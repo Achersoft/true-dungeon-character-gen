@@ -1,0 +1,167 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install' ]
+2 info using npm@2.14.20
+3 info using node@v4.4.0
+4 verbose readDependencies loading dependencies from C:\Users\shaun\Repositories\mtg-inventory-management\gui\package.json
+5 verbose install where, deps [ 'C:\\Users\\shaun\\Repositories\\mtg-inventory-management\\gui',
+5 verbose install   [ 'bower',
+5 verbose install     'http-server',
+5 verbose install     'jasmine-core',
+5 verbose install     'karma',
+5 verbose install     'karma-chrome-launcher',
+5 verbose install     'karma-firefox-launcher',
+5 verbose install     'karma-jasmine',
+5 verbose install     'karma-junit-reporter',
+5 verbose install     'protractor',
+5 verbose install     'grunt-contrib-copy',
+5 verbose install     'grunt-contrib-clean',
+5 verbose install     'shelljs' ] ]
+6 verbose install where, peers [ 'C:\\Users\\shaun\\Repositories\\mtg-inventory-management\\gui',
+6 verbose install   [] ]
+7 verbose installManyTop reading for lifecycle C:\Users\shaun\Repositories\mtg-inventory-management\gui\package.json
+8 info preinstall titan@0.0.0
+9 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\bower\package.json
+10 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\grunt\package.json
+11 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\grunt-contrib-clean\package.json
+12 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\grunt-contrib-copy\package.json
+13 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\http-server\package.json
+14 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\jasmine-core\package.json
+15 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\karma\package.json
+16 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\karma-chrome-launcher\package.json
+17 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\karma-firefox-launcher\package.json
+18 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\karma-jasmine\package.json
+19 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\karma-junit-reporter\package.json
+20 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\protractor\package.json
+21 verbose installManyTop reading scoped package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\shelljs\package.json
+22 info package.json http-server@0.6.1 No license field.
+23 info package.json shelljs@0.2.6 No license field.
+24 info package.json grunt-contrib-copy@0.4.1 No license field.
+25 info package.json grunt-contrib-clean@0.4.1 No license field.
+26 info package.json grunt@0.4.5 No license field.
+27 verbose readDependencies loading dependencies from C:\Users\shaun\Repositories\mtg-inventory-management\gui\package.json
+28 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\bower\package.json
+29 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\grunt\package.json
+30 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\grunt-contrib-clean\package.json
+31 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\grunt-contrib-copy\package.json
+32 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\http-server\package.json
+33 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\jasmine-core\package.json
+34 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\karma\package.json
+35 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\karma-chrome-launcher\package.json
+36 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\karma-firefox-launcher\package.json
+37 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\karma-jasmine\package.json
+38 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\karma-junit-reporter\package.json
+39 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\protractor\package.json
+40 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\shelljs\package.json
+41 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\bower\package.json
+42 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\bower.cmd\package.json
+43 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\http-server\package.json
+44 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\http-server.cmd\package.json
+45 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\karma\package.json
+46 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\karma.cmd\package.json
+47 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\protractor\package.json
+48 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\protractor.cmd\package.json
+49 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\shjs\package.json
+50 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\shjs.cmd\package.json
+51 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\webdriver-manager\package.json
+52 verbose targetResolver reading package data from C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\.bin\webdriver-manager.cmd\package.json
+53 verbose already installed skipping shelljs@^0.2.6 C:\Users\shaun\Repositories\mtg-inventory-management\gui
+54 verbose already installed skipping bower@^1.3.1 C:\Users\shaun\Repositories\mtg-inventory-management\gui
+55 verbose already installed skipping http-server@^0.6.1 C:\Users\shaun\Repositories\mtg-inventory-management\gui
+56 verbose already installed skipping jasmine-core@^2.3.4 C:\Users\shaun\Repositories\mtg-inventory-management\gui
+57 verbose already installed skipping karma@~0.12 C:\Users\shaun\Repositories\mtg-inventory-management\gui
+58 verbose already installed skipping karma-chrome-launcher@^0.1.12 C:\Users\shaun\Repositories\mtg-inventory-management\gui
+59 verbose already installed skipping karma-firefox-launcher@^0.1.6 C:\Users\shaun\Repositories\mtg-inventory-management\gui
+60 verbose already installed skipping karma-jasmine@^0.3.5 C:\Users\shaun\Repositories\mtg-inventory-management\gui
+61 verbose already installed skipping karma-junit-reporter@^0.2.2 C:\Users\shaun\Repositories\mtg-inventory-management\gui
+62 verbose already installed skipping protractor@^2.1.0 C:\Users\shaun\Repositories\mtg-inventory-management\gui
+63 verbose already installed skipping grunt-contrib-copy@0.4.x C:\Users\shaun\Repositories\mtg-inventory-management\gui
+64 verbose already installed skipping grunt-contrib-clean@0.4.x C:\Users\shaun\Repositories\mtg-inventory-management\gui
+65 silly install resolved []
+66 info build C:\Users\shaun\Repositories\mtg-inventory-management\gui
+67 info linkStuff titan@0.0.0
+68 silly linkStuff titan@0.0.0 has C:\Users\shaun\Repositories\mtg-inventory-management as its parent node_modules
+69 verbose linkBins titan@0.0.0
+70 verbose linkMans titan@0.0.0
+71 verbose rebuildBundles titan@0.0.0
+72 verbose rebuildBundles [ '.bin',
+72 verbose rebuildBundles   'bower',
+72 verbose rebuildBundles   'grunt',
+72 verbose rebuildBundles   'grunt-contrib-clean',
+72 verbose rebuildBundles   'grunt-contrib-copy',
+72 verbose rebuildBundles   'http-server',
+72 verbose rebuildBundles   'jasmine-core',
+72 verbose rebuildBundles   'karma',
+72 verbose rebuildBundles   'karma-chrome-launcher',
+72 verbose rebuildBundles   'karma-firefox-launcher',
+72 verbose rebuildBundles   'karma-jasmine',
+72 verbose rebuildBundles   'karma-junit-reporter',
+72 verbose rebuildBundles   'protractor',
+72 verbose rebuildBundles   'shelljs' ]
+73 verbose rebuild bundle C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\grunt
+74 info build C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules\grunt
+75 info preinstall grunt@0.4.5
+76 info linkStuff grunt@0.4.5
+77 silly linkStuff grunt@0.4.5 has C:\Users\shaun\Repositories\mtg-inventory-management\gui\node_modules as its parent node_modules
+78 verbose linkBins grunt@0.4.5
+79 verbose linkMans grunt@0.4.5
+80 verbose rebuildBundles grunt@0.4.5
+81 verbose rebuildBundles [ '.bin',
+81 verbose rebuildBundles   'async',
+81 verbose rebuildBundles   'coffee-script',
+81 verbose rebuildBundles   'colors',
+81 verbose rebuildBundles   'dateformat',
+81 verbose rebuildBundles   'eventemitter2',
+81 verbose rebuildBundles   'exit',
+81 verbose rebuildBundles   'findup-sync',
+81 verbose rebuildBundles   'getobject',
+81 verbose rebuildBundles   'glob',
+81 verbose rebuildBundles   'grunt-legacy-log',
+81 verbose rebuildBundles   'grunt-legacy-util',
+81 verbose rebuildBundles   'hooker',
+81 verbose rebuildBundles   'iconv-lite',
+81 verbose rebuildBundles   'js-yaml',
+81 verbose rebuildBundles   'lodash',
+81 verbose rebuildBundles   'minimatch',
+81 verbose rebuildBundles   'nopt',
+81 verbose rebuildBundles   'rimraf',
+81 verbose rebuildBundles   'underscore.string',
+81 verbose rebuildBundles   'which' ]
+82 info install grunt@0.4.5
+83 info postinstall grunt@0.4.5
+84 info install titan@0.0.0
+85 info postinstall titan@0.0.0
+86 verbose unsafe-perm in lifecycle true
+87 info titan@0.0.0 Failed to exec postinstall script
+88 verbose stack Error: titan@0.0.0 postinstall: `bower install`
+88 verbose stack Exit status 1
+88 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:214:16)
+88 verbose stack     at emitTwo (events.js:87:13)
+88 verbose stack     at EventEmitter.emit (events.js:172:7)
+88 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:24:14)
+88 verbose stack     at emitTwo (events.js:87:13)
+88 verbose stack     at ChildProcess.emit (events.js:172:7)
+88 verbose stack     at maybeClose (internal/child_process.js:827:16)
+88 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+89 verbose pkgid titan@0.0.0
+90 verbose cwd C:\Users\shaun\Repositories\mtg-inventory-management\gui
+91 error Windows_NT 10.0.10586
+92 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install"
+93 error node v4.4.0
+94 error npm  v2.14.20
+95 error code ELIFECYCLE
+96 error titan@0.0.0 postinstall: `bower install`
+96 error Exit status 1
+97 error Failed at the titan@0.0.0 postinstall script 'bower install'.
+97 error This is most likely a problem with the titan package,
+97 error not with npm itself.
+97 error Tell the author that this fails on your system:
+97 error     bower install
+97 error You can get information on how to open an issue for this project with:
+97 error     npm bugs titan
+97 error Or if that isn't available, you can get their info via:
+97 error
+97 error     npm owner ls titan
+97 error There is likely additional logging output above.
+98 verbose exit [ 1, true ]

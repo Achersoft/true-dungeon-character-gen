@@ -1,0 +1,52 @@
+CREATE DATABASE `titan` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE TABLE `card_inventory` (
+  `id` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `NM` int(11) NOT NULL DEFAULT '0',
+  `nm_price` double DEFAULT NULL,
+  `SP` int(11) NOT NULL DEFAULT '0',
+  `sp_price` double DEFAULT NULL,
+  `MP` int(11) NOT NULL DEFAULT '0',
+  `mp_price` double DEFAULT NULL,
+  `HP` int(11) NOT NULL DEFAULT '0',
+  `hp_price` double DEFAULT NULL,
+  `FNM` int(11) NOT NULL DEFAULT '0',
+  `fnm_price` double DEFAULT NULL,
+  `FSP` int(11) NOT NULL DEFAULT '0',
+  `fsp_price` double DEFAULT NULL,
+  `FMP` int(11) NOT NULL DEFAULT '0',
+  `fmp_price` double DEFAULT NULL,
+  `FHP` int(11) NOT NULL DEFAULT '0',
+  `fhp_price` double DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `card_inventory_fk_card` FOREIGN KEY (`id`) REFERENCES `mtg_card` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `mtg_card` (
+  `id` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `set_id` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `mana_cost` varchar(45) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` varchar(45) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `sub_type` varchar(45) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `rarity` varchar(45) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `card_text` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `oracle_text` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `artist` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `power` varchar(10) DEFAULT NULL,
+  `toughness` varchar(10) DEFAULT NULL,
+  `number` varchar(45) DEFAULT NULL,
+  `language` varchar(45) DEFAULT NULL,
+  `multiverse_id` int(11) DEFAULT NULL,
+  `release_date` date DEFAULT NULL,
+  `split_sequence` int(1) DEFAULT NULL,
+  `split_id` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `has_children` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `mtg_set` (
+  `id` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `code` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `block` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `mtg_price_code` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

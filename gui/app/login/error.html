@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>eStaff Login</title>
+
+        <!-- CSS -->
+        <link type="text/css" rel="stylesheet" href="/estaff/assets/css/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="/estaff/assets/css/default.css" />
+    </head>
+
+    <body id="loginPage">
+        <div id="outermost" class="container">
+            <div id="header" class="text-center">
+                <div class="centerBox">
+                    <img src="/estaff/assets/images/esiLogoWhite.png" />
+                    <strong>eStaff</strong>
+                </div>
+            </div>
+            <div id="loginBody">
+                <p class="errorMsg text-center">Invalid credentials. Please try again.</p>
+                <form class="form-signin" action="j_security_check" method="post">
+                    <div class="loginInput">
+                        <label for="inputEmail" class="sr-only">Username</label>
+                        <input name="j_username" type="text" class="form-control" placeholder="Username" required autofocus>
+                    </div>
+                    <div class="loginInput">
+                        <label for="inputPassword" class="sr-only">Password</label>
+                        <input name="j_password" type="password" class="form-control" placeholder="Password" required>
+                        <p id="forgotPassword" class="text-center">
+                            <a href="mailto:webmaster@enginsol.com?subject=EStaff Password Reset">Forgot Password?</a>
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-md btn-primary" type="submit">Log in</button>
+                    </div>
+                </form>
+            </div>
+        </div> <!-- /container -->
+    </body>
+</html>

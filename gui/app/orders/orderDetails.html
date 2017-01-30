@@ -1,0 +1,69 @@
+<div class="row">
+    <h2 style="margin-top: 10px;font-size:32px"><b>Order For: {{order.customerName}}</b></h2>
+    <h3 style="margin-top: 10px;font-size:24px;"><b>Placed:  {{order.createdAt | date:'medium'}}</b></h3>
+</div>
+<div class="row">
+    <table ng-table="tableParams" class="table table-striped table-hover table-condensed" >
+        <tr ng-repeat-start="card in $data" ng-repeat-end="" class="form-inline" style="margin-top: 10px;font-size:16px;">
+            <td data-title="'Card'" style="padding-top:12px">
+                <span style="cursor:pointer" ng-click="removeItem($index)" class="fa fa-times"></span>&nbsp;&nbsp;{{card.name}}
+            </td>
+            <td data-title="'Color'" style="padding-top:12px">
+                {{card.color}}
+            </td>
+            <td data-title="'Language'" style="padding-top:12px">
+                {{card.language}}
+            </td>
+            <td data-title="'Set'" style="padding-top:12px">
+                {{card.set}}
+            </td>
+            <td data-title="'Condition'" style="padding-top:12px">
+                {{card.condition}}
+            </td>
+            <td data-title="'On TCG'" style="padding-top:12px">
+                {{card.tcg | yesNo}}
+            </td>
+            <td data-title="'Quantity'" style="padding-top:12px">
+                <span style="cursor:pointer" class="glyphicon glyphicon-minus" ng-class="{'disabled':card.qty===1}" ng-click="changeQty(card, true)"></span>
+                    &nbsp;&nbsp;{{card.qty}}&nbsp;&nbsp;
+                <span style="cursor:pointer" class="glyphicon glyphicon-plus" ng-class="{'disabled':card.qty===card.orgQty}" ng-click="changeQty(card, false)"></span>
+            </td>
+            <td data-title="'Price'">
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input ng-model="card.price" type="text" class="form-control" placeholder="price">
+                </div>
+            </td>
+            <td data-title="'Total'" style="padding-top:12px">
+                {{card.price * card.qty | currency: '$'}}
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="row text-right">
+    <div class="col-sm-9"></div>
+    <div class="col-sm-3">
+        <div class="col-sm-5">
+            <label style="padding-top:10px;font-size:16px;">Discount(%): </label>
+        </div>
+        <div class="col-sm-7">
+            <input ng-model="order.discount" type="number" class="form-control" min="0" max="100" />
+        </div>
+    </div>
+</div>
+<div class="row text-right">
+    <div class="col-sm-9"></div>
+    <div class="col-sm-3">
+        <div class="col-sm-5">
+            <label style="padding-top:10px;font-size:16px;">Total: </label>
+        </div>
+        <div class="col-sm-7" style="padding-top:10px;font-size:16px;">
+            ${{getTotal()}}
+        </div>
+    </div>
+</div>
+<div class="row text-right" style="margin-top:10px;margin-right:15px">
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="fulfill()">Fulfill</button>
+</div>
+

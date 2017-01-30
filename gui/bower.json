@@ -1,0 +1,28 @@
+{
+  "name": "tdcc-ui",
+  "description": "A starter project for AngularJS",
+  "version": "0.0.0",
+  "homepage": "https://github.com/angular/angular-seed",
+  "license": "MIT",
+  "private": true, 
+  "main": [
+    "app.js"
+  ],
+  "dependencies": {
+    "angular": "~1.4.x",
+    "angular-route": "~1.4.x",
+    "angular-animate": "1.4.x",
+    "angular-loader": "~1.4.x",
+    "angular-resource": "1.4.x",
+    "angular-bootstrap": "1.2.x",
+    "angular-dragdrop": "1.0.x",
+    "html5-boilerplate": "~5.2.0",
+    "a0-angular-storage" : "0.0.x",
+    "angular-jwt" : "0.0.9",
+    "ng-table": "1.0.x",
+    "bootstrap": "3.3.6",
+    "ngcart": "1.0.X",
+    "angular-http-auth":"1.2.x",
+    "font-awesome": "4.5.0"
+  }
+}

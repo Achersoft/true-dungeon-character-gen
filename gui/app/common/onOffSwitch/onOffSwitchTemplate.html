@@ -1,0 +1,8 @@
+<div class="radio" ng-if='!switchInline'>
+    <label style="padding:0px;"><input type='radio' ng-value="true" name="{{switchName}}" id="{{switchName}}yes" ng-model="$parent.ngModel" ng-disabled="switchDisabled==='true'"><i></i> <span>Yes</span></label>
+    <label style="padding-top:0px;"><input type='radio' ng-value="false" name="{{switchName}}" id="{{switchName}}no" ng-model="$parent.ngModel" ng-disabled="switchDisabled==='true'"><i></i> <span>No</span></label>
+</div>
+<span  class="radio"  ng-if='switchInline'>
+    <label ><input type='radio' ng-value="true" name="{{switchName}}" id="{{switchName}}yes" ng-model="$parent.ngModel" ng-disabled="switchDisabled==='true'"><i></i> <span>Yes</span></label>
+    <label ><input type='radio' ng-value="false" name="{{switchName}}" id="{{switchName}}no" ng-model="$parent.ngModel" ng-disabled="switchDisabled==='true'"><i></i> <span>No</span></label>
+</span>

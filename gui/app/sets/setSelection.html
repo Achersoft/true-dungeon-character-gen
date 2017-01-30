@@ -1,0 +1,222 @@
+<div>
+    <div ng-controller="SetCtrl">
+        <div class="fixed-header" ng-show="false">
+            <h2>
+                <a href="" ng-click="gotoAnchor(link)" ng-repeat="link in headerLinks">{{link}}</a>
+            </h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div ng-show="hasAnchor('a')">    
+                <h2 id="anchora" class="anchor" style="border-bottom:1pt solid black;"><a name="a">A</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'a'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul>  
+            </div>
+            <div ng-show="hasAnchor('b')">
+                <h2 style="border-bottom:1pt solid black;"><a name="b">B</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'b'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+            </div>
+            <div ng-show="hasAnchor('c')">
+                <h2 style="border-bottom:1pt solid black;"><a name="c">C</a></h2>
+                <ul id="ttt">
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'c'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+            </div>
+            <div ng-show="hasAnchor('d')">
+                <h2 style="border-bottom:1pt solid black;"><a name="d">D</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'d'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul>     
+            </div>
+            <div ng-show="hasAnchor('e')">    
+                <h2 style="border-bottom:1pt solid black;"><a name="e">E</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'e'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul>   
+            </div>
+            <div ng-show="hasAnchor('f')">    
+                <h2 style="border-bottom:1pt solid black;"><a name="f">F</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'f'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+            </div>
+            <div ng-show="hasAnchor('g')">
+                <h2 style="border-bottom:1pt solid black;"><a name="g">G</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'g'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+            </div>
+            <div ng-show="hasAnchor('h')">
+                <h2 style="border-bottom:1pt solid black;"><a name="h">H</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'h'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+            </div>
+            <div ng-show="hasAnchor('i')">
+                <h2 style="border-bottom:1pt solid black;"><a name="i">I</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'i'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+            </div>
+            <div ng-show="hasAnchor('j')">
+                <h2 style="border-bottom:1pt solid black;"><a name="j">J</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'j'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+            </div>
+            <div ng-show="hasAnchor('k')">
+                <h2 style="border-bottom:1pt solid black;"><a name="k">K</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'k'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+            </div>
+            <div ng-show="hasAnchor('l')">
+                <h2 style="border-bottom:1pt solid black;"><a name="l">L</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'l'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+             <div ng-show="hasAnchor('m')">
+                <h2 style="border-bottom:1pt solid black;"><a name="m">M</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'m'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul>
+             </div>
+             <div ng-show="hasAnchor('n')">
+                <h2 style="border-bottom:1pt solid black;"><a name="n">N</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'n'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+             </div>
+             <div ng-show="hasAnchor('o')">
+                <h2 style="border-bottom:1pt solid black;"><a name="o">O</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'o'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+             </div>
+             <div ng-show="hasAnchor('p')">
+                <h2 style="border-bottom:1pt solid black;"><a name="p">P</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'p'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+             </div>
+             <div ng-show="hasAnchor('q')">
+                <h2 style="border-bottom:1pt solid black;"><a name="q">Q</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'q'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+             </div>
+             <div ng-show="hasAnchor('r')">
+                <h2 style="border-bottom:1pt solid black;"><a name="r">R</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'r'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+             </div>
+             <div ng-show="hasAnchor('s')">
+                <h2 style="border-bottom:1pt solid black;"><a name="s">S</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'s'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+             </div>
+             <div ng-show="hasAnchor('t')">
+                <h2 style="border-bottom:1pt solid black;"><a name="t">T</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'t'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+             </div>
+             <div ng-show="hasAnchor('u')">
+                <h2 style="border-bottom:1pt solid black;"><a name="u">U</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'u'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+             </div>
+             <div ng-show="hasAnchor('v')">
+                <h2 style="border-bottom:1pt solid black;"><a name="v">V</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'v'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul>
+             </div>
+             <div ng-show="hasAnchor('w')">
+                <h2 style="border-bottom:1pt solid black;"><a name="w">W</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'w'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul>
+             </div>
+             <div ng-show="hasAnchor('x')">
+                <h2 style="border-bottom:1pt solid black;"><a name="x">X</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'x'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul>
+             </div>
+             <div ng-show="hasAnchor('y')">
+                <h2 style="border-bottom:1pt solid black;"><a name="y">Y</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'y'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+             </div>
+             <div ng-show="hasAnchor('z')">
+                <h2 id="anchorz" class="anchor" style="border-bottom:1pt solid black;"><a name="z">Z</a></h2>
+                <ul>
+                    <li ng-repeat="set in sets | orderBy:'name' | filter:{'name':'z'}:startsWith">
+                        <a ng-href="#/setList/{{set.id}}/{{set.language}}">{{set.name}}</a>
+                    </li>
+                </ul> 
+             </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,58 @@
+<div class="row">
+    <h2 style="border-bottom:1pt solid black;">Advanced Search</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <label>Card Name:</label>
+            <input class="form-control" type="text" ng-model="search.like"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px">
+            <label>Type:</label><br>
+            <span ng-class="{'btn-info' : typeSelected(cardType), 'btn-default' : !typeSelected(cardType)}" ng-click="toggleTypeSelected(cardType);" class="btn" ng-repeat-start="cardType in cardTypes" ng-repeat-end="">
+                {{cardType | lowercase | capitalize}}
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px">
+            <label>Color:</label><br>
+            <span ng-class="{'btn-info' : colorSelected(cardColor), 'btn-default' : !colorSelected(cardColor)}" ng-click="toggleColorSelected(cardColor);" class="btn" ng-repeat-start="cardColor in cardColors" ng-repeat-end="">
+                {{cardColor | lowercase | capitalize}}
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px">
+            <label>Rarity:</label><br>
+            <span ng-class="{'btn-info' : raritySelected(cardRarity), 'btn-default' : !raritySelected(cardRarity)}" ng-click="toggleRaritySelected(cardRarity);" class="btn" ng-repeat-start="cardRarity in cardRarities" ng-repeat-end="">
+                {{cardRarity | lowercase | capitalize}}
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px; margin-bottom: 10px">
+            <label>Language:</label><br>
+            <span ng-class="{'btn-info' : languageSelected(cardLanguage), 'btn-default' : !languageSelected(cardLanguage)}" ng-click="toggleLanguageSelected(cardLanguage);" class="btn" ng-repeat-start="cardLanguage in cardLanguages" ng-repeat-end="">
+                {{cardLanguage | lowercase | capitalize}}
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label>Price Minimum:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.priceMin"/>
+        </div>
+        <div class="col-md-4">
+            <label>Price Maximum:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.priceMax"/>
+        </div>
+    </div>
+    <div class="text-right" style="margin-bottom: 15px">
+        <button class="btn btn-primary" ng-click="doSearch()">
+            <span class="fa fa-save" ></span> Search 
+        </button>
+    </div>
+</div>
+
+

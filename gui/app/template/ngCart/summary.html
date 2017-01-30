@@ -1,0 +1,6 @@
+<div class="">
+    <span class="fa fa-shopping-cart">
+    {{ ngCart.getTotalItems() }}
+    <ng-pluralize count="ngCart.getTotalItems()" when="{1: 'item', 'other':'items'}"></ng-pluralize>
+    {{ ngCart.totalCost() | currency }}
+</div>
