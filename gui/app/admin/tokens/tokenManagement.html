@@ -1,9 +1,23 @@
 <div class="row">
-    <h2 style="border-bottom:1pt solid black;">Advanced Search</h2>
+    <h2 style="border-bottom:1pt solid black;">Add Token</h2>
     <div class="row">
         <div class="col-md-4">
-            <label>Card Name:</label>
-            <input class="form-control" type="text" ng-model="search.like"/>
+            <label>Name:</label>
+            <input class="form-control" type="text" ng-model="search.name"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label>Text:</label>
+            <input class="form-control" type="text" ng-model="search.text"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px">
+            <label>Usable By:</label><br>
+            <span ng-class="{'btn-info' : usabilitySelected(tokenUsableBy), 'btn-default' : !usabilitySelected(tokenUsableBy)}" ng-click="toggleUsabilitySelected(tokenUsableBy);" class="btn" ng-repeat-start="tokenUsableBy in tokenUsability" ng-repeat-end="">
+                {{tokenUsableBy | lowercase | capitalize}}
+            </span>
         </div>
     </div>
     <div class="row">
@@ -16,41 +30,168 @@
     </div>
     <div class="row">
         <div class="col-md-12" style="margin-top: 10px">
-            <label>Color:</label><br>
-            <span ng-class="{'btn-info' : colorSelected(tokenColor), 'btn-default' : !colorSelected(tokenColor)}" ng-click="toggleColorSelected(tokenColor);" class="btn" ng-repeat-start="tokenColor in tokenColors" ng-repeat-end="">
-                {{tokenColor | lowercase | capitalize}}
-            </span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12" style="margin-top: 10px">
             <label>Rarity:</label><br>
             <span ng-class="{'btn-info' : raritySelected(tokenRarity), 'btn-default' : !raritySelected(tokenRarity)}" ng-click="toggleRaritySelected(tokenRarity);" class="btn" ng-repeat-start="tokenRarity in tokenRarities" ng-repeat-end="">
                 {{tokenRarity | lowercase | capitalize}}
             </span>
         </div>
     </div>
+    <hr>
     <div class="row">
-        <div class="col-md-12" style="margin-top: 10px; margin-bottom: 10px">
-            <label>Language:</label><br>
-            <span ng-class="{'btn-info' : languageSelected(tokenLanguage), 'btn-default' : !languageSelected(tokenLanguage)}" ng-click="toggleLanguageSelected(tokenLanguage);" class="btn" ng-repeat-start="tokenLanguage in tokenLanguages" ng-repeat-end="">
-                {{tokenLanguage | lowercase | capitalize}}
-            </span>
+        <div class="col-md-2" style="margin-top: 10px">
+            <label>Strength:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.str"/>
+        </div>
+        <div class="col-md-2" style="margin-top: 10px">
+            <label>Dexterity:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.dex"/>
+        </div>
+        <div class="col-md-2" style="margin-top: 10px">
+            <label>Constitution:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.con"/>
+        </div>
+        <div class="col-md-2" style="margin-top: 10px">
+            <label>Intelligence:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.intel"/>
+        </div>
+        <div class="col-md-2" style="margin-top: 10px">
+            <label>Wisdom:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.wis"/>
+        </div>
+        <div class="col-md-2" style="margin-top: 10px">
+            <label>Charisma:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.cha"/>
+        </div>
+    </div>
+    <hr>
+        <div class="row">
+        <div class="col-md-4">
+            <label>Melee Hit:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.meleeHit"/>
+        </div>
+        <div class="col-md-4">
+            <label>Melee Damage:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.meleeDmg"/>
+        </div>
+        <div class="col-md-4">
+            <label>Melee AC:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.meleeAC"/>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
-            <label>Price Minimum:</label>
-            <input type="number" min="0" class="form-control" ng-model="search.priceMin"/>
-        </div>
-        <div class="col-md-4">
-            <label>Price Maximum:</label>
-            <input type="number" min="0" class="form-control" ng-model="search.priceMax"/>
+        <div class="col-md-12" style="margin-top: 15px">
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.meleeFire">Melee Fire?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.meleeCold">Melee Cold?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.meleeShock">Melee Shock?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.meleeSonic">Melee Sonic?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.meleeEldritch">Melee Eldritch?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.meleePoison">Melee Poison?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.meleeDarkrift">Melee Darkrift?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.meleeSacred">Melee Sacred?</label>
         </div>
     </div>
-    <div class="text-right" style="margin-bottom: 15px">
-        <button class="btn btn-primary" ng-click="doSearch()">
-            <span class="fa fa-save" ></span> Search 
+    <hr>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Ranged Hit:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.rangeHit"/>
+        </div>
+        <div class="col-md-3">
+            <label>Ranged Damage:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.rangeDmg"/>
+        </div>
+        <div class="col-md-3">
+            <label>Ranged AC:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.rangeAC"/>
+        </div>
+        <div class="col-md-3">
+            <label>Missile AC:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.rangeMissileAC"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 15px">
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.rangeFire">Ranged Fire?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.rangeCold">Ranged Cold?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.rangeShock">Ranged Shock?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.rangeSonic">Ranged Sonic?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.rangeEldritch">Ranged Eldritch?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.rangePoison">Ranged Poison?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.rangeDarkrift">Ranged Darkrift?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.rangeSacred">Ranged Sacred?</label> 
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Health:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.health"/>
+        </div>
+        <div class="col-md-3">
+            <label>Fortitude:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.fort"/>
+        </div>
+        <div class="col-md-3">
+            <label>Reflex:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.reflex"/>
+        </div>
+        <div class="col-md-3">
+            <label>Will:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.will"/>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <label>Retribution Damage:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.retDmg"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 15px">
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.retFire">Retribution Fire?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.retCold">Retribution Cold?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.retShock">Retribution Shock?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.retSonic">Retribution Sonic?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.retEldritch">Retribution Eldritch?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.retPoison">Retribution Poison?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.retDarkrift">Retribution Darkrift?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.retSacred">Retribution Sacred?</label> 
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <label>Spell Damage:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.spellDmg"/>
+        </div>
+        <div class="col-md-4">
+            <label>Spell Heal:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.spellHeal"/>
+        </div>
+        <div class="col-md-4">
+            <label>Spell Resistance:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.spellResist"/>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 15px">
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.cannotBeSuprised">Cannot Be Suprised?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.freeMovement">Free Movement?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.psychic">Psychic?</label>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-4">
+            <label>Treasure Pulls:</label>
+            <input type="number" min="0" class="form-control" ng-model="search.treasure"/>
+        </div>
+    </div>
+    <div class="row text-right" style="margin-top:15px;margin-bottom:15px">
+        <button class="btn btn-primary" ng-click="addToken()">
+            <span class="fa fa-save" ></span> Add 
         </button>
     </div>
 </div>

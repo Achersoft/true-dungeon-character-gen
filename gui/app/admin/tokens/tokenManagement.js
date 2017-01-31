@@ -8,180 +8,133 @@ angular.module('main')
     });
 }])
 
-.controller('TokenManagementCtrl', ['$scope', 'SearchState', 'SearchSvc', '$location', '$route', function ($scope, searchState, searchSvc, $location, $route) {
-    $scope.search = searchState.reset();
+.controller('TokenManagementCtrl', ['$scope', 'TokenAdminState', 'TokenAdminSvc', '$location', '$route', function ($scope, tokenAdminState, tokenAdminSvc, $location, $route) {
+    $scope.search = tokenAdminState.reset();
+    $scope.tokenUsability = ["ALL", "BARBARIAN", "BARD", "CLERIC", "DRUID", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
     $scope.tokenSlots = ["BACK", "CHARM", "EAR", "EYES", "FEET", "FIGURINE", "FINGER", "HANDS", "HEAD", "IOUNSTONE", "LEGS", "MAINHAND", 
         "NECK", "OFFHAND", "RUNESTONE", "SHIRT", "SLOTLESS", "TORSO", "WAIST", "WRIST"];
     $scope.tokenRarities = ["COMMON", "UNCOMMON", "RARE", "ULRARARE", "ENHANCED", "EXALTED", "RELIC", "LEGENDARY", "ELDRITCH", "PREMIUM", "ARTIFACT"];
 
+    $scope.usabilitySelected =  function(usableBy){
+        return $.inArray(usableBy, $scope.search.usableBy) > -1;
+    };
+    
+    $scope.toggleUsabilitySelected =  function(usableBy){
+        if($scope.usabilitySelected(usableBy)) 
+            $scope.search.usableBy.splice($scope.search.usableBy.indexOf(usableBy), 1);
+        else
+            $scope.search.usableBy.push(usableBy);
+    };
+    
     $scope.slotSelected =  function(slot){
-        return $.inArray(slot, $scope.search.slot) > -1;
+        return slot === $scope.search.slot;
     };
     
     $scope.toggleSlotSelected =  function(slot){
-        if($scope.slotSelected(slot)) 
-            $scope.search.slot.splice($scope.search.slot.indexOf(slot), 1);
-        else
-            $scope.search.slot.push(slot);
+        $scope.search.slot = slot;
     };
     
-    $scope.colorSelected =  function(type){
-        return $.inArray(type, $scope.search.colors) > -1;
+    $scope.raritySelected =  function(rarity){
+        return rarity === $scope.search.rarity;
     };
     
-    $scope.toggleColorSelected =  function(type){
-        if($scope.colorSelected(type)) 
-            $scope.search.colors.splice($scope.search.colors.indexOf(type), 1);
-        else
-            $scope.search.colors.push(type);
+    $scope.toggleRaritySelected =  function(rarity){
+        $scope.search.rarity = rarity;
     };
     
-    $scope.raritySelected =  function(type){
-        return $.inArray(type, $scope.search.rarities) > -1;
-    };
-    
-    $scope.toggleRaritySelected =  function(type){
-        if($scope.raritySelected(type)) 
-            $scope.search.rarities.splice($scope.search.rarities.indexOf(type), 1);
-        else
-            $scope.search.rarities.push(type);
-    };
-    
-    $scope.languageSelected =  function(type){
-        return $.inArray(type, $scope.search.languages) > -1;
-    };
-    
-    $scope.toggleLanguageSelected =  function(type){
-        if($scope.languageSelected(type)) 
-            $scope.search.languages.splice($scope.search.languages.indexOf(type), 1);
-        else
-            $scope.search.languages.push(type);
-    };
-    
-    $scope.doSearch = function(){
-        $location.path("/search/results");
-        $route.reload();
+    $scope.addToken = function(){
+        tokenAdminSvc.addToken($scope.search).then(function() {
+            $scope.search = tokenAdminState.reset();
+        });
     };
 }])
 
-.factory('SearchState', [
+.factory('TokenAdminState', [
     function() {                    
-        var searchState = {
-            name: null,
-            text: null,
-            rarity: null,
-            slot: null,
-            usableByBarbarian: false,
-            usableByBard: false,
-            usableByCleric: false,
-            usableByDruid: false,
-            usableByFighter: false,
-            usableByWizard: false,
-            usableByMonk: false,
-            usableByPaladin: false,
-            usableByRanger: false,
-            usableByRogue: false,
-            str: null,
-            dex: null,
-            con: null,
-            intel: null,
-            wis: null,
-            cha: null,
-            health: null,
-            meleeHit: null,
-            meleeDmg: null,
-            meleeFire: false,
-            meleeCold: false,
-            meleeShock: false,
-            meleeSonic: false,
-            meleeEldritch: false,
-            meleePosion: false,
-            meleeDarkrift: false,
-            meleeSacred: false,
-            meleeAC: null,
-            rangeHit: null,
-            rangeDmg: null,
-            rangeFire: false,
-            rangeCold: false,
-            rangeShock: false,
-            rangeSonic: false,
-            rangeEldritch: false,
-            rangePosion: false,
-            rangeDarkrift: false,
-            rangeSacred: false,
-            rangeAC: null,
-            rangeMissleAC: null,
-            fort: null,
-            reflex: null,
-            will: null,
-            retDmg: null,
-            retFire: false,
-            retCold: false,
-            retShock: false,
-            retSonic: false,
-            retEldritch: false,
-            retPosion: false,
-            retDarkrift: false,
-            retSacred: false,
-            cannotBeSuprised: false,
-            freeMovement: false,
-            psychic: false,
-            spellDmg: null,
-            spellHeal: null,
-            spellResist: null,
-            treasure: null
-        };
+        var tokenAdminState = {};
         
-        function setCardName(tokenName) {
-            searchState = {name: tokenName, page: 1, limit: 20};
-        }
-        
-        function setLikeName(tokenName) {
-            searchState = {like: tokenName, page: 1, limit: 10, quick: true};
-        }
-
         function setContext(data) {
-            searchState = data;
+            tokenAdminState = data;
         }
         
         function reset() {
-            searchState = {
-                    name: null,
-                    like: null,
-                    colors: [],
-                    types: [],
-                    rarities: [],
-                    languages: ["English"],
-                    cmc: null,
-                    priceMin: null,
-                    priceMax: null,
-                    page: 1,
-                    limit: 20,
-                    quick: false,
-                    inStock: false
-                };
-            return searchState;   
+            tokenAdminState = {
+                name: null,
+                text: null,
+                rarity: null,
+                slot: null,
+                usableBy: [],
+                str: null,
+                dex: null,
+                con: null,
+                intel: null,
+                wis: null,
+                cha: null,
+                health: null,
+                meleeHit: null,
+                meleeDmg: null,
+                meleeFire: false,
+                meleeCold: false,
+                meleeShock: false,
+                meleeSonic: false,
+                meleeEldritch: false,
+                meleePoison: false,
+                meleeDarkrift: false,
+                meleeSacred: false,
+                meleeAC: null,
+                rangeHit: null,
+                rangeDmg: null,
+                rangeFire: false,
+                rangeCold: false,
+                rangeShock: false,
+                rangeSonic: false,
+                rangeEldritch: false,
+                rangePoison: false,
+                rangeDarkrift: false,
+                rangeSacred: false,
+                rangeAC: null,
+                rangeMissileAC: null,
+                fort: null,
+                reflex: null,
+                will: null,
+                retDmg: null,
+                retFire: false,
+                retCold: false,
+                retShock: false,
+                retSonic: false,
+                retEldritch: false,
+                retPoison: false,
+                retDarkrift: false,
+                retSacred: false,
+                cannotBeSuprised: false,
+                freeMovement: false,
+                psychic: false,
+                spellDmg: null,
+                spellHeal: null,
+                spellResist: null,
+                treasure: null
+            };
+            return tokenAdminState;   
         }
 
         function get() {
-            return searchState;
+            return tokenAdminState;
         }
 
         return {
-            setCardName: setCardName,
-            setLikeName: setLikeName,
             setContext: setContext,
             reset: reset,
             get: get
         };
     }])
 
-.factory('SearchSvc',['$http', 'RESOURCES', 'SearchState', function($http, RESOURCES, searchState) {    
-    var searchSvc={};
+.factory('TokenAdminSvc',['$http', 'RESOURCES', function($http, RESOURCES) {    
+    var tokenAdminSvc={};
 
-    searchSvc.search = function() {
-        return $http.put(RESOURCES.REST_BASE_URL + '/tokens/search/', searchState.get());
+    tokenAdminSvc.addToken = function(token) {
+        console.log(token);
+        return $http.put(RESOURCES.REST_BASE_URL + '/token/admin', token);
     };
     
-    return searchSvc;
+    return tokenAdminSvc;
 }]);

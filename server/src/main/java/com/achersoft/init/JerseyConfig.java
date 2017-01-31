@@ -12,6 +12,7 @@ import javax.ws.rs.ApplicationPath;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.filter.RequestContextFilter;
 
 @ApplicationPath("/*")
@@ -31,6 +32,7 @@ public class JerseyConfig extends ResourceConfig {
         register(AccessDeniedExceptionHandler.class);
         register(InvalidDataExceptionHandler.class);
         register(NotFoundExceptionHandler.class);
+        register(DuplicateKeyException.class);
         
         // register features
         register(JacksonFeature.class);

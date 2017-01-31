@@ -7,10 +7,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Builder
+@Data
+@NoArgsConstructor 
 @AllArgsConstructor
-@NoArgsConstructor
 public class TokenFullDetails {
     private String id;
     private String name;
@@ -41,7 +41,7 @@ public class TokenFullDetails {
     private Boolean meleeShock;
     private Boolean meleeSonic;
     private Boolean meleeEldritch;
-    private Boolean meleePosion;
+    private Boolean meleePoison;
     private Boolean meleeDarkrift;
     private Boolean meleeSacred;
     private Integer meleeAC;
@@ -52,11 +52,11 @@ public class TokenFullDetails {
     private Boolean rangeShock;
     private Boolean rangeSonic;
     private Boolean rangeEldritch;
-    private Boolean rangePosion;
+    private Boolean rangePoison;
     private Boolean rangeDarkrift;
     private Boolean rangeSacred;
     private Integer rangeAC;
-    private Integer rangeMissleAC;
+    private Integer rangeMissileAC;
     private Integer fort;
     private Integer reflex;
     private Integer will;
@@ -66,7 +66,7 @@ public class TokenFullDetails {
     private Boolean retShock;
     private Boolean retSonic;
     private Boolean retEldritch;
-    private Boolean retPosion;
+    private Boolean retPoison;
     private Boolean retDarkrift;
     private Boolean retSacred;
     private Boolean cannotBeSuprised;

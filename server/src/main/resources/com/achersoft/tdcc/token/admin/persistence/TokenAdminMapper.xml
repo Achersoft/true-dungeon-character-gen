@@ -34,7 +34,6 @@
                             #{usableByPaladin},
                             #{usableByRanger},
                             #{usableByRogue})
-    ON DUPLICATE KEY UPDATE name=#{name}
     </insert>
     
     <insert id="addTokenDetails">
@@ -53,7 +52,7 @@
                                     m_shock,
                                     m_sonic,
                                     m_eldritch,
-                                    m_posion,
+                                    m_poison,
                                     m_darkrift,
                                     m_sacred,
                                     m_ac,
@@ -64,7 +63,7 @@
                                     r_shock,
                                     r_sonic,
                                     r_eldritch,
-                                    r_posion,
+                                    r_poison,
                                     r_darkrift,
                                     r_sacred,
                                     r_ac,
@@ -78,7 +77,7 @@
                                     ret_shock,
                                     ret_sonic,
                                     ret_eldritch,
-                                    ret_posion,
+                                    ret_poison,
                                     ret_darkrift,
                                     ret_sacred,
                                     cbs,
@@ -103,7 +102,7 @@
                                     #{meleeShock},
                                     #{meleeSonic},
                                     #{meleeEldritch},
-                                    #{meleePosion},
+                                    #{meleePoison},
                                     #{meleeDarkrift},
                                     #{meleeSacred},
                                     #{meleeAC},
@@ -114,11 +113,11 @@
                                     #{rangeShock},
                                     #{rangeSonic},
                                     #{rangeEldritch},
-                                    #{rangePosion},
+                                    #{rangePoison},
                                     #{rangeDarkrift},
                                     #{rangeSacred},
                                     #{rangeAC},
-                                    #{rangeMissleAC},
+                                    #{rangeMissileAC},
                                     #{fort},
                                     #{reflex},
                                     #{will},
@@ -128,7 +127,7 @@
                                     #{retShock},
                                     #{retSonic},
                                     #{retEldritch},
-                                    #{retPosion},
+                                    #{retPoison},
                                     #{retDarkrift},
                                     #{retSacred},
                                     #{cannotBeSuprised},
@@ -138,6 +137,5 @@
                                     #{spellHeal},
                                     #{spellResist},
                                     #{treasure});
-            ON DUPLICATE KEY UPDATE str=#{str}
     </insert>
 </mapper>
