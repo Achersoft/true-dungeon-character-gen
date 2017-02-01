@@ -21,7 +21,7 @@ angular.module('main', [
 ])
 .constant('RESOURCES', (function() {
     'use strict';
-    var restBaseUrl = 'http://localhost:8080/rest/td';
+    var restBaseUrl = 'http://localhost:8080/TD-Character-Gen';
     var uriBaseUrl = 'http://localhost:8080';
     return {
         // Service URLs

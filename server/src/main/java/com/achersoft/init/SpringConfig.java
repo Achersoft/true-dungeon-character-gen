@@ -23,22 +23,28 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableScheduling
+@PropertySource(value = "file:../app/tdcc.properties", ignoreResourceNotFound = true)
+@PropertySource(value = "file:/opt/app/tdcc.properties", ignoreResourceNotFound = true)
 @MapperScan(basePackageClasses = { UserMapper.class,
                                    TokenAdminMapper.class
                                  })
 public class SpringConfig {
+    
+    @Autowired
+    private Environment env;
     
     // <editor-fold defaultstate="collapsed" desc="REST Gateways"> 
     // </editor-fold>
@@ -65,13 +71,13 @@ public class SpringConfig {
     public DataSource dataSource() {
         DataSource datasource = new DataSource();
         PoolProperties p = new PoolProperties();
-        p.setUrl("jdbc:" + "mysql" + 
-                 "://" + "localhost" +
-                 ":" + "3306" +
-                 "/" + "td_tokens");
-        p.setUsername("root");
-        p.setPassword("zxcxcv");
+        p.setUrl("jdbc:" + env.getProperty("dataSource.database") + 
+                 "://" + env.getProperty("dataSource.url") +
+                 ":" + env.getProperty("dataSource.port") +
+                 "/" + env.getProperty("dataSource.schema"));
         p.setDriverClassName("com.mysql.jdbc.Driver");
+        p.setUsername(env.getProperty("dataSource.user"));
+        p.setPassword(env.getProperty("dataSource.password"));
         p.setJmxEnabled(true);
         p.setTestWhileIdle(false);
         p.setTestOnBorrow(true);
