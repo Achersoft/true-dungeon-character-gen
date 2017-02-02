@@ -1,5 +1,6 @@
 package com.achersoft.tdcc.token.admin.dao;
 
+import com.achersoft.tdcc.enums.ConditionalUse;
 import com.achersoft.tdcc.enums.Rarity;
 import com.achersoft.tdcc.enums.Slot;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,12 @@ public class TokenFullDetails {
     private Integer wis;
     private Integer cha;
     private Integer health;
+    private Boolean oneHanded;
+    private Boolean twoHanded;
+    private Boolean sheild;
+    private Boolean thrown;
+    private Boolean rangerOffhand;
+    private Boolean instrument;
     private Integer meleeHit;
     private Integer meleeDmg;
     private Boolean meleeFire;
@@ -45,6 +52,7 @@ public class TokenFullDetails {
     private Boolean meleeDarkrift;
     private Boolean meleeSacred;
     private Integer meleeAC;
+    private Boolean rangedWeapon;
     private Integer rangeHit;
     private Integer rangeDmg;
     private Boolean rangeFire;
@@ -75,5 +83,12 @@ public class TokenFullDetails {
     private Integer spellDmg;
     private Integer spellHeal;
     private Integer spellResist;
-    private Integer treasure;    
+    private Integer initiative;  
+    private Integer treasure;  
+    private ConditionalUse conditionalUse;
+    private Boolean alwaysInEffect;
+    private Boolean oncePerRound;
+    private Boolean oncePerRoom;
+    private Boolean oncePerGame;
+    private String specialText;
 }

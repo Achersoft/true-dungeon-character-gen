@@ -1,0 +1,15 @@
+<ul class="dropdown-menu" ng-show="isOpen() && !moveInProgress" ng-style="{top: position().top+'px', left: position().left+'px', width: position().width+'px'}" style="display:block;font-size:11px;" role="listbox" aria-hidden="{{!isOpen()}}">
+    <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }" ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::match.id}}">
+        <a>
+            <div class="row">
+                <div class="col-sm-12">
+                    {{match.label.name}}
+                </div>
+                <div class="col-sm-12 nowrap-truncate">
+                    {{match.label.text}}
+                </div>
+            </div>
+        </a>          
+    </li>
+</ul>
+

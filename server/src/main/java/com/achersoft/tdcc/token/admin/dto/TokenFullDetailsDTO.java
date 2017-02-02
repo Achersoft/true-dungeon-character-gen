@@ -1,10 +1,12 @@
 package com.achersoft.tdcc.token.admin.dto;
 
+import com.achersoft.tdcc.enums.ConditionalUse;
 import com.achersoft.tdcc.enums.Rarity;
 import com.achersoft.tdcc.enums.Slot;
 import com.achersoft.tdcc.enums.UsableBy;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,12 @@ public class TokenFullDetailsDTO {
     public Integer wis;
     public Integer cha;
     public Integer health;
+    public Boolean oneHanded;
+    public Boolean twoHanded;
+    public Boolean sheild;
+    public Boolean thrown;
+    public Boolean rangerOffhand;
+    public Boolean instrument;
     public Integer meleeHit;
     public Integer meleeDmg;
     public Boolean meleeFire;
@@ -43,6 +51,7 @@ public class TokenFullDetailsDTO {
     public Boolean meleeDarkrift;
     public Boolean meleeSacred;
     public Integer meleeAC;
+    public Boolean rangedWeapon;
     public Integer rangeHit;
     public Integer rangeDmg;
     public Boolean rangeFire;
@@ -73,10 +82,123 @@ public class TokenFullDetailsDTO {
     public Integer spellDmg;
     public Integer spellHeal;
     public Integer spellResist;
+    public Integer initiative;  
     public Integer treasure;  
+    public ConditionalUse conditionalUse;
+    public Boolean alwaysInEffect;
+    public Boolean oncePerRound;
+    public Boolean oncePerRoom;
+    public Boolean oncePerGame;
+    public String specialText;
+    
+    public static TokenFullDetailsDTO fromDAO(TokenFullDetails tokenFullDetails) {
+        TokenFullDetailsDTO build = TokenFullDetailsDTO.builder()
+                .id(tokenFullDetails.getId())
+                .name(tokenFullDetails.getName())
+                .text(tokenFullDetails.getText())
+                .rarity(tokenFullDetails.getRarity())
+                .slot(tokenFullDetails.getSlot())
+                .str(tokenFullDetails.getStr())
+                .dex(tokenFullDetails.getDex())
+                .con(tokenFullDetails.getCon())
+                .intel(tokenFullDetails.getIntel())
+                .wis(tokenFullDetails.getWis())
+                .cha(tokenFullDetails.getCha())
+                .health(tokenFullDetails.getHealth())
+                .oneHanded(tokenFullDetails.getOneHanded())
+                .twoHanded(tokenFullDetails.getTwoHanded())
+                .sheild(tokenFullDetails.getSheild())
+                .thrown(tokenFullDetails.getThrown())
+                .rangerOffhand(tokenFullDetails.getRangerOffhand())
+                .instrument(tokenFullDetails.getInstrument())
+                .meleeHit(tokenFullDetails.getMeleeHit())
+                .meleeDmg(tokenFullDetails.getMeleeDmg())
+                .meleeFire(tokenFullDetails.getMeleeFire())
+                .meleeCold(tokenFullDetails.getMeleeCold())
+                .meleeShock(tokenFullDetails.getMeleeShock())
+                .meleeSonic(tokenFullDetails.getMeleeSonic())
+                .meleeEldritch(tokenFullDetails.getMeleeEldritch())
+                .meleePoison(tokenFullDetails.getMeleePoison())
+                .meleeDarkrift(tokenFullDetails.getMeleeDarkrift())
+                .meleeSacred(tokenFullDetails.getMeleeSacred())
+                .meleeAC(tokenFullDetails.getMeleeAC())
+                .rangedWeapon(tokenFullDetails.getRangedWeapon())
+                .rangeHit(tokenFullDetails.getRangeHit())
+                .rangeDmg(tokenFullDetails.getRangeDmg())
+                .rangeFire(tokenFullDetails.getRangeFire())
+                .rangeCold(tokenFullDetails.getRangeCold())
+                .rangeShock(tokenFullDetails.getRangeShock())
+                .rangeSonic(tokenFullDetails.getRangeSonic())
+                .rangeEldritch(tokenFullDetails.getRetEldritch())
+                .rangePoison(tokenFullDetails.getRetPoison())
+                .rangeDarkrift(tokenFullDetails.getRangeDarkrift())
+                .rangeSacred(tokenFullDetails.getRangeSacred())
+                .rangeAC(tokenFullDetails.getRangeAC())
+                .rangeMissileAC(tokenFullDetails.getRangeMissileAC())
+                .fort(tokenFullDetails.getFort())
+                .reflex(tokenFullDetails.getReflex())
+                .will(tokenFullDetails.getWill())
+                .retDmg(tokenFullDetails.getRetDmg())
+                .retFire(tokenFullDetails.getRetFire())
+                .retCold(tokenFullDetails.getRetCold())
+                .retShock(tokenFullDetails.getRetShock())
+                .retSonic(tokenFullDetails.getRetSonic())
+                .retEldritch(tokenFullDetails.getRetEldritch())
+                .retPoison(tokenFullDetails.getRetPoison())
+                .retDarkrift(tokenFullDetails.getRetDarkrift())
+                .retSacred(tokenFullDetails.getRetSacred())
+                .cannotBeSuprised(tokenFullDetails.getCannotBeSuprised())
+                .freeMovement(tokenFullDetails.getFreeMovement())
+                .psychic(tokenFullDetails.getPsychic())
+                .spellDmg(tokenFullDetails.getSpellDmg())
+                .spellHeal(tokenFullDetails.getSpellHeal())
+                .spellResist(tokenFullDetails.getSpellResist())
+                .initiative(tokenFullDetails.getInitiative())
+                .treasure(tokenFullDetails.getTreasure())
+                .conditionalUse(tokenFullDetails.getConditionalUse())
+                .alwaysInEffect(tokenFullDetails.getAlwaysInEffect())
+                .oncePerRound(tokenFullDetails.getOncePerRound())
+                .oncePerRoom(tokenFullDetails.getOncePerRoom())
+                .oncePerGame(tokenFullDetails.getOncePerGame())
+                .specialText(tokenFullDetails.getSpecialText())
+                .usableBy(new ArrayList())
+                .build();
+        
+        if(tokenFullDetails.isUsableByBarbarian() && tokenFullDetails.isUsableByBard()&&
+           tokenFullDetails.isUsableByCleric()&& tokenFullDetails.isUsableByDruid()&&
+           tokenFullDetails.isUsableByFighter()&& tokenFullDetails.isUsableByMonk() &&
+           tokenFullDetails.isUsableByPaladin()&& tokenFullDetails.isUsableByRanger()&&
+           tokenFullDetails.isUsableByRogue()&& tokenFullDetails.isUsableByWizard())
+            build.usableBy.add(UsableBy.ALL);
+        else {
+            if(tokenFullDetails.isUsableByBarbarian()) 
+                build.usableBy.add(UsableBy.BARBARIAN);
+            if(tokenFullDetails.isUsableByBard()) 
+                build.usableBy.add(UsableBy.BARD);
+            if(tokenFullDetails.isUsableByCleric()) 
+                build.usableBy.add(UsableBy.CLERIC);
+            if(tokenFullDetails.isUsableByDruid()) 
+                build.usableBy.add(UsableBy.DRUID);
+            if(tokenFullDetails.isUsableByFighter()) 
+                build.usableBy.add(UsableBy.FIGHTER);
+            if(tokenFullDetails.isUsableByMonk()) 
+                build.usableBy.add(UsableBy.MONK);
+            if(tokenFullDetails.isUsableByPaladin()) 
+                build.usableBy.add(UsableBy.PALADIN);
+            if(tokenFullDetails.isUsableByRanger()) 
+                build.usableBy.add(UsableBy.RANGER);
+            if(tokenFullDetails.isUsableByRogue()) 
+                build.usableBy.add(UsableBy.ROGUE);
+            if(tokenFullDetails.isUsableByWizard()) 
+                build.usableBy.add(UsableBy.WIZARD);
+        }
+
+        return build;
+    }
     
     public TokenFullDetails toDAO() {
         TokenFullDetails build = TokenFullDetails.builder()
+                .id(id)
                 .name(name)
                 .text(text)
                 .rarity(rarity)
@@ -88,6 +210,12 @@ public class TokenFullDetailsDTO {
                 .wis(wis)
                 .cha(cha)
                 .health(health)
+                .oneHanded(oneHanded)
+                .twoHanded(twoHanded)
+                .sheild(sheild)
+                .thrown(thrown)
+                .rangerOffhand(rangerOffhand)
+                .instrument(instrument)
                 .meleeHit(meleeHit)
                 .meleeDmg(meleeDmg)
                 .meleeFire(meleeFire)
@@ -99,6 +227,7 @@ public class TokenFullDetailsDTO {
                 .meleeDarkrift(meleeDarkrift)
                 .meleeSacred(meleeSacred)
                 .meleeAC(meleeAC)
+                .rangedWeapon(rangedWeapon)
                 .rangeHit(rangeHit)
                 .rangeDmg(rangeDmg)
                 .rangeFire(rangeFire)
@@ -129,7 +258,14 @@ public class TokenFullDetailsDTO {
                 .spellDmg(spellDmg)
                 .spellHeal(spellHeal)
                 .spellResist(spellResist)
+                .initiative(initiative)
                 .treasure(treasure)
+                .conditionalUse((conditionalUse != null)?conditionalUse:ConditionalUse.NONE)
+                .alwaysInEffect(alwaysInEffect)
+                .oncePerRound(oncePerRound)
+                .oncePerRoom(oncePerRoom)
+                .oncePerGame(oncePerGame)
+                .specialText(specialText)
                 .build();
         
         if(usableBy.contains(UsableBy.ALL)){

@@ -1,5 +1,10 @@
 <div class="row">
-    <h2 style="border-bottom:1pt solid black;">Add Token</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <input type="text" class="form-control" ng-model="selectedToken" uib-typeahead="token for token in searchForToken($viewValue)" typeahead-popup-template-url="admin/tokens/template.html" typeahead-on-select="onSelect($item)" placeholder="Search for token..." >
+        </div> 
+    </div>
+    <h2 style="border-bottom:1pt solid black;"></h2>
     <div class="row">
         <div class="col-md-4">
             <label>Name:</label>
@@ -36,6 +41,14 @@
             </span>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px">
+            <label>Conditional:</label><br>
+            <span ng-class="{'btn-info' : conditionalSelected(tokenConditional), 'btn-default' : !conditionalSelected(tokenConditional)}" ng-click="toggleConditionalSelected(tokenConditional);" class="btn" ng-repeat-start="tokenConditional in tokenConditionals" ng-repeat-end="">
+                {{tokenConditional | lowercase | capitalize}}
+            </span>
+        </div>
+    </div>
     <hr>
     <div class="row">
         <div class="col-md-2" style="margin-top: 10px">
@@ -61,6 +74,18 @@
         <div class="col-md-2" style="margin-top: 10px">
             <label>Charisma:</label>
             <input type="number" class="form-control" ng-model="search.cha"/>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px">
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.oneHanded">One Handed Weapon?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.twoHanded">Two Handed Weapon?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.sheild">Shield?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.rangedWeapon">Ranged Weapon?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.thrown">Thrown Weapon?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.rangerOffhand">Ranger Offhand?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.instrument">Instrument Weapon?</label>
         </div>
     </div>
     <hr>
@@ -188,12 +213,34 @@
             <label>Treasure Pulls:</label>
             <input type="number" class="form-control" ng-model="search.treasure"/>
         </div>
+        <div class="col-md-4">
+            <label>Initiative:</label>
+            <input type="number" class="form-control" ng-model="search.initiative"/>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <label>Special Text:</label>
+            <input class="form-control" type="text" ng-model="search.specialText"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 15px">
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.alwaysInEffect">Always In Effect?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.oncePerRound">Once Per Round?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.oncePerRoom">Once Per Room?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.oncePerGame">Once Per Game?</label>
+        </div>
     </div>
     <div class="row text-right" style="margin-top:15px;margin-bottom:15px">
-        <button class="btn btn-primary" ng-click="addToken()">
-            <span class="fa fa-save" ></span> Add 
+        <button class="btn btn-primary" ng-click="editToken()">
+            <span class="fa fa-save" ></span> Save 
         </button>
     </div>
 </div>
 
 
+                
+                
+                

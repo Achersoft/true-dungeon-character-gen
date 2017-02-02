@@ -3,8 +3,12 @@ angular.module('main')
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
     .when('/admin/tokens/management', {
-        templateUrl: 'admin/tokens/tokenManagement.html',
+        templateUrl: 'admin/tokens/addToken.html',
         controller: 'TokenManagementCtrl'
+    })
+    .when('/admin/tokens/edit', {
+        templateUrl: 'admin/tokens/editToken.html',
+        controller: 'TokenEditCtrl'
     });
 }])
 
@@ -14,7 +18,8 @@ angular.module('main')
     $scope.tokenSlots = ["BACK", "CHARM", "EAR", "EYES", "FEET", "FIGURINE", "FINGER", "HANDS", "HEAD", "IOUNSTONE", "LEGS", "MAINHAND", 
         "NECK", "OFFHAND", "RUNESTONE", "SHIRT", "SLOTLESS", "TORSO", "WAIST", "WRIST"];
     $scope.tokenRarities = ["COMMON", "UNCOMMON", "RARE", "ULRARARE", "ENHANCED", "EXALTED", "RELIC", "LEGENDARY", "ELDRITCH", "PREMIUM", "ARTIFACT"];
-
+    $scope.tokenConditionals = ["NONE", "DEXTERITY_18", "DEXTERITY_20", "INTELLECT_20", "WISDOM_20", "WEAPON_2H", "WEAPON_1H", "WEAPON_RANGED", "MAY_NOT_USE_SHIELDS", "STRENGTH_24"];
+    
     $scope.usabilitySelected =  function(usableBy){
         return $.inArray(usableBy, $scope.search.usableBy) > -1;
     };
@@ -42,8 +47,81 @@ angular.module('main')
         $scope.search.rarity = rarity;
     };
     
+    $scope.conditionalSelected =  function(conditionalUse){
+        return conditionalUse === $scope.search.conditionalUse;
+    };
+    
+    $scope.toggleConditionalSelected =  function(conditionalUse){
+        $scope.search.conditionalUse = conditionalUse;
+    };
+    
     $scope.addToken = function(){
         tokenAdminSvc.addToken($scope.search).then(function() {
+            $scope.search = tokenAdminState.reset();
+        });
+    };
+}])
+
+.controller('TokenEditCtrl', ['$scope', 'TokenAdminState', 'TokenAdminSvc', '$location', '$route', function ($scope, tokenAdminState, tokenAdminSvc, $location, $route) {
+    $scope.search = tokenAdminState.reset();
+    $scope.tokenUsability = ["ALL", "BARBARIAN", "BARD", "CLERIC", "DRUID", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
+    $scope.tokenSlots = ["BACK", "CHARM", "EAR", "EYES", "FEET", "FIGURINE", "FINGER", "HANDS", "HEAD", "IOUNSTONE", "LEGS", "MAINHAND", 
+        "NECK", "OFFHAND", "RUNESTONE", "SHIRT", "SLOTLESS", "TORSO", "WAIST", "WRIST"];
+    $scope.tokenRarities = ["COMMON", "UNCOMMON", "RARE", "ULRARARE", "ENHANCED", "EXALTED", "RELIC", "LEGENDARY", "ELDRITCH", "PREMIUM", "ARTIFACT"];
+    $scope.tokenConditionals = ["NONE", "DEXTERITY_18", "DEXTERITY_20", "INTELLECT_20", "WISDOM_20", "WEAPON_2H", "WEAPON_1H", "WEAPON_RANGED", "MAY_NOT_USE_SHIELDS", "STRENGTH_24"];
+    
+    $scope.selectedToken = '';
+            
+    $scope.onSelect = function($item){
+        tokenAdminState.setContext($item);
+        $scope.search = tokenAdminState.get();
+        $scope.selectedToken = '';
+    };
+
+    $scope.searchForToken = function(viewValue) {
+        return tokenAdminSvc.search(viewValue).then(function(response) {
+            console.log(response.data);
+            return response.data;
+        });
+    };
+    
+    $scope.usabilitySelected =  function(usableBy){
+        return $.inArray(usableBy, $scope.search.usableBy) > -1;
+    };
+    
+    $scope.toggleUsabilitySelected =  function(usableBy){
+        if($scope.usabilitySelected(usableBy)) 
+            $scope.search.usableBy.splice($scope.search.usableBy.indexOf(usableBy), 1);
+        else
+            $scope.search.usableBy.push(usableBy);
+    };
+    
+    $scope.slotSelected =  function(slot){
+        return slot === $scope.search.slot;
+    };
+    
+    $scope.toggleSlotSelected =  function(slot){
+        $scope.search.slot = slot;
+    };
+    
+    $scope.raritySelected =  function(rarity){
+        return rarity === $scope.search.rarity;
+    };
+    
+    $scope.toggleRaritySelected =  function(rarity){
+        $scope.search.rarity = rarity;
+    };
+    
+    $scope.conditionalSelected =  function(conditionalUse){
+        return conditionalUse === $scope.search.conditionalUse;
+    };
+    
+    $scope.toggleConditionalSelected =  function(conditionalUse){
+        $scope.search.conditionalUse = conditionalUse;
+    };
+    
+    $scope.editToken = function(){
+        tokenAdminSvc.editToken($scope.search).then(function() {
             $scope.search = tokenAdminState.reset();
         });
     };
@@ -59,6 +137,7 @@ angular.module('main')
         
         function reset() {
             tokenAdminState = {
+                id: null,
                 name: null,
                 text: null,
                 rarity: null,
@@ -71,6 +150,12 @@ angular.module('main')
                 wis: null,
                 cha: null,
                 health: null,
+                oneHanded: false,
+                twoHanded: false,
+                thrown: false,
+                rangerOffhand: false,
+                instrument: false,
+                sheild: false,
                 meleeHit: null,
                 meleeDmg: null,
                 meleeFire: false,
@@ -82,6 +167,7 @@ angular.module('main')
                 meleeDarkrift: false,
                 meleeSacred: false,
                 meleeAC: null,
+                rangedWeapon: false,
                 rangeHit: null,
                 rangeDmg: null,
                 rangeFire: false,
@@ -112,7 +198,14 @@ angular.module('main')
                 spellDmg: null,
                 spellHeal: null,
                 spellResist: null,
-                treasure: null
+                initiative: null,
+                treasure: null,
+                conditionalUse: null,
+                alwaysInEffect: false,
+                oncePerRound: false,
+                oncePerRoom: false,
+                oncePerGame: false,
+                specialText: null
             };
             return tokenAdminState;   
         }
@@ -132,8 +225,15 @@ angular.module('main')
     var tokenAdminSvc={};
 
     tokenAdminSvc.addToken = function(token) {
-        console.log(token);
         return $http.put(RESOURCES.REST_BASE_URL + '/token/admin', token);
+    };
+    
+    tokenAdminSvc.editToken = function(token) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/token/admin', token);
+    };
+    
+    tokenAdminSvc.search = function(name) {
+        return $http.get(RESOURCES.REST_BASE_URL + '/token/search/?name=' + name);
     };
     
     return tokenAdminSvc;

@@ -155,7 +155,7 @@ angular.module('main')
     var searchSvc={};
 
     searchSvc.search = function() {
-        return $http.put(RESOURCES.REST_BASE_URL + '/cards/search/', searchState.get());
+        return $http.post(RESOURCES.REST_BASE_URL + '/tokens/search/', searchState.get());
     };
     
     return searchSvc;
