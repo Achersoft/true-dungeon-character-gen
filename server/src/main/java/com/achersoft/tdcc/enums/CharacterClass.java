@@ -1,6 +1,6 @@
 package com.achersoft.tdcc.enums;
 
-public enum UsableBy {
+public enum CharacterClass {
     ALL,
     BARBARIAN,
     BARD,

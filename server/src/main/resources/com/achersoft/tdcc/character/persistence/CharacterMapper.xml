@@ -1,0 +1,17 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.achersoft.tdcc.character.persistence.CharacterMapper">
+    
+    <insert id="addCharacter">
+        <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+            SELECT UUID()
+        </selectKey>
+        INSERT INTO character (id,
+                               name,
+                               character_class) 
+                       VALUES (#{id},
+                               #{name},
+                               #{characterClass})
+    </insert>
+</mapper>                          

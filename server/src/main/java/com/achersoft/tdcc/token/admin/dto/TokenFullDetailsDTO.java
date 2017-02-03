@@ -3,7 +3,7 @@ package com.achersoft.tdcc.token.admin.dto;
 import com.achersoft.tdcc.enums.ConditionalUse;
 import com.achersoft.tdcc.enums.Rarity;
 import com.achersoft.tdcc.enums.Slot;
-import com.achersoft.tdcc.enums.UsableBy;
+import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class TokenFullDetailsDTO {
     public String text;
     public @NotNull Rarity rarity;
     public @NotNull Slot slot;
-    public @NotNull List<UsableBy> usableBy;
+    public @NotNull List<CharacterClass> usableBy;
     public Integer str;
     public Integer dex;
     public Integer con;
@@ -169,28 +169,28 @@ public class TokenFullDetailsDTO {
            tokenFullDetails.isUsableByFighter()&& tokenFullDetails.isUsableByMonk() &&
            tokenFullDetails.isUsableByPaladin()&& tokenFullDetails.isUsableByRanger()&&
            tokenFullDetails.isUsableByRogue()&& tokenFullDetails.isUsableByWizard())
-            build.usableBy.add(UsableBy.ALL);
+            build.usableBy.add(CharacterClass.ALL);
         else {
             if(tokenFullDetails.isUsableByBarbarian()) 
-                build.usableBy.add(UsableBy.BARBARIAN);
+                build.usableBy.add(CharacterClass.BARBARIAN);
             if(tokenFullDetails.isUsableByBard()) 
-                build.usableBy.add(UsableBy.BARD);
+                build.usableBy.add(CharacterClass.BARD);
             if(tokenFullDetails.isUsableByCleric()) 
-                build.usableBy.add(UsableBy.CLERIC);
+                build.usableBy.add(CharacterClass.CLERIC);
             if(tokenFullDetails.isUsableByDruid()) 
-                build.usableBy.add(UsableBy.DRUID);
+                build.usableBy.add(CharacterClass.DRUID);
             if(tokenFullDetails.isUsableByFighter()) 
-                build.usableBy.add(UsableBy.FIGHTER);
+                build.usableBy.add(CharacterClass.FIGHTER);
             if(tokenFullDetails.isUsableByMonk()) 
-                build.usableBy.add(UsableBy.MONK);
+                build.usableBy.add(CharacterClass.MONK);
             if(tokenFullDetails.isUsableByPaladin()) 
-                build.usableBy.add(UsableBy.PALADIN);
+                build.usableBy.add(CharacterClass.PALADIN);
             if(tokenFullDetails.isUsableByRanger()) 
-                build.usableBy.add(UsableBy.RANGER);
+                build.usableBy.add(CharacterClass.RANGER);
             if(tokenFullDetails.isUsableByRogue()) 
-                build.usableBy.add(UsableBy.ROGUE);
+                build.usableBy.add(CharacterClass.ROGUE);
             if(tokenFullDetails.isUsableByWizard()) 
-                build.usableBy.add(UsableBy.WIZARD);
+                build.usableBy.add(CharacterClass.WIZARD);
         }
 
         return build;
@@ -268,7 +268,7 @@ public class TokenFullDetailsDTO {
                 .specialText(specialText)
                 .build();
         
-        if(usableBy.contains(UsableBy.ALL)){
+        if(usableBy.contains(CharacterClass.ALL)){
             build.setUsableByBarbarian(true);
             build.setUsableByBard(true);
             build.setUsableByCleric(true);
@@ -280,25 +280,25 @@ public class TokenFullDetailsDTO {
             build.setUsableByRogue(true);
             build.setUsableByWizard(true);
         } else if(usableBy != null && !usableBy.isEmpty()) {
-            if(usableBy.contains(UsableBy.BARBARIAN))
+            if(usableBy.contains(CharacterClass.BARBARIAN))
                 build.setUsableByBarbarian(true);
-            if(usableBy.contains(UsableBy.BARD))
+            if(usableBy.contains(CharacterClass.BARD))
                 build.setUsableByBard(true);
-            if(usableBy.contains(UsableBy.CLERIC))
+            if(usableBy.contains(CharacterClass.CLERIC))
                 build.setUsableByCleric(true);
-            if(usableBy.contains(UsableBy.DRUID))
+            if(usableBy.contains(CharacterClass.DRUID))
                 build.setUsableByDruid(true);
-            if(usableBy.contains(UsableBy.FIGHTER))
+            if(usableBy.contains(CharacterClass.FIGHTER))
                 build.setUsableByFighter(true);
-            if(usableBy.contains(UsableBy.MONK))
+            if(usableBy.contains(CharacterClass.MONK))
                 build.setUsableByMonk(true);
-            if(usableBy.contains(UsableBy.PALADIN))
+            if(usableBy.contains(CharacterClass.PALADIN))
                 build.setUsableByPaladin(true);
-            if(usableBy.contains(UsableBy.RANGER))
+            if(usableBy.contains(CharacterClass.RANGER))
                 build.setUsableByRanger(true);
-            if(usableBy.contains(UsableBy.ROGUE))
+            if(usableBy.contains(CharacterClass.ROGUE))
                 build.setUsableByRogue(true);
-            if(usableBy.contains(UsableBy.WIZARD))
+            if(usableBy.contains(CharacterClass.WIZARD))
                 build.setUsableByWizard(true);  
         }
 
