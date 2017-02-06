@@ -9,6 +9,7 @@ angular.module('main').directive('itemMobileSelector',['CharacterSvc', function(
         },
         link: function(scope) {
             scope.itemSelection = {};
+            scope.tabIndex = 0;
             
             scope.reloadTokens = function() {
                 characterSvc.getSlotTokens(scope.model.characterId, 'BARBARIAN', scope.model.slot).then(function(result) {
