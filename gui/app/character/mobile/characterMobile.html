@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-xs-12 text-center" style="margin-top:10px;padding:0px">
+        <strong>{{characterContext.name}}</strong>
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Level {{characterContext.stats.level}} - {{characterContext.characterClass | lowercase | capitalize}}</strong>
+    </div>
+    <center>
+        <img src="images/barbarian.jpg" width="40%" alt="" style="margin-top:5px;padding:0px"/>
+    </center>
+    <div class="col-xs-12 text-center">
+        <strong>Hit Points: </strong>{{characterContext.stats.health}}
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Melee</strong> Hit: {{characterContext.stats.meleeHit}}  Damage: {{characterContext.stats.meleeDmg}}  AC: {{characterContext.stats.meleeAC}}
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Ranged</strong> Hit: {{characterContext.stats.rangeHit}}  Damage: {{characterContext.stats.rangeDmg}}  AC: {{characterContext.stats.rangeAC}}
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Saves</strong> Fort: {{characterContext.stats.fort}}  Reflex: {{characterContext.stats.reflex}}  Will: {{characterContext.stats.will}}
+    </div>
+    <div class="col-xs-12 text-center" style="margin-top:15px;">
+        <button class="btn btn-primary" ng-click="exportToPDF()">
+            Download Character as PDF 
+        </button>
+    </div>
+</div>
+

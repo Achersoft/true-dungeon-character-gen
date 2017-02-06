@@ -1,0 +1,29 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.achersoft.tdcc.token.persistence.TokenMapper">
+                       
+    <select id="getNonWeaponSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
+         SELECT t.id,
+                t.name,
+                t.text,
+                t.rarity,
+                t.slot
+           FROM token t
+          WHERE t.slot= #{slot}
+            AND t.barbarian = 1
+            AND t.id NOT IN
+                (SELECT item_id 
+                 FROM character_items
+                 WHERE character_id = #{characterId}
+                       AND item_id is not null
+                   AND slot= #{slot})
+       ORDER BY t.name
+    </select>
+    
+    <update id="setTokenSlot">      
+        UPDATE character_items SET
+            item_id = #{tokenId}   
+         WHERE id = #{soltId}
+    </update>  
+</mapper>                          

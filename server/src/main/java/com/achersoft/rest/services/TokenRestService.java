@@ -2,8 +2,12 @@ package com.achersoft.rest.services;
 
 import com.achersoft.security.annotations.RequiresPrivilege;
 import com.achersoft.security.type.Privilege;
+import com.achersoft.tdcc.enums.CharacterClass;
+import com.achersoft.tdcc.enums.Slot;
+import com.achersoft.tdcc.token.TokenService;
 import com.achersoft.tdcc.token.admin.TokenAdminService;
 import com.achersoft.tdcc.token.admin.dto.TokenFullDetailsDTO;
+import com.achersoft.tdcc.token.dao.Token;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -23,6 +27,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class TokenRestService {
 
     private @Inject TokenAdminService tokenAdminService; 
+    private @Inject TokenService tokenService; 
     
     @RequiresPrivilege({Privilege.ADMIN})
     @PUT 
@@ -47,5 +52,14 @@ public class TokenRestService {
     public List<TokenFullDetailsDTO> addToken(@QueryParam("name") @NotNull @NotEmpty String name) throws Exception {
         return tokenAdminService.search("%" + name + "%").stream().map((dao) -> { return TokenFullDetailsDTO.fromDAO(dao); }).collect(Collectors.toList());
     }
+    
+   // @RequiresPrivilege({Privilege.ADMIN})
+    @GET 
+    @Path("/character")
+    @Produces({MediaType.APPLICATION_JSON})	
+    public List<Token> getSlotTokens(@QueryParam("id") @NotNull @NotEmpty String id, @QueryParam("characterClass") @NotNull CharacterClass characterClass, @QueryParam("slot") @NotNull Slot slot) throws Exception {
+        return tokenService.getSlotItems(id, characterClass, slot);
+    }
+    
 }
 

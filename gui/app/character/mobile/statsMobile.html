@@ -1,0 +1,167 @@
+<div class="row">
+    <div class="col-xs-12 text-center" style="margin-top:10px;padding:0px">
+        <strong>{{characterContext.name}}</strong>
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Level {{characterContext.stats.level}} - {{characterContext.characterClass | lowercase | capitalize}}</strong>
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Hit Points: </strong>{{characterContext.stats.health}}
+    </div>
+    <div class="col-xs-12">
+        <strong>Base Stats</strong>
+    </div>
+    <div class="col-xs-12">
+        <div class="table-responsive" style="border:none;">          
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Base</th>
+                        <th>Score</th>
+                        <th>Bonus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>STR</strong></td>
+                        <td>{{characterContext.stats.str}}</td>
+                        <td>{{characterContext.stats.str}}</td>
+                        <td>{{characterContext.stats.str}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DEX</strong></td>
+                        <td>{{characterContext.stats.dex}}</td>
+                        <td>{{characterContext.stats.dex}}</td>
+                        <td>{{characterContext.stats.dex}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CON</strong></td>
+                        <td>{{characterContext.stats.con}}</td>
+                        <td>{{characterContext.stats.con}}</td>
+                        <td>{{characterContext.stats.con}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>INT</strong></td>
+                        <td>{{characterContext.stats.intel}}</td>
+                        <td>{{characterContext.stats.intel}}</td>
+                        <td>{{characterContext.stats.intel}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>WIS</strong></td>
+                        <td>{{characterContext.stats.wis}}</td>
+                        <td>{{characterContext.stats.wis}}</td>
+                        <td>{{characterContext.stats.wis}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CHA</strong></td>
+                        <td>{{characterContext.stats.cha}}</td>
+                        <td>{{characterContext.stats.cha}}</td>
+                        <td>{{characterContext.stats.cha}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <strong>Melee</strong>
+    </div>
+    <div class="col-xs-12">
+        <div class="table-responsive" style="border: none;margin-bottom:0px">          
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th>Hit</th>
+                      <th>Damage</th>
+                      <th>AC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <td>{{characterContext.stats.meleeHit}}</td>
+                      <td>{{characterContext.stats.meleeDmg}}</td>
+                      <td>{{characterContext.stats.meleeAC}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12" style="margin-bottom:10px">
+        Types: 
+    </div>
+    <div class="col-xs-12">
+        <strong>Range</strong>
+    </div>
+    <div class="col-xs-12">
+        <div class="table-responsive" style="border:none;margin-bottom:0px">          
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th>Hit</th>
+                      <th>Damage</th>
+                      <th>AC</th>
+                      <th>Missile AC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <td>{{characterContext.stats.rangeHit}}</td>
+                      <td>{{characterContext.stats.rangeDmg}}</td>
+                      <td>{{characterContext.stats.rangeAC}}</td>
+                      <td>{{characterContext.stats.rangeMissileAC}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12" style="margin-bottom:10px">
+        Types: 
+    </div>
+    <div class="col-xs-12">
+        <strong>Spell</strong>
+    </div>
+    <div class="col-xs-12">
+        <div class="table-responsive" style="border:none;">          
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th>Damage</th>
+                      <th>Heal</th>
+                      <th>Resistance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <td>{{characterContext.stats.spellDmg}}</td>
+                      <td>{{characterContext.stats.spellHeal}}</td>
+                      <td>{{characterContext.stats.spellResist}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <strong>Saves</strong>
+    </div>
+    <div class="col-xs-12">
+        <div class="table-responsive" style="border:none;">          
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th>Fortitude</th>
+                      <th>Reflex</th>
+                      <th>Will</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <td>{{characterContext.stats.fort}}</td>
+                      <td>{{characterContext.stats.reflex}}</td>
+                      <td>{{characterContext.stats.will}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

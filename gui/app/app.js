@@ -6,18 +6,11 @@ angular.module('main', [
   'ngTable', 
   'ui.bootstrap', 
   'ngCart',
+  'ngRoute',
   'angular-storage',
   'angular-jwt',
   'http-auth-interceptor',
-  'main.auth',
-  'main.users',
-  'main.home',
-  'main.storage',
-  'main.cards',
-  'main.import',
-  'main.inventory',
-  'main.checkout',
-  'main.orders'
+  'angular-storage'
 ])
 .constant('RESOURCES', (function() {
     'use strict';
@@ -33,9 +26,10 @@ angular.module('main', [
     };
 })())  
 .filter('capitalize', function() {
-  return function(input, scope) {
-    if (input!==null)
-        input = input.toLowerCase();
+  return function(input) {
+    if (input===null || input===undefined)
+        return input;
+    input = input.toLowerCase();
     return input.substring(0,1).toUpperCase()+input.substring(1);
   };
 })

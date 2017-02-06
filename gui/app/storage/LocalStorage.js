@@ -1,4 +1,4 @@
-angular.module('main.storage', ['angular-storage'])
+angular.module('main')
 
 .factory('LocalStorage',['store',function(store) {
         return store.getNamespacedStore('mtginv');

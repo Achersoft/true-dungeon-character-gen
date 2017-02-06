@@ -1,4 +1,4 @@
-angular.module('main.auth', ['ngRoute'])
+angular.module('main')
         
 .config(['$httpProvider',
     function($httpProvider) {

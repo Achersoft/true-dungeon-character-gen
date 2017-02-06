@@ -6,9 +6,17 @@ import com.achersoft.security.UserAuthenticationServiceImpl;
 import com.achersoft.security.authenticator.Authenticator;
 import com.achersoft.security.providers.SignatureServiceProvider;
 import com.achersoft.security.providers.UserPrincipalProvider;
+import com.achersoft.tdcc.character.CharacterService;
+import com.achersoft.tdcc.character.CharacterServiceImpl;
+import com.achersoft.tdcc.character.create.CharacterCreatorService;
+import com.achersoft.tdcc.character.create.CharacterCreatorServiceImpl;
+import com.achersoft.tdcc.character.persistence.CharacterMapper;
+import com.achersoft.tdcc.token.TokenService;
+import com.achersoft.tdcc.token.TokenServiceImpl;
 import com.achersoft.tdcc.token.admin.TokenAdminService;
 import com.achersoft.tdcc.token.admin.TokenAdminServiceImpl;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
+import com.achersoft.tdcc.token.persistence.TokenMapper;
 import com.achersoft.user.UserService;
 import com.achersoft.user.UserServiceImpl;
 import com.achersoft.user.persistence.UserMapper;
@@ -39,7 +47,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource(value = "file:../app/tdcc.properties", ignoreResourceNotFound = true)
 @PropertySource(value = "file:/opt/app/tdcc.properties", ignoreResourceNotFound = true)
 @MapperScan(basePackageClasses = { UserMapper.class,
-                                   TokenAdminMapper.class
+                                   TokenAdminMapper.class,
+                                   TokenMapper.class,
+                                   CharacterMapper.class
                                  })
 public class SpringConfig {
     
@@ -49,7 +59,22 @@ public class SpringConfig {
     // <editor-fold defaultstate="collapsed" desc="REST Gateways"> 
     // </editor-fold>
     
-    // <editor-fold defaultstate="collapsed" desc="Services"> 
+    // <editor-fold defaultstate="collapsed" desc="Services">
+    @Bean
+    public CharacterService characterService() {
+        return new CharacterServiceImpl();
+    }
+    
+    @Bean
+    public CharacterCreatorService characterCreatorService() {
+        return new CharacterCreatorServiceImpl();
+    }
+    
+    @Bean
+    public TokenService tokenService() {
+        return new TokenServiceImpl();
+    }
+    
     @Bean
     public TokenAdminService tokenAdminService() {
         return new TokenAdminServiceImpl();
