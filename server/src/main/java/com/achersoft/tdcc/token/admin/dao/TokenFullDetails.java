@@ -37,7 +37,7 @@ public class TokenFullDetails {
     private Integer health;
     private Boolean oneHanded;
     private Boolean twoHanded;
-    private Boolean sheild;
+    private Boolean shield;
     private Boolean thrown;
     private Boolean rangerOffhand;
     private Boolean instrument;

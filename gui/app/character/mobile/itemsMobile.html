@@ -1,18 +1,18 @@
 <div class="col-xs-12">
     <div class="row" style="margin-top:10px" ng-if="characterContext.meleeMainhand !== null">
-        <item-mobile-selector set-token="setTokenSlot" element-id="meleeMainhand" model="characterContext.meleeMainhand" label="Melee Weapon"></item-mobile-selector>
+        <item-mobile-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" element-id="meleeMainhand" model="characterContext.meleeMainhand" label="Melee Weapon"></item-mobile-selector>
     </div>
     <div class="row" ng-if="characterContext.meleeMainhand !== null">
-        <item-mobile-selector set-token="setTokenSlot" element-id="meleeOffhand" model="characterContext.meleeOffhand" label="Melee Offhand"></item-mobile-selector>
+        <item-mobile-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" element-id="meleeOffhand" model="characterContext.meleeOffhand" label="Melee Offhand"></item-mobile-selector>
     </div>
     <div class="row" ng-if="characterContext.rangedMainhand !== null">
-        <item-mobile-selector set-token="setTokenSlot" element-id="rangedMainhand" model="characterContext.rangedMainhand" label="Range Weapon"></item-mobile-selector>
+        <item-mobile-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" element-id="rangedMainhand" model="characterContext.rangedMainhand" label="Range Weapon"></item-mobile-selector>
     </div>
     <div class="row" ng-if="characterContext.rangedOffhand !== null">
-        <item-mobile-selector set-token="setTokenSlot" element-id="rangedOffhand" model="characterContext.rangedOffhand" label="Range Offhand"></item-mobile-selector>
+        <item-mobile-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" element-id="rangedOffhand" model="characterContext.rangedOffhand" label="Range Offhand"></item-mobile-selector>
     </div>
     <div class="row" ng-if="characterContext.neck !== null">
-        <item-mobile-selector set-token="setTokenSlot" element-id="neck" model="characterContext.neck" label="Neck"></item-mobile-selector>
+        <item-mobile-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" element-id="neck" model="characterContext.neck" label="Neck"></item-mobile-selector>
     </div>
 </div>
 

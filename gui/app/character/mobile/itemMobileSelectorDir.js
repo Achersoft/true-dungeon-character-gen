@@ -3,6 +3,7 @@ angular.module('main').directive('itemMobileSelector',['CharacterSvc', function(
         restrict:'E',
         scope:{
             model:'=',
+            characterClass: '@',
             elementId: '@',
             setToken: '&?',
             label:'@'
@@ -12,7 +13,20 @@ angular.module('main').directive('itemMobileSelector',['CharacterSvc', function(
             scope.tabIndex = 0;
             
             scope.reloadTokens = function() {
-                characterSvc.getSlotTokens(scope.model.characterId, 'BARBARIAN', scope.model.slot).then(function(result) {
+                var rarity = 'ALL';
+                if(scope.tabIndex === 0)
+                    rarity = 'ALL';
+                if(scope.tabIndex === 1)
+                    rarity = 'COMMON';
+                if(scope.tabIndex === 2)
+                    rarity = 'UNCOMMON';
+                if(scope.tabIndex === 3)
+                    rarity = 'RARE';
+                if(scope.tabIndex === 4)
+                    rarity = 'ULRARARE';
+                if(scope.tabIndex === 5)
+                    rarity = 'RELIC_PLUS';
+                characterSvc.getSlotTokens(scope.model.id, scope.model.characterId, scope.characterClass, scope.model.slot, rarity).then(function(result) {
                     scope.itemSelection = result.data;
                 });
             };       

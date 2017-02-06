@@ -3,6 +3,7 @@ package com.achersoft.rest.services;
 import com.achersoft.security.annotations.RequiresPrivilege;
 import com.achersoft.security.type.Privilege;
 import com.achersoft.tdcc.enums.CharacterClass;
+import com.achersoft.tdcc.enums.Rarity;
 import com.achersoft.tdcc.enums.Slot;
 import com.achersoft.tdcc.token.TokenService;
 import com.achersoft.tdcc.token.admin.TokenAdminService;
@@ -57,9 +58,8 @@ public class TokenRestService {
     @GET 
     @Path("/character")
     @Produces({MediaType.APPLICATION_JSON})	
-    public List<Token> getSlotTokens(@QueryParam("id") @NotNull @NotEmpty String id, @QueryParam("characterClass") @NotNull CharacterClass characterClass, @QueryParam("slot") @NotNull Slot slot) throws Exception {
-        return tokenService.getSlotItems(id, characterClass, slot);
+    public List<Token> getSlotTokens(@QueryParam("slotId") @NotNull @NotEmpty String slotId, @QueryParam("characterId") @NotNull @NotEmpty String characterId, @QueryParam("characterClass") @NotNull CharacterClass characterClass, @QueryParam("slot") @NotNull Slot slot, @QueryParam("rarity") @NotNull Rarity rarity) throws Exception {
+        return tokenService.getSlotItems(slotId, characterId, characterClass, slot, rarity);
     }
-    
 }
 

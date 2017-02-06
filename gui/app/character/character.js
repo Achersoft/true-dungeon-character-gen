@@ -96,8 +96,8 @@ angular.module('main')
         return $http.get(RESOURCES.REST_BASE_URL + '/character?id=' + id);
     };
     
-    tokenAdminSvc.getSlotTokens = function(id, characterClass, slot) {
-        return $http.get(RESOURCES.REST_BASE_URL + '/token/character?id=' + id + "&characterClass=" + characterClass + "&slot=" + slot);
+    tokenAdminSvc.getSlotTokens = function(slotId, characterId, characterClass, slot, rarity) {
+        return $http.get(RESOURCES.REST_BASE_URL + '/token/character?slotId=' + slotId + "&characterId=" + characterId + "&characterClass=" + characterClass + "&slot=" + slot + "&rarity=" + rarity);
     };
     
     tokenAdminSvc.setTokenSlot = function(id, soltId, tokenId) {

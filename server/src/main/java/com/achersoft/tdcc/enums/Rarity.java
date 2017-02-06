@@ -1,6 +1,7 @@
 package com.achersoft.tdcc.enums;
 
 public enum Rarity {
+    ALL,
     COMMON,
     UNCOMMON,
     RARE,
@@ -8,6 +9,7 @@ public enum Rarity {
     ENHANCED,
     EXALTED,
     RELIC,
+    RELIC_PLUS,
     LEGENDARY,
     ELDRITCH,
     PREMIUM,

@@ -14,12 +14,12 @@
                     <h4 class="modal-title">{{label}} Selection</h4>
                 </div>
                 <div class="col-xs-12 text-center" style="height:32px;margin:0px;padding:0px">
-                    <span class="col-xs-2 btn" ng-class="tabIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 0">All </span> 
-                    <span class="col-xs-2 btn" ng-class="tabIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 1">Comn </span> 
-                    <span class="col-xs-2 btn" ng-class="tabIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 2">Uncom </span> 
-                    <span class="col-xs-2 btn" ng-class="tabIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 3">Rare </span> 
-                    <span class="col-xs-2 btn" ng-class="tabIndex === 4 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 4">Ultra </span> 
-                    <span class="col-xs-2 btn" ng-class="tabIndex === 5 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 5">Relic + </span>
+                    <span class="col-xs-2 btn" ng-class="tabIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 0;reloadTokens()">All </span> 
+                    <span class="col-xs-2 btn" ng-class="tabIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 1;reloadTokens()">Comn </span> 
+                    <span class="col-xs-2 btn" ng-class="tabIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 2;reloadTokens()">Uncom </span> 
+                    <span class="col-xs-2 btn" ng-class="tabIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 3;reloadTokens()">Rare </span> 
+                    <span class="col-xs-2 btn" ng-class="tabIndex === 4 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 4;reloadTokens()">Ultra </span> 
+                    <span class="col-xs-2 btn" ng-class="tabIndex === 5 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 5;reloadTokens()">Relic + </span>
                 </div>
                 <div class="modal-body" style="padding:0px;top:32px;">
                     <div style="height:calc(100% - 91px);position:fixed;overflow-y:scroll;width:100%;padding-left:0;padding-right:0;">  

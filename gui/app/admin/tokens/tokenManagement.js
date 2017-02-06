@@ -155,7 +155,7 @@ angular.module('main')
                 thrown: false,
                 rangerOffhand: false,
                 instrument: false,
-                sheild: false,
+                shield: false,
                 meleeHit: null,
                 meleeDmg: null,
                 meleeFire: false,

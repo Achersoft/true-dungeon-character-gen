@@ -36,7 +36,7 @@ public class TokenFullDetailsDTO {
     public Integer health;
     public Boolean oneHanded;
     public Boolean twoHanded;
-    public Boolean sheild;
+    public Boolean shield;
     public Boolean thrown;
     public Boolean rangerOffhand;
     public Boolean instrument;
@@ -107,7 +107,7 @@ public class TokenFullDetailsDTO {
                 .health(tokenFullDetails.getHealth())
                 .oneHanded(tokenFullDetails.getOneHanded())
                 .twoHanded(tokenFullDetails.getTwoHanded())
-                .sheild(tokenFullDetails.getSheild())
+                .shield(tokenFullDetails.getShield())
                 .thrown(tokenFullDetails.getThrown())
                 .rangerOffhand(tokenFullDetails.getRangerOffhand())
                 .instrument(tokenFullDetails.getInstrument())
@@ -212,7 +212,7 @@ public class TokenFullDetailsDTO {
                 .health(health)
                 .oneHanded(oneHanded)
                 .twoHanded(twoHanded)
-                .sheild(sheild)
+                .shield(shield)
                 .thrown(thrown)
                 .rangerOffhand(rangerOffhand)
                 .instrument(instrument)
