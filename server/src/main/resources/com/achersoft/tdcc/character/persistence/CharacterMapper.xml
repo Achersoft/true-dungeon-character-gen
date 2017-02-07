@@ -335,4 +335,8 @@
         WHERE characterClass = #{characterClass}
           AND level = #{level}
     </select>
+    
+    <delete id="deleteCharacterItems">
+        DELETE FROM character_items WHERE character_id = #{id}
+    </delete>
 </mapper>                          

@@ -65,6 +65,13 @@ angular.module('main')
             $scope.characterContext = characterState.get();
         });
     };
+    
+    $scope.unequipItem = function(id, soltId) {
+        characterSvc.unequipItem(id, soltId).then(function(result) {
+            characterState.setContext(result.data);
+            $scope.characterContext = characterState.get();
+        });
+    };
 }])
 
 .factory('CharacterState', [
@@ -102,6 +109,10 @@ angular.module('main')
     
     tokenAdminSvc.setTokenSlot = function(id, soltId, tokenId) {
         return $http.post(RESOURCES.REST_BASE_URL + '/character/token?id=' + id + '&soltId=' + soltId + "&tokenId=" + tokenId);
+    };
+    
+    tokenAdminSvc.unequipItem = function(id, soltId) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/character/token/unequip?id=' + id + '&soltId=' + soltId);
     };
     
     return tokenAdminSvc;

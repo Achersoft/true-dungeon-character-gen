@@ -155,4 +155,12 @@
             item_id = #{tokenId}   
          WHERE id = #{soltId}
     </update>  
-</mapper>                          
+    
+    <update id="unequipTokenSlot">      
+        UPDATE character_items SET
+            item_id = null,
+            slot_status = 'OK',
+            status_text = null
+         WHERE id = #{soltId}
+    </update>  
+</mapper>

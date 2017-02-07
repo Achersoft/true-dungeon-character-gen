@@ -6,6 +6,7 @@ angular.module('main').directive('itemMobileSelector',['CharacterSvc', function(
             characterClass: '@',
             elementId: '@',
             setToken: '&?',
+            unequip: '&?',
             label:'@'
         },
         link: function(scope) {
@@ -34,6 +35,10 @@ angular.module('main').directive('itemMobileSelector',['CharacterSvc', function(
             scope.selectToken = function(item) {
                 scope.setToken()(scope.model.characterId, scope.model.id, item.id); 
             };    
+            
+            scope.unequipItemSlot = function() {
+                scope.unequip()(scope.model.characterId, scope.model.id); 
+            };
         },
         templateUrl:'character/mobile/itemMobileSelectorTemplate.html'
     };

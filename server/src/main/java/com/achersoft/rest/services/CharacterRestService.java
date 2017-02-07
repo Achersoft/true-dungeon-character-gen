@@ -48,5 +48,13 @@ public class CharacterRestService {
     public CharacterDetailsDTO setTokenSlot(@QueryParam("id") @NotNull @NotEmpty String id, @QueryParam("soltId") @NotNull @NotEmpty String soltId, @QueryParam("tokenId") @NotNull @NotEmpty String tokenId) throws Exception {
         return CharacterDetailsDTO.fromDAO(characterService.setTokenSlot(id, soltId, tokenId));
     }
+    
+    @RequiresPrivilege({Privilege.ADMIN})
+    @POST 
+    @Path("/token/unequip")
+    @Produces({MediaType.APPLICATION_JSON})	
+    public CharacterDetailsDTO unequipTokenSlot(@QueryParam("id") @NotNull @NotEmpty String id, @QueryParam("soltId") @NotNull @NotEmpty String soltId) throws Exception {
+        return CharacterDetailsDTO.fromDAO(characterService.unequipTokenSlot(id, soltId));
+    }
 }
 

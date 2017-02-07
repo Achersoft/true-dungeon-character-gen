@@ -65,4 +65,13 @@
   -moz-border-radius: 0px !important;
   border-radius: 0px !important; 
   border:0;
+  z-index: 1;
+}
+
+div.modal div.modal-backdrop {
+    z-index: 0;
+}
+
+body.modal-open div.modal-backdrop { 
+    z-index: -1; 
 }
