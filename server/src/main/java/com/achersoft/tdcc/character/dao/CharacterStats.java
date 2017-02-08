@@ -11,12 +11,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CharacterStats {
     private String characterId = null;
+    private int baseStr = 0;
     private int str = 0;
+    private int strBonus = 0;
+    private int baseDex = 0;
     private int dex = 0;
+    private int dexBonus = 0;
+    private int baseCon = 0;
     private int con = 0;
+    private int conBonus = 0;
+    private int baseIntel = 0;
     private int intel = 0;
+    private int intelBonus = 0;
+    private int baseWis = 0;
     private int wis = 0;
+    private int wisBonus = 0;
+    private int baseCha = 0;
     private int cha = 0;
+    private int chaBonus = 0;
     private int health = 0;
     private int regen = 0; 
     private int meleeHit = 0;

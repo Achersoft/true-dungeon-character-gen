@@ -15,5 +15,6 @@ public interface CharacterMapper {
     public CharacterStats getCharacterStats(@Param("id") String id);
     public List<CharacterItem> getCharacterItems(@Param("id") String id);
     public CharacterStats getStartingStats(@Param("characterClass") CharacterClass characterClass, @Param("level") int level);
+    public void updateCharacterStats(CharacterStats characterStats); 
     public void deleteCharacterItems(@Param("id") String id);
 }

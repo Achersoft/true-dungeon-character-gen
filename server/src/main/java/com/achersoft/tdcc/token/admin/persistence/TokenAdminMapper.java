@@ -10,4 +10,5 @@ public interface TokenAdminMapper {
     public void editToken(TokenFullDetails token);
     public void editTokenDetails(TokenFullDetails token);
     public List<TokenFullDetails> search(String name);
+    public TokenFullDetails getTokenDetails(String id);
 }
