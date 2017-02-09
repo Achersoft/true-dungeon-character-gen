@@ -193,6 +193,24 @@
         </foreach> 
     </insert>
     
+    <insert id="addCharacterNotes">
+        INSERT INTO character_notes (id,
+                                     alwaysInEffect,
+                                     oncePerRound,
+                                     oncePerRoom,
+                                     oncePerGame,
+                                     note)
+                             VALUES
+        <foreach item="element" index="index" collection="notes" separator=",">
+                                    (#{id},
+                                     #{element.alwaysInEffect},
+                                     #{element.oncePerRound},
+                                     #{element.oncePerRoom},
+                                     #{element.oncePerGame},
+                                     #{element.note})
+        </foreach> 
+    </insert>
+    
     <select id="getCharacter" resultType="com.achersoft.tdcc.character.dao.CharacterDetails"> 
         SELECT id 'id',
                user_id 'userId',
@@ -300,6 +318,17 @@
                FROM character_items ci
     LEFT OUTER JOIN token t ON ci.item_id = t.id 
               WHERE character_id = #{id}
+           ORDER BY ci.slot, ci.slot_index 
+    </select>
+    
+    <select id="getCharacterNotes" resultType="com.achersoft.tdcc.character.dao.CharacterNote"> 
+         SELECT alwaysInEffect,
+                oncePerRound,
+                oncePerRoom,
+                oncePerGame,
+                note
+           FROM character_notes
+          WHERE id = #{id}
     </select>
    
     <select id="getStartingStats" resultType="com.achersoft.tdcc.character.dao.CharacterStats"> 
@@ -467,5 +496,9 @@
     
     <delete id="deleteCharacterItems">
         DELETE FROM character_items WHERE character_id = #{id}
+    </delete>
+    
+    <delete id="deleteCharacterNotes">
+        DELETE FROM character_notes WHERE id = #{id}
     </delete>
 </mapper>                          

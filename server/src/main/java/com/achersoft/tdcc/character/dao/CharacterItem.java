@@ -6,12 +6,14 @@ import com.achersoft.tdcc.enums.SlotStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Builder
 @Data
 @NoArgsConstructor 
 @AllArgsConstructor
+@EqualsAndHashCode(exclude={"id", "characterId", "name", "text", "slot", "index", "rarity", "slotStatus", "statusText"})
 public class CharacterItem {
     private String id;
     private String itemId;

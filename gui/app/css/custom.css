@@ -75,3 +75,7 @@ div.modal div.modal-backdrop {
 body.modal-open div.modal-backdrop { 
     z-index: -1; 
 }
+
+.strikethrough {
+    text-decoration: Line-Through
+}

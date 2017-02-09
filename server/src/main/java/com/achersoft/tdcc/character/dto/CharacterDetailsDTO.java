@@ -42,6 +42,10 @@ public class CharacterDetailsDTO {
     public List<CharacterItem> iounStones;
     public List<CharacterItem> slotless;
     public List<CharacterItem> runestones;
+    public List<String> alwaysInEffect;
+    public List<String> oncePerRound;
+    public List<String>  oncePerRoom;
+    public List<String> oncePerGame;
     
     public static CharacterDetailsDTO fromDAO(CharacterDetails dao) {
         CharacterDetailsDTO build = CharacterDetailsDTO.builder()
@@ -49,16 +53,19 @@ public class CharacterDetailsDTO {
                 .name(dao.getName())
                 .characterClass(dao.getCharacterClass())
                 .stats(dao.getStats())
+                .instruments(new ArrayList())
+                .backs(new ArrayList())
+                .rings(new ArrayList())
+                .charms(new ArrayList())
+                .iounStones(new ArrayList())
+                .slotless(new ArrayList())
+                .runestones(new ArrayList())
+                .alwaysInEffect(new ArrayList())
+                .oncePerRound(new ArrayList())
+                .oncePerRoom(new ArrayList())
+                .oncePerGame(new ArrayList())
                 .build();
-        
-        build.setInstruments(new ArrayList());
-        build.setBacks(new ArrayList());
-        build.setRings(new ArrayList());
-        build.setCharms(new ArrayList());
-        build.setIounStones(new ArrayList());
-        build.setSlotless(new ArrayList());
-        build.setRunestones(new ArrayList());
-        
+      
         dao.getItems().stream().forEach((item) -> {
             if(item.getName() == null)
                 item.setName("Empty");
@@ -110,6 +117,17 @@ public class CharacterDetailsDTO {
                 build.slotless.add(item);
             if(item.getSlot() == Slot.RUNESTONE)
                 build.runestones.add(item);
+        });
+        
+        dao.getNotes().stream().forEach((note) -> {
+            if(note.isAlwaysInEffect())
+                build.alwaysInEffect.add(note.getNote());
+            if(note.isOncePerRound())
+                build.oncePerRound.add(note.getNote());
+            if(note.isOncePerRoom())
+                build.oncePerRoom.add(note.getNote());
+            if(note.isOncePerGame())
+                build.oncePerGame.add(note.getNote());
         });
         
         return build;
