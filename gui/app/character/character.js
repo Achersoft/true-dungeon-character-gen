@@ -2,13 +2,25 @@ angular.module('main')
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
-    .when('/charater/create', {
+    .when('/character/mine', {
+        templateUrl: 'character/myCharacters.html',
+        controller: 'MyCharactersCtrl'
+    })
+    .when('/character/create', {
         templateUrl: 'character/createCharacter.html',
         controller: 'CharacterCreationCtrl'
     })
-    .when('/charater/edit', {
+    .when('/character/edit/:characterId', {
         templateUrl: 'character/editCharacter.html',
         controller: 'CharacterEditCtrl'
+    });
+}])
+
+.controller('MyCharactersCtrl', ['$scope', 'CharacterSvc', '$location', '$route', function ($scope, characterSvc, $location, $route) {
+    $scope.myCharacterContext = {};
+    
+    characterSvc.getCharacters().then(function(result) {
+        $scope.myCharacterContext = result.data;
     });
 }])
 
@@ -27,19 +39,19 @@ angular.module('main')
     
     $scope.createCharacter = function(){
         characterSvc.createCharacter($scope.characterClass, $scope.name).then(function(result) {
-            console.log(result);
-          //  $scope.search = tokenAdminState.reset();
+            $location.path("/character/edit/" + result.data.id);
+            $route.reload();
         });
     };
 }])
 
-.controller('CharacterEditCtrl', ['$scope', 'CharacterSvc', 'CharacterState', '$route', function ($scope, characterSvc, characterState, $route) {
+.controller('CharacterEditCtrl', ['$scope', 'CharacterSvc', 'CharacterState', '$route', '$routeParams', function ($scope, characterSvc, characterState, $route, $routeParams) {
     $scope.tabIndex = 0;
     $scope.characterContext = characterState.get();
     $scope.characterClass = null;
     $scope.characterClasses = ["BARBARIAN", "BARD", "CLERIC", "DRUID", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
-    
-    characterSvc.getCharacter('210af603-6429-4249-bdd4-8f06c4348ff6').then(function(result) {
+
+    characterSvc.getCharacter($routeParams.characterId).then(function(result) {
         characterState.setContext(result.data);
         $scope.characterContext = characterState.get();
     });
@@ -50,13 +62,6 @@ angular.module('main')
     
     $scope.toggleCharacterClassSelected =  function(charClass){
         $scope.characterClass = charClass;
-    };
-    
-    $scope.createCharacter = function(){
-        characterSvc.createCharacter($scope.characterClass, $scope.name).then(function(result) {
-            console.log(result);
-          //  $scope.search = tokenAdminState.reset();
-        });
     };
     
     $scope.setTokenSlot = function(id, soltId, tokenId) {
@@ -101,6 +106,10 @@ angular.module('main')
     
     tokenAdminSvc.getCharacter = function(id) {
         return $http.get(RESOURCES.REST_BASE_URL + '/character?id=' + id);
+    };
+    
+    tokenAdminSvc.getCharacters = function() {
+        return $http.get(RESOURCES.REST_BASE_URL + '/character/all');
     };
     
     tokenAdminSvc.getSlotTokens = function(slotId, characterId, characterClass, slot, rarity) {

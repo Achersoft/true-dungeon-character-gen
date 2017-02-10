@@ -17,6 +17,9 @@
     <div class="col-xs-12 text-center">
         <strong>Ranged</strong> Hit: {{characterContext.stats.rangeHit}}  Damage: {{characterContext.stats.rangeDmg}}  AC: {{characterContext.stats.rangeAC}}
     </div>
+    <div class="col-xs-12 text-center" ng-if="characterContext.characterClass === 'CLERIC' || characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELFWIZARD'|| characterContext.characterClass === 'WIZARD'">
+        <strong>Spell</strong> Damage: {{characterContext.stats.spellDmg}}  Heal: {{characterContext.stats.spellHeal}}  Resist: {{characterContext.stats.spelResist}}
+    </div>
     <div class="col-xs-12 text-center">
         <strong>Saves</strong> Fort: {{characterContext.stats.fort}}  Reflex: {{characterContext.stats.reflex}}  Will: {{characterContext.stats.will}}
     </div>

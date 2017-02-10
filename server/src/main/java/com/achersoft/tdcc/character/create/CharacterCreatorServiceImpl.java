@@ -1,5 +1,6 @@
 package com.achersoft.tdcc.character.create;
 
+import com.achersoft.exception.InvalidDataException;
 import com.achersoft.security.providers.UserPrincipalProvider;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.character.dao.CharacterDetails;
@@ -24,7 +25,35 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
     public CharacterDetails createCharacter(CharacterClass characterClass, String name) {
         String userId = userPrincipalProvider.getUserPrincipal().getSub();
         
-        return createBarbarian(userId, name);
+        if(userId == null || userId.isEmpty())
+            throw new InvalidDataException("User is not valid."); 
+        
+        if(characterClass == CharacterClass.BARBARIAN)
+            return createBarbarian(userId, name);
+        if(characterClass == CharacterClass.BARD)
+            return createBard(userId, name);
+        if(characterClass == CharacterClass.CLERIC)
+            return createCleric(userId, name);
+        if(characterClass == CharacterClass.DRUID)
+            return createDruid(userId, name);
+        if(characterClass == CharacterClass.DWARFFIGHTER)
+            return createDwarfFighter(userId, name);
+        if(characterClass == CharacterClass.ELFWIZARD)
+            return createElfWizard(userId, name);
+        if(characterClass == CharacterClass.FIGHTER)
+            return createFighter(userId, name);
+        if(characterClass == CharacterClass.MONK)
+            return createMonk(userId, name);
+        if(characterClass == CharacterClass.PALADIN)
+            return createPaladin(userId, name);
+        if(characterClass == CharacterClass.RANGER)
+            return createRanger(userId, name);
+        if(characterClass == CharacterClass.ROGUE)
+            return createRogue(userId, name);
+        if(characterClass == CharacterClass.WIZARD)
+            return createWizard(userId, name);
+
+        throw new InvalidDataException("Character class requested is not valid."); 
     }
     
     private CharacterDetails createBarbarian(String userId, String name) {
@@ -35,13 +64,243 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
                 .characterClass(CharacterClass.BARBARIAN)
                 .createdOn(new Date())
                 .build();
-        
-        
+
         mapper.addCharacter(characterDetails);
         
         characterDetails.setStats(mapper.getStartingStats(CharacterClass.BARBARIAN, 4));
-        characterDetails.getStats().setCharacterId(characterDetails.getId());
-        System.err.println(characterDetails.getStats());
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createBard(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.BARD)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.BARD, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.INSTRUMENT).index(0).slotStatus(SlotStatus.OK).build());
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createCleric(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.CLERIC)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.CLERIC, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createDruid(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.DRUID)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.DRUID, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createDwarfFighter(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.DWARFFIGHTER)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.DWARFFIGHTER, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createElfWizard(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.ELFWIZARD)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.ELFWIZARD, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createFighter(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.FIGHTER)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.FIGHTER, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createMonk(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.MONK)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.MONK, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createPaladin(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.PALADIN)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.PALADIN, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createRanger(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.RANGER)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.RANGER, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createRogue(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.ROGUE)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.ROGUE, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        mapper.addCharacterStats(characterDetails.getStats());
+        
+        characterDetails.setItems(createDefaultItems(characterDetails.getId()));
+        mapper.addCharacterItems(characterDetails.getItems());
+
+        return characterDetails;
+    }
+    
+    private CharacterDetails createWizard(String userId, String name) {
+        CharacterDetails characterDetails = CharacterDetails.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(userId)
+                .name(name)
+                .characterClass(CharacterClass.WIZARD)
+                .createdOn(new Date())
+                .build();
+
+        mapper.addCharacter(characterDetails);
+        
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.WIZARD, 4));
+        characterDetails.getStats().setCharacterId(characterDetails.getId());;
         mapper.addCharacterStats(characterDetails.getStats());
         
         characterDetails.setItems(createDefaultItems(characterDetails.getId()));

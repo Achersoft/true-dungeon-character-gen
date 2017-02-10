@@ -29,8 +29,11 @@
             <if test="slot.name() == 'OFFHAND'">
                 <if test="characterClass == 'RANGER'">
                     AND td.ranger_off = 1
+                    AND (t.slot= 'MAINHAND' OR t.slot= 'OFFHAND')
                 </if>
-            AND t.slot= 'OFFHAND'
+                <if test="characterClass != 'RANGER'">
+                    AND t.slot= 'OFFHAND'
+                </if>
             AND (td.one_hand = 1 OR td.shield = 1)
             AND td.range_wep = 0
             </if>
@@ -80,12 +83,14 @@
             AND t.rogue = 1
             </if>
             AND t.id NOT IN
-                (SELECT item_id 
-                 FROM character_items
+                (SELECT ci.item_id 
+                 FROM character_items ci,
+                      token t
                  WHERE character_id = #{characterId}
-                   AND item_id is not null
-                   AND id != #{slotId}    
-                   AND slot = #{slot})
+                   AND ci.item_id is not null
+                   AND ci.id != #{slotId} 
+                   AND ci.item_id = t.id
+                   AND t.rarity IN ('COMMON','UNCOMMON','RARE','ULRARARE','ENHANCED','EXALTED'))
        ORDER BY t.name
     </select>
                        

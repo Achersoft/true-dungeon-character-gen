@@ -222,6 +222,20 @@
            AND user_id = #{userId}
     </select>  
     
+    <select id="getCharacters" resultType="com.achersoft.tdcc.character.dao.CharacterName"> 
+        SELECT cn.id 'id',
+               cn.user_id 'userId',
+               cn.name 'name',
+               cn.character_class 'characterClass',
+               cn.created 'createdOn',
+               cs.level 'level'
+          FROM character_name cn,
+               character_stats cs
+         WHERE cn.user_id = #{userId}
+           AND cn.id = cs.id
+      ORDER BY cn.name
+    </select>  
+    
     <select id="getCharacterStats" resultType="com.achersoft.tdcc.character.dao.CharacterStats"> 
          SELECT id 'characterId',
                 base_str 'baseStr',

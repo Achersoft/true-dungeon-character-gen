@@ -7,6 +7,8 @@ public enum CharacterClass {
     CLERIC,
     DRUID,
     FIGHTER,
+    DWARFFIGHTER,
+    ELFWIZARD,
     WIZARD,
     MONK,
     PALADIN,

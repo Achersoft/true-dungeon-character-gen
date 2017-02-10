@@ -4,6 +4,7 @@ import com.achersoft.exception.InvalidDataException;
 import com.achersoft.security.providers.UserPrincipalProvider;
 import com.achersoft.tdcc.character.dao.CharacterDetails;
 import com.achersoft.tdcc.character.dao.CharacterItem;
+import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.character.dao.CharacterNote;
 import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.character.persistence.CharacterMapper;
@@ -43,6 +44,11 @@ public class CharacterServiceImpl implements CharacterService {
         
         return characterDetails;
     }
+    
+    @Override
+    public List<CharacterName> getCharacters() {
+        return mapper.getCharacters(userPrincipalProvider.getUserPrincipal().getSub());
+    }
 
     @Override
     public CharacterDetails setTokenSlot(String id, String soltId, String tokenId) {
@@ -74,7 +80,8 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Save notes
         mapper.deleteCharacterNotes(characterDetails.getId());
-        mapper.addCharacterNotes(characterDetails.getId(), characterDetails.getNotes());
+        if(!characterDetails.getNotes().isEmpty())
+            mapper.addCharacterNotes(characterDetails.getId(), characterDetails.getNotes());
         
         return characterDetails;
     }

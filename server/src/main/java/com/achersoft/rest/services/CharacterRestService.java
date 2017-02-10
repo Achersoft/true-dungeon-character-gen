@@ -4,6 +4,7 @@ import com.achersoft.security.annotations.RequiresPrivilege;
 import com.achersoft.security.type.Privilege;
 import com.achersoft.tdcc.character.CharacterService;
 import com.achersoft.tdcc.character.create.CharacterCreatorService;
+import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.character.dto.CharacterDetailsDTO;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.token.dao.Token;
@@ -29,16 +30,24 @@ public class CharacterRestService {
     @RequiresPrivilege({Privilege.ADMIN})
     @PUT 
     @Path("/create")
-    @Consumes({MediaType.APPLICATION_JSON})	
+    @Produces({MediaType.APPLICATION_JSON})	
     public CharacterDetailsDTO createCharacter(@QueryParam("characterClass") @NotNull CharacterClass characterClass, @QueryParam("name") @NotNull @NotEmpty String name) throws Exception {
         return CharacterDetailsDTO.fromDAO(characterCreatorService.createCharacter(characterClass, name));
     }
     
     @RequiresPrivilege({Privilege.ADMIN})
     @GET 
-    @Consumes({MediaType.APPLICATION_JSON})	
+    @Produces({MediaType.APPLICATION_JSON})	
     public CharacterDetailsDTO getCharacter(@QueryParam("id") @NotNull @NotEmpty String id) throws Exception {
         return CharacterDetailsDTO.fromDAO(characterService.getCharacter(id));
+    }
+    
+    @RequiresPrivilege({Privilege.ADMIN})
+    @GET 
+    @Path("/all")
+    @Produces({MediaType.APPLICATION_JSON})	
+    public List<CharacterName> getCharacters() throws Exception {
+        return characterService.getCharacters();
     }
     
     @RequiresPrivilege({Privilege.ADMIN})

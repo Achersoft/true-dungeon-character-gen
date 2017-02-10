@@ -119,16 +119,18 @@ public class CharacterDetailsDTO {
                 build.runestones.add(item);
         });
         
-        dao.getNotes().stream().forEach((note) -> {
-            if(note.isAlwaysInEffect())
-                build.alwaysInEffect.add(note.getNote());
-            if(note.isOncePerRound())
-                build.oncePerRound.add(note.getNote());
-            if(note.isOncePerRoom())
-                build.oncePerRoom.add(note.getNote());
-            if(note.isOncePerGame())
-                build.oncePerGame.add(note.getNote());
-        });
+        if(dao.getNotes() != null) {
+            dao.getNotes().stream().forEach((note) -> {
+                if(note.isAlwaysInEffect())
+                    build.alwaysInEffect.add(note.getNote());
+                if(note.isOncePerRound())
+                    build.oncePerRound.add(note.getNote());
+                if(note.isOncePerRoom())
+                    build.oncePerRoom.add(note.getNote());
+                if(note.isOncePerGame())
+                    build.oncePerGame.add(note.getNote());
+            });
+        }
         
         return build;
     }

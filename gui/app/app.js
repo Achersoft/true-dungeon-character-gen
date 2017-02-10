@@ -34,7 +34,7 @@ angular.module('main', [
   };
 })
 .config(['$routeProvider', function($routeProvider) {
-  //$routeProvider.otherwise({redirectTo: '/setSelection/English'});
+  $routeProvider.otherwise({redirectTo: '/character/mine'});
 }])
 .run(['$rootScope', '$location', 'RESOURCES', function($rootScope, $location, RESOURCES) {
     $rootScope.loginRequired = false;
