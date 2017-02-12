@@ -22,12 +22,18 @@ angular.module('main')
     characterSvc.getCharacters().then(function(result) {
         $scope.myCharacterContext = result.data;
     });
+    
+    $scope.deleteCharacter = function(id){
+        characterSvc.deleteCharacter(id).then(function(result) {
+            $scope.myCharacterContext = result.data;
+        });
+    };
 }])
 
 .controller('CharacterCreationCtrl', ['$scope', 'CharacterSvc', '$location', '$route', function ($scope, characterSvc, $location, $route) {
     $scope.name = null;
     $scope.characterClass = null;
-    $scope.characterClasses = ["BARBARIAN", "BARD", "CLERIC", "DRUID", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
+    $scope.characterClasses = ["BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
 
     $scope.characterClassSelected =  function(charClass){
         return charClass === $scope.characterClass;
@@ -105,7 +111,7 @@ angular.module('main')
     };
     
     tokenAdminSvc.getCharacter = function(id) {
-        return $http.get(RESOURCES.REST_BASE_URL + '/character?id=' + id);
+        return $http.get(RESOURCES.REST_BASE_URL + '/character/' + id);
     };
     
     tokenAdminSvc.getCharacters = function() {
@@ -122,6 +128,10 @@ angular.module('main')
     
     tokenAdminSvc.unequipItem = function(id, soltId) {
         return $http.post(RESOURCES.REST_BASE_URL + '/character/token/unequip?id=' + id + '&soltId=' + soltId);
+    };
+    
+    tokenAdminSvc.deleteCharacter = function(id) {
+        return $http.delete(RESOURCES.REST_BASE_URL + '/character/' + id);
     };
     
     return tokenAdminSvc;

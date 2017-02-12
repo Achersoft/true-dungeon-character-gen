@@ -5,7 +5,7 @@ public enum Rarity {
     COMMON,
     UNCOMMON,
     RARE,
-    ULRARARE,
+    ULTRARARE,
     ENHANCED,
     EXALTED,
     RELIC,

@@ -62,6 +62,12 @@ public class CharacterServiceImpl implements CharacterService {
         return validateCharacterItems(id);
     }
     
+    @Override
+    public List<CharacterName> deleteCharacter(String id) {
+        mapper.deleteCharacter(id, userPrincipalProvider.getUserPrincipal().getSub());
+        return mapper.getCharacters(userPrincipalProvider.getUserPrincipal().getSub());
+    }
+    
     private CharacterDetails validateCharacterItems(String id) {
         CharacterDetails characterDetails = getCharacter(id);
 

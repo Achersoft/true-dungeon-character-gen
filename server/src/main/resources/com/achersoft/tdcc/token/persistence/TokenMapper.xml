@@ -46,8 +46,8 @@
             <if test="rarity == 'RARE'">
             AND t.rarity = 'RARE'
             </if>
-            <if test="rarity == 'ULRARARE'">
-            AND t.rarity = 'ULRARARE'
+            <if test="rarity == 'ULTRARARE'">
+            AND t.rarity = 'ULTRARARE'
             </if>
             <if test="rarity == 'RELIC_PLUS'">
             AND t.rarity IN ('ENHANCED','EXALTED','RELIC','LEGENDARY','ELDRITCH','PREMIUM','ARTIFACT')
@@ -82,15 +82,6 @@
             <if test="characterClass == 'ROGUE'">
             AND t.rogue = 1
             </if>
-            AND t.id NOT IN
-                (SELECT ci.item_id 
-                 FROM character_items ci,
-                      token t
-                 WHERE character_id = #{characterId}
-                   AND ci.item_id is not null
-                   AND ci.id != #{slotId} 
-                   AND ci.item_id = t.id
-                   AND t.rarity IN ('COMMON','UNCOMMON','RARE','ULRARARE','ENHANCED','EXALTED'))
        ORDER BY t.name
     </select>
                        
@@ -111,8 +102,8 @@
             <if test="rarity == 'RARE'">
             AND t.rarity = 'RARE'
             </if>
-            <if test="rarity == 'ULRARARE'">
-            AND t.rarity = 'ULRARARE'
+            <if test="rarity == 'ULTRARARE'">
+            AND t.rarity = 'ULTRARARE'
             </if>
             <if test="rarity == 'RELIC_PLUS'">
             AND t.rarity IN ('ENHANCED','EXALTED','RELIC','LEGENDARY','ELDRITCH','PREMIUM','ARTIFACT')

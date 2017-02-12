@@ -9,4 +9,5 @@ public interface CharacterService {
     public List<CharacterName> getCharacters();
     public CharacterDetails setTokenSlot(String id, String soltId, String tokenId);
     public CharacterDetails unequipTokenSlot(String id, String soltId);
+    public List<CharacterName> deleteCharacter(String id);
 }

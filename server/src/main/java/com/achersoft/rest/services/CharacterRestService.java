@@ -12,10 +12,12 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -37,8 +39,9 @@ public class CharacterRestService {
     
     @RequiresPrivilege({Privilege.ADMIN})
     @GET 
+    @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})	
-    public CharacterDetailsDTO getCharacter(@QueryParam("id") @NotNull @NotEmpty String id) throws Exception {
+    public CharacterDetailsDTO getCharacter(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
         return CharacterDetailsDTO.fromDAO(characterService.getCharacter(id));
     }
     
@@ -64,6 +67,14 @@ public class CharacterRestService {
     @Produces({MediaType.APPLICATION_JSON})	
     public CharacterDetailsDTO unequipTokenSlot(@QueryParam("id") @NotNull @NotEmpty String id, @QueryParam("soltId") @NotNull @NotEmpty String soltId) throws Exception {
         return CharacterDetailsDTO.fromDAO(characterService.unequipTokenSlot(id, soltId));
+    }
+    
+    @RequiresPrivilege({Privilege.ADMIN})
+    @DELETE 
+    @Path("/{id}")
+    @Produces({MediaType.APPLICATION_JSON})	
+    public List<CharacterName> deleteCharacter(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
+        return characterService.deleteCharacter(id);
     }
 }
 

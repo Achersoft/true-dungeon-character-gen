@@ -2,15 +2,12 @@
 
 // Declare app level module which depends on views, and components
 angular.module('main', [
-  'ngRoute',
-  'ngTable', 
   'ui.bootstrap', 
-  'ngCart',
+  'ngAnimate',
   'ngRoute',
   'angular-storage',
   'angular-jwt',
-  'http-auth-interceptor',
-  'angular-storage'
+  'http-auth-interceptor'
 ])
 .constant('RESOURCES', (function() {
     'use strict';

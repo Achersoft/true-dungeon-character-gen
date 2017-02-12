@@ -79,3 +79,61 @@ body.modal-open div.modal-backdrop {
 .strikethrough {
     text-decoration: Line-Through
 }
+
+.popover {
+    max-width: 400px;
+    width: 400px;
+    height: 532px;
+}
+
+.popover-title {
+    font-weight: bold;
+}
+
+.popover-content {
+    padding:0;
+}
+
+.common-token {
+    background-color:darkgoldenrod;
+}
+
+.uncommon-token {
+    background-color:lime;
+}
+
+.rare-token {
+    background-color:red;
+}
+
+.ultrarare-token {
+    background-color:purple;
+}
+
+.enhanced-token {
+    background-color:royalblue;
+}
+
+.exhalted-token {
+    background-color:royalblue;
+}
+
+.relic-token {
+    background-color:darkblue;
+}
+
+.legendary-token {
+    background-color:orange;
+}
+
+.eldritch-token {
+    background-color:green;
+}
+
+.premium-token {
+    background-color:green;
+}
+
+.artifact-token {
+    background-color:blueviolet;
+}

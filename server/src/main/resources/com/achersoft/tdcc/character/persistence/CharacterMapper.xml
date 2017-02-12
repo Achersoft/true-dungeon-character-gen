@@ -508,6 +508,11 @@
       WHERE id = #{characterId};
     </update>
     
+    <delete id="deleteCharacter">
+        DELETE FROM character_name WHERE id = #{id}
+           AND user_id = #{userId}
+    </delete>
+    
     <delete id="deleteCharacterItems">
         DELETE FROM character_items WHERE character_id = #{id}
     </delete>
