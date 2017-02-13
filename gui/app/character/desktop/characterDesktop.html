@@ -1,9 +1,23 @@
 <div class="row">
-    <div>
-        <label style="font-size: 36px">Ioun Stones:</label>
-        <token-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="meleeMainhand" model="characterContext.meleeMainhand" label="Melee Weapon"></token-selector>
-       
-    </div> 
+    <div style="display:flex;margin-top:10px" ng-if="characterContext.iounStones !== null && characterContext.iounStones.length > 0">
+        <label style="font-size:28px;padding-right:15px;margin-top:8px">Ioun Stones:</label>
+        <div style="padding:0;width:70px" ng-repeat-start="iounStone in characterContext.iounStones track by $index" ng-repeat-end>
+            <token-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="iounStone{{$index}}" model="iounStone" label="Ioun Stone"></token-selector>
+        </div>
+    </div>
+    <div style="display:flex;margin-top:10px" ng-if="characterContext.charms !== null && characterContext.charms.length > 0">
+        <label style="font-size:28px;padding-right:15px;margin-top:8px">Charms:</label>
+        <div style="padding:0;width:70px" ng-repeat-start="charm in characterContext.charms track by $index" ng-repeat-end>
+            <token-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="charm{{$index}}" model="charm" label="Charm"></token-selector>
+        </div>
+    </div>
+    <div style="display:flex;margin-top:10px" ng-if="characterContext.slotless !== null && characterContext.slotless.length > 0">
+        <label style="font-size:28px;padding-right:15px;margin-top:8px">Slotless:</label>
+        <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in characterContext.slotless track by $index" ng-repeat-end>
+           <token-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
+        </div>
+    </div>
+
     <center>
         <img src="images/barbarian.jpg" width="20%" alt="" style="margin-top:5px;padding:0px"/>
     </center>
