@@ -2,7 +2,7 @@
   <img style="margin-left:13px;border:none;" src="images/token.jpg" alt="" ng-click="reloadTokens('ALL')" popover-is-open="isOpen" width="75px" popover-title="{{label}} Selection" uib-popover-template="'tokenSelectorDetailsTemplate.html'" popover-placement="bottom" popover-trigger="'outsideClick'"> 
   <figcaption style="text-align: center;">{{model.name}}</figcaption>
 </figure>-->
-<a href=""><img style="border:none;" src="images/token.jpg" alt="" ng-click="reloadTokens('ALL')" popover-is-open="isOpen" width="60px" popover-title="{{label}} Selection" uib-popover-template="'tokenSelectorDetailsTemplate.html'" popover-placement="bottom" popover-trigger="'outsideClick'"></a>
+<a href=""><img title="{{model.name}}" style="border:none;" ng-src="{{model.itemId === null && 'images/empty.jpg' || 'images/token.jpg'}}" alt="" ng-click="reloadTokens('ALL')" popover-is-open="isOpen" width="60px" popover-title="{{label}} Selection" uib-popover-template="'tokenSelectorDetailsTemplate.html'" popover-placement="{{placement}}" popover-trigger="'outsideClick'"></a>
 
 <script type="text/ng-template" id="tokenSelectorDetailsTemplate.html">
     <div class="col-md-12 text-center" style="display:block;height:32px;margin:0px;padding:0px;margin-bottom:2px">

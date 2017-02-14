@@ -1,45 +1,163 @@
-<div class="row">
-    <div style="display:flex;margin-top:10px" ng-if="characterContext.iounStones !== null && characterContext.iounStones.length > 0">
-        <label style="font-size:28px;padding-right:15px;margin-top:8px">Ioun Stones:</label>
-        <div style="padding:0;width:70px" ng-repeat-start="iounStone in characterContext.iounStones track by $index" ng-repeat-end>
-            <token-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="iounStone{{$index}}" model="iounStone" label="Ioun Stone"></token-selector>
-        </div>
-    </div>
-    <div style="display:flex;margin-top:10px" ng-if="characterContext.charms !== null && characterContext.charms.length > 0">
-        <label style="font-size:28px;padding-right:15px;margin-top:8px">Charms:</label>
-        <div style="padding:0;width:70px" ng-repeat-start="charm in characterContext.charms track by $index" ng-repeat-end>
-            <token-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="charm{{$index}}" model="charm" label="Charm"></token-selector>
-        </div>
-    </div>
-    <div style="display:flex;margin-top:10px" ng-if="characterContext.slotless !== null && characterContext.slotless.length > 0">
-        <label style="font-size:28px;padding-right:15px;margin-top:8px">Slotless:</label>
-        <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in characterContext.slotless track by $index" ng-repeat-end>
-           <token-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
-        </div>
-    </div>
-
+<div>
     <center>
-        <img src="images/barbarian.jpg" width="20%" alt="" style="margin-top:5px;padding:0px"/>
+        <div style="display:flex;max-width:866px;margin-top:10px;margin-left:-105px">
+            <label class="text-right" style="font-size:28px;padding-right:15px;margin-top:8px">Ioun Stones:</label>
+            <div style="padding:0;width:70px" ng-repeat-start="iounStone in characterContext.iounStones track by $index" ng-repeat-end>
+                <token-selector character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="iounStone{{$index}}" model="iounStone" label="Ioun Stone"></token-selector>
+            </div>
+        </div>
+            <div style="display:flex;max-width:866px;margin-top:10px">
+            <label class="text-right" style="font-size:28px;padding-right:15px;margin-top:8px">Charms:</label>
+            <div style="padding:0;width:70px" ng-repeat-start="charm in characterContext.charms track by $index" ng-repeat-end>
+                <token-selector character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="charm{{$index}}" model="charm" label="Charm"></token-selector>
+            </div>
+        </div>
+        <div style="display:flex;max-width:866px;margin-top:10px">
+            <label class="text-right" style="font-size:28px;padding-right:15px;margin-top:8px">Slotless:</label>
+            <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in characterContext.slotless track by $index" ng-repeat-end>
+               <token-selector character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
+            </div>
+        </div>
     </center>
-    <div class="col-xs-12 text-center">
-        <strong>Hit Points: </strong>{{characterContext.stats.health}}
+    <div style="display:flex">
+        <div style="min-width:250px;width:25%">
+            <div style="display:flex;margin-top:10px">
+                <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Head:</label>
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="right-top" set-token="setTokenSlot" unequip="unequipItem" element-id="head" model="characterContext.head" label="Head"></token-selector>
+                </div>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Wrists:</label>
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="right" set-token="setTokenSlot" unequip="unequipItem" element-id="wrists" model="characterContext.wrists" label="Wrists"></token-selector>
+                </div>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Hands:</label>
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="right" set-token="setTokenSlot" unequip="unequipItem" element-id="hands" model="characterContext.hands" label="Hands"></token-selector>
+                </div>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Torso:</label>
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="right" placement="right-top" set-token="setTokenSlot" unequip="unequipItem" element-id="torso" model="characterContext.torso" label="Torso"></token-selector>
+                </div>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Waist:</label>
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.waist" label="Waist"></token-selector>
+                </div>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Legs:</label>
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.legs" label="Legs"></token-selector>
+                </div>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Feet:</label>
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.boots" label="Feet"></token-selector>
+                </div>
+            </div>
+        </div>
+        <div style="min-width:340px;width:50%">
+            <center>
+            <img src="images/barbarian.jpg" width="325px" alt="" style="margin-top:25px;padding:0px"/></center>
+        </div>
+        <div style="min-width:250px;width:25%">
+            <div style="display:flex;margin-top:10px">
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="left-top" set-token="setTokenSlot" unequip="unequipItem" element-id="eyes" model="characterContext.eyes" label="Eyes"></token-selector>
+                </div>
+                <label class="text-left" style="font-size:28px;padding-left:15px;margin-top:8px">:Eyes</label>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <div style="padding-right:0;width:70px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="left" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.leftEar" label="Left Ear"></token-selector>
+                </div>
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="left" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.rightEar" label="Right Ear"></token-selector>
+                </div>
+                <label class="text-left" style="font-size:28px;padding-left:15px;margin-top:8px">:Ears</label>
+            </div>
+            <div style="display:flex;margin-top:10px" ng-if="characterContext.neck !== null">
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="left" set-token="setTokenSlot" unequip="unequipItem" element-id="neck" model="characterContext.neck" label="Neck"></token-selector>
+                </div>
+                <label class="text-left" style="font-size:28px;padding-left:15px;margin-top:8px">:Neck</label>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="left" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.shirt" label="Shirt"></token-selector>
+                </div>
+                <label class="text-left" style="font-size:28px;padding-left:15px;margin-top:8px">:Shirt</label>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <div style="padding:0;width:70px" ng-repeat-start="back in characterContext.backs track by $index" ng-repeat-end>
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="left-bottom" set-token="setTokenSlot" unequip="unequipItem" model="back" label="Back"></token-selector>
+                </div>
+                <label class="text-left" style="font-size:28px;padding-left:5px;margin-top:8px">:Back</label>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <div ng-if="characterContext.rings !== null" style="padding:0;width:70px" ng-repeat-start="ring in characterContext.rings track by $index" ng-repeat-end>
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="left-bottom" set-token="setTokenSlot" unequip="unequipItem" model="ring" label="Ring"></token-selector>
+                </div>
+                <img ng-if="characterContext.rings.length === 0" style="border:none;" src="images/nullToken.jpg" alt="images/nullToken.jpg" width="60px" >
+                <label class="text-left" style="font-size:28px;padding-left:5px;margin-top:8px">:Rings</label>
+            </div>
+            <div style="display:flex;margin-top:10px">
+                <div style="padding:0;width:60px">
+                    <token-selector character-class="{{characterContext.characterClass}}" placement="left-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.figurine" label="Figurine"></token-selector>
+                </div>
+                <label class="text-left" style="font-size:28px;padding-left:15px;margin-top:8px">:Figurine</label>
+            </div>
+        </div>
     </div>
-    <div class="col-xs-12 text-center">
-        <strong>Melee</strong> Hit: {{characterContext.stats.meleeHit}}  Damage: {{characterContext.stats.meleeDmg}}  AC: {{characterContext.stats.meleeAC}}
-    </div>
-    <div class="col-xs-12 text-center">
-        <strong>Ranged</strong> Hit: {{characterContext.stats.rangeHit}}  Damage: {{characterContext.stats.rangeDmg}}  AC: {{characterContext.stats.rangeAC}}
-    </div>
-    <div class="col-xs-12 text-center" ng-if="characterContext.characterClass === 'CLERIC' || characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELFWIZARD'|| characterContext.characterClass === 'WIZARD'">
-        <strong>Spell</strong> Damage: {{characterContext.stats.spellDmg}}  Heal: {{characterContext.stats.spellHeal}}  Resist: {{characterContext.stats.spelResist}}
-    </div>
-    <div class="col-xs-12 text-center">
-        <strong>Saves</strong> Fort: {{characterContext.stats.fort}}  Reflex: {{characterContext.stats.reflex}}  Will: {{characterContext.stats.will}}
-    </div>
-    <div class="col-xs-12 text-center" style="margin-top:15px;">
-        <button class="btn btn-primary" ng-click="exportToPDF()">
-            Download Character as PDF 
-        </button>
-    </div>
+    <center>
+        <div style="display:flex;max-width:866px;margin-top:15px">
+            <div class="text-center" style="padding:0;width:25%">
+                <token-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.meleeMainhand" label="Melee Weapon"></token-selector>
+            </div>
+            <div class="text-center" style="padding:0;width:25%">
+                <img ng-if="characterContext.meleeOffhand === null" style="border:none;" src="images/nullToken.jpg" alt="images/nullToken.jpg" width="60px" >
+                <token-selector ng-if="characterContext.meleeOffhand !== null" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.meleeOffhand" label="Melee Offhand"></token-selector>
+            </div>
+            <div class="text-center" style="padding:0;width:25%">
+                <token-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem"  model="characterContext.rangedMainhand" label="Range Weapon"></token-selector>
+            </div>
+            <div class="text-center" style="padding:0;width:25%">
+                <img ng-if="characterContext.rangedOffhand === null" style="border:none;" src="images/nullToken.jpg" alt="images/nullToken.jpg" width="60px" >
+                <token-selector ng-if="characterContext.rangedOffhand !== null" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.rangedOffhand" label="Range Offhand"></token-selector>
+            </div>
+        </div>
+    </center>
+    <center>
+        <div style="display:flex;max-width:866px;margin-bottom:15px;">
+            <div class="text-center" style="padding:0;width:25%">
+                <label style="font-size:28px;">Main Hand</label>
+            </div>
+            <div class="text-center" style="padding:0;width:25%">
+                <label style="font-size:28px;">Offhand</label>
+            </div>
+            <div class="text-center" style="padding:0;width:25%">
+                <label style="font-size:28px;">Ranged Main</label>
+            </div>
+            <div class="text-center" style="padding:0;width:25%">
+                <label style="font-size:28px;">Ranged Offhand</label>
+            </div>
+        </div>
+    </center>
+    <center ng-if="characterContext.characterClass === 'BARD'">
+        <div style="display:flex;max-width:750px;margin-top:0px;margin-bottom:15px;">
+            <label  style="font-size:28px;padding-left:5px;margin-top:8px">Instruments:</label>
+            <div style="padding:0;width:70px" ng-repeat-start="instrument in characterContext.instruments track by $index" ng-repeat-end>
+                <token-selector character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="instrument" label="Instrument"></token-selector>
+            </div>
+        </div>
+    </center>
 </div>
 

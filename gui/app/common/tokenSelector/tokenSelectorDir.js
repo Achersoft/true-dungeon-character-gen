@@ -4,6 +4,7 @@ angular.module('main').directive('tokenSelector',['CharacterSvc', function(chara
         scope:{
             model:'=',
             characterClass: '@',
+            placement: '@',
             elementId: '@',
             setToken: '&?',
             unequip: '&?',

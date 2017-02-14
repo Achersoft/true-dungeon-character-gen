@@ -19,13 +19,10 @@
 </head>
 <body>
   <div ng-controller="PrivilegeCtrl as privilegeCheck">
-    <nav-bar ng-show="!privilegeCheck.isLoginRequired()"></nav-bar>
-    <div ng-view class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 col-sm-12 col-xs-12"></div>
+    <nav-bar ng-show="!privilegeCheck.isLoginRequired()" style="margin-bottom:0px;"></nav-bar>
+    <div ng-view class="col-lg-10 col-lg-offset-1 col-sm-12 col-xs-12"></div>
   </div>
 
-            
-       
-            
   <script src="components/jquery/dist/jquery.js"></script>
   <script src="components/jquery-ui/jquery-ui.js"></script>
   <script src="components/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
@@ -38,8 +35,7 @@
   <script src="components/angular-bootstrap/ui-bootstrap.min.js"></script>
   <script src="components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
   <script src="components/angular-animate/angular-animate.min.js"></script>
-  
-  
+
   <script src="app.js"></script>
   <script src="admin/tokens/tokenManagement.js"></script>
   <script src="admin/user/user.js"></script>
