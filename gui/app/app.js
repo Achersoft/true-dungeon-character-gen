@@ -7,7 +7,8 @@ angular.module('main', [
   'ngRoute',
   'angular-storage',
   'angular-jwt',
-  'http-auth-interceptor'
+  'http-auth-interceptor',
+  'toggle-switch'
 ])
 .constant('RESOURCES', (function() {
     'use strict';

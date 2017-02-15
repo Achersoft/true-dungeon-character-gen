@@ -38,6 +38,7 @@ public class CharacterDetailsDTO {
     public CharacterItem shirt;
     public CharacterItem boots;
     public CharacterItem legs;
+    public CharacterItem figurine;
     public List<CharacterItem> charms;
     public List<CharacterItem> iounStones;
     public List<CharacterItem> slotless;
@@ -109,6 +110,8 @@ public class CharacterDetailsDTO {
                 build.boots = item;
             if(item.getSlot() == Slot.LEGS)
                 build.legs = item;
+            if(item.getSlot() == Slot.FIGURINE)
+                build.figurine = item;
             if(item.getSlot() == Slot.CHARM)
                 build.charms.add(item);
             if(item.getSlot() == Slot.IOUNSTONE)
