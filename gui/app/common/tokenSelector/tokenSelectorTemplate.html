@@ -3,7 +3,7 @@
   <figcaption style="text-align: center;">{{model.name}}</figcaption>
 </figure>-->
 <a href=""><img uib-tooltip="{{model.name}}" class="img-thumbnail img-responsive img-circle" style="border:none;" ng-src="{{model.itemId === null && 'images/empty.jpg' || 'images/token.jpg'}}" alt="" ng-click="reloadTokens('ALL')" popover-is-open="isOpen" width="60px" popover-title="{{label}} Selection" uib-popover-template="'tokenSelectorDetailsTemplate.html'" popover-placement="{{placement}}" popover-trigger="'outsideClick'"
-                ng-class="{ 'common-token': model.rarity === 'COMMON', 'uncommon-token': model.rarity === 'UNCOMMON', 'rare-token': model.rarity === 'RARE', 'ultrarare-token': model.rarity === 'ULTRARARE', 'enhanced-token': model.rarity === 'ENHANCED', 'exhalted-token': model.rarity === 'EXHALTED', 'relic-token': model.rarity === 'RELIC', 'legendary-token': model.rarity === 'LEGENDARY', 'eldritch-token': model.rarity === 'ELDRITCH', 'premium-token': model.rarity === 'PREMIUM', 'artifact-token': model.rarity === 'ARTIFACT' }"></a>
+                ng-class="{ 'common-token': model.rarity === 'COMMON', 'uncommon-token': model.rarity === 'UNCOMMON', 'rare-token': model.rarity === 'RARE', 'ultrarare-token': model.rarity === 'ULTRARARE', 'enhanced-token': model.rarity === 'ENHANCED', 'exalted-token': model.rarity === 'EXALTED', 'relic-token': model.rarity === 'RELIC', 'legendary-token': model.rarity === 'LEGENDARY', 'eldritch-token': model.rarity === 'ELDRITCH', 'premium-token': model.rarity === 'PREMIUM', 'artifact-token': model.rarity === 'ARTIFACT' }"></a>
 
 <script type="text/ng-template" id="tokenSelectorDetailsTemplate.html">
     <div class="col-md-12 text-center" style="display:block;height:32px;margin:0px;padding:0px;margin-bottom:2px">
@@ -21,7 +21,7 @@
         <div style="height:90px" ng-class-odd="'esi-row-alt'" ng-repeat-start="item in itemSelection track by $index" ng-click="selectToken(item)" data-dismiss="modal" >
             <div class="col-md-3" style="padding-left:0px;padding-right:15px">
                 <img class="img-thumbnail img-responsive img-circle" src="images/token.jpg" alt="" width="75px" style="border:none" 
-                     ng-class="{ 'common-token': item.rarity === 'COMMON', 'uncommon-token': item.rarity === 'UNCOMMON', 'rare-token': item.rarity === 'RARE', 'ultrarare-token': item.rarity === 'ULTRARARE', 'enhanced-token': item.rarity === 'ENHANCED', 'exhalted-token': item.rarity === 'EXHALTED', 'relic-token': item.rarity === 'RELIC', 'legendary-token': item.rarity === 'LEGENDARY', 'eldritch-token': item.rarity === 'ELDRITCH', 'premium-token': item.rarity === 'PREMIUM', 'artifact-token': item.rarity === 'ARTIFACT' }"> 
+                     ng-class="{ 'common-token': item.rarity === 'COMMON', 'uncommon-token': item.rarity === 'UNCOMMON', 'rare-token': item.rarity === 'RARE', 'ultrarare-token': item.rarity === 'ULTRARARE', 'enhanced-token': item.rarity === 'ENHANCED', 'exalted-token': item.rarity === 'EXALTED', 'relic-token': item.rarity === 'RELIC', 'legendary-token': item.rarity === 'LEGENDARY', 'eldritch-token': item.rarity === 'ELDRITCH', 'premium-token': item.rarity === 'PREMIUM', 'artifact-token': item.rarity === 'ARTIFACT' }"> 
             </div>
             <div class="col-md-9" style="padding-left:0px;padding-right:15px">
                 <strong>{{item.name}}</strong>

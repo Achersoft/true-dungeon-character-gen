@@ -54,21 +54,11 @@ angular.module('main')
 .controller('CharacterEditCtrl', ['$scope', 'CharacterSvc', 'CharacterState', '$route', '$routeParams', function ($scope, characterSvc, characterState, $route, $routeParams) {
     $scope.tabIndex = 0;
     $scope.characterContext = characterState.get();
-    $scope.characterClass = null;
-    $scope.characterClasses = ["BARBARIAN", "BARD", "CLERIC", "DRUID", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
 
     characterSvc.getCharacter($routeParams.characterId).then(function(result) {
         characterState.setContext(result.data);
         $scope.characterContext = characterState.get();
     });
-    
-    $scope.characterClassSelected =  function(charClass){
-        return charClass === $scope.characterClass;
-    };
-    
-    $scope.toggleCharacterClassSelected =  function(charClass){
-        $scope.characterClass = charClass;
-    };
     
     $scope.setTokenSlot = function(id, soltId, tokenId) {
         characterSvc.setTokenSlot(id, soltId, tokenId).then(function(result) {

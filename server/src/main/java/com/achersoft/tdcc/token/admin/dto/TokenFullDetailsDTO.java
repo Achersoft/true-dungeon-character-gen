@@ -205,6 +205,10 @@ public class TokenFullDetailsDTO {
                 build.usableBy.add(CharacterClass.CLERIC);
             if(tokenFullDetails.isUsableByDruid()) 
                 build.usableBy.add(CharacterClass.DRUID);
+            if(tokenFullDetails.isUsableByDwarfFighter()) 
+                build.usableBy.add(CharacterClass.DWARF_FIGHTER);
+            if(tokenFullDetails.isUsableByElfWizard()) 
+                build.usableBy.add(CharacterClass.ELF_WIZARD);
             if(tokenFullDetails.isUsableByFighter()) 
                 build.usableBy.add(CharacterClass.FIGHTER);
             if(tokenFullDetails.isUsableByMonk()) 
@@ -327,6 +331,10 @@ public class TokenFullDetailsDTO {
                 build.setUsableByCleric(true);
             if(usableBy.contains(CharacterClass.DRUID))
                 build.setUsableByDruid(true);
+            if(usableBy.contains(CharacterClass.DWARF_FIGHTER))
+                build.setUsableByDwarfFighter(true);
+            if(usableBy.contains(CharacterClass.ELF_WIZARD))
+                build.setUsableByElfWizard(true);
             if(usableBy.contains(CharacterClass.FIGHTER))
                 build.setUsableByFighter(true);
             if(usableBy.contains(CharacterClass.MONK))

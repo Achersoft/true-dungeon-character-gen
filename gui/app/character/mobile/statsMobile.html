@@ -3,7 +3,7 @@
         <strong>{{characterContext.name}}</strong>
     </div>
     <div class="col-xs-12 text-center">
-        <strong>Level {{characterContext.stats.level}} - {{characterContext.characterClass | lowercase | capitalize}}</strong>
+        <strong>Level {{characterContext.stats.level}} - {{characterContext.characterClass | characterclassformat}}</strong>
     </div>
     <div class="col-xs-12 text-center">
         <strong>Hit Points: </strong>{{characterContext.stats.health}}

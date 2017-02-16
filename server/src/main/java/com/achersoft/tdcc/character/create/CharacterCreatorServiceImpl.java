@@ -36,9 +36,9 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
             return createCleric(userId, name);
         if(characterClass == CharacterClass.DRUID)
             return createDruid(userId, name);
-        if(characterClass == CharacterClass.DWARFFIGHTER)
+        if(characterClass == CharacterClass.DWARF_FIGHTER)
             return createDwarfFighter(userId, name);
-        if(characterClass == CharacterClass.ELFWIZARD)
+        if(characterClass == CharacterClass.ELF_WIZARD)
             return createElfWizard(userId, name);
         if(characterClass == CharacterClass.FIGHTER)
             return createFighter(userId, name);
@@ -146,13 +146,13 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
                 .id(UUID.randomUUID().toString())
                 .userId(userId)
                 .name(name)
-                .characterClass(CharacterClass.DWARFFIGHTER)
+                .characterClass(CharacterClass.DWARF_FIGHTER)
                 .createdOn(new Date())
                 .build();
 
         mapper.addCharacter(characterDetails);
         
-        characterDetails.setStats(mapper.getStartingStats(CharacterClass.DWARFFIGHTER, 4));
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.DWARF_FIGHTER, 4));
         characterDetails.getStats().setCharacterId(characterDetails.getId());;
         mapper.addCharacterStats(characterDetails.getStats());
         
@@ -167,13 +167,13 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
                 .id(UUID.randomUUID().toString())
                 .userId(userId)
                 .name(name)
-                .characterClass(CharacterClass.ELFWIZARD)
+                .characterClass(CharacterClass.ELF_WIZARD)
                 .createdOn(new Date())
                 .build();
 
         mapper.addCharacter(characterDetails);
         
-        characterDetails.setStats(mapper.getStartingStats(CharacterClass.ELFWIZARD, 4));
+        characterDetails.setStats(mapper.getStartingStats(CharacterClass.ELF_WIZARD, 4));
         characterDetails.getStats().setCharacterId(characterDetails.getId());;
         mapper.addCharacterStats(characterDetails.getStats());
         

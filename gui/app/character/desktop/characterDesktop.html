@@ -177,6 +177,11 @@
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.rangedOffhand !== null">
             <item-desktop-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="rangedOffhand" model="characterContext.rangedOffhand" label="Range Offhand"></item-desktop-selector>
         </div>
+        <div ng-if="characterContext.instruments !== null && characterContext.instruments.length > 0">
+            <div class="col-xs-12" style="padding:0" ng-repeat-start="instrument in characterContext.instruments track by $index" ng-repeat-end>
+                <item-desktop-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="instrument{{$index}}" model="instrument" label="Instrument"></item-desktop-selector>
+            </div>
+        </div>
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.head !== null">
             <item-desktop-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="head" model="characterContext.head" label="Head"></item-desktop-selector>
         </div>

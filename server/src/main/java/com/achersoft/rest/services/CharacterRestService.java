@@ -8,7 +8,16 @@ import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.character.dto.CharacterDetailsDTO;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.token.dao.Token;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -20,7 +29,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.StreamingOutput;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Path("/character")
@@ -43,6 +56,54 @@ public class CharacterRestService {
     @Produces({MediaType.APPLICATION_JSON})	
     public CharacterDetailsDTO getCharacter(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
         return CharacterDetailsDTO.fromDAO(characterService.getCharacter(id));
+    }
+    
+   // @RequiresPrivilege({Privilege.ADMIN})
+  //  @GET 
+ //   @Path("/pdf/{id}")
+  //  @Produces("application/pdf")
+ /*   public Response getCharacterPDF(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
+       
+        PdfReader reader = new PdfReader("C:\\Users\\shaun\\Repositories\\true-dungeon-character-gen\\server\\barb.pdf");
+        ByteArrayOutputStream ba = new ByteArrayOutputStream();
+        PdfStamper stamper = new PdfStamper(reader, ba);
+        AcroFields fields = stamper.getAcroFields();
+        fields.setField("MeleeToHit", "5");
+        stamper.setFormFlattening(true);
+        stamper.close();
+        reader.close();
+
+        ResponseBuilder response = Response.ok((Object) ba);
+        response.header("Content-Disposition",
+                "attachment; filename=" + "Test" + ".pdf");
+        return response.build();//characterService.getCharacter(id).getName()
+    }*/
+    
+    @GET 
+    @Path("/pdf/{id}")
+    @Produces({"application/pdf"})
+    public StreamingOutput getPDF(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
+        return new StreamingOutput() {
+            @Override
+            public void write(OutputStream out) throws IOException, WebApplicationException {
+                try {
+                    PdfReader reader = new PdfReader("C:\\Users\\shaun\\Repositories\\true-dungeon-character-gen\\server\\barb.pdf");
+                    PdfStamper stamper = new PdfStamper(reader, out);
+                    AcroFields fields = stamper.getAcroFields();
+                    System.err.println(fields.getFields().keySet());
+                    System.err.println(fields.getAppearanceStates("MeleePosion")[1]);
+                    
+                    fields.setField("MeleeToHit", "55");
+                    fields.setField("MeleePosion", "Yes");
+                    fields.setGenerateAppearances(true);
+                    stamper.setFormFlattening(true);
+                    stamper.close();
+                    reader.close();
+                } catch (DocumentException ex) {
+                    Logger.getLogger(CharacterRestService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
     }
     
     @RequiresPrivilege({Privilege.ADMIN})

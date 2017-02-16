@@ -24,7 +24,7 @@
                 <tbody>
                     <tr ng-repeat-start="myCharacter in myCharacterContext" ng-repeat-end>
                         <td><a ng-href="#/character/edit/{{myCharacter.id}}">{{myCharacter.name | limitTo : 25}}</a></td>
-                        <td>{{myCharacter.characterClass}}</td>
+                        <td>{{myCharacter.characterClass | characterclassformat}}</td>
                         <td>{{myCharacter.level}}</td>
                         <td><a ng-click="deleteCharacter(myCharacter.id)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
                     </tr>
@@ -50,7 +50,7 @@
                         <tbody>
                             <tr ng-repeat-start="myCharacter in myCharacterContext" ng-repeat-end>
                                 <td><a ng-href="#/character/edit/{{myCharacter.id}}">{{myCharacter.name | limitTo : 25}}</a></td>
-                                <td>{{myCharacter.characterClass}}</td>
+                                <td>{{myCharacter.characterClass | characterclassformat}}</td>
                                 <td>{{myCharacter.level}}</td>
                                 <td><a ng-click="deleteCharacter(myCharacter.id)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
                             </tr>

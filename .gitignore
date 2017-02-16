@@ -2,3 +2,4 @@
 /gui/node_modules/
 /gui/app/components/
 /server/target/
+/gui/bower_components/

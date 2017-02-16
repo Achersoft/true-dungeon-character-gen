@@ -31,6 +31,19 @@ angular.module('main', [
     return input.substring(0,1).toUpperCase()+input.substring(1);
   };
 })
+.filter('characterclassformat', function() {
+  return function(input) {
+    if (input===null || input===undefined)
+        return input;
+    input = input.toLowerCase();
+    var arrayOfStrings = input.split("_");
+    if(arrayOfStrings.length === 1)
+        return input.substring(0,1).toUpperCase()+input.substring(1);
+    else {
+        return arrayOfStrings[0].substring(0,1).toUpperCase()+arrayOfStrings[0].substring(1) + " " + arrayOfStrings[1].substring(0,1).toUpperCase()+arrayOfStrings[1].substring(1);
+    }
+  };
+})
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/character/mine'});
 }])

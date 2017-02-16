@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" style="margin:15px">
     <div class="row">
         <div class="col-md-12">
             <input type="text" class="form-control" ng-model="selectedToken" uib-typeahead="token for token in searchForToken($viewValue)" typeahead-popup-template-url="admin/tokens/template.html" typeahead-on-select="onSelect($item)" placeholder="Search for token..." >
@@ -21,7 +21,7 @@
         <div class="col-md-12" style="margin-top: 10px">
             <label>Usable By:</label><br>
             <span ng-class="{'btn-info' : usabilitySelected(tokenUsableBy), 'btn-default' : !usabilitySelected(tokenUsableBy)}" ng-click="toggleUsabilitySelected(tokenUsableBy);" class="btn" ng-repeat-start="tokenUsableBy in tokenUsability" ng-repeat-end="">
-                {{tokenUsableBy | lowercase | capitalize}}
+                {{tokenUsableBy | characterclassformat}}
             </span>
         </div>
     </div>

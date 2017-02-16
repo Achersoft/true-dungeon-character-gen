@@ -22,6 +22,8 @@ public class TokenFullDetails {
     private boolean usableByBard;
     private boolean usableByCleric;
     private boolean usableByDruid;
+    private boolean usableByDwarfFighter;
+    private boolean usableByElfWizard;
     private boolean usableByFighter;
     private boolean usableByWizard;
     private boolean usableByMonk;

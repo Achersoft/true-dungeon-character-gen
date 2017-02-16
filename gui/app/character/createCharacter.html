@@ -12,7 +12,7 @@
              </div>   
             <div class="col-md-12" style="padding-left:4px;padding-right:0px">
                 <span style="width:33%" ng-class="{'btn-info' : characterClassSelected(charClass), 'btn-default' : !characterClassSelected(charClass)}" ng-click="toggleCharacterClassSelected(charClass)" class="btn" ng-repeat-start="charClass in characterClasses" ng-repeat-end="">
-                    {{charClass | lowercase | capitalize}}
+                    {{charClass | characterclassformat}}
                 </span>
             </div>
         </div>

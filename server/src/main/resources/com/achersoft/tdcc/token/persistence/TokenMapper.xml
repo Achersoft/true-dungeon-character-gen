@@ -64,6 +64,12 @@
             <if test="characterClass == 'DRUID'">
             AND t.druid = 1
             </if>
+            <if test="characterClass == 'DWARF_FIGHTER'">
+            AND t.dwarf_fighter = 1
+            </if>
+            <if test="characterClass == 'ELF_WIZARD'">
+            AND t.elf_wizard = 1
+            </if>
             <if test="characterClass == 'FIGHTER'">
             AND t.fighter = 1
             </if>
@@ -119,6 +125,12 @@
             </if>
             <if test="characterClass == 'DRUID'">
             AND t.druid = 1
+            </if>
+            <if test="characterClass == 'DWARF_FIGHTER'">
+            AND t.dwarf_fighter = 1
+            </if>
+            <if test="characterClass == 'ELF_WIZARD'">
+            AND t.elf_wizard = 1
             </if>
             <if test="characterClass == 'FIGHTER'">
             AND t.fighter = 1
