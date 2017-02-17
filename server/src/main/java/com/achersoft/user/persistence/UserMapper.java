@@ -9,13 +9,13 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper {   
     public void createUser(User user);
     public List<User> getUsers();
-    public User getUser(int id);
+    public User getUser(String id);
     public User getUserFromName(String userName);
-    public List<Privilege> getUserPrivileges(int id);
-    public void addUserPrivilege(@Param("id") int id, @Param("privilege")Privilege privilege);
-    public void removeUserPrivileges(@Param("id") int id);
+    public List<Privilege> getUserPrivileges(String id);
+    public void addUserPrivilege(@Param("id") String id, @Param("privilege")Privilege privilege);
+    public void removeUserPrivileges(@Param("id") String id);
     public void editUser(User user);
-    public void deleteUser(int id);
+    public void deleteUser(String id);
     public boolean validateCredentials(UserLoginRequest request);
 }
 

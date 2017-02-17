@@ -7,7 +7,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("/")
 public class AuthenticationRestService {
@@ -17,17 +16,14 @@ public class AuthenticationRestService {
     @POST 
     @Path("/login")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response login(UserLoginRequest request) {
+    public void login(UserLoginRequest request) {
         userAuthenticationProvider.login(request);	
-        return Response.status(Response.Status.OK.getStatusCode()).build();
     }
     
     @POST 
     @Path("/logout")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response logout() {
+    public void logout() {
         userAuthenticationProvider.logout();
-        return Response.status(Response.Status.OK.getStatusCode()).build();
     }
     
  /*   @POST 

@@ -13,17 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private int id;
+    private String id;
     private String username;
     private String firstName;
     private String lastName;
+    private String email;
     private String password;
     private Boolean locked;
     private Integer loginAttempts;
     private Date lastAccessed;
     private List<Privilege> privileges;
-    
-    public String getName() {
-        return firstName + " " + lastName;
-    }
 }

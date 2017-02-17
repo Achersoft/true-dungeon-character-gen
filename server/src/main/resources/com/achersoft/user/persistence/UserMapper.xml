@@ -3,14 +3,24 @@
  
 <mapper namespace="com.achersoft.user.persistence.UserMapper">
     <insert id="createUser">
-        INSERT INTO user (user_name,
+        INSERT INTO user (id,
+                          user_name,
                           first_name,
                           last_name,
+                          email,
+                          locked,
+                          login_attempts,
+                          last_login,
                           password) 
-                  VALUES (#{username},
+                  VALUES (#{id},
+                          #{username},
                           #{firstName},
                           #{lastName},
-                          #{password})             
+                          #{email},
+                          #{locked},
+                          #{loginAttempts},
+                          #{lastAccessed},
+                          #{password})    
     </insert>
 
     <sql id="userSelection">
@@ -18,6 +28,7 @@
                u.user_name 'username', 
                u.first_name 'firstName', 
                u.last_name 'lastName', 
+               u.email 'email', 
                u.locked 'locked',  
                u.login_attempts 'loginAttempts',  
                u.last_login 'lastAccessed'
@@ -49,6 +60,7 @@
                user_name = #{username},
                first_name = #{firstName},
                last_name = #{lastName}, 
+               email = #{email}, 
                <if test="password != null">
                password = #{password}, 
                </if>

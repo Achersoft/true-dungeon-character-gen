@@ -175,7 +175,7 @@ public class SpringConfig {
     @Bean(name = "userMap")
     public Cache<String, String> userMap() {
         return CacheBuilder.newBuilder()
-            .expireAfterAccess(1, TimeUnit.HOURS)
+            .expireAfterAccess(12, TimeUnit.HOURS)
             .build();
     }
     // </editor-fold>

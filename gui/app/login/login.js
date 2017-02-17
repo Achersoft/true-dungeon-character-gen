@@ -7,11 +7,39 @@ angular.module('main')
             controller: 'LoginCtrl'
         }),
     $routeProvider
-        .when('/logout/', {
-            templateUrl: 'login/logout.html',
-            controller: 'LoginCtrl'
+        .when('/signup/', {
+            templateUrl: 'login/signup.html',
+            controller: 'SignupCtrl'
         });
 }])
+.controller('SignupCtrl',['$scope', '$location', '$rootScope', 'AuthorizationSvc', 'AuthorizationState',
+    function($scope, $location, $rootScope, AuthorizationSvc, AuthorizationState){
+        $scope.createUserValues = { username : '',
+                                    firstName : '',
+                                    lastName : '',
+                                    email : '',
+                                    password : ''};
+        
+        $scope.createAccount = function(){
+            AuthorizationSvc.createNewAccount($scope.createUserValues)
+                    .then(function(response) {
+                        $location.path("/setSelection/English");
+                    },
+                      function(response) {
+                        // Wipe out password to allow re-entry
+                        $scope.createUserValues.username = '';
+                        $scope.createUserValues.password = '';
+                    })
+                    .finally(function() {
+                        // Wipe out - if error 
+                        $scope.createUserValues.username = '';
+                        $scope.createUserValues.password = '';
+                        // Reset form - to hide validation errors, etc. for next go round...
+                        $scope.createaccountform.$setPristine();
+                    });
+        };
+    }
+])
 .controller('LoginCtrl',['$scope', '$location', '$rootScope', 'AuthorizationSvc', 'AuthorizationState',
     function($scope, $location, $rootScope, AuthorizationSvc, AuthorizationState){
         $scope.loginPrompt = { username : '',
@@ -21,7 +49,7 @@ angular.module('main')
         $scope.login = function(){
             AuthorizationSvc.authenticate($scope.loginPrompt.username, $scope.loginPrompt.password)
                     .then(function(response) {
-                        $location.path("/setSelection/English");
+                        $location.path("/character/mine");
                         },
                           function(response) {
                             // Wipe out password to allow re-entry
@@ -36,14 +64,6 @@ angular.module('main')
                         // Reset form - to hide validation errors, etc. for next go round...
                         $scope.estaffLoginForm.$setPristine();
                     });
-        };
-        
-        $scope.logout = function() {
-            AuthorizationSvc.release()
-                    .then(function(response) {
-                            $rootScope.loginRequired = true;
-                            $location.path("/login");
-                        });
         };
         
         $scope.isLoggedIn = function() {

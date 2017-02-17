@@ -50,11 +50,11 @@ public class TokenRestService {
     @GET 
     @Path("/search")
     @Produces({MediaType.APPLICATION_JSON})	
-    public List<TokenFullDetailsDTO> addToken(@QueryParam("name") @NotNull @NotEmpty String name) throws Exception {
+    public List<TokenFullDetailsDTO> searchForToken(@QueryParam("name") @NotNull @NotEmpty String name) throws Exception {
         return tokenAdminService.search("%" + name + "%").stream().map((dao) -> { return TokenFullDetailsDTO.fromDAO(dao); }).collect(Collectors.toList());
     }
     
-   // @RequiresPrivilege({Privilege.ADMIN})
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @GET 
     @Path("/character")
     @Produces({MediaType.APPLICATION_JSON})	

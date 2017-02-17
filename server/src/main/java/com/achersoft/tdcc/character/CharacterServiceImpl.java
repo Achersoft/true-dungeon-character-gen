@@ -303,6 +303,30 @@ public class CharacterServiceImpl implements CharacterService {
         if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("09a0ad7cb78d898992c96ab00487bc8ffdc66f5a") || item.getItemId().equals("4b4e1b22e1ce20a529920fd48f8b891ec8e0b74a") || item.getItemId().equals("c34921c9623d7d3c1eee054e646fc3cdc7f08659"))).count() == 3)
             characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("You are immune to melee and mental attacks from evil outsiders.").build());
        
+        // Charming items
+        if(charmingCount > 0) {
+            int charmCount = (int) characterDetails.getItems().stream().distinct().filter((item) -> item.getSlot() == Slot.CHARM).count();
+            if(charmCount > 6)
+                charmCount = 6;
+            // Ear
+            if(itemsMap.containsKey("f9f68f1e599025ab379192633697fca78ab2f7d0")) {
+                characterDetails.getStats().setReflex(characterDetails.getStats().getReflex() + charmCount);
+            }
+            // Ring
+            if(itemsMap.containsKey("c2dddfc5254138f8441486900ec2f2db1714fcc2")) {
+                characterDetails.getStats().setFort(characterDetails.getStats().getFort() + charmCount);
+            }
+            // Crown
+            if(itemsMap.containsKey("e0c359ef619d5aa2fae5c93c9e372514e43b4543")) {
+                characterDetails.getStats().setWill(characterDetails.getStats().getWill()+ charmCount);
+            }
+            // Ioun
+            if(itemsMap.containsKey("27b93edab1b6ef69929adfee3f4a9f9da465b1b6")) {
+                characterDetails.getStats().setHealth(characterDetails.getStats().getHealth()+ charmCount);
+            }
+        }
+        
+        
         // Darkthorn Set
         // all 3 +2 ret dmg
       //  if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("09a0ad7cb78d898992c96ab00487bc8ffdc66f5a") || item.getItemId().equals("4b4e1b22e1ce20a529920fd48f8b891ec8e0b74a") || item.getItemId().equals("c34921c9623d7d3c1eee054e646fc3cdc7f08659"))).count() == 3)

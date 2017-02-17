@@ -5,27 +5,29 @@ import com.achersoft.user.dao.User;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    private int id;
-    private String username;
-    private String firstName;
-    private String lastName;
-    private String password;
+    private String id;
+    private @NotNull @NotEmpty String username;
+    private @NotNull @NotEmpty String firstName;
+    private @NotNull @NotEmpty String lastName;
+    private @NotNull @NotEmpty String email;
+    private @NotNull @NotEmpty String password;
     private Boolean locked;
     private Integer loginAttempts;
     private Date lastAccessed;
     private Boolean admin;
-    private Boolean customer;
-    private Boolean employee;
+    private Boolean systemUser;
     
     public static UserDTO fromDAO(User dao){
         return UserDTO.builder()
@@ -33,12 +35,12 @@ public class UserDTO {
                 .username(dao.getUsername())
                 .firstName(dao.getFirstName())
                 .lastName(dao.getLastName())  
+                .email(dao.getEmail())
                 .locked(dao.getLocked())
                 .loginAttempts(dao.getLoginAttempts())
                 .lastAccessed(dao.getLastAccessed())
                 .admin((dao.getPrivileges()!= null)?dao.getPrivileges().contains(Privilege.ADMIN):false)
-                .customer((dao.getPrivileges()!= null)?dao.getPrivileges().contains(Privilege.CUSTOMER):false)
-                .employee((dao.getPrivileges()!= null)?dao.getPrivileges().contains(Privilege.EMPLOYEE):false)
+                .systemUser((dao.getPrivileges()!= null)?dao.getPrivileges().contains(Privilege.SYSTEM_USER):false)
                 .build();
     }
     
@@ -46,15 +48,14 @@ public class UserDTO {
         List<Privilege> privileges = new ArrayList();
         if(admin != null && admin)
             privileges.add(Privilege.ADMIN);
-        if(customer != null && customer)
-            privileges.add(Privilege.CUSTOMER);
-        if(employee != null && employee)
-            privileges.add(Privilege.EMPLOYEE);
+        if(systemUser != null && systemUser)
+            privileges.add(Privilege.SYSTEM_USER);
         return User.builder()
                 .id(id)
                 .username(username)
                 .firstName(firstName)
-                .lastName(lastName)  
+                .lastName(lastName) 
+                .email(email)
                 .password(password)
                 .locked(locked)
                 .loginAttempts(loginAttempts)

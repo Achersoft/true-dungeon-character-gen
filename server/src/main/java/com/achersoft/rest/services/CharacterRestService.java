@@ -42,7 +42,7 @@ public class CharacterRestService {
     private @Inject CharacterCreatorService characterCreatorService; 
     private @Inject CharacterService characterService; 
     
-    @RequiresPrivilege({Privilege.ADMIN})
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @PUT 
     @Path("/create")
     @Produces({MediaType.APPLICATION_JSON})	
@@ -50,7 +50,7 @@ public class CharacterRestService {
         return CharacterDetailsDTO.fromDAO(characterCreatorService.createCharacter(characterClass, name));
     }
     
-    @RequiresPrivilege({Privilege.ADMIN})
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @GET 
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})	
@@ -106,7 +106,7 @@ public class CharacterRestService {
         };
     }
     
-    @RequiresPrivilege({Privilege.ADMIN})
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @GET 
     @Path("/all")
     @Produces({MediaType.APPLICATION_JSON})	
@@ -114,7 +114,7 @@ public class CharacterRestService {
         return characterService.getCharacters();
     }
     
-    @RequiresPrivilege({Privilege.ADMIN})
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @POST 
     @Path("/token")
     @Produces({MediaType.APPLICATION_JSON})	
@@ -122,7 +122,7 @@ public class CharacterRestService {
         return CharacterDetailsDTO.fromDAO(characterService.setTokenSlot(id, soltId, tokenId));
     }
     
-    @RequiresPrivilege({Privilege.ADMIN})
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @POST 
     @Path("/token/unequip")
     @Produces({MediaType.APPLICATION_JSON})	
@@ -130,7 +130,7 @@ public class CharacterRestService {
         return CharacterDetailsDTO.fromDAO(characterService.unequipTokenSlot(id, soltId));
     }
     
-    @RequiresPrivilege({Privilege.ADMIN})
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @DELETE 
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})	

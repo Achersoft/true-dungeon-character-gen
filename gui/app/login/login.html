@@ -3,8 +3,16 @@
       <div id="header" class="form-signin-heading center"> 
           <img src="images/logo.png" height="150px" style="display:block" class="img-responsive"/>
       </div>
-      <input type="text" ng-model="loginPrompt.username" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
-      <input type="password" ng-model="loginPrompt.password" class="form-control" name="password" placeholder="Password" required=""/>      
-      <button class="btn btn-primary btn-block" ng-click="login()">Login</button>   
+      <input style="margin-top:15px" type="text" ng-model="loginPrompt.username" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
+      <input style="margin-top:15px"type="password" ng-model="loginPrompt.password" class="form-control" name="password" placeholder="Password" required=""/>      
+      <div style="margin-top:15px" class="col-md-6">
+        <button class="btn btn-primary btn-block" ng-click="login()">Log In</button>  
+      </div>
+      <div style="margin-top:15px" class="col-md-6">
+          <a href="#/signup"><span class="btn btn-primary btn-block" >Create New Account</span></a>  
+      </div>
+      <div style="margin-top:15px" class="col-md-12 text-center">
+          <a>Forgot Password?</a>
+      </div>
     </form>
 </div>

@@ -1,6 +1,8 @@
 package com.achersoft.rest.services;
 
+import com.achersoft.security.UserAuthenticationService;
 import com.achersoft.security.annotations.RequiresPrivilege;
+import com.achersoft.security.dto.UserLoginRequest;
 import com.achersoft.security.type.Privilege;
 import com.achersoft.user.UserService;
 import com.achersoft.user.dao.User;
@@ -19,11 +21,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/users")
 public class UserRestService {
 
     private @Inject UserService userProvider; 
+    private @Inject UserAuthenticationService userAuthenticationProvider; 
 
     @RequiresPrivilege({Privilege.ADMIN})
     @GET 
@@ -39,17 +43,18 @@ public class UserRestService {
     @GET 
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})	
-    public UserDTO getUser(@PathParam("id")int id) throws Exception {
+    public UserDTO getUser(@PathParam("id") String id) throws Exception {
         return UserDTO.fromDAO(userProvider.getUser(id));	
     }
 
-    @RequiresPrivilege({Privilege.ADMIN})
     @POST 
     @Path("/create")
     @Produces({MediaType.APPLICATION_JSON})	
     @Consumes({MediaType.APPLICATION_JSON})
-    public UserDTO createUser(@Valid @NotNull UserDTO user) throws Exception {
-        return UserDTO.fromDAO(userProvider.createUser(user.toDAO()));
+    public Response createUser(@Valid @NotNull UserDTO user) throws Exception {
+        User createUser = userProvider.createUser(user.toDAO());
+        userAuthenticationProvider.login(createUser);	
+        return Response.status(Response.Status.OK.getStatusCode()).build();
     }
     
     @RequiresPrivilege({Privilege.ADMIN})
@@ -64,7 +69,7 @@ public class UserRestService {
     @RequiresPrivilege({Privilege.ADMIN})
     @DELETE 
     @Path("/{id}")
-    public void deleteUser(@PathParam("id")int id) throws Exception {
+    public void deleteUser(@PathParam("id") String id) throws Exception {
         userProvider.deleteUser(id);	
     }
 }

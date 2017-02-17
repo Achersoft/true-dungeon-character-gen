@@ -68,8 +68,8 @@ angular.module('main')
             return token;
         };
         
-        var putAuthInfo = function(token, claims, expiryTime) {
-            localCacheMgr.put(ID_AUTH_INFO, {'token' : token, 'claims' : claims}, expiryTime);
+        var putAuthInfo = function(token, claims) {
+            localCacheMgr.put(ID_AUTH_INFO, {'token' : token, 'claims' : claims});
         };
         
         var getAuthInfo = function() {
@@ -114,7 +114,7 @@ angular.module('main')
                 //Add/update token in cache - make it expire from cache slightly after (1 min) token expiry time...
                 // Note per JWT spec, expiryTime claim ('exp') is in Seconds (not millis) since Epoch Time.
                 // Should always be present, but we'll failsafe to 30min if not...
-                putAuthInfo(token, claims, (claims.exp ?  ((claims.exp * 1000) - Date.now()) + 60000 : 1800000));
+                putAuthInfo(token, claims);
                 
                 // Add to default HTTP headers - so Auth token will be added to all requests...
                 this.addAuthorization(httpGlobalHeaders);
@@ -135,6 +135,30 @@ angular.module('main')
 .factory('AuthorizationSvc',['$http', '$q', 'authService', 'RESOURCES', 'AuthorizationState',
     function($http, $q, httpAuthService, RESOURCES, AuthorizationState){
         var AuthorizationSvc={};
+        
+        AuthorizationSvc.createNewAccount = function(user) {
+            // Set ignoreAuthModule = true so if we get a 401 status, we don't get in endless loop...
+            return $http.post(RESOURCES.REST_BASE_URL + '/users/create', user, {'ignoreAuthModule' : true})
+                        .then(function(response) {
+                            // Extract auth token from response, save off and also add to default http req headers
+                            AuthorizationState.updateAuthorization(response.headers, $http.defaults.headers.common);
+                            // Let AuthService know that we have successfully logged in...
+                            httpAuthService.loginConfirmed(user.username, function(config) {
+                                // Add new/valid token to requests we will replay (now that we are authorized).
+                                // These are request(s) that generated 401 responses and "forced" us to log in
+                                AuthorizationState.addAuthorization(config.headers);
+                                return(config);
+                            });
+                            return response;
+                        },
+                        function(response) {
+                            // Erase the token if the user fails to log in
+                            //console.log("Login failed - " + response.statusText);
+                            AuthorizationState.removeAuthorization();
+                            // Reject - so we can percolate this error up to caller
+                            return $q.reject(response);
+                        });
+        };
         
         AuthorizationSvc.authenticate = function(username, password) {
             // Set ignoreAuthModule = true so if we get a 401 status, we don't get in endless loop...
@@ -161,12 +185,11 @@ angular.module('main')
         };
         
         AuthorizationSvc.release = function () {
-            return $http.post(RESOURCES.LOGOUT_URL)
-                    .then(  function(response) {
-                                // Erase the token from local now that user is logged out
-                                AuthorizationState.removeAuthorization();
-                                return response;
-                            });
+            return $http.post(RESOURCES.LOGOUT_URL).then( function(response) {
+                // Erase the token from local now that user is logged out
+                AuthorizationState.removeAuthorization();
+                return response;
+            });
             
         };
         

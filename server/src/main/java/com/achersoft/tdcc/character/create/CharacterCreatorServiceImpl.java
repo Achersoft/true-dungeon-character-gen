@@ -326,6 +326,7 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.BACK).index(0).slotStatus(SlotStatus.OK).build());
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.FINGER).index(0).slotStatus(SlotStatus.OK).build());
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.FINGER).index(1).slotStatus(SlotStatus.OK).build());
+        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.FIGURINE).index(0).slotStatus(SlotStatus.OK).build());
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.WAIST).index(0).slotStatus(SlotStatus.OK).build());
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.SHIRT).index(0).slotStatus(SlotStatus.OK).build());
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.FEET).index(0).slotStatus(SlotStatus.OK).build());

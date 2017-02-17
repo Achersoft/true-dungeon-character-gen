@@ -10,7 +10,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">
-        <li class="dropdown" ng-if="privilegeCheck.isUserAuthorized('ADMIN')">
+        <li class="dropdown" ng-if="privilegeCheck.isUserAuthorized('ADMIN') || privilegeCheck.isUserAuthorized('SYSTEM_USER')">
             <a class="dropdown-toggle" data-toggle="dropdown" href=""><b>Character </b><span class="caret"></span></a>
           <ul class="dropdown-menu">
               <li><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/character/mine"><b>My Characters</b></a></li>
@@ -31,7 +31,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li ng-if="!privilegeCheck.isLoggedIn()"><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/login"><span class="fa fa-sign-in"></span><b>Login</b></a></li>
-        <li ng-if="privilegeCheck.isLoggedIn()"><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/logout"><span class="fa fa-sign-out"></span><b>Logout</b></a></li>
+        <li ng-if="privilegeCheck.isLoggedIn()"><a data-toggle="collapse" data-target=".navbar-collapse.in" href="" ng-click="logout()"><span class="fa fa-sign-out"></span><b>Logout</b></a></li>
       </ul>
     </div> 
   </div>

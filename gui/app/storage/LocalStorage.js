@@ -1,30 +1,18 @@
 angular.module('main')
 
 .factory('LocalStorage',['store',function(store) {
-        return store.getNamespacedStore('mtginv');
+        return store.getNamespacedStore('tdcc');
     }
 ])
-.factory('LocalCacheMgr',['LocalStorage', 'RESOURCES', function(localStorage, RESOURCES) {
+.factory('LocalCacheMgr',['LocalStorage', function(localStorage) {
     var LocalCacheMgr={};
 
     LocalCacheMgr.get = function(name) {
-        var entry = localStorage.get(name);
-        var dataObj = null;
-        if ( entry !== null ) {
-            if ( entry.expiryTime >= Date.now() ) {
-                dataObj =  entry.data;
-            } else {
-                localStorage.remove(name);
-            }
-        }
-        return dataObj;
+        return localStorage.get(name);
     };
 
-    LocalCacheMgr.put = function(name, dataObj, maxAgeInMillis) {
-        localStorage.set(name, {'data' : dataObj,
-                                'expiryTime' : Date.now() + ((typeof maxAgeInMillis === 'undefined') ?
-                                                                RESOURCES.LCL_CACHE_DFLT_MAX_TIME_TO_LIVE :
-                                                                maxAgeInMillis)});
+    LocalCacheMgr.put = function(name, dataObj) {
+        localStorage.set(name, dataObj);
     };
 
     LocalCacheMgr.remove = function(name) {
