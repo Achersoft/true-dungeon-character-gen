@@ -29,6 +29,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.ws.rs.core.StreamingOutput;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(rollbackFor = Exception.class)
@@ -81,11 +83,52 @@ public class CharacterServiceImpl implements CharacterService {
         final CharacterDetails character = getCharacter(id);
         return (OutputStream out) -> {
             try {
-                PdfReader reader = new PdfReader("C:\\Users\\shaun\\Repositories\\true-dungeon-character-gen\\server\\barb2.pdf");
+                Resource pdfFile = null;
+                if(null != character.getCharacterClass())
+                    switch (character.getCharacterClass()) {
+                    case BARBARIAN:
+                        pdfFile = new ClassPathResource("barbarian.pdf");
+                        break;
+                    case BARD:
+                        pdfFile = new ClassPathResource("bard.pdf");
+                        break;
+                    case CLERIC:
+                        pdfFile = new ClassPathResource("clearic.pdf");
+                        break;
+                    case DRUID:
+                        pdfFile = new ClassPathResource("druid.pdf");
+                        break;
+                    case DWARF_FIGHTER:
+                        pdfFile = new ClassPathResource("dwarfFighter.pdf");
+                        break;
+                    case ELF_WIZARD:
+                        pdfFile = new ClassPathResource("elfWizard.pdf");
+                        break;
+                    case FIGHTER:
+                        pdfFile = new ClassPathResource("fighter.pdf");
+                        break;
+                    case MONK:
+                        pdfFile = new ClassPathResource("monk.pdf");
+                        break;
+                    case PALADIN:
+                        pdfFile = new ClassPathResource("paladin.pdf");
+                        break;
+                    case RANGER:
+                        pdfFile = new ClassPathResource("ranger.pdf");
+                        break;
+                    case ROGUE:
+                        pdfFile = new ClassPathResource("rogue.pdf");
+                        break;
+                    case WIZARD:
+                        pdfFile = new ClassPathResource("wizard.pdf");
+                        break;
+                    default:
+                        break;
+                }
+                PdfReader reader = new PdfReader(pdfFile.getURL());
                 PdfStamper stamper = new PdfStamper(reader, out);
                 AcroFields fields = stamper.getAcroFields();
-                System.err.println(fields.getFields().keySet());
-                //System.err.println(fields.getAppearanceStates("MeleePosion")[1]);
+                //System.err.println(fields.getFields().keySet());
                 
                 fields.setField("characterName", character.getName());
                 fields.setField("characterLevel", Integer.toString(character.getStats().getLevel()));
@@ -266,8 +309,47 @@ public class CharacterServiceImpl implements CharacterService {
                 fields.setField("itemList", itemsList.toString());
                 fields.setField("itemListCnt", itemsListCnt.toString());
                 
-                //fields.setField("MeleeToHit", "55");
-                //fields.setField("MeleePosion", "Yes");
+                fields.setField("pcMeleeHit", Integer.toString(character.getStats().getMeleeHit()));
+                fields.setField("pcMeleeDmg", Integer.toString(character.getStats().getMeleeDmg()));
+                fields.setField("pcMeleeAC", Integer.toString(character.getStats().getMeleeAC()));
+                fields.setField("pcMeleeFire", (character.getStats().isMeleeFire())?"Yes":"No");
+                fields.setField("pcMeleeCold", (character.getStats().isMeleeCold())?"Yes":"No");
+                fields.setField("pcMeleeShock", (character.getStats().isMeleeShock())?"Yes":"No");
+                fields.setField("pcMeleeSonic", (character.getStats().isMeleeSonic())?"Yes":"No");
+                fields.setField("pcMeleeEldritch", (character.getStats().isMeleeEldritch())?"Yes":"No");
+                fields.setField("pcMeleePoison", (character.getStats().isMeleePoison())?"Yes":"No");
+                fields.setField("pcMeleeDarkrift", (character.getStats().isMeleeDarkrift())?"Yes":"No");
+                fields.setField("pcMeleeSacred", (character.getStats().isMeleeSacred())?"Yes":"No");
+                fields.setField("pcRangeHit", Integer.toString(character.getStats().getRangeHit()));
+                fields.setField("pcRangeDmg", Integer.toString(character.getStats().getRangeDmg()));
+                fields.setField("pcRangeAC", Integer.toString(character.getStats().getRangeAC()));
+                fields.setField("pcRangeMissileAC", Integer.toString(character.getStats().getRangeMissileAC()));
+                fields.setField("pcRangeFire", (character.getStats().isRangeFire())?"Yes":"No");
+                fields.setField("pcRangeCold", (character.getStats().isRangeCold())?"Yes":"No");
+                fields.setField("pcRangeShock", (character.getStats().isRangeShock())?"Yes":"No");
+                fields.setField("pcRangeSonic", (character.getStats().isRangeSonic())?"Yes":"No");
+                fields.setField("pcRangeEldritch", (character.getStats().isRangeEldritch())?"Yes":"No");
+                fields.setField("pcRangePoison", (character.getStats().isRangePoison())?"Yes":"No");
+                fields.setField("pcRangeDarkrift", (character.getStats().isRangeDarkrift())?"Yes":"No");
+                fields.setField("pcRangeSacred", (character.getStats().isRangeSacred())?"Yes":"No");
+                fields.setField("pcFort", Integer.toString(character.getStats().getFort()));
+                fields.setField("pcReflex", Integer.toString(character.getStats().getReflex()));
+                fields.setField("pcWill", Integer.toString(character.getStats().getWill()));
+                fields.setField("pcRetDmg", Integer.toString(character.getStats().getRetDmg()));
+                fields.setField("pcRetFire", (character.getStats().isRetFire())?"Yes":"No");
+                fields.setField("pcRetCold", (character.getStats().isRetCold())?"Yes":"No");
+                fields.setField("pcRetShock", (character.getStats().isRetShock())?"Yes":"No");
+                fields.setField("pcRetSonic", (character.getStats().isRetSonic())?"Yes":"No");
+                fields.setField("pcRetEldritch", (character.getStats().isRetEldritch())?"Yes":"No");
+                fields.setField("pcRetPoison", (character.getStats().isRetPoison())?"Yes":"No");
+                fields.setField("pcRetDarkrift", (character.getStats().isRetDarkrift())?"Yes":"No");
+                fields.setField("pcRetSacred", (character.getStats().isRetSacred())?"Yes":"No");
+                fields.setField("pcCBS", (character.getStats().isCannotBeSuprised())?"Yes":"No");
+                fields.setField("pcFM", (character.getStats().isFreeMovement())?"Yes":"No");
+                fields.setField("pcP", (character.getStats().isPsychic())?"Yes":"No");
+                fields.setField("pcTreasureMin", Integer.toString(character.getStats().getTreasureMin()));
+                fields.setField("pcTreasureMax", Integer.toString(character.getStats().getTreasureMax()));
+                
                 fields.setGenerateAppearances(true);
                 stamper.setFormFlattening(true);
                 stamper.close();
