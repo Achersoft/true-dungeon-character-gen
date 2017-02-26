@@ -14,13 +14,21 @@ import com.achersoft.tdcc.enums.SlotStatus;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.core.StreamingOutput;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(rollbackFor = Exception.class)
@@ -66,6 +74,208 @@ public class CharacterServiceImpl implements CharacterService {
     public List<CharacterName> deleteCharacter(String id) {
         mapper.deleteCharacter(id, userPrincipalProvider.getUserPrincipal().getSub());
         return mapper.getCharacters(userPrincipalProvider.getUserPrincipal().getSub());
+    }
+    
+    @Override
+    public StreamingOutput exportCharacterPdf(String id) {
+        final CharacterDetails character = getCharacter(id);
+        return (OutputStream out) -> {
+            try {
+                PdfReader reader = new PdfReader("C:\\Users\\shaun\\Repositories\\true-dungeon-character-gen\\server\\barb2.pdf");
+                PdfStamper stamper = new PdfStamper(reader, out);
+                AcroFields fields = stamper.getAcroFields();
+                System.err.println(fields.getFields().keySet());
+                //System.err.println(fields.getAppearanceStates("MeleePosion")[1]);
+                
+                fields.setField("characterName", character.getName());
+                fields.setField("characterLevel", Integer.toString(character.getStats().getLevel()));
+                
+                fields.setField("baseStr", Integer.toString(character.getStats().getBaseStr()));
+                fields.setField("baseDex", Integer.toString(character.getStats().getBaseDex()));
+                fields.setField("baseCon", Integer.toString(character.getStats().getBaseCon()));
+                fields.setField("baseInt", Integer.toString(character.getStats().getBaseIntel()));
+                fields.setField("baseWis", Integer.toString(character.getStats().getBaseWis()));
+                fields.setField("baseCha", Integer.toString(character.getStats().getBaseCha()));
+                fields.setField("totalStr", Integer.toString(character.getStats().getStr()));
+                fields.setField("totalDex", Integer.toString(character.getStats().getDex()));
+                fields.setField("totalCon", Integer.toString(character.getStats().getCon()));
+                fields.setField("totalInt", Integer.toString(character.getStats().getIntel()));
+                fields.setField("totalWis", Integer.toString(character.getStats().getWis()));
+                fields.setField("totalCha", Integer.toString(character.getStats().getCha()));
+                fields.setField("bonusStr", Integer.toString(character.getStats().getStrBonus()));
+                fields.setField("bonusDex", Integer.toString(character.getStats().getDexBonus()));
+                fields.setField("bonusCon", Integer.toString(character.getStats().getConBonus()));
+                fields.setField("bonusInt", Integer.toString(character.getStats().getIntelBonus()));
+                fields.setField("bonusWis", Integer.toString(character.getStats().getWisBonus()));
+                fields.setField("bonusCha", Integer.toString(character.getStats().getChaBonus()));
+                
+                fields.setField("meleeHit", Integer.toString(character.getStats().getMeleeHit()));
+                fields.setField("meleeDmg", Integer.toString(character.getStats().getMeleeDmg()));
+                fields.setField("meleeAC", Integer.toString(character.getStats().getMeleeAC()));
+                String meleeDmgTypes = "";
+                if(character.getStats().isMeleeFire())
+                    meleeDmgTypes += "Fire";
+                if(character.getStats().isMeleeCold()) {
+                    if(!meleeDmgTypes.isEmpty())
+                        meleeDmgTypes += ", ";
+                    meleeDmgTypes += "Cold";    
+                }if(character.getStats().isMeleeShock()) {
+                    if(!meleeDmgTypes.isEmpty())
+                        meleeDmgTypes += ", ";
+                    meleeDmgTypes += "Shock";    
+                }if(character.getStats().isMeleeSonic()) {
+                    if(!meleeDmgTypes.isEmpty())
+                        meleeDmgTypes += ", ";
+                    meleeDmgTypes += "Sonic";    
+                }if(character.getStats().isMeleeEldritch()) {
+                    if(!meleeDmgTypes.isEmpty())
+                        meleeDmgTypes += ", ";
+                    meleeDmgTypes += "Eldritch";    
+                }if(character.getStats().isMeleePoison()) {
+                    if(!meleeDmgTypes.isEmpty())
+                        meleeDmgTypes += ", ";
+                    meleeDmgTypes += "Poison";    
+                }if(character.getStats().isMeleeDarkrift()) {
+                    if(!meleeDmgTypes.isEmpty())
+                        meleeDmgTypes += ", ";
+                    meleeDmgTypes += "Darkrift";    
+                }if(character.getStats().isMeleeSacred()) {
+                    if(!meleeDmgTypes.isEmpty())
+                        meleeDmgTypes += ", ";
+                    meleeDmgTypes += "Sacred";    
+                }if(meleeDmgTypes.isEmpty())
+                    meleeDmgTypes += "None";    
+                fields.setField("meleeDmgTypes", meleeDmgTypes);
+                
+                fields.setField("rangeHit", Integer.toString(character.getStats().getRangeHit()));
+                fields.setField("rangeDmg", Integer.toString(character.getStats().getRangeDmg()));
+                fields.setField("rangeAC", Integer.toString(character.getStats().getRangeAC()));
+                fields.setField("rangeMissileAC", Integer.toString(character.getStats().getRangeMissileAC()));
+                String rangeDmgTypes = "";
+                if(character.getStats().isRangeFire())
+                    rangeDmgTypes += "Fire";
+                if(character.getStats().isRangeCold()) {
+                    if(!rangeDmgTypes.isEmpty())
+                        rangeDmgTypes += ", ";
+                    rangeDmgTypes += "Cold";    
+                }if(character.getStats().isRangeShock()) {
+                    if(!rangeDmgTypes.isEmpty())
+                        rangeDmgTypes += ", ";
+                    rangeDmgTypes += "Shock";    
+                }if(character.getStats().isRangeSonic()) {
+                    if(!rangeDmgTypes.isEmpty())
+                        rangeDmgTypes += ", ";
+                    rangeDmgTypes += "Sonic";    
+                }if(character.getStats().isRangeEldritch()) {
+                    if(!rangeDmgTypes.isEmpty())
+                        rangeDmgTypes += ", ";
+                    rangeDmgTypes += "Eldritch";    
+                }if(character.getStats().isRangePoison()) {
+                    if(!rangeDmgTypes.isEmpty())
+                        rangeDmgTypes += ", ";
+                    rangeDmgTypes += "Poison";    
+                }if(character.getStats().isRangeDarkrift()) {
+                    if(!rangeDmgTypes.isEmpty())
+                        rangeDmgTypes += ", ";
+                    rangeDmgTypes += "Darkrift";    
+                }if(character.getStats().isRangeSacred()) {
+                    if(!rangeDmgTypes.isEmpty())
+                        rangeDmgTypes += ", ";
+                    rangeDmgTypes += "Sacred";    
+                }if(rangeDmgTypes.isEmpty())
+                    rangeDmgTypes += "None";    
+                fields.setField("rangeDmgTypes", rangeDmgTypes);
+                
+                fields.setField("hitPoints", Integer.toString(character.getStats().getHealth()));
+                fields.setField("regenPerRoom", Integer.toString(character.getStats().getRegen()));
+                
+                fields.setField("spellDmg", Integer.toString(character.getStats().getSpellDmg()));
+                fields.setField("spellHeal", Integer.toString(character.getStats().getSpellHeal()));
+                fields.setField("spellRes", Integer.toString(character.getStats().getSpellResist()));
+                
+                fields.setField("fortSave", Integer.toString(character.getStats().getFort()));
+                fields.setField("reflexSave", Integer.toString(character.getStats().getReflex()));
+                fields.setField("willSave", Integer.toString(character.getStats().getWill()));
+                
+                fields.setField("retDmg", Integer.toString(character.getStats().getRetDmg()));
+                String retDmgTypes = "";
+                if(character.getStats().isRetFire())
+                    retDmgTypes += "Fire";
+                if(character.getStats().isRetCold()) {
+                    if(!retDmgTypes.isEmpty())
+                        retDmgTypes += ", ";
+                    retDmgTypes += "Cold";    
+                }if(character.getStats().isRetShock()) {
+                    if(!retDmgTypes.isEmpty())
+                        retDmgTypes += ", ";
+                    retDmgTypes += "Shock";    
+                }if(character.getStats().isRetSonic()) {
+                    if(!retDmgTypes.isEmpty())
+                        retDmgTypes += ", ";
+                    retDmgTypes += "Sonic";    
+                }if(character.getStats().isRetEldritch()) {
+                    if(!retDmgTypes.isEmpty())
+                        retDmgTypes += ", ";
+                    retDmgTypes += "Eldritch";    
+                }if(character.getStats().isRetPoison()) {
+                    if(!retDmgTypes.isEmpty())
+                        retDmgTypes += ", ";
+                    retDmgTypes += "Poison";    
+                }if(character.getStats().isRetDarkrift()) {
+                    if(!retDmgTypes.isEmpty())
+                        retDmgTypes += ", ";
+                    retDmgTypes += "Darkrift";    
+                }if(character.getStats().isRetSacred()) {
+                    if(!retDmgTypes.isEmpty())
+                        retDmgTypes += ", ";
+                    retDmgTypes += "Sacred";    
+                }if(retDmgTypes.isEmpty())
+                    retDmgTypes += "None";    
+                fields.setField("retDmgTypes", retDmgTypes);
+                
+                fields.setField("drMelee", Integer.toString(character.getStats().getDrMelee()));
+                fields.setField("drRange", Integer.toString(character.getStats().getDrRange()));
+                fields.setField("drSpell", Integer.toString(character.getStats().getDrSpell()));
+                fields.setField("drFire", Integer.toString(character.getStats().getDrFire()));
+                fields.setField("drCold", Integer.toString(character.getStats().getDrCold()));
+                fields.setField("drShock", Integer.toString(character.getStats().getDrShock()));
+                fields.setField("drSonic", Integer.toString(character.getStats().getDrSonic()));
+                fields.setField("drEldritch", Integer.toString(character.getStats().getDrEldritch()));
+                fields.setField("drPoison", Integer.toString(character.getStats().getDrPoison()));
+                fields.setField("drDarkrift", Integer.toString(character.getStats().getDrDarkrift()));
+                fields.setField("drSacred", Integer.toString(character.getStats().getDrSacred()));
+                
+                fields.setField("treasureMin", Integer.toString(character.getStats().getTreasureMin()));
+                fields.setField("treasureMax", Integer.toString(character.getStats().getTreasureMax()));
+                
+                fields.setField("cannotBeSurprised", Boolean.toString(character.getStats().isCannotBeSuprised()));
+                fields.setField("freeMovement", Boolean.toString(character.getStats().isFreeMovement()));
+                fields.setField("isPsychic", Boolean.toString(character.getStats().isPsychic()));
+                fields.setField("psychicLevel", Integer.toString(character.getStats().getPsychicLevel()));
+                fields.setField("initiativeBonus", Integer.toString(character.getStats().getInitiative()));
+                
+                final StringBuilder itemsList = new StringBuilder();
+                final StringBuilder itemsListCnt = new StringBuilder();
+                AtomicInteger counter = new AtomicInteger(0);
+                character.getItems().stream().sorted().forEach((CharacterItem item) -> {
+                    if(counter.incrementAndGet() > 46)
+                        itemsListCnt.append(item.getSlot().text()).append(": ").append(item.getName()).append("\n");
+                    else
+                        itemsList.append(item.getSlot().text()).append(": ").append(item.getName()).append("\n");
+                });
+                fields.setField("itemList", itemsList.toString());
+                fields.setField("itemListCnt", itemsListCnt.toString());
+                
+                //fields.setField("MeleeToHit", "55");
+                //fields.setField("MeleePosion", "Yes");
+                fields.setGenerateAppearances(true);
+                stamper.setFormFlattening(true);
+                stamper.close();
+                reader.close();
+            } catch (DocumentException ex) {
+                throw new IOException(ex);
+            }
+        };
     }
     
     private CharacterDetails validateCharacterItems(String id) {

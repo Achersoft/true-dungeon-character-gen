@@ -69,6 +69,7 @@ public class CharacterStats {
     private boolean cannotBeSuprised = false;
     private boolean freeMovement = false;
     private boolean psychic = false;
+    private int psychicLevel = 0;
     private int spellDmg = 0;
     private int spellHeal = 0;
     private int spellResist = 0;

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor 
 @AllArgsConstructor
 @EqualsAndHashCode(exclude={"id", "characterId", "name", "text", "slot", "index", "rarity", "slotStatus", "statusText"})
-public class CharacterItem {
+public class CharacterItem implements Comparable<CharacterItem>{
     private String id;
     private String itemId;
     private String characterId;
@@ -25,4 +25,11 @@ public class CharacterItem {
     private Rarity rarity;
     private SlotStatus slotStatus;
     private String statusText;
+    
+    @Override
+    public int compareTo(CharacterItem ci) {
+        if(ci.slot.ordinal() > this.slot.ordinal())
+            return -1;
+        return 1;
+    }
 }

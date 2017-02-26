@@ -73,6 +73,16 @@ angular.module('main')
             $scope.characterContext = characterState.get();
         });
     };
+    
+    $scope.exportToPDF = function() {
+        characterSvc.exportToPDF($scope.characterContext.id).then(function(response) {
+            //console.log(response);
+            var blob = new Blob([response.data], {type:"blob"});
+            //console.log(blob);
+            //change download.pdf to the name of whatever you want your file to be
+            saveAs(blob, $scope.characterContext.name + ".pdf");
+        });
+    };
 }])
 
 .factory('CharacterState', [
@@ -122,6 +132,10 @@ angular.module('main')
     
     tokenAdminSvc.deleteCharacter = function(id) {
         return $http.delete(RESOURCES.REST_BASE_URL + '/character/' + id);
+    };
+    
+    tokenAdminSvc.exportToPDF = function(id) {
+        return $http.get(RESOURCES.REST_BASE_URL + '/character/pdf/' + id, {responseType: 'arraybuffer'});
     };
     
     return tokenAdminSvc;
