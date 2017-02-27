@@ -567,7 +567,8 @@ public class CharacterServiceImpl implements CharacterService {
         // Redoubt Set
         long redoubtCount = characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("f2b637457bc71b5fefd203388e84ba0e362c805a") || item.getItemId().equals("b07a7dad6b7094f91d5a080d4d16a2f505cfb343") || item.getItemId().equals("acaf3474f747654a2e0a3131f578762525173031") || item.getItemId().equals("94fa53c957b26cc84e0934b8425eeb82e77e3fa2") || item.getItemId().equals("b090451773359bd10b8e2d48cb2057c0a5ab9197") || item.getItemId().equals("d7a7ec69cff4f728559b57f4a4abb5beb092079b") || item.getItemId().equals("7784bba18a9c0f2021af27c6d1b07e20d0e774f2") || item.getItemId().equals("807e09264b752e61a405333ee1f5f165a2187848") || item.getItemId().equals("5a9dfb7089e81ad8995db870c890e5f93e4ed764") || item.getItemId().equals("30d3dc0bf82c9524c8f7874eb86571936cab8dd8"))).count();
         // Viper Strike Set
-        long viperCount = characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("bd21afd63114346decea5fc899ff697106e99429") || item.getItemId().equals("9431d39ad2fba9953bf4b526d86f41f37022efeb") || item.getItemId().equals("f2ff2a508dd3075633ca2fd9e58c0e1a76088af8") || item.getItemId().equals("dd565d74807cc9094990b324465612d52b3070bf") || item.getItemId().equals("09ad5527813c4f087f3123cd6a40404b9377a4bc"))).count();
+        long viperCount = characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && (item.getItemId().equals("9431d39ad2fba9953bf4b526d86f41f37022efeb") || item.getItemId().equals("f2ff2a508dd3075633ca2fd9e58c0e1a76088af8") || item.getItemId().equals("dd565d74807cc9094990b324465612d52b3070bf") || item.getItemId().equals("09ad5527813c4f087f3123cd6a40404b9377a4bc"))).count();
+        viperCount += characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && item.getItemId().equals("bd21afd63114346decea5fc899ff697106e99429")).count();
         
         // Reset Notes
         characterDetails.setNotes(new ArrayList());
@@ -737,9 +738,13 @@ public class CharacterServiceImpl implements CharacterService {
     
     private void calculateStats(CharacterDetails characterDetails) {
         final CharacterStats stats = characterDetails.getStats();
+        AtomicInteger mainWeaponHit = new AtomicInteger(0);
+        AtomicInteger offWeaponHit = new AtomicInteger(0);
+        AtomicInteger mightyRanged = new AtomicInteger(0);
 
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
+            
             stats.setStr(stats.getStr() + td.getStr());
             stats.setDex(stats.getDex() + td.getDex());
             stats.setCon(stats.getCon() + td.getCon());
@@ -748,7 +753,16 @@ public class CharacterServiceImpl implements CharacterService {
             stats.setCha(stats.getCha() + td.getCha());
             stats.setHealth(stats.getHealth() + td.getHealth());
             stats.setRegen(stats.getRegen() + td.getRegen());
-            stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+            if(item.getSlot() == Slot.MAINHAND) {
+                mainWeaponHit.set(td.getMeleeHit());
+                if(td.getMeleeHit() > offWeaponHit.get())
+                    stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit() - offWeaponHit.get());
+            } else if(item.getSlot() == Slot.OFFHAND) {
+                offWeaponHit.set(td.getMeleeHit());
+                if(td.getMeleeHit() > mainWeaponHit.get())
+                    stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit() - mainWeaponHit.get());
+            } else if(item.getSlot() != Slot.RANGE_MAINHAND)
+                stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
             stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
             stats.setMeleeFire(stats.isMeleeFire() || td.isMeleeFire());
             stats.setMeleeCold(stats.isMeleeCold() || td.isMeleeCold());
@@ -760,7 +774,10 @@ public class CharacterServiceImpl implements CharacterService {
             stats.setMeleeSacred(stats.isMeleeSacred() || td.isMeleeSacred());
             if(item.getSlot() != Slot.RANGE_OFFHAND)
                 stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-            stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+            if(item.getSlot() == Slot.RANGE_MAINHAND && (td.isThrown() || td.getName().toLowerCase().contains("mighty")))
+                mightyRanged.set(1);
+            if(item.getSlot() != Slot.MAINHAND && item.getSlot() != Slot.OFFHAND)    
+                stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
             stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
             stats.setRangeFire(stats.isRangeFire() || td.isRangeFire());
             stats.setRangeCold(stats.isRangeCold() || td.isRangeCold());
@@ -826,5 +843,8 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setFort(stats.getFort() + stats.getConBonus());
         stats.setReflex(stats.getReflex() + stats.getDexBonus());
         stats.setWill(stats.getWill() + stats.getWisBonus());
+        
+        if(mightyRanged.get() == 1)
+            stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
     }
 }
