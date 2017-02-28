@@ -1,6 +1,6 @@
 <div ng-click="openModal()" style="display:flex;margin-bottom:10px">
     <div style="width:225px;padding-right:10px">
-        <label class="text-right" style="font-size:28px;margin-top:15px;width:225px">{{label}}:</label>
+        <label class="text-right" style="font-size:28px;margin-top:15px;width:225px" ng-class="{'error-text': model.slotStatus === 'INVALID'}">{{label}}:</label>
     </div>
     <div style="width:75px">
         <img class="img-thumbnail img-responsive img-circle" ng-src="{{model.itemId === null && 'images/empty.jpg' || 'images/token.jpg'}}" alt="" width="75px" style="border:none" 
@@ -12,6 +12,9 @@
         </div>
         <div class="col-xs-12 nowrap-truncate" style=";padding-right:0px">
             {{model.text}}&nbsp;
+        </div>
+        <div class="col-xs-12 error-text" style="padding-right:0px" ng-if="model.slotStatus === 'INVALID'">
+            {{model.statusText}}
         </div>
     </div>
 </div>

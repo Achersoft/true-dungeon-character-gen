@@ -62,10 +62,14 @@
                     </div>
                 </div>
                 <div style="display:flex;margin-top:10px">
-                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Feet:</label>
+                    <label class="text-right" ng-class="{'error-text': characterContext.boots.slotStatus === 'INVALID'}" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Feet:</label>
                     <div style="padding:0;width:60px">
                         <token-selector character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.boots" label="Feet"></token-selector>
                     </div>
+                </div>
+                <div style="display:flex;" ng-show="characterContext.boots.slotStatus === 'INVALID'">
+                    <div style="min-width:40px;width:75%;"></div>
+                    <label style="min-width:210px;" class="error-text">{{characterContext.boots.statusText}}</label>
                 </div>
             </div>
             <div style="min-width:340px;width:50%">
@@ -77,7 +81,10 @@
                     <div style="padding:0;width:60px">
                         <token-selector character-class="{{characterContext.characterClass}}" placement="left-top" set-token="setTokenSlot" unequip="unequipItem" element-id="eyes" model="characterContext.eyes" label="Eyes"></token-selector>
                     </div>
-                    <label class="text-left" style="font-size:28px;padding-left:15px;margin-top:8px">:Eyes</label>
+                    <label class="text-left" ng-class="{'error-text': characterContext.eyes.slotStatus === 'INVALID'}"  style="font-size:28px;padding-left:15px;margin-top:8px">:Eyes</label>
+                </div>
+                <div style="display:flex;" ng-show="characterContext.eyes.slotStatus === 'INVALID'">
+                    <label style="min-width:210px;" class="error-text">{{characterContext.eyes.statusText}}</label>
                 </div>
                 <div style="display:flex;margin-top:10px">
                     <div style="padding-right:0;width:70px">
@@ -142,16 +149,20 @@
         <center>
             <div style="display:flex;max-width:866px;margin-bottom:15px;">
                 <div class="text-center" style="padding:0;width:25%">
-                    <label style="font-size:28px;">Main Hand</label>
+                    <label ng-class="{'error-text': characterContext.meleeMainhand.slotStatus === 'INVALID'}" style="font-size:28px;">Main Hand</label>
+                    <label class="error-text">{{characterContext.meleeMainhand.statusText}}</label>
                 </div>
                 <div class="text-center" style="padding:0;width:25%">
-                    <label style="font-size:28px;">Offhand</label>
+                    <label ng-class="{'error-text': characterContext.meleeOffhand.slotStatus === 'INVALID'}" style="font-size:28px;">Offhand</label>
+                    <label class="error-text">{{characterContext.meleeOffhand.statusText}}</label>
                 </div>
                 <div class="text-center" style="padding:0;width:25%">
-                    <label style="font-size:28px;">Ranged Main</label>
+                    <label ng-class="{'error-text': characterContext.rangedMainhand.slotStatus === 'INVALID'}" style="font-size:28px;">Ranged Main</label>
+                    <label class="error-text">{{characterContext.rangedMainhand.statusText}}</label>
                 </div>
                 <div class="text-center" style="padding:0;width:25%">
-                    <label style="font-size:28px;">Ranged Offhand</label>
+                    <label ng-class="{'error-text': characterContext.rangedOffhand.slotStatus === 'INVALID'}" style="font-size:28px;">Ranged Offhand</label>
+                    <label class="error-text">{{characterContext.rangedOffhand.statusText}}</label>
                 </div>
             </div>
         </center>

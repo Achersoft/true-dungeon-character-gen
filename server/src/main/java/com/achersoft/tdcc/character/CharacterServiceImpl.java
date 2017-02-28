@@ -9,6 +9,7 @@ import com.achersoft.tdcc.character.dao.CharacterNote;
 import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.character.persistence.CharacterMapper;
 import com.achersoft.tdcc.enums.CharacterClass;
+import com.achersoft.tdcc.enums.ConditionalUse;
 import com.achersoft.tdcc.enums.Slot;
 import com.achersoft.tdcc.enums.SlotStatus;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
@@ -22,8 +23,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -738,6 +741,8 @@ public class CharacterServiceImpl implements CharacterService {
     
     private void calculateStats(CharacterDetails characterDetails) {
         final CharacterStats stats = characterDetails.getStats();
+        final List<CharacterItem> conditionalTokens = new ArrayList();
+        final Set<ConditionalUse> weaponCondition = new HashSet();
         AtomicInteger mainWeaponHit = new AtomicInteger(0);
         AtomicInteger offWeaponHit = new AtomicInteger(0);
         AtomicInteger mightyRanged = new AtomicInteger(0);
@@ -745,14 +750,21 @@ public class CharacterServiceImpl implements CharacterService {
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
             
-            stats.setStr(stats.getStr() + td.getStr());
-            stats.setDex(stats.getDex() + td.getDex());
-            stats.setCon(stats.getCon() + td.getCon());
-            stats.setIntel(stats.getIntel() + td.getIntel());
-            stats.setWis(stats.getWis() + td.getWis());
-            stats.setCha(stats.getCha() + td.getCha());
-            stats.setHealth(stats.getHealth() + td.getHealth());
-            stats.setRegen(stats.getRegen() + td.getRegen());
+            if(td.isOneHanded() && !td.isRangedWeapon())
+                weaponCondition.add(ConditionalUse.WEAPON_1H);
+            if(td.isRangedWeapon())
+                weaponCondition.add(ConditionalUse.WEAPON_RANGED);
+            if(td.isTwoHanded() && !td.isRangedWeapon())
+                weaponCondition.add(ConditionalUse.WEAPON_2H);
+            
+            if(td.getConditionalUse() != ConditionalUse.NONE){
+                conditionalTokens.add(item);
+            } else {
+                item.setSlotStatus(SlotStatus.OK);
+                item.setStatusText(null);
+                updateStats(stats, td, characterDetails.getNotes());
+            }
+            
             if(item.getSlot() == Slot.MAINHAND) {
                 mainWeaponHit.set(td.getMeleeHit());
                 if(td.getMeleeHit() > offWeaponHit.get())
@@ -763,69 +775,20 @@ public class CharacterServiceImpl implements CharacterService {
                     stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit() - mainWeaponHit.get());
             } else if(item.getSlot() != Slot.RANGE_MAINHAND)
                 stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
-            stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
-            stats.setMeleeFire(stats.isMeleeFire() || td.isMeleeFire());
-            stats.setMeleeCold(stats.isMeleeCold() || td.isMeleeCold());
-            stats.setMeleeShock(stats.isMeleeShock() || td.isMeleeShock());
-            stats.setMeleeSonic(stats.isMeleeSonic() || td.isMeleeSonic());
-            stats.setMeleeEldritch(stats.isMeleeEldritch() || td.isMeleeEldritch());
-            stats.setMeleePoison(stats.isMeleePoison() || td.isMeleePoison());
-            stats.setMeleeDarkrift(stats.isMeleeDarkrift() || td.isMeleeDarkrift());
-            stats.setMeleeSacred(stats.isMeleeSacred() || td.isMeleeSacred());
             if(item.getSlot() != Slot.RANGE_OFFHAND)
                 stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
             if(item.getSlot() == Slot.RANGE_MAINHAND && (td.isThrown() || td.getName().toLowerCase().contains("mighty")))
                 mightyRanged.set(1);
             if(item.getSlot() != Slot.MAINHAND && item.getSlot() != Slot.OFFHAND)    
                 stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
-            stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
-            stats.setRangeFire(stats.isRangeFire() || td.isRangeFire());
-            stats.setRangeCold(stats.isRangeCold() || td.isRangeCold());
-            stats.setRangeShock(stats.isRangeShock() || td.isRangeShock());
-            stats.setRangeSonic(stats.isRangeSonic() || td.isRangeSonic());
-            stats.setRangeEldritch(stats.isRangeEldritch() || td.isRangeEldritch());
-            stats.setRangePoison(stats.isRangePoison() || td.isRangePoison());
-            stats.setRangeDarkrift(stats.isRangeDarkrift() || td.isRangeDarkrift());
-            stats.setRangeSacred(stats.isRangeSacred() || td.isRangeSacred());
             if(item.getSlot() != Slot.OFFHAND) {
                 stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                 stats.setRangeMissileAC(stats.getRangeMissileAC() + td.getRangeMissileAC());
             }
-            stats.setFort(stats.getFort() + td.getFort());
-            stats.setReflex(stats.getReflex() + td.getReflex());
-            stats.setWill(stats.getWill() + td.getWill());
-            stats.setRetDmg(stats.getRetDmg() + td.getRetDmg());
-            stats.setRetFire(stats.isRetFire() || td.isRetFire());
-            stats.setRetCold(stats.isRetCold() || td.isRetCold());
-            stats.setRetShock(stats.isRetShock() || td.isRetShock());
-            stats.setRetSonic(stats.isRetSonic() || td.isRetSonic());
-            stats.setRetEldritch(stats.isRetEldritch() || td.isRetEldritch());
-            stats.setRetPoison(stats.isRetPoison() || td.isRetPoison());
-            stats.setRetDarkrift(stats.isRetDarkrift() || td.isRetDarkrift());
-            stats.setRetSacred(stats.isRetSacred() || td.isRetSacred());
-            stats.setCannotBeSuprised(stats.isCannotBeSuprised() || td.isCannotBeSuprised());
-            stats.setFreeMovement(stats.isFreeMovement() || td.isFreeMovement());
-            stats.setPsychic(stats.isPsychic() || td.isPsychic());
-            stats.setSpellDmg(stats.getSpellDmg() + td.getSpellDmg());
-            stats.setSpellHeal(stats.getSpellHeal() + td.getSpellHeal());
-            stats.setTreasureMin(stats.getTreasureMin() + td.getTreasureMin());
-            stats.setTreasureMax(stats.getTreasureMax() + td.getTreasureMax());
-            stats.setDrMelee(stats.getDrMelee() + td.getDrMelee());
-            stats.setDrRange(stats.getDrRange() + td.getDrRange());
-            stats.setDrSpell(stats.getDrSpell() + td.getDrSpell());
-            stats.setDrFire(stats.getDrFire() + td.getDrFire());
-            stats.setDrCold(stats.getDrCold() + td.getDrCold());
-            stats.setDrShock(stats.getDrShock() + td.getDrShock());
-            stats.setDrSonic(stats.getDrSonic() + td.getDrSonic());
-            stats.setDrEldritch(stats.getDrEldritch() + td.getDrEldritch());
-            stats.setDrPoison(stats.getDrPoison() + td.getDrPoison());
-            stats.setDrDarkrift(stats.getDrDarkrift() + td.getDrDarkrift());
-            stats.setDrSacred(stats.getDrSacred() + td.getDrSacred()); 
-            
-            if(td.getSpecialText() != null && !td.getSpecialText().isEmpty()) {
-                 characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(td.isAlwaysInEffect()).oncePerRound(td.isOncePerRound()).oncePerRoom(td.isOncePerRoom()).oncePerGame(td.isOncePerGame()).note(td.getSpecialText()).build());
-            }
         });   
+        
+        // Check Conditionals 
+        checkConditionals(conditionalTokens, weaponCondition, stats, characterDetails.getNotes());
         
         stats.setStrBonus((stats.getStr()-10)/2);
         stats.setDexBonus((stats.getDex()-10)/2);
@@ -834,7 +797,7 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setWisBonus((stats.getWis()-10)/2);
         stats.setChaBonus((stats.getCha()-10)/2);
 
-        stats.setHealth(stats.getHealth() + stats.getLevel() * ((int)((stats.getCon()-stats.getBaseCon())/2)));
+        stats.setHealth(stats.getHealth() + stats.getLevel() * ((int)((stats.getCon()+1-stats.getBaseCon())/2)));
         stats.setMeleeHit(stats.getMeleeHit() + stats.getStrBonus());
         stats.setMeleeDmg(stats.getMeleeDmg() + stats.getStrBonus());
         stats.setRangeHit(stats.getRangeHit() + stats.getDexBonus());
@@ -846,5 +809,150 @@ public class CharacterServiceImpl implements CharacterService {
         
         if(mightyRanged.get() == 1)
             stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
+    }
+    
+    private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> weaponCondition, CharacterStats stats, List<CharacterNote> notes) {
+        conditionalTokens.stream().forEach((token) -> {
+            TokenFullDetails td = tokenAdminMapper.getTokenDetails(token.getItemId());
+            if(null != td.getConditionalUse()) switch (td.getConditionalUse()) {
+                case WEAPON_2H:
+                    if(!weaponCondition.contains(ConditionalUse.WEAPON_2H)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("This token requires a two handed weapon to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                case WEAPON_1H:
+                    if(!weaponCondition.contains(ConditionalUse.WEAPON_1H)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("This token requires a one handed weapon to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                case WEAPON_RANGED:
+                    if(!weaponCondition.contains(ConditionalUse.WEAPON_RANGED)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("This token requires a range weapon to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                case DEXTERITY_18:
+                    if(stats.getDex() < 18) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("This token requires a dexterity of 18 or higher to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                case DEXTERITY_20:
+                    if(stats.getDex() < 20) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("This token requires a dexterity of 20 or higher to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                case INTELLECT_20:
+                    if(stats.getIntel()< 20) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("This token requires a intellect of 20 or higher to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                case WISDOM_20:
+                    if(stats.getWis()< 20) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("This token requires a wisdom of 20 or higher to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                case STRENGTH_24:
+                    if(stats.getStr()< 24) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("This token requires a strength of 24 or higher to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                default:
+                    break;
+            }
+        });
+    }
+                
+    private void updateStats(CharacterStats stats, TokenFullDetails td, List<CharacterNote> notes) {
+        stats.setStr(stats.getStr() + td.getStr());
+        stats.setDex(stats.getDex() + td.getDex());
+        stats.setCon(stats.getCon() + td.getCon());
+        stats.setIntel(stats.getIntel() + td.getIntel());
+        stats.setWis(stats.getWis() + td.getWis());
+        stats.setCha(stats.getCha() + td.getCha());
+        stats.setHealth(stats.getHealth() + td.getHealth());
+        stats.setRegen(stats.getRegen() + td.getRegen());
+        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+        stats.setMeleeFire(stats.isMeleeFire() || td.isMeleeFire());
+        stats.setMeleeCold(stats.isMeleeCold() || td.isMeleeCold());
+        stats.setMeleeShock(stats.isMeleeShock() || td.isMeleeShock());
+        stats.setMeleeSonic(stats.isMeleeSonic() || td.isMeleeSonic());
+        stats.setMeleeEldritch(stats.isMeleeEldritch() || td.isMeleeEldritch());
+        stats.setMeleePoison(stats.isMeleePoison() || td.isMeleePoison());
+        stats.setMeleeDarkrift(stats.isMeleeDarkrift() || td.isMeleeDarkrift());
+        stats.setMeleeSacred(stats.isMeleeSacred() || td.isMeleeSacred());
+        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+        stats.setRangeFire(stats.isRangeFire() || td.isRangeFire());
+        stats.setRangeCold(stats.isRangeCold() || td.isRangeCold());
+        stats.setRangeShock(stats.isRangeShock() || td.isRangeShock());
+        stats.setRangeSonic(stats.isRangeSonic() || td.isRangeSonic());
+        stats.setRangeEldritch(stats.isRangeEldritch() || td.isRangeEldritch());
+        stats.setRangePoison(stats.isRangePoison() || td.isRangePoison());
+        stats.setRangeDarkrift(stats.isRangeDarkrift() || td.isRangeDarkrift());
+        stats.setRangeSacred(stats.isRangeSacred() || td.isRangeSacred());
+        stats.setFort(stats.getFort() + td.getFort());
+        stats.setReflex(stats.getReflex() + td.getReflex());
+        stats.setWill(stats.getWill() + td.getWill());
+        stats.setRetDmg(stats.getRetDmg() + td.getRetDmg());
+        stats.setRetFire(stats.isRetFire() || td.isRetFire());
+        stats.setRetCold(stats.isRetCold() || td.isRetCold());
+        stats.setRetShock(stats.isRetShock() || td.isRetShock());
+        stats.setRetSonic(stats.isRetSonic() || td.isRetSonic());
+        stats.setRetEldritch(stats.isRetEldritch() || td.isRetEldritch());
+        stats.setRetPoison(stats.isRetPoison() || td.isRetPoison());
+        stats.setRetDarkrift(stats.isRetDarkrift() || td.isRetDarkrift());
+        stats.setRetSacred(stats.isRetSacred() || td.isRetSacred());
+        stats.setCannotBeSuprised(stats.isCannotBeSuprised() || td.isCannotBeSuprised());
+        stats.setFreeMovement(stats.isFreeMovement() || td.isFreeMovement());
+        stats.setPsychic(stats.isPsychic() || td.isPsychic());
+        stats.setSpellDmg(stats.getSpellDmg() + td.getSpellDmg());
+        stats.setSpellHeal(stats.getSpellHeal() + td.getSpellHeal());
+        stats.setTreasureMin(stats.getTreasureMin() + td.getTreasureMin());
+        stats.setTreasureMax(stats.getTreasureMax() + td.getTreasureMax());
+        stats.setDrMelee(stats.getDrMelee() + td.getDrMelee());
+        stats.setDrRange(stats.getDrRange() + td.getDrRange());
+        stats.setDrSpell(stats.getDrSpell() + td.getDrSpell());
+        stats.setDrFire(stats.getDrFire() + td.getDrFire());
+        stats.setDrCold(stats.getDrCold() + td.getDrCold());
+        stats.setDrShock(stats.getDrShock() + td.getDrShock());
+        stats.setDrSonic(stats.getDrSonic() + td.getDrSonic());
+        stats.setDrEldritch(stats.getDrEldritch() + td.getDrEldritch());
+        stats.setDrPoison(stats.getDrPoison() + td.getDrPoison());
+        stats.setDrDarkrift(stats.getDrDarkrift() + td.getDrDarkrift());
+        stats.setDrSacred(stats.getDrSacred() + td.getDrSacred()); 
+
+        if(td.getSpecialText() != null && !td.getSpecialText().isEmpty()) {
+             notes.add(CharacterNote.builder().alwaysInEffect(td.isAlwaysInEffect()).oncePerRound(td.isOncePerRound()).oncePerRoom(td.isOncePerRoom()).oncePerGame(td.isOncePerGame()).note(td.getSpecialText()).build());
+        }
     }
 }

@@ -1,6 +1,6 @@
 <div>
     <div>
-        <label>{{label}}:</label>
+        <label ng-class="{'error-text': model.slotStatus === 'INVALID'}">{{label}}:</label>
         <a href="" ng-click="openModal()"><label>{{model.name}}</label></a>
     </div>     
 </div>

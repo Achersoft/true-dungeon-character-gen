@@ -104,6 +104,14 @@
     padding:0;
 }
 
+.error-text {
+    color: red;
+}
+
+.no-token {
+    background-color:transparent;
+}
+
 .common-token {
     background-color:darkgoldenrod;
 }
