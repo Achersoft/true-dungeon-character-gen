@@ -17,8 +17,8 @@ angular.module('main')
     $scope.tokenUsability = ["ALL", "BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
     $scope.tokenSlots = ["BACK", "CHARM", "EAR", "EYES", "FEET", "FIGURINE", "FINGER", "HANDS", "HEAD", "INSTRUMENT", "IOUNSTONE", "LEGS", "MAINHAND", 
         "NECK", "OFFHAND", "RUNESTONE", "SHIRT", "SLOTLESS", "TORSO", "WAIST", "WRIST"];
-    $scope.tokenRarities = ["COMMON", "UNCOMMON", "RARE", "ULTRARARE", "ENHANCED", "EXALTED", "RELIC", "LEGENDARY", "ELDRITCH", "PREMIUM", "ARTIFACT"];
-    $scope.tokenConditionals = ["NONE", "DEXTERITY_18", "DEXTERITY_20", "INTELLECT_20", "WISDOM_20", "WEAPON_2H", "WEAPON_1H", "WEAPON_RANGED", "MAY_NOT_USE_SHIELDS", "STRENGTH_24"];
+    $scope.tokenRarities = ["COMMON", "UNCOMMON", "RARE", "ULTRARARE", "ENHANCED", "EXALTED", "RELIC", "LEGENDARY", "ELDRITCH", "PREMIUM", "ARTIFACT", "PLAYER_REWARD"];
+    $scope.tokenConditionals = ["NONE", "DEXTERITY_18", "DEXTERITY_20", "INTELLECT_20", "WISDOM_20", "WEAPON_2H", "WEAPON_1H", "WEAPON_RANGED", "MAY_NOT_USE_SHIELDS", "STRENGTH_24", "NOT_WITH_COA", "NO_OTHER_TREASURE"];
     
     $scope.usabilitySelected =  function(usableBy){
         return $.inArray(usableBy, $scope.search.usableBy) > -1;
@@ -67,8 +67,8 @@ angular.module('main')
     $scope.tokenUsability = ["ALL", "BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
     $scope.tokenSlots = ["BACK", "CHARM", "EAR", "EYES", "FEET", "FIGURINE", "FINGER", "HANDS", "HEAD", "INSTRUMENT", "IOUNSTONE", "LEGS", "MAINHAND", 
         "NECK", "OFFHAND", "RUNESTONE", "SHIRT", "SLOTLESS", "TORSO", "WAIST", "WRIST"];
-    $scope.tokenRarities = ["COMMON", "UNCOMMON", "RARE", "ULTRARARE", "ENHANCED", "EXALTED", "RELIC", "LEGENDARY", "ELDRITCH", "PREMIUM", "ARTIFACT"];
-    $scope.tokenConditionals = ["NONE", "DEXTERITY_18", "DEXTERITY_20", "INTELLECT_20", "WISDOM_20", "WEAPON_2H", "WEAPON_1H", "WEAPON_RANGED", "MAY_NOT_USE_SHIELDS", "STRENGTH_24"];
+    $scope.tokenRarities = ["COMMON", "UNCOMMON", "RARE", "ULTRARARE", "ENHANCED", "EXALTED", "RELIC", "LEGENDARY", "ELDRITCH", "PREMIUM", "ARTIFACT", "PLAYER_REWARD"];
+    $scope.tokenConditionals = ["NONE", "DEXTERITY_18", "DEXTERITY_20", "INTELLECT_20", "WISDOM_20", "WEAPON_2H", "WEAPON_1H", "WEAPON_RANGED", "MAY_NOT_USE_SHIELDS", "STRENGTH_24", "NOT_WITH_COA", "NO_OTHER_TREASURE"];
     
     $scope.selectedToken = '';
             

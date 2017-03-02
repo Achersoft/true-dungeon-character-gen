@@ -13,7 +13,8 @@ public enum Rarity {
     LEGENDARY,
     ELDRITCH,
     PREMIUM,
-    ARTIFACT;
+    ARTIFACT,
+    PLAYER_REWARD;
 }
 
 

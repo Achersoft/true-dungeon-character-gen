@@ -10,6 +10,7 @@ import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.character.persistence.CharacterMapper;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.enums.ConditionalUse;
+import com.achersoft.tdcc.enums.Rarity;
 import com.achersoft.tdcc.enums.Slot;
 import com.achersoft.tdcc.enums.SlotStatus;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
@@ -742,20 +743,27 @@ public class CharacterServiceImpl implements CharacterService {
     private void calculateStats(CharacterDetails characterDetails) {
         final CharacterStats stats = characterDetails.getStats();
         final List<CharacterItem> conditionalTokens = new ArrayList();
-        final Set<ConditionalUse> weaponCondition = new HashSet();
+        final Set<ConditionalUse> metCondition = new HashSet();
         AtomicInteger mainWeaponHit = new AtomicInteger(0);
         AtomicInteger offWeaponHit = new AtomicInteger(0);
         AtomicInteger mightyRanged = new AtomicInteger(0);
+        AtomicInteger additionalTreasureTokens = new AtomicInteger(0);
 
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
             
+            if(td.getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
+                metCondition.add(ConditionalUse.NOT_WITH_COA);
+            if(td.getTreasureMin()>0 && td.getRarity() != Rarity.PLAYER_REWARD)
+                if(additionalTreasureTokens.addAndGet(1) > 1)
+                    metCondition.add(ConditionalUse.NO_OTHER_TREASURE);
+            
             if(td.isOneHanded() && !td.isRangedWeapon())
-                weaponCondition.add(ConditionalUse.WEAPON_1H);
+                metCondition.add(ConditionalUse.WEAPON_1H);
             if(td.isRangedWeapon())
-                weaponCondition.add(ConditionalUse.WEAPON_RANGED);
+                metCondition.add(ConditionalUse.WEAPON_RANGED);
             if(td.isTwoHanded() && !td.isRangedWeapon())
-                weaponCondition.add(ConditionalUse.WEAPON_2H);
+                metCondition.add(ConditionalUse.WEAPON_2H);
             
             if(td.getConditionalUse() != ConditionalUse.NONE){
                 conditionalTokens.add(item);
@@ -788,7 +796,7 @@ public class CharacterServiceImpl implements CharacterService {
         });   
         
         // Check Conditionals 
-        checkConditionals(conditionalTokens, weaponCondition, stats, characterDetails.getNotes());
+        checkConditionals(conditionalTokens, metCondition, stats, characterDetails.getNotes());
         
         stats.setStrBonus((stats.getStr()-10)/2);
         stats.setDexBonus((stats.getDex()-10)/2);
@@ -811,12 +819,12 @@ public class CharacterServiceImpl implements CharacterService {
             stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
     }
     
-    private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> weaponCondition, CharacterStats stats, List<CharacterNote> notes) {
+    private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, List<CharacterNote> notes) {
         conditionalTokens.stream().forEach((token) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(token.getItemId());
             if(null != td.getConditionalUse()) switch (td.getConditionalUse()) {
                 case WEAPON_2H:
-                    if(!weaponCondition.contains(ConditionalUse.WEAPON_2H)) {
+                    if(!metCondition.contains(ConditionalUse.WEAPON_2H)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a two handed weapon to use.");
                     } else {
@@ -825,7 +833,7 @@ public class CharacterServiceImpl implements CharacterService {
                         updateStats(stats, td, notes);
                     }   break;
                 case WEAPON_1H:
-                    if(!weaponCondition.contains(ConditionalUse.WEAPON_1H)) {
+                    if(!metCondition.contains(ConditionalUse.WEAPON_1H)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a one handed weapon to use.");
                     } else {
@@ -834,7 +842,7 @@ public class CharacterServiceImpl implements CharacterService {
                         updateStats(stats, td, notes);
                     }   break;
                 case WEAPON_RANGED:
-                    if(!weaponCondition.contains(ConditionalUse.WEAPON_RANGED)) {
+                    if(!metCondition.contains(ConditionalUse.WEAPON_RANGED)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a range weapon to use.");
                     } else {
@@ -882,6 +890,24 @@ public class CharacterServiceImpl implements CharacterService {
                     if(stats.getStr()< 24) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a strength of 24 or higher to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                case NOT_WITH_COA:
+                    if(metCondition.contains(ConditionalUse.NOT_WITH_COA)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with the Charm of Avarice.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                case NO_OTHER_TREASURE:
+                    if(metCondition.contains(ConditionalUse.NO_OTHER_TREASURE)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with any other treasure enchancing token.");
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);

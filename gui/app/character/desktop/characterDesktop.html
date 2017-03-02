@@ -10,11 +10,14 @@
                     <token-selector character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="iounStone{{$index}}" model="iounStone" label="Ioun Stone"></token-selector>
                 </div>
             </div>
-                <div style="display:flex;max-width:866px;margin-top:10px">
-                <label class="text-right" style="font-size:28px;padding-right:15px;margin-top:8px">Charms:</label>
+            <div style="display:flex;max-width:866px;margin-top:10px">
+                <label class="text-right" ng-class="{'error-text': charmErrors !== null}" style="font-size:28px;padding-right:15px;margin-top:8px">Charms:</label>
                 <div style="padding:0;width:70px" ng-repeat-start="charm in characterContext.charms track by $index" ng-repeat-end>
                     <token-selector character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="charm{{$index}}" model="charm" label="Charm"></token-selector>
                 </div>
+            </div>
+            <div style="display:flex;max-width:866px;margin-top:2px" ng-repeat-start="charmError in charmErrors track by $index" ng-repeat-end>
+                <label class="error-text">{{charmError}}</label>
             </div>
             <div style="display:flex;max-width:866px;margin-top:10px">
                 <label class="text-right" style="font-size:28px;padding-right:15px;margin-top:8px">Slotless:</label>
@@ -99,7 +102,10 @@
                     <div style="padding:0;width:60px">
                         <token-selector character-class="{{characterContext.characterClass}}" placement="left" set-token="setTokenSlot" unequip="unequipItem" element-id="neck" model="characterContext.neck" label="Neck"></token-selector>
                     </div>
-                    <label class="text-left" style="font-size:28px;padding-left:15px;margin-top:8px">:Neck</label>
+                    <label class="text-left" ng-class="{'error-text': characterContext.neck.slotStatus === 'INVALID'}" style="font-size:28px;padding-left:15px;margin-top:8px">:Neck</label>
+                </div>
+                <div style="display:flex;" ng-show="characterContext.neck.slotStatus === 'INVALID'">
+                    <label style="min-width:210px;" class="error-text">{{characterContext.neck.statusText}}</label>
                 </div>
                 <div style="display:flex;margin-top:10px">
                     <div style="padding:0;width:60px">
@@ -111,14 +117,20 @@
                     <div style="padding:0;width:70px" ng-repeat-start="back in characterContext.backs track by $index" ng-repeat-end>
                         <token-selector character-class="{{characterContext.characterClass}}" placement="left-bottom" set-token="setTokenSlot" unequip="unequipItem" model="back" label="Back"></token-selector>
                     </div>
-                    <label class="text-left" style="font-size:28px;padding-left:5px;margin-top:8px">:Back</label>
+                    <label class="text-left" ng-class="{'error-text': backErrors !== null}" style="font-size:28px;padding-left:5px;margin-top:8px">:Back</label>
+                </div>
+                <div style="display:flex;" ng-show="backErrors !== null">
+                    <label style="min-width:210px;" class="error-text">{{backErrors}}</label>
                 </div>
                 <div style="display:flex;margin-top:10px;height:60px">
                     <div ng-if="characterContext.rings !== null" style="padding:0;width:70px" ng-repeat-start="ring in characterContext.rings track by $index" ng-repeat-end>
                         <token-selector character-class="{{characterContext.characterClass}}" placement="left-bottom" set-token="setTokenSlot" unequip="unequipItem" model="ring" label="Ring"></token-selector>
                     </div>
                     <img ng-if="characterContext.rings.length === 0" class="img-thumbnail img-responsive img-circle" style="border:none;" src="images/nullToken.jpg" alt="images/nullToken.jpg" width="60px">
-                    <label class="text-left" style="font-size:28px;padding-left:5px;margin-top:8px">:Rings</label>
+                    <label class="text-left" ng-class="{'error-text': ringErrors !== null}" style="font-size:28px;padding-left:5px;margin-top:8px">:Rings</label>
+                </div>
+                <div style="display:flex;" ng-show="ringErrors !== null">
+                    <label style="min-width:210px;" class="error-text">{{ringErrors}}</label>
                 </div>
                 <div style="display:flex;margin-top:10px">
                     <div style="padding:0;width:60px">

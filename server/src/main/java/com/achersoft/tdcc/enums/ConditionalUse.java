@@ -10,7 +10,9 @@ public enum ConditionalUse {
     WEAPON_1H,
     WEAPON_RANGED,
     MAY_NOT_USE_SHIELDS,
-    STRENGTH_24;
+    STRENGTH_24,
+    NO_OTHER_TREASURE,
+    NOT_WITH_COA;
 }
 
 

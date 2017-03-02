@@ -54,16 +54,21 @@ angular.module('main')
 .controller('CharacterEditCtrl', ['$scope', 'CharacterSvc', 'CharacterState', '$route', '$routeParams', function ($scope, characterSvc, characterState, $route, $routeParams) {
     $scope.tabIndex = 0;
     $scope.characterContext = characterState.get();
-
+    $scope.ringErrors = null;
+    $scope.backErrors = null;
+    $scope.charmErrors = null;
+    
     characterSvc.getCharacter($routeParams.characterId).then(function(result) {
         characterState.setContext(result.data);
         $scope.characterContext = characterState.get();
+        $scope.checkItemStatus();
     });
     
     $scope.setTokenSlot = function(id, soltId, tokenId) {
         characterSvc.setTokenSlot(id, soltId, tokenId).then(function(result) {
             characterState.setContext(result.data);
             $scope.characterContext = characterState.get();
+            $scope.checkItemStatus();
         });
     };
     
@@ -71,6 +76,7 @@ angular.module('main')
         characterSvc.unequipItem(id, soltId).then(function(result) {
             characterState.setContext(result.data);
             $scope.characterContext = characterState.get();
+            $scope.checkItemStatus();
         });
     };
     
@@ -82,6 +88,33 @@ angular.module('main')
             //change download.pdf to the name of whatever you want your file to be
             saveAs(blob, $scope.characterContext.name + ".pdf");
         });
+    };
+    
+    $scope.checkItemStatus = function() {
+        $scope.ringErrors = null;
+        $scope.backErrors = null;
+        $scope.charmErrors = null;
+        if($scope.characterContext.rings.length > 0) {
+            $scope.characterContext.rings.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID')
+                    $scope.ringErrors = item.statusText;
+            });
+        }
+        if($scope.characterContext.backs.length > 0) {
+            $scope.characterContext.backs.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID')
+                    $scope.backErrors = item.statusText;
+            });
+        }
+        if($scope.characterContext.charms.length > 0) {
+            $scope.characterContext.charms.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID') {
+                    if($scope.charmErrors === null)
+                        $scope.charmErrors = [];
+                    $scope.charmErrors.push(item.statusText);
+                }
+            });
+        }
     };
 }])
 
