@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <label>Name:</label>
+                <input class="form-control" type="text" ng-model="name"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12" style="margin-top: 10px">
+                <label>Class:</label><br>
+             </div>   
+            <div class="col-xs-12 col-md-12">
+                <span style="width:33.33333%" ng-class="{'btn-info' : characterClassSelected(charClass), 'btn-default' : !characterClassSelected(charClass)}" ng-click="toggleCharacterClassSelected(charClass)" class="btn" ng-repeat-start="charClass in characterClasses" ng-repeat-end="">
+                    {{charClass | characterclassformat}}
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px;margin-bottom:15px">
+                <button class="btn btn-primary" ng-click="createCharacter()" style="width:100%;max-width:600px">
+                    <span class="fa fa-save" ></span> Create 
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

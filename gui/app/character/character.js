@@ -2,21 +2,33 @@ angular.module('main')
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
-    .when('/character/mine', {
-        templateUrl: 'character/myCharacters.html',
+    .when('/desktop/character/mine', {
+        templateUrl: 'character/desktop/myCharacters.html',
         controller: 'MyCharactersCtrl'
     })
-    .when('/character/create', {
-        templateUrl: 'character/createCharacter.html',
+    .when('/mobile/character/mine', {
+        templateUrl: 'character/mobile/myCharacters.html',
+        controller: 'MyCharactersCtrl'
+    })
+    .when('/desktop/character/create', {
+        templateUrl: 'character/desktop/createCharacter.html',
         controller: 'CharacterCreationCtrl'
     })
-    .when('/character/edit/:characterId', {
-        templateUrl: 'character/editCharacter.html',
+    .when('/mobile/character/create', {
+        templateUrl: 'character/mobile/createCharacter.html',
+        controller: 'CharacterCreationCtrl'
+    })
+    .when('/desktop/character/edit/:characterId', {
+        templateUrl: 'character/desktop/editCharacter.html',
+        controller: 'CharacterEditCtrl'
+    })
+    .when('/mobile/character/edit/:characterId', {
+        templateUrl: 'character/mobile/editCharacter.html',
         controller: 'CharacterEditCtrl'
     });
 }])
 
-.controller('MyCharactersCtrl', ['$scope', 'CharacterSvc', '$location', '$route', function ($scope, characterSvc, $location, $route) {
+.controller('MyCharactersCtrl', ['$scope', 'CharacterSvc', function ($scope, characterSvc) {
     $scope.myCharacterContext = {};
     
     characterSvc.getCharacters().then(function(result) {

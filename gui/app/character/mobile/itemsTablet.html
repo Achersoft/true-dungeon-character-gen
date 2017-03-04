@@ -1,0 +1,85 @@
+<div style="height:calc(100% - 102px);position:fixed;overflow-y:scroll;padding-left:0;padding-right:0">
+    <div class="col-xs-12" style="margin-top:10px;padding:0" ng-if="characterContext.meleeMainhand !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="meleeMainhand" model="characterContext.meleeMainhand" label="Melee Weapon"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.meleeOffhand !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="meleeOffhand" model="characterContext.meleeOffhand" label="Melee Offhand"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.rangedMainhand !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="rangedMainhand" model="characterContext.rangedMainhand" label="Range Weapon"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.rangedOffhand !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="rangedOffhand" model="characterContext.rangedOffhand" label="Range Offhand"></item-tablet-selector>
+    </div>
+    <div ng-if="characterContext.instruments !== null && characterContext.instruments.length > 0">
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="instrument in characterContext.instruments track by $index" ng-repeat-end>
+            <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="instrument{{$index}}" model="instrument" label="Instrument"></item-tablet-selector>
+        </div>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.head !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="head" model="characterContext.head" label="Head"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.eyes !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="eyes" model="characterContext.eyes" label="Eyes"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.leftEar !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="leftEar" model="characterContext.leftEar" label="Ear"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.rightEar !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="rightEar" model="characterContext.rightEar" label="Ear"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.neck !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="neck" model="characterContext.neck" label="Neck"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.torso !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="torso" model="characterContext.torso" label="Torso"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.wrists !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="wrists" model="characterContext.wrists" label="Wrists"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.hands !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="hands" model="characterContext.hands" label="Hands"></item-tablet-selector>
+    </div>
+    <div ng-if="characterContext.backs !== null && characterContext.backs.length > 0">
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="back in characterContext.backs track by $index" ng-repeat-end>
+            <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="back{{$index}}" model="back" label="Back"></item-tablet-selector>
+        </div>
+    </div>
+    <div ng-if="characterContext.rings !== null && characterContext.rings.length > 0">
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="ring in characterContext.rings track by $index" ng-repeat-end>
+            <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="ring{{$index}}" model="ring" label="Ring"></item-tablet-selector>
+        </div>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.waist !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="waist" model="characterContext.waist" label="Waist"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.shirt !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="shirt" model="characterContext.shirt" label="Shirt"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.legs !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="legs" model="characterContext.legs" label="Legs"></item-tablet-selector>
+    </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.boots !== null">
+        <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="boots" model="characterContext.boots" label="Feet"></item-tablet-selector>
+    </div>
+    <div ng-if="characterContext.charms !== null && characterContext.charms.length > 0">
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="charm in characterContext.charms track by $index" ng-repeat-end>
+            <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="charm{{$index}}" model="charm" label="Charm"></item-tablet-selector>
+        </div>
+    </div>
+    <div ng-if="characterContext.iounStones !== null && characterContext.iounStones.length > 0">
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="iounStone in characterContext.iounStones track by $index" ng-repeat-end>
+            <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="iounStone{{$index}}" model="iounStone" label="Ioun Stone"></item-tablet-selector>
+        </div>
+    </div>
+    <div ng-if="characterContext.slotless !== null && characterContext.slotless.length > 0">
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="slotlessItem in characterContext.slotless track by $index" ng-repeat-end>
+            <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></item-tablet-selector>
+        </div>
+    </div>
+    <div ng-if="characterContext.runestones !== null && characterContext.runestones.length > 0">
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="runestone in characterContext.runestones track by $index" ng-repeat-end>
+            <item-tablet-selector character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="runestone{{$index}}" model="runestone" label="Runestone"></item-tablet-selector>
+        </div>
+    </div>
+</div>
