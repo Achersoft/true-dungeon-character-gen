@@ -58,8 +58,15 @@ angular.module('main', [
     else
         $routeProvider.otherwise({redirectTo: '/desktop/character/mine'});
 }])
-.run(['$rootScope', '$location', 'RESOURCES', function($rootScope, $location, RESOURCES) {
+.run(['$rootScope', '$location', '$uibModalStack', 'RESOURCES', function($rootScope, $location, $uibModalStack, RESOURCES) {
     $rootScope.loginRequired = false;
+    
+    $rootScope.$on('$locationChangeStart', function(event, next, current){            
+        if($uibModalStack.getTop()) {
+            $uibModalStack.dismissAll();
+            event.preventDefault();  
+        }
+    });
 
     // If angular-http-auth inteceptor fires "requires login" event, we need to display login "view"
     $rootScope.$on('event:auth-loginRequired', function() {
