@@ -1,9 +1,11 @@
-'use strict';
-
-angular.module('main.users', ['ngRoute'])
+angular.module('main')
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
+    .when('/password/reset/:resetId', {
+        templateUrl: 'admin/user/resetPassword.html',
+        controller: 'PasswordResetCtrl'
+    })
     .when('/users/viewAll', {
         templateUrl: 'admin/user/userList.html',
         controller: 'UserCtrl'
@@ -66,6 +68,15 @@ angular.module('main.users', ['ngRoute'])
             });
         }
     });
+}])
+
+.controller('PasswordResetCtrl', ['$scope', '$location', '$route', '$routeParams', 'NgTableParams', 'UserSvc', 'UserState', function ($scope, $location, $route, $routeParams, NgTableParams, userSvc, userState) {
+    $scope.userContext = userState.get();
+    
+    $scope.add = function() {
+        userState.setUser({}, true, true);
+        $location.path("/users/add");
+    };
 }])
 
 .factory('UserState', [

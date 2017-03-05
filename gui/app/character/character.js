@@ -1,29 +1,17 @@
 angular.module('main')
 
-.config(['$routeProvider', function($routeProvider) {
+.config(['$routeProvider', 'RESOURCES', function($routeProvider, RESOURCES) {
   $routeProvider
-    .when('/desktop/character/mine', {
-        templateUrl: 'character/desktop/myCharacters.html',
+    .when('/character/mine', {
+        templateUrl: (RESOURCES.IS_MOBILE)?'character/mobile/myCharacters.html':'character/mobile/myCharacters.html',
         controller: 'MyCharactersCtrl'
     })
-    .when('/mobile/character/mine', {
-        templateUrl: 'character/mobile/myCharacters.html',
-        controller: 'MyCharactersCtrl'
-    })
-    .when('/desktop/character/create', {
-        templateUrl: 'character/desktop/createCharacter.html',
+    .when('/character/create', {
+        templateUrl: (RESOURCES.IS_MOBILE)?'character/mobile/createCharacter.html':'character/desktop/createCharacter.html',
         controller: 'CharacterCreationCtrl'
     })
-    .when('/mobile/character/create', {
-        templateUrl: 'character/mobile/createCharacter.html',
-        controller: 'CharacterCreationCtrl'
-    })
-    .when('/desktop/character/edit/:characterId', {
-        templateUrl: 'character/desktop/editCharacter.html',
-        controller: 'CharacterEditCtrl'
-    })
-    .when('/mobile/character/edit/:characterId', {
-        templateUrl: 'character/mobile/editCharacter.html',
+    .when('/character/edit/:characterId', {
+        templateUrl: (RESOURCES.IS_MOBILE)?'character/mobile/editCharacter.html':'character/desktop/editCharacter.html',
         controller: 'CharacterEditCtrl'
     });
 }])

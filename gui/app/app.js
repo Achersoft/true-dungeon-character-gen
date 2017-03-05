@@ -52,11 +52,8 @@ angular.module('main', [
     }
   };
 })
-.config(['$routeProvider', 'RESOURCES', function($routeProvider, RESOURCES) {
-    if(RESOURCES.IS_MOBILE)
-        $routeProvider.otherwise({redirectTo: '/mobile/character/mine'});
-    else
-        $routeProvider.otherwise({redirectTo: '/desktop/character/mine'});
+.config(['$routeProvider', function($routeProvider) {
+        $routeProvider.otherwise({redirectTo: '/character/mine'});
 }])
 .run(['$rootScope', '$location', '$uibModalStack', 'RESOURCES', function($rootScope, $location, $uibModalStack, RESOURCES) {
     $rootScope.loginRequired = false;
