@@ -5,6 +5,7 @@ import com.achersoft.security.annotations.RequiresPrivilege;
 import com.achersoft.security.dto.UserLoginRequest;
 import com.achersoft.security.type.Privilege;
 import com.achersoft.user.UserService;
+import com.achersoft.user.dao.ResetPassword;
 import com.achersoft.user.dao.User;
 import com.achersoft.user.dto.UserDTO;
 import java.util.List;
@@ -64,6 +65,12 @@ public class UserRestService {
     @Consumes({MediaType.APPLICATION_JSON})
     public UserDTO editUser(@PathParam("id")String id, @Valid @NotNull UserDTO user) throws Exception {
         return UserDTO.fromDAO(userProvider.editUser(user.toDAO()));
+    }
+    
+    @POST 
+    @Path("/resetpassword")
+    public void resetPassword(@Valid @NotNull ResetPassword resetPassword) throws Exception {
+        userProvider.resetPassword(resetPassword);	
     }
     
     @RequiresPrivilege({Privilege.ADMIN})

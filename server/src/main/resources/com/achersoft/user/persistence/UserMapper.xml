@@ -64,6 +64,9 @@
                <if test="password != null">
                password = #{password}, 
                </if>
+               <if test="passwordResetId != null">
+               password_reset_id = #{passwordResetId}, 
+               </if>
                <if test="lastAccessed != null">
                last_login = #{lastAccessed}, 
                </if>
@@ -73,6 +76,18 @@
                locked = #{locked}
          WHERE id = #{id}
     </update>  
+    
+    <update id="resetPassword">      
+        UPDATE user SET
+               password = #{password}
+         WHERE user_name = #{username}
+    </update> 
+    
+    <update id="changePassword">      
+        UPDATE user SET
+               password = #{password}
+         WHERE password_reset_id = #{resetId}
+    </update> 
     
     <insert id="addUserPrivilege">
         INSERT INTO user_privilege (user_id, 

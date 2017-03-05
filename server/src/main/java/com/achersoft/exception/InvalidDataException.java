@@ -1,6 +1,6 @@
 package com.achersoft.exception;
 
-public class InvalidDataException extends EstaffException {
+public class InvalidDataException extends UnknownException {
 
     public InvalidDataException(String error) {
         super(SystemError.builder()

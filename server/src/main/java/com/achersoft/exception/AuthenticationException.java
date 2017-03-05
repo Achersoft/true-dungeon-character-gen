@@ -1,6 +1,6 @@
 package com.achersoft.exception;
 
-public class AuthenticationException extends EstaffException {
+public class AuthenticationException extends UnknownException {
 
     public AuthenticationException(int code, String error) {
         super(SystemError.builder()

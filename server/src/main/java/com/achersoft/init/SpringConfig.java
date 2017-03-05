@@ -1,6 +1,7 @@
 package com.achersoft.init;
 
 import com.achersoft.configuration.PropertiesManager;
+import com.achersoft.email.EmailClient;
 import com.achersoft.security.UserAuthenticationService;
 import com.achersoft.security.UserAuthenticationServiceImpl;
 import com.achersoft.security.authenticator.Authenticator;
@@ -88,6 +89,11 @@ public class SpringConfig {
     @Bean
     public UserService userService() {
         return new UserServiceImpl();
+    }
+    
+    @Bean
+    public EmailClient emailClient() {
+        return new EmailClient();
     }
     // </editor-fold>
     
