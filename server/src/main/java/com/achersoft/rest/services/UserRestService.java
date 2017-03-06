@@ -5,6 +5,7 @@ import com.achersoft.security.annotations.RequiresPrivilege;
 import com.achersoft.security.dto.UserLoginRequest;
 import com.achersoft.security.type.Privilege;
 import com.achersoft.user.UserService;
+import com.achersoft.user.dao.ChangePassword;
 import com.achersoft.user.dao.ResetPassword;
 import com.achersoft.user.dao.User;
 import com.achersoft.user.dto.UserDTO;
@@ -71,6 +72,12 @@ public class UserRestService {
     @Path("/resetpassword")
     public void resetPassword(@Valid @NotNull ResetPassword resetPassword) throws Exception {
         userProvider.resetPassword(resetPassword);	
+    }
+    
+    @POST 
+    @Path("/reset/changepassword")
+    public void resetPassword(@Valid @NotNull ChangePassword resetPassword) throws Exception {
+        userProvider.resetChangePassword(resetPassword);	
     }
     
     @RequiresPrivilege({Privilege.ADMIN})

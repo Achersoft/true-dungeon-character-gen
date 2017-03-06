@@ -90,11 +90,14 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public void resetChangePassword(ChangePassword changePassword) throws Exception {
+        changePassword.setNewPassword(PasswordHelper.generatePasswordHash(changePassword.getNewPassword()));
         userMapper.resetPassword(changePassword.getResetId(), changePassword.getNewPassword());
     }
     
     @Override
     public void changePassword(ChangePassword changePassword) throws Exception {
+        changePassword.setCurrentPassword(PasswordHelper.generatePasswordHash(changePassword.getCurrentPassword()));
+        changePassword.setNewPassword(PasswordHelper.generatePasswordHash(changePassword.getNewPassword()));
         if(userMapper.validateCredentials(UserLoginRequest.builder().userName(changePassword.getUsername()).password(changePassword.getCurrentPassword()).build()))
             userMapper.changePassword(changePassword.getUsername(), changePassword.getNewPassword());
         else

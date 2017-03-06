@@ -64,9 +64,7 @@
                <if test="password != null">
                password = #{password}, 
                </if>
-               <if test="passwordResetId != null">
                password_reset_id = #{passwordResetId}, 
-               </if>
                <if test="lastAccessed != null">
                last_login = #{lastAccessed}, 
                </if>
@@ -77,13 +75,13 @@
          WHERE id = #{id}
     </update>  
     
-    <update id="resetPassword">      
+    <update id="changePassword">      
         UPDATE user SET
                password = #{password}
          WHERE user_name = #{username}
     </update> 
     
-    <update id="changePassword">      
+    <update id="resetPassword">      
         UPDATE user SET
                password = #{password}
          WHERE password_reset_id = #{resetId}

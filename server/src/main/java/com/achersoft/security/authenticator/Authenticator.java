@@ -25,6 +25,7 @@ public class Authenticator {
             throw new AuthenticationException(SystemError.USER_BAD_CREDENTIALS, "Invalid credentials.");
         }
         user.setLoginAttempts(0);
+        user.setPasswordResetId(null);
         userMapper.editUser(user);
     }
 

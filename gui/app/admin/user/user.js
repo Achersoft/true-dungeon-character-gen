@@ -2,6 +2,10 @@ angular.module('main')
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
+  .when('/password/requestreset', {
+        templateUrl: 'admin/user/requestResetPassword.html',
+        controller: 'PasswordResetRequestCtrl'
+    })
     .when('/password/reset/:resetId', {
         templateUrl: 'admin/user/resetPassword.html',
         controller: 'PasswordResetCtrl'
@@ -70,12 +74,28 @@ angular.module('main')
     });
 }])
 
-.controller('PasswordResetCtrl', ['$scope', '$location', '$route', '$routeParams', 'NgTableParams', 'UserSvc', 'UserState', function ($scope, $location, $route, $routeParams, NgTableParams, userSvc, userState) {
-    $scope.userContext = userState.get();
-    
-    $scope.add = function() {
-        userState.setUser({}, true, true);
-        $location.path("/users/add");
+.controller('PasswordResetRequestCtrl', ['$scope', '$location', 'UserSvc', function ($scope, $location, UserSvc) {
+    $scope.username = null;
+    $scope.email = null;
+   
+    $scope.requestResetPassword = function() {
+        UserSvc.requestResetPassword({"username":$scope.username,"email":$scope.email}).then(function (data) {
+           $location.path("/login");
+        });
+    };
+}])
+
+.controller('PasswordResetCtrl', ['$scope', '$location', '$routeParams', 'UserSvc', function ($scope, $location, $routeParams, UserSvc) {
+    $scope.password = null;
+    $scope.confirmPassword = null;
+   
+    $scope.resetPassword = function() {
+        if($scope.password !== null && ($scope.password === $scope.confirmPassword)) {
+            UserSvc.resetPassword({"resetId":$routeParams.resetId,"newPassword":$scope.password}).then(function (data) {
+               $location.path("/login");
+            });
+        } else
+            alert("Passwords cannot be empty and must match");
     };
 }])
 
@@ -111,6 +131,14 @@ angular.module('main')
 
 .factory('UserSvc',['$http', 'RESOURCES', function($http, RESOURCES){    
     var userSvc={};
+    
+    userSvc.requestResetPassword = function(resetParam){
+        return $http.post(RESOURCES.REST_BASE_URL + '/users/resetpassword', resetParam, {silentHttpErrors : true});
+    };
+    
+    userSvc.resetPassword = function(resetParam){
+        return $http.post(RESOURCES.REST_BASE_URL + '/users/reset/changepassword', resetParam, {silentHttpErrors : true});
+    };
 
     userSvc.getUsers = function(){
         return $http.get(RESOURCES.REST_BASE_URL + '/users/');
