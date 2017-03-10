@@ -42,6 +42,7 @@ public class EmailClient {
             transport.close();
             }
         catch(Exception e){
+            System.err.println(e);
             throw new Exception();
         }
     }

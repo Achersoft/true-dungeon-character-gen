@@ -219,7 +219,6 @@
                created 'createdOn'
           FROM character_name
          WHERE id = #{id}
-           AND user_id = #{userId}
     </select>  
     
     <select id="getCharacters" resultType="com.achersoft.tdcc.character.dao.CharacterName"> 

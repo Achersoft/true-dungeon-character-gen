@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CharacterDetailsDTO {
     public String id;
+    public boolean editable;
     public String name;
     public CharacterClass characterClass;
     public CharacterStats stats;
@@ -51,6 +52,7 @@ public class CharacterDetailsDTO {
     public static CharacterDetailsDTO fromDAO(CharacterDetails dao) {
         CharacterDetailsDTO build = CharacterDetailsDTO.builder()
                 .id(dao.getId())
+                .editable(dao.isEditable())
                 .name(dao.getName())
                 .characterClass(dao.getCharacterClass())
                 .stats(dao.getStats())

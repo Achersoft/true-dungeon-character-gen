@@ -14,7 +14,7 @@ public interface CharacterMapper {
     public void addCharacterStats(CharacterStats characterStats); 
     public void addCharacterItems(@Param("characterItems") List<CharacterItem> characterItem);
     public void addCharacterNotes(@Param("id") String id, @Param("notes") List<CharacterNote> notes);
-    public CharacterDetails getCharacter(@Param("id") String id, @Param("userId") String userId);
+    public CharacterDetails getCharacter(@Param("id") String id);
     public List<CharacterName> getCharacters(@Param("userId") String userId);
     public CharacterStats getCharacterStats(@Param("id") String id);
     public List<CharacterItem> getCharacterItems(@Param("id") String id);

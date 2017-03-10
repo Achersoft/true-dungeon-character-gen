@@ -33,42 +33,19 @@ public class CharacterRestService {
     @Path("/create")
     @Produces({MediaType.APPLICATION_JSON})	
     public CharacterDetailsDTO createCharacter(@QueryParam("characterClass") @NotNull CharacterClass characterClass, @QueryParam("name") @NotNull @NotEmpty String name) throws Exception {
-        return CharacterDetailsDTO.fromDAO(characterCreatorService.createCharacter(characterClass, name));
+        return CharacterDetailsDTO.fromDAO(characterService.validateCharacterItems(characterCreatorService.createCharacter(characterClass, name).getId()));
     }
-    
-    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+
     @GET 
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})	
     public CharacterDetailsDTO getCharacter(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
         return CharacterDetailsDTO.fromDAO(characterService.getCharacter(id));
     }
-    
-   // @RequiresPrivilege({Privilege.ADMIN})
-  //  @GET 
- //   @Path("/pdf/{id}")
-  //  @Produces("application/pdf")
- /*   public Response getCharacterPDF(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
-       
-        PdfReader reader = new PdfReader("C:\\Users\\shaun\\Repositories\\true-dungeon-character-gen\\server\\barb.pdf");
-        ByteArrayOutputStream ba = new ByteArrayOutputStream();
-        PdfStamper stamper = new PdfStamper(reader, ba);
-        AcroFields fields = stamper.getAcroFields();
-        fields.setField("MeleeToHit", "5");
-        stamper.setFormFlattening(true);
-        stamper.close();
-        reader.close();
 
-        ResponseBuilder response = Response.ok((Object) ba);
-        response.header("Content-Disposition",
-                "attachment; filename=" + "Test" + ".pdf");
-        return response.build();//characterService.getCharacter(id).getName()
-    }*/
-    
     @GET 
     @Path("/pdf/{id}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    //@Produces({"application/pdf"})
     public StreamingOutput getPDF(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
         return characterService.exportCharacterPdf(id);
     }

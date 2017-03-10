@@ -3,6 +3,7 @@ angular.module('main').directive('itemTabletSelector',['CharacterSvc', '$uibModa
         restrict:'E',
         scope:{
             model:'=',
+            editable: '=',
             characterClass: '@',
             elementId: '@',
             setToken: '&?',
@@ -15,20 +16,22 @@ angular.module('main').directive('itemTabletSelector',['CharacterSvc', '$uibModa
             scope.modalInstance = null;
             
             scope.openModal = function() {
-                characterSvc.getSlotTokens(scope.model.id, scope.model.characterId, scope.characterClass, scope.model.slot, 'ALL').then(function(result) {
-                    scope.itemSelection = result.data;
-                    
-                    scope.modalInstance = $uibModal.open({
-                        ariaLabelledBy: 'modal-title',
-                        ariaDescribedBy: 'modal-body',
-                        bindToController: true,
-                        scope: scope,
-                        windowClass: 'mobile-modal-dialog',
-                        openedClass: 'mobile-modal-content',
-                        templateUrl: 'common/tokenSelector/tablet/itemTabletSelectorModalTemplate.html'
+                if(scope.editable === true) {
+                    characterSvc.getSlotTokens(scope.model.id, scope.model.characterId, scope.characterClass, scope.model.slot, 'ALL').then(function(result) {
+                        scope.itemSelection = result.data;
+
+                        scope.modalInstance = $uibModal.open({
+                            ariaLabelledBy: 'modal-title',
+                            ariaDescribedBy: 'modal-body',
+                            bindToController: true,
+                            scope: scope,
+                            windowClass: 'mobile-modal-dialog',
+                            openedClass: 'mobile-modal-content',
+                            templateUrl: 'common/tokenSelector/tablet/itemTabletSelectorModalTemplate.html'
+                        });
                     });
-                });
-            }
+                }
+            };
             
             scope.reloadTokens = function(rarity) {
                 characterSvc.getSlotTokens(scope.model.id, scope.model.characterId, scope.characterClass, scope.model.slot, rarity).then(function(result) {

@@ -47,10 +47,15 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public CharacterDetails getCharacter(String id) {
-        CharacterDetails characterDetails = mapper.getCharacter(id, userPrincipalProvider.getUserPrincipal().getSub());
+        CharacterDetails characterDetails = mapper.getCharacter(id);
         
         if(characterDetails == null)
             throw new InvalidDataException("Requested character could not be found."); 
+        
+        if(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(characterDetails.getUserId()))
+            characterDetails.setEditable(true);
+        else
+            characterDetails.setEditable(false);
         
         characterDetails.setStats(mapper.getCharacterStats(id));
         characterDetails.setItems(mapper.getCharacterItems(id));
@@ -364,7 +369,8 @@ public class CharacterServiceImpl implements CharacterService {
         };
     }
     
-    private CharacterDetails validateCharacterItems(String id) {
+    @Override
+    public CharacterDetails validateCharacterItems(String id) {
         CharacterDetails characterDetails = getCharacter(id);
 
         chackWeaponAvailability(characterDetails);
@@ -574,9 +580,6 @@ public class CharacterServiceImpl implements CharacterService {
         long viperCount = characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && (item.getItemId().equals("9431d39ad2fba9953bf4b526d86f41f37022efeb") || item.getItemId().equals("f2ff2a508dd3075633ca2fd9e58c0e1a76088af8") || item.getItemId().equals("dd565d74807cc9094990b324465612d52b3070bf") || item.getItemId().equals("09ad5527813c4f087f3123cd6a40404b9377a4bc"))).count();
         viperCount += characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && item.getItemId().equals("bd21afd63114346decea5fc899ff697106e99429")).count();
         
-        // Reset Notes
-        characterDetails.setNotes(new ArrayList());
-        
         // First check if we need to boost character level
         // Charm of Heroism, Medallion of Heroism, Ring of Heroism, Eldrich Set, Kubu’s Coin of Coincidence, Smackdown’s Charm of Comraderie
         if(itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") || 
@@ -589,6 +592,8 @@ public class CharacterServiceImpl implements CharacterService {
             characterDetails.setStats(mapper.getStartingStats(characterDetails.getCharacterClass(), 4));
             characterDetails.getStats().setCharacterId(characterDetails.getId());
         }
+        
+        // Set character notes
         
         // Cabal set
         // all three two spells in one round once per room
@@ -738,6 +743,81 @@ public class CharacterServiceImpl implements CharacterService {
         /*if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("d9ebb109843e8fa1aa04d90dbf7405e572042fa1") || item.getItemId().equals("e5b7a23fc4208752b6e29c1c0c040279425bc898") || item.getItemId().equals("4fb8d5b22892902f33a73630d5dddb8cff8e244b")).count() == 3) {
             characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("You have the feather fall effect and immunity to non-magical physical missiles.").build());
         }*/
+    }
+    
+    private void setCharacterNotes(CharacterDetails characterDetails) {
+        // Reset Notes
+        characterDetails.setNotes(new ArrayList());
+        
+        if(null != characterDetails.getCharacterClass()) switch (characterDetails.getCharacterClass()) {
+            case BARBARIAN:
+                if(characterDetails.getStats().getLevel() == 5) {
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerGame(true).note("Greater Rage - Until end of combat you have +6 damage with all melee attacks.").build());
+                } else {
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerGame(true).note("Rage - Until end of combat you have +4 damage with all melee attacks.").build());  
+                }   break;
+            case BARD:
+                characterDetails.getNotes().add(CharacterNote.builder().oncePerRound(true).note("Monster Lore Check.").build());
+                break;
+            case CLERIC:
+                if(characterDetails.getStats().getLevel() == 5) {
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Improved Turn Undead - Deals 9 or 12 damage to all undead.").build());
+                } else {
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Turn Undead - Deals 5 or 8 damage to all undead.").build());  
+                }   break;
+            case DRUID:
+                characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Communicate with Animals.").build());
+                if(characterDetails.getStats().getLevel() == 5) 
+                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Keen Polymorph - When polymorphed your melee attacks deal +5 damage and can crit on 19-20.").build());
+                break;
+            case DWARF_FIGHTER:
+                characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Taunt - Target's next attack must include you.").build());
+                if(characterDetails.getStats().getLevel() == 5) 
+                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Enhanced Critical - Anytime you slide a natural 20 the result is triple damage.").build());
+                break;
+            case ELF_WIZARD:
+                if(characterDetails.getStats().getLevel() == 5) 
+                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Focused Polymorph - When you are polymorphed your melee attacks have +3 to hit.").build());
+                break;
+            case FIGHTER:
+                if(characterDetails.getStats().getLevel() == 5) 
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Weapon Specialization - You may immediately re-slide a melee attack but must take the second result.").build());
+                break;
+            case MONK:
+                characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Deflect Missles - You are immune to non-magical missile attacks").build());
+                characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Feather Fall - You take no fall damage from falling 60 feet or less.").build());
+                if(characterDetails.getStats().getLevel() == 5) {
+                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Diamond Body - You are immune to posions.").build());
+                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Improved Evasion - You take no damage if you succeed half if you fail against required Reflex saving throw against damage from spells, traps, or breath.").build());
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Stunning Fist - Your first natural 20 with Flurry of Blows stuns the target for 1 round.").build());
+                } else {
+                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Evasion - You take no damage if you succeed on a required Reflex saving throw against damage from spells, traps, or breath.").build());
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Dazing Fist - Your first natural 20 with Flurry of Blows dazes the target for 1 round.").build());  
+                }   break;
+            case PALADIN:
+                characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Guard - Guard a target party member.  If that party member were to be attacked with a melee attack, that attack is resolved against you instead.").build());
+                characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Immunity to Disease - You are immune to all disease.").build());
+                break;
+            case RANGER:
+                if(characterDetails.getStats().getLevel() == 5) {
+                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Favored Enemy - Your attack have +2 damage against undead.").build());
+                } else {
+                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Favored Enemy - Your attack have +1 damage against undead.").build());  
+                }   break;
+            case ROGUE:
+                if(characterDetails.getStats().getLevel() == 5) {
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Flank Attack - ").build());
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Improved Sneak Attack - ").build());
+                } else {
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Sneak Attack - ").build());  
+                }   break; 
+            case WIZARD:
+                if(characterDetails.getStats().getLevel() == 5) 
+                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Wand Mastery - ").build());
+                break;
+            default:
+                break;
+        }
     }
     
     private void calculateStats(CharacterDetails characterDetails) {
