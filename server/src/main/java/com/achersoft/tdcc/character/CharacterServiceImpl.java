@@ -594,6 +594,7 @@ public class CharacterServiceImpl implements CharacterService {
         }
         
         // Set character notes
+        setCharacterNotes(characterDetails);
         
         // Cabal set
         // all three two spells in one round once per room
@@ -806,14 +807,14 @@ public class CharacterServiceImpl implements CharacterService {
                 }   break;
             case ROGUE:
                 if(characterDetails.getStats().getLevel() == 5) {
-                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Flank Attack - ").build());
-                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Improved Sneak Attack - ").build());
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Flank Attack - Instead of attacking, you may put a upside down token in slider and places it on the board to act as a bumper.").build());
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Improved Sneak Attack - You do +20 to Damage on a successful melee hit.").build());
                 } else {
-                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Sneak Attack - ").build());  
+                    characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("Sneak Attack - You do +15 to Damage on a successful melee hit.").build());  
                 }   break; 
             case WIZARD:
                 if(characterDetails.getStats().getLevel() == 5) 
-                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Wand Mastery - ").build());
+                    characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Wand Mastery - Damage-dealing wands deal +2 Damage.").build());
                 break;
             default:
                 break;
@@ -897,6 +898,14 @@ public class CharacterServiceImpl implements CharacterService {
         
         if(mightyRanged.get() == 1)
             stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
+        
+        if(null != characterDetails.getCharacterClass()) switch (characterDetails.getCharacterClass()) {
+            case BARBARIAN:
+                if(metCondition.contains(ConditionalUse.WEAPON_2H))
+                    stats.setMeleeDmg(stats.getMeleeDmg() + 4);
+            default:
+                break;
+        }
     }
     
     private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, List<CharacterNote> notes) {

@@ -12,43 +12,33 @@ angular.module('main')
     })
     .when('/users/viewAll', {
         templateUrl: 'admin/user/userList.html',
-        controller: 'UserCtrl'
+        controller: 'UserListCtrl'
     })
-    .when('/users/add', {
+    .when('/users/edit/:id', {
         templateUrl: 'admin/user/userDetails.html',
         controller: 'UserCtrl'
     });
 }])
 
-.controller('UserCtrl', ['$scope', '$location', '$route', '$routeParams', 'NgTableParams', 'UserSvc', 'UserState', function ($scope, $location, $route, $routeParams, NgTableParams, userSvc, userState) {
-    $scope.userContext = userState.get();
+.controller('UserListCtrl', ['$scope', 'UserSvc', function ($scope, userSvc) {
+    $scope.users = {};
     
-    $scope.add = function() {
-        userState.setUser({}, true, true);
-        $location.path("/users/add");
-    };
+    userSvc.getUsers().then(function (result) {
+        $scope.users = result.data;
+    });
+}])
+
+.controller('UserCtrl', ['$scope', '$location', '$route', '$routeParams', 'UserSvc', function ($scope, $location, $route, $routeParams, userSvc) {
+    $scope.user = {};
     
-    $scope.edit = function(userId) {
-        userSvc.getUser(userId).then(function (result) {
-            userState.setUser(result.data, true, false);
-            $location.path("/users/add");
+    userSvc.getUser($routeParams.id).then(function(result) {
+        $scope.user = result.data;
+    });
+
+    $scope.edit = function() {
+        userSvc.editUser($scope.userContext.user.id, $scope.userContext.user).then(function() {
+            $location.path("/users/viewAll");
         });
-    }; 
-    
-    $scope.create = function(isValid) {
-        if(isValid) {
-            userSvc.createUser($scope.userContext.user).then(function() {
-                $location.path("/users/viewAll");
-            });
-        }
-    }; 
-    
-    $scope.editUser = function(isValid) {
-        if(isValid) {
-            userSvc.editUser($scope.userContext.user.id, $scope.userContext.user).then(function() {
-                $location.path("/users/viewAll");
-            });
-        }
     }; 
     
     $scope.delete = function(userId) {
@@ -56,22 +46,6 @@ angular.module('main')
             $route.reload();
         });
     }; 
-    
-    $scope.tableParams = new NgTableParams({
-        page: 1,         
-        count: 20     
-    },
-    {   total: 0, 
-        counts: [], 
-        getData: function ($defer, params) {
-            userSvc.getUsers().success(function (result) {
-                params.total(result.length);
-                $defer.resolve(result.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            }).error(function(error){
-                $scope.status = 'Unable to load candidate list for page ' + params.page() + ': ';
-            });
-        }
-    });
 }])
 
 .controller('PasswordResetRequestCtrl', ['$scope', '$location', 'UserSvc', function ($scope, $location, UserSvc) {

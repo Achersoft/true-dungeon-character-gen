@@ -1,28 +1,26 @@
 <div class="row">
-    <div class="text-right">
-        <button class="btn btn-primary" ng-click="add()">
-            <span class="fa fa-plus-circle"></span> Add New User 
-        </button> 
+    <div class="table-responsive" style="border:none;">          
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Locked</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody> 
+                <tr ng-repeat-start="user in users track by $index" ng-repeat-end>
+                    <td><a ng-href="#/users/edit/{{user.id}}">{{user.username}}</a></td>
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.lastName}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.locked}}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <table ng-table="tableParams" class="table table-striped table-hover table-condensed" >
-        <tr ng-repeat-start="user in $data" ng-repeat-end="" class="form-inline">
-            <td data-title="'Username'">
-                <a ng-click="edit(user.id)">{{user.username}}</a>
-            </td>
-            <td data-title="'Name'">
-                 {{user.firstName}} {{user.lastName}}
-            </td>
-            <td data-title="'Locked'">
-                 {{user.locked}}
-            </td>
-            <td data-title="'Last Accessed'">
-                 {{user.lastAccessed | date: 'MM/dd/yyyy hh:mm:ss a'}}
-            </td>
-            <td data-title="'Delete User'">
-                <a ng-click="delete(user.id)">
-                    <span class="fa fa-trash-o" style="font-size:14px;"></span>
-                </a>
-            </td>
-        </tr>
-    </table>
 </div>

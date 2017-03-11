@@ -1,71 +1,49 @@
 <div>
     <form name="userForm" novalidate>
-        <div class="row esi-row-offset-md">
-            <div class="col-md-4" ng-class="{'has-error':userForm.userName.$invalid && userForm.userName.$dirty}">
-                <label uib-popover="User Name is required" popover-trigger="mouseenter" for="userName">User Name</label>
-                <input ng-model="userContext.user.username" type="text" class="form-control" id="userName" name="userName" placeholder="User Name" required ng-maxlength="255" ng-readonly="!userContext.editMode"/>
-                <span class="help-block has-error" ng-show="userForm.userName.$error && userForm.userName.$dirty"
-                    ng-messages="userForm.userName.$error">
-                    <span ng-message="required">User name is required</span>
-                </span>
+        <div class="row">
+            <div class="col-md-4" >
+                <label>Username</label>
+                <input ng-model="user.username" type="text" class="form-control" id="userName" name="userName" placeholder="User Name" required ng-maxlength="255"/>
             </div>
-
-            <div class="col-md-4" ng-class="{'has-error':userForm.firstName.$invalid && userForm.firstName.$dirty}">
-                <label uib-popover="First Name is required" popover-trigger="mouseenter" for="firstName">First Name</label>
-                <input ng-model="userContext.user.firstName" type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" required ng-maxlength="255" ng-readonly="!userContext.editMode"/>
-                <span class="help-block has-error" ng-show="userForm.firstName.$error && userForm.firstName.$dirty"
-                    ng-messages="userForm.firstName.$error">
-                    <span ng-message="required">First name is required</span>
-                </span>
+            <div class="col-md-4">
+                <label>First Name</label>
+                <input ng-model="user.firstName" type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" required ng-maxlength="255"/>
             </div>
-
-            <div class="col-md-4" ng-class="{'has-error':userForm.lastName.$invalid && userForm.lastName.$dirty}">
-                <label uib-popover="Last Name is required" popover-trigger="mouseenter" for="lastName">Last Name</label>
-                <input ng-model="userContext.user.lastName" type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" required ng-maxlength="255" ng-readonly="!userContext.editMode"/>
-                <span class="help-block has-error" ng-show="userForm.lastName.$error && userForm.lastName.$dirty"
-                    ng-messages="userForm.lastName.$error">
-                    <span ng-message="required">Last name is required</span>
-                </span>
+            <div class="col-md-4">
+                <label>Last Name</label>
+                <input ng-model="user.lastName" type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" required ng-maxlength="255"/>
             </div>
         </div>
 
-        <div class="row esi-row-offset-md" ng-class="{'has-error':userForm.lastName.$invalid && userForm.lastName.$dirty}">
+        <div class="row">
             <div class="col-md-4">
-                <label for="userPassword">Password</label>
-                <input ng-model="userContext.user.password" type="password" class="form-control" id="userPassword" name="userPassword" placeholder="Password" ng-maxlength="255" ng-readonly="!userContext.editMode"/>
-                <span class="help-block has-error" ng-show="userForm.password.$error && userForm.password.$dirty" ng-if="userContext.addMode" ng-messages="userForm.password.$error">
-                    <span ng-message="required">Password is required</span>
-                </span>
+                <label>Password</label>
+                <input ng-model="user.password" type="password" class="form-control" id="userPassword" name="userPassword" placeholder="Password" ng-maxlength="255"/>
             </div> 
 
             <div class="col-md-4">
-                <label class="checkbox-inline" style="padding-top: 35px"><input type="checkbox" ng-model="userContext.user.locked" ng-disabled="!userContext.editMode">User is Locked?</label>
+                <label class="checkbox-inline" style="padding-top: 35px"><input type="checkbox" ng-model="user.locked">User is Locked?</label>
             </div> 
 
             <div class="col-md-4" >
                 <label>Last Accessed</label>
-                <input value="{{userContext.user.lastAccessed | date: 'MM/dd/yyyy hh:mm:ss a'}}" type="text" class="form-control" ng-readonly="true"/>
+                <input value="{{user.lastAccessed | date: 'MM/dd/yyyy hh:mm:ss a'}}" type="text" class="form-control" ng-readonly="true"/>
             </div>
         </div>
-        
-        <div class="row esi-row-offset-md" style="margin-top:15px;margin-left:10px">
-            <label class="checkbox-inline"><input type="checkbox" ng-model="userContext.user.admin" ng-disabled="!userContext.editMode">Admin</label>
-            <label class="checkbox-inline"><input type="checkbox" ng-model="userContext.user.customer" ng-disabled="!userContext.editMode">Customer</label>
-            <label class="checkbox-inline"><input type="checkbox" ng-model="userContext.user.employee" ng-disabled="!userContext.editMode">Employee</label>
+        <div class="row" style="margin-top:15px;margin-left:10px">
+            <label class="checkbox-inline"><input type="checkbox" ng-model="user.admin" ng-disabled="!userContext.editMode">Admin</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="user.systemUser" ng-disabled="!userContext.editMode">System User</label>
         </div>
     </form>
    
     <div class="text-right" style="margin-top:15px">
-        <button class="btn btn-primary" ng-if="userContext.addMode" ng-click="userForm.userName.$dirty=true;userForm.firstName.$dirty=true;userForm.lastName.$dirty=true;userForm.password.$dirty=true;create(userForm.$valid)">
-            <span class="fa fa-save" ></span> Add 
-        </button>
-        <button class="btn btn-primary" ng-if="!userContext.addMode" ng-click="userForm.userName.$dirty=true;userForm.firstName.$dirty=true;userForm.lastName.$dirty=true;editUser(userForm.$valid)">
-            <span class="fa fa-save" ></span> Edit 
+        <button class="btn btn-primary" ng-click="editUser()">
+            <span class="fa fa-save" ></span> Save 
         </button>
         <a href="#/users/viewAll"> 
-            <button class="btn btn-default">
-            <span class="fa fa-ban"></span> Cancel
-        </button>
+            <span class="btn btn-default">
+                <span class="fa fa-ban"></span> Cancel
+            </span>
         </a>
     </div>
 </div>
