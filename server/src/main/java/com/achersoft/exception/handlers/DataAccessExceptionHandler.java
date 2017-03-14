@@ -18,7 +18,6 @@ public class DataAccessExceptionHandler implements ExceptionMapper<DataAccessExc
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
-                                           .code(SystemError.INVALID_REQUEST_DATA)
                                            .message("Persistence layer exception.")
                                            .build())
                        .type(MediaType.APPLICATION_JSON)

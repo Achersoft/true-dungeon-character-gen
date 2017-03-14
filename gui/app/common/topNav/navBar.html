@@ -9,9 +9,14 @@
         <a class="navbar-brand" ><img src="images/logo.png" height="75px" alt="" /></a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
-        <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav">
         <li class="dropdown" ng-if="privilegeCheck.isUserAuthorized('ADMIN') || privilegeCheck.isUserAuthorized('SYSTEM_USER')">
           <a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/character/mine"><b>My Characters</b></a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/contact"><b>Contact Us</b></a>
         </li>
       </ul>
       <ul class="nav navbar-nav">

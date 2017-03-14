@@ -1,11 +1,10 @@
 package com.achersoft.exception;
 
-public class AuthenticationException extends UnknownException {
+public class AuthenticationException extends RuntimeException {
 
-    public AuthenticationException(int code, String error) {
-        super(SystemError.builder()
-                    .code(code)                                               
-                    .message(error)                                               
-                    .build());
+    public String error;
+    
+    public AuthenticationException(String error) {
+        this.error = error;
     }
 }

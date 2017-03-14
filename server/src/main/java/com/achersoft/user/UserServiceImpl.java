@@ -26,11 +26,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
+        user.setUsername(user.getUsername().toLowerCase());
         if(user.getPassword() == null || user.getPassword().isEmpty())
             throw new InvalidDataException("A user password must be provided.");
         if(user.getEmail() == null || user.getEmail().isEmpty() || !isValidEmailAddress(user.getEmail()))
             throw new InvalidDataException("A valid email must be provided.");
-  
+        if(userMapper.emailExists(user.getEmail()))
+            throw new InvalidDataException("Email address has already been associated to an account.");
+        if(userMapper.userExists(user.getUsername()))
+            throw new InvalidDataException("Username is not available.");
+        
         // Salt the user password before storage
         user.setPassword(PasswordHelper.generatePasswordHash(user.getPassword()));
         
@@ -101,7 +106,7 @@ public class UserServiceImpl implements UserService {
         if(userMapper.validateCredentials(UserLoginRequest.builder().userName(changePassword.getUsername()).password(changePassword.getCurrentPassword()).build()))
             userMapper.changePassword(changePassword.getUsername(), changePassword.getNewPassword());
         else
-            throw new AuthenticationException(SystemError.USER_BAD_CREDENTIALS, "Invalid credentials.");
+            throw new AuthenticationException("Invalid credentials.");
     }
     
     private boolean isValidEmailAddress(String email) {

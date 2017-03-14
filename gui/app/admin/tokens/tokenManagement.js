@@ -234,19 +234,28 @@ angular.module('main')
         };
     }])
 
-.factory('TokenAdminSvc',['$http', 'RESOURCES', function($http, RESOURCES) {    
+.factory('TokenAdminSvc',['$http', 'RESOURCES', 'ErrorDialogSvc', '$q', function($http, RESOURCES, errorDialogSvc, $q) {
     var tokenAdminSvc={};
 
     tokenAdminSvc.addToken = function(token) {
-        return $http.put(RESOURCES.REST_BASE_URL + '/token/admin', token);
+        return $http.put(RESOURCES.REST_BASE_URL + '/token/admin', token).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
     };
     
     tokenAdminSvc.editToken = function(token) {
-        return $http.post(RESOURCES.REST_BASE_URL + '/token/admin', token);
+        return $http.post(RESOURCES.REST_BASE_URL + '/token/admin', token).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
     };
     
     tokenAdminSvc.search = function(name) {
-        return $http.get(RESOURCES.REST_BASE_URL + '/token/search/?name=' + name);
+        return $http.get(RESOURCES.REST_BASE_URL + '/token/search/?name=' + name).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
     };
     
     return tokenAdminSvc;

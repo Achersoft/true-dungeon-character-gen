@@ -19,5 +19,7 @@ public interface UserMapper {
     public void changePassword(@Param("username") String username, @Param("password") String password);
     public void deleteUser(String id);
     public boolean validateCredentials(UserLoginRequest request);
+    public boolean userExists(String userName);
+    public boolean emailExists(String email);
 }
 

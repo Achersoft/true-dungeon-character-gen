@@ -18,7 +18,6 @@ public class ForeignKeyExceptionHandler implements ExceptionMapper<DataIntegrity
         return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.BAD_REQUEST.getStatusCode())
-                                           .code(SystemError.INVALID_REQUEST_DATA)
                                            .message("Entry has dependent foreign keys.")
                                            .build())
                        .type(MediaType.APPLICATION_JSON)

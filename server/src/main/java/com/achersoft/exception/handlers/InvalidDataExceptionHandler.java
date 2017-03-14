@@ -18,8 +18,7 @@ public class InvalidDataExceptionHandler implements ExceptionMapper<InvalidDataE
         return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.BAD_REQUEST.getStatusCode())
-                                           .code(e.error.code)
-                                           .message(e.error.message)
+                                           .message(e.error)
                                            .build())
                        .type(MediaType.APPLICATION_JSON)
                        .build();

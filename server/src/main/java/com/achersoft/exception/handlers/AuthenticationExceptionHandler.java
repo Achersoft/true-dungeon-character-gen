@@ -15,8 +15,7 @@ public class AuthenticationExceptionHandler implements ExceptionMapper<Authentic
         return Response.status(Response.Status.UNAUTHORIZED.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.UNAUTHORIZED.getStatusCode())
-                                           .code(e.error.code)
-                                           .message(e.error.message)
+                                           .message(e.error)
                                            .build())
                        .type(MediaType.APPLICATION_JSON)
                        .build();	

@@ -1,5 +1,6 @@
 package com.achersoft.tdcc.character.create;
 
+import com.achersoft.exception.AuthenticationException;
 import com.achersoft.exception.InvalidDataException;
 import com.achersoft.security.providers.UserPrincipalProvider;
 import com.achersoft.tdcc.enums.CharacterClass;
@@ -22,11 +23,14 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
     private @Inject UserPrincipalProvider userPrincipalProvider;
     
     @Override
-    public CharacterDetails createCharacter(CharacterClass characterClass, String name) {
+    public CharacterDetails createCharacter(CharacterClass characterClass, String name) throws Exception {
         String userId = userPrincipalProvider.getUserPrincipal().getSub();
         
         if(userId == null || userId.isEmpty())
-            throw new InvalidDataException("User is not valid."); 
+            throw new AuthenticationException("User is not valid."); 
+        
+        if(mapper.getCharacterCount(userId) >= 30)
+            throw new InvalidDataException("Maximum character limit exceeded. Due to storage capabilities of the serer each account is limited to 30 characters. In order to create additional characters you must delete one or more existing characters");
         
         if(characterClass == CharacterClass.BARBARIAN)
             return createBarbarian(userId, name);

@@ -103,38 +103,56 @@ angular.module('main')
         };
     }])
 
-.factory('UserSvc',['$http', 'RESOURCES', function($http, RESOURCES){    
+.factory('UserSvc',['$http', 'RESOURCES', 'ErrorDialogSvc', '$q', function($http, RESOURCES, errorDialogSvc, $q) {        
     var userSvc={};
     
     userSvc.requestResetPassword = function(resetParam){
-        return $http.post(RESOURCES.REST_BASE_URL + '/users/resetpassword', resetParam, {silentHttpErrors : true});
+        return $http.post(RESOURCES.REST_BASE_URL + '/users/resetpassword', resetParam, {silentHttpErrors : true}).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
     };
     
     userSvc.resetPassword = function(resetParam){
-        return $http.post(RESOURCES.REST_BASE_URL + '/users/reset/changepassword', resetParam, {silentHttpErrors : true});
+        return $http.post(RESOURCES.REST_BASE_URL + '/users/reset/changepassword', resetParam, {silentHttpErrors : true}).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
     };
 
     userSvc.getUsers = function(){
-        return $http.get(RESOURCES.REST_BASE_URL + '/users/');
+        return $http.get(RESOURCES.REST_BASE_URL + '/users/').catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
     };
     
     userSvc.getUser = function(userId){
-        return $http.get(RESOURCES.REST_BASE_URL + '/users/' + userId);
+        return $http.get(RESOURCES.REST_BASE_URL + '/users/' + userId).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
     };
     
     userSvc.createUser = function(user){
-        return $http.post(RESOURCES.REST_BASE_URL + "/users/create",
-                          user, {silentHttpErrors : true});
+        return $http.post(RESOURCES.REST_BASE_URL + "/users/create", user, {silentHttpErrors : true}).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
     };
     
     userSvc.editUser = function(userId, user){
-        return $http.put(RESOURCES.REST_BASE_URL + "/users/" + userId,
-                          user, {silentHttpErrors : true});
+        return $http.put(RESOURCES.REST_BASE_URL + "/users/" + userId, user, {silentHttpErrors : true}).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
     };
      
     userSvc.deleteUser = function(id){
-        return $http.delete(RESOURCES.REST_BASE_URL + "/users/" + id,
-                            {silentHttpErrors : true});
+        return $http.delete(RESOURCES.REST_BASE_URL + "/users/" + id, {silentHttpErrors : true}).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
     };
         
     return userSvc;

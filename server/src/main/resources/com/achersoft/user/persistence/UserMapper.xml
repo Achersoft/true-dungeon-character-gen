@@ -110,4 +110,16 @@
          WHERE u.user_name =  #{userName}
            AND u.password = #{password}
     </select> 
+    
+    <select id="userExists" resultType="boolean"> 
+        SELECT count(*)
+          FROM user u 
+         WHERE u.user_name =  #{userName}
+    </select> 
+    
+    <select id="emailExists" resultType="boolean"> 
+        SELECT count(*)
+          FROM user u 
+         WHERE u.email =  #{email}
+    </select> 
 </mapper>

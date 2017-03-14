@@ -1,11 +1,10 @@
 package com.achersoft.exception;
 
-public class InvalidDataException extends UnknownException {
+public class InvalidDataException extends RuntimeException {
 
+    public String error;
+    
     public InvalidDataException(String error) {
-        super(SystemError.builder()
-                    .code(SystemError.INVALID_REQUEST_DATA)                                               
-                    .message(error)                                               
-                    .build());
+        this.error = error;
     }
 }

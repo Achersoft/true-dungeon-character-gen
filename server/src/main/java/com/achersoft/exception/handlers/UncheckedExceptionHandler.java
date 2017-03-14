@@ -17,7 +17,6 @@ public class UncheckedExceptionHandler implements ExceptionMapper<Throwable> {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
-                                           .code(SystemError.UNKNOWN_EXCEPTION)
                                            .message("An unknown error occurred")
                                            .build())
                        .type(MediaType.APPLICATION_JSON)

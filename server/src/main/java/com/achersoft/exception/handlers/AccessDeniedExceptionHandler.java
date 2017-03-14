@@ -15,7 +15,6 @@ public class AccessDeniedExceptionHandler implements ExceptionMapper<AccessDenie
         return Response.status(Response.Status.FORBIDDEN.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.FORBIDDEN.getStatusCode())
-                                           .code(SystemError.INSUFFICIENT_PRIVILEGES)
                                            .message(e.getMessage())
                                            .build())
                        .type(MediaType.APPLICATION_JSON)

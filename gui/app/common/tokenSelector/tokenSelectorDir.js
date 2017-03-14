@@ -1,4 +1,4 @@
-angular.module('main').directive('tokenSelector',['CharacterSvc', function(characterSvc){
+angular.module('main').directive('tokenSelector',['CharacterSvc', 'RESOURCES', function(characterSvc, RESOURCES){
     return {
         restrict:'E',
         scope:{
@@ -14,6 +14,7 @@ angular.module('main').directive('tokenSelector',['CharacterSvc', function(chara
         link: function(scope) {
             scope.itemSelection = {};
             scope.tabIndex = 0;
+            scope.imgBaseURL = RESOURCES.IMG_BASE_URL;
             scope.isOpen = false;  
             
             scope.reloadTokens = function(rarity) {

@@ -90,6 +90,8 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public StreamingOutput exportCharacterPdf(String id) {
         final CharacterDetails character = getCharacter(id);
+        if(character.getItems().stream().filter((item) -> item.getSlotStatus() == SlotStatus.INVALID).count() > 0)
+            throw new InvalidDataException("The requested character is currently in a invalid state and cannot be exported. Please correct any item conflicts and try again."); 
         return (OutputStream out) -> {
             try {
                 Resource pdfFile = null;

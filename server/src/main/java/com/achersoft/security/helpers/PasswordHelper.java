@@ -21,7 +21,7 @@ public class PasswordHelper {
             
             return toHex(skf.generateSecret(spec).getEncoded());
         } catch (Exception ex) {
-            throw new AuthenticationException(SystemError.UNKNOWN_EXCEPTION, "Password hash error.");
+            throw new AuthenticationException("Password hash error.");
         }
     }
      

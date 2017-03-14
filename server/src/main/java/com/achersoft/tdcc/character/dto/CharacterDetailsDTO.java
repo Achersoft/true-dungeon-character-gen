@@ -20,30 +20,30 @@ public class CharacterDetailsDTO {
     public String name;
     public CharacterClass characterClass;
     public CharacterStats stats;
-    public CharacterItem head;
-    public CharacterItem eyes;
-    public CharacterItem leftEar;
-    public CharacterItem rightEar;
-    public CharacterItem neck;
-    public CharacterItem torso;
-    public CharacterItem wrists;
-    public CharacterItem hands;
-    public CharacterItem meleeMainhand;
-    public CharacterItem meleeOffhand;
-    public List<CharacterItem> instruments;
-    public CharacterItem rangedMainhand;
-    public CharacterItem rangedOffhand;
-    public List<CharacterItem> backs;
-    public List<CharacterItem> rings;
-    public CharacterItem waist;
-    public CharacterItem shirt;
-    public CharacterItem boots;
-    public CharacterItem legs;
-    public CharacterItem figurine;
-    public List<CharacterItem> charms;
-    public List<CharacterItem> iounStones;
-    public List<CharacterItem> slotless;
-    public List<CharacterItem> runestones;
+    public CharacterItemDTO head;
+    public CharacterItemDTO eyes;
+    public CharacterItemDTO leftEar;
+    public CharacterItemDTO rightEar;
+    public CharacterItemDTO neck;
+    public CharacterItemDTO torso;
+    public CharacterItemDTO wrists;
+    public CharacterItemDTO hands;
+    public CharacterItemDTO meleeMainhand;
+    public CharacterItemDTO meleeOffhand;
+    public List<CharacterItemDTO> instruments;
+    public CharacterItemDTO rangedMainhand;
+    public CharacterItemDTO rangedOffhand;
+    public List<CharacterItemDTO> backs;
+    public List<CharacterItemDTO> rings;
+    public CharacterItemDTO waist;
+    public CharacterItemDTO shirt;
+    public CharacterItemDTO boots;
+    public CharacterItemDTO legs;
+    public CharacterItemDTO figurine;
+    public List<CharacterItemDTO> charms;
+    public List<CharacterItemDTO> iounStones;
+    public List<CharacterItemDTO> slotless;
+    public List<CharacterItemDTO> runestones;
     public List<String> alwaysInEffect;
     public List<String> oncePerRound;
     public List<String>  oncePerRoom;
@@ -73,55 +73,55 @@ public class CharacterDetailsDTO {
             if(item.getName() == null)
                 item.setName("Empty");
             if(item.getSlot() == Slot.HEAD)
-                build.head = item;
+                build.head = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.EYES)
-                build.eyes = item;
+                build.eyes = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.EAR) {
                if(item.getIndex() == 0)  
-                   build.leftEar = item;
+                   build.leftEar = CharacterItemDTO.fromDAO(item);
                if(item.getIndex() == 1)  
-                   build.rightEar = item;
+                   build.rightEar = CharacterItemDTO.fromDAO(item);
             }
             if(item.getSlot() == Slot.NECK)
-                build.neck = item;
+                build.neck = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.TORSO)
-                build.torso = item;
+                build.torso = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.WRIST)
-                build.wrists = item;
+                build.wrists = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.HANDS)
-                build.hands = item;
+                build.hands = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.MAINHAND)
-                build.meleeMainhand = item;
+                build.meleeMainhand = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.OFFHAND)
-                build.meleeOffhand = item;
+                build.meleeOffhand = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.INSTRUMENT)
-                build.instruments.add(item);
+                build.instruments.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.RANGE_MAINHAND)
-                build.rangedMainhand = item;
+                build.rangedMainhand = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.RANGE_OFFHAND)
-                build.rangedOffhand = item;
+                build.rangedOffhand = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.BACK)
-                build.backs.add(item);
+                build.backs.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.FINGER)
-                build.rings.add(item);
+                build.rings.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.WAIST)
-                build.waist = item;
+                build.waist = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.SHIRT)
-                build.shirt = item;
+                build.shirt = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.FEET)
-                build.boots = item;
+                build.boots = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.LEGS)
-                build.legs = item;
+                build.legs = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.FIGURINE)
-                build.figurine = item;
+                build.figurine = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.CHARM)
-                build.charms.add(item);
+                build.charms.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.IOUNSTONE)
-                build.iounStones.add(item);
+                build.iounStones.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.SLOTLESS)
-                build.slotless.add(item);
+                build.slotless.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.RUNESTONE)
-                build.runestones.add(item);
+                build.runestones.add(CharacterItemDTO.fromDAO(item));
         });
         
         if(dao.getNotes() != null) {

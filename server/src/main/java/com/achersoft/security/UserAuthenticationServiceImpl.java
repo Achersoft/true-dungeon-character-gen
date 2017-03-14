@@ -2,7 +2,6 @@ package com.achersoft.security;
 
 import com.adobe.xmp.impl.Base64;
 import com.achersoft.exception.AuthenticationException;
-import com.achersoft.exception.SystemError;
 import com.achersoft.security.authenticator.Authenticator;
 import com.achersoft.security.dao.UserPrincipal;
 import com.achersoft.security.providers.SignatureServiceProvider;
@@ -13,7 +12,6 @@ import com.achersoft.user.persistence.UserMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 import javax.annotation.Resource;
@@ -29,15 +27,16 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
     
     @Override
     public void login(UserLoginRequest request) {
+        request.setUserName(request.getUserName().toLowerCase());
         User user = userMapper.getUserFromName(request.getUserName());
         if(user == null)
-            throw new AuthenticationException(SystemError.USER_BAD_CREDENTIALS, "Invalid credentials.");
+            throw new AuthenticationException("Invalid credentials.");
         if(user.getLocked()) {
             if(user.getLastAccessed() != null && user.getLastAccessed().before(new Date(new Date().getTime() - 1800000))) {
                 user.setLoginAttempts(0);
                 user.setLocked(Boolean.FALSE);
             } else {
-                throw new AuthenticationException(SystemError.USER_BAD_CREDENTIALS, "User account has been locked.");
+                throw new AuthenticationException("User account has been locked.");
             }
         }
 
@@ -77,14 +76,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
             userMap.invalidate(userPrincipalProvider.getUserPrincipal().getUserName()); 
         }
     }
-    
-   /* 
-    @Override
-    public void changeUserPassword(UserChangePassword userChangePassword) {
-        EstaffUser user = userMapper.getUserFromName(userChangePassword.getUserName());
-        userAuthenticators.get(user.getAuthenticatorId()).changeUserPassword(userChangePassword);
-    }
-    */
+
     @Override
     public UserPrincipal getUserPrincipal(String token) { 
         if(token != null && !token.isEmpty()) {
@@ -103,15 +95,15 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
         UserPrincipal userPrincipal = getUserPrincipal(token);
         
         if(userMap.getIfPresent(userPrincipal.getUserName()) == null) 
-            throw new AuthenticationException(SystemError.INVALID_SESSION, "Invalid session.");
+            throw new AuthenticationException("Invalid session.");
      
         if(!token.equals(generateToken(userPrincipal))) 
-            throw new AuthenticationException(SystemError.INVALID_SESSION, "Invalid session.");
+            throw new AuthenticationException("Invalid session.");
         
         /*if(new Date().getTime() > userPrincipal.getExp().getTime()) 
             throw new AuthenticationException(SystemError.SESSION_TIMEOUT, "User session has expired.");*/
         
-       // userPrincipal.setExp(new Date(new Date().getTime() + 43200000));
+        userPrincipal.setExp(new Date(new Date().getTime() + 43200000));
 
         return generateToken(userPrincipal);
     }
@@ -122,7 +114,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
             token += "." +  Base64.encode(new ObjectMapper().writeValueAsString(userPrincipal));
             return token + "." + new String(Base64.encode(signatureServiceProvider.sign(token.getBytes("UTF-8"))));
         } catch (Exception e) {
-            throw new AuthenticationException(SystemError.UNKNOWN_EXCEPTION, "Failed to generate authentication token");
+            throw new AuthenticationException("Failed to generate authentication token");
         }
     }
 }

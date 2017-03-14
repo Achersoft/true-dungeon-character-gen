@@ -1,4 +1,4 @@
-angular.module('main').directive('itemTabletSelector',['CharacterSvc', '$uibModal', function(characterSvc, $uibModal){
+angular.module('main').directive('itemTabletSelector',['CharacterSvc', '$uibModal', 'RESOURCES', function(characterSvc, $uibModal, RESOURCES){
     return {
         restrict:'E',
         scope:{
@@ -13,6 +13,7 @@ angular.module('main').directive('itemTabletSelector',['CharacterSvc', '$uibModa
         link: function(scope) {
             scope.itemSelection = {};
             scope.tabIndex = 0;
+            scope.imgBaseURL = RESOURCES.IMG_BASE_URL;
             scope.modalInstance = null;
             
             scope.openModal = function() {

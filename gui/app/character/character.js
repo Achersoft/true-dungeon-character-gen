@@ -136,15 +136,23 @@ angular.module('main')
         };
     }])
 
-.factory('CharacterSvc',['$http', 'RESOURCES', 'CharacterState', function($http, RESOURCES, characterState) {    
+.factory('CharacterSvc',['$http', 'RESOURCES', 'ErrorDialogSvc', '$q', function($http, RESOURCES, errorDialogSvc, $q) {    
     var tokenAdminSvc={};
 
     tokenAdminSvc.createCharacter = function(characterClass, name) {
-        return $http.put(RESOURCES.REST_BASE_URL + '/character/create?characterClass=' + characterClass + "&name=" + name);
+        return $http.put(RESOURCES.REST_BASE_URL + '/character/create?characterClass=' + characterClass + "&name=" + name)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
     };
     
     tokenAdminSvc.getCharacter = function(id) {
-        return $http.get(RESOURCES.REST_BASE_URL + '/character/' + id);
+        return $http.get(RESOURCES.REST_BASE_URL + '/character/' + id)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
     };
     
     tokenAdminSvc.getCharacters = function() {
@@ -152,7 +160,11 @@ angular.module('main')
     };
     
     tokenAdminSvc.getSlotTokens = function(slotId, characterId, characterClass, slot, rarity) {
-        return $http.get(RESOURCES.REST_BASE_URL + '/token/character?slotId=' + slotId + "&characterId=" + characterId + "&characterClass=" + characterClass + "&slot=" + slot + "&rarity=" + rarity);
+        return $http.get(RESOURCES.REST_BASE_URL + '/token/character?slotId=' + slotId + "&characterId=" + characterId + "&characterClass=" + characterClass + "&slot=" + slot + "&rarity=" + rarity)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
     };
     
     tokenAdminSvc.setTokenSlot = function(id, soltId, tokenId) {
@@ -160,15 +172,27 @@ angular.module('main')
     };
     
     tokenAdminSvc.unequipItem = function(id, soltId) {
-        return $http.post(RESOURCES.REST_BASE_URL + '/character/token/unequip?id=' + id + '&soltId=' + soltId);
+        return $http.post(RESOURCES.REST_BASE_URL + '/character/token/unequip?id=' + id + '&soltId=' + soltId)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
     };
     
     tokenAdminSvc.deleteCharacter = function(id) {
-        return $http.delete(RESOURCES.REST_BASE_URL + '/character/' + id);
+        return $http.delete(RESOURCES.REST_BASE_URL + '/character/' + id)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
     };
     
     tokenAdminSvc.exportToPDF = function(id) {
-        return $http.get(RESOURCES.REST_BASE_URL + '/character/pdf/' + id, {responseType: 'arraybuffer'});
+        return $http.get(RESOURCES.REST_BASE_URL + '/character/pdf/' + id, {responseType: 'arraybuffer'})
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
     };
     
     return tokenAdminSvc;

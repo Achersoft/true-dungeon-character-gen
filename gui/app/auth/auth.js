@@ -132,13 +132,12 @@ angular.module('main')
         return AuthorizationState;
     }
 ])
-.factory('AuthorizationSvc',['$http', '$q', 'authService', 'RESOURCES', 'AuthorizationState',
-    function($http, $q, httpAuthService, RESOURCES, AuthorizationState){
+.factory('AuthorizationSvc',['$http', '$q', 'authService', 'RESOURCES', 'AuthorizationState', 'ErrorDialogSvc',
+    function($http, $q, httpAuthService, RESOURCES, AuthorizationState, errorDialogSvc){
         var AuthorizationSvc={};
         
         AuthorizationSvc.createNewAccount = function(user) {
-            // Set ignoreAuthModule = true so if we get a 401 status, we don't get in endless loop...
-            return $http.post(RESOURCES.REST_BASE_URL + '/users/create', user, {'ignoreAuthModule' : true})
+            return $http.post(RESOURCES.REST_BASE_URL + '/users/create', user)
                         .then(function(response) {
                             // Extract auth token from response, save off and also add to default http req headers
                             AuthorizationState.updateAuthorization(response.headers, $http.defaults.headers.common);
@@ -150,13 +149,11 @@ angular.module('main')
                                 return(config);
                             });
                             return response;
-                        },
-                        function(response) {
-                            // Erase the token if the user fails to log in
-                            //console.log("Login failed - " + response.statusText);
-                            AuthorizationState.removeAuthorization();
-                            // Reject - so we can percolate this error up to caller
-                            return $q.reject(response);
+                        })
+                        .catch(function(response) {
+                            console.log(response);
+                            errorDialogSvc.showError(response);
+                            return($q.reject(response));
                         });
         };
         

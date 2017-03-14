@@ -38,12 +38,12 @@ public class AuthenticationFilter implements ContainerRequestFilter, ContainerRe
                     setAuthenticationToken(userAuthenticationServiceProvider.authenticate(getAuthenticationToken()));
                     return getUserPrincipal().getPrivileges().contains(privilege);
                 }
-                throw new AuthenticationException(SystemError.INVALID_SESSION, "Invalid session.");
+                throw new AuthenticationException("Invalid session.");
             }
 
             @Override
             public boolean isUserInRole(String role) {
-                throw new AuthenticationException(SystemError.INVALID_SESSION, "Invalid session.");
+                throw new AuthenticationException("Invalid session.");
             }
 
             @Override

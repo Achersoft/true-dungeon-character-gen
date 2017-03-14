@@ -9,6 +9,7 @@ import com.achersoft.tdcc.token.TokenService;
 import com.achersoft.tdcc.token.admin.TokenAdminService;
 import com.achersoft.tdcc.token.admin.dto.TokenFullDetailsDTO;
 import com.achersoft.tdcc.token.dao.Token;
+import com.achersoft.tdcc.token.dto.TokenDTO;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -58,8 +59,8 @@ public class TokenRestService {
     @GET 
     @Path("/character")
     @Produces({MediaType.APPLICATION_JSON})	
-    public List<Token> getSlotTokens(@QueryParam("slotId") @NotNull @NotEmpty String slotId, @QueryParam("characterId") @NotNull @NotEmpty String characterId, @QueryParam("characterClass") @NotNull CharacterClass characterClass, @QueryParam("slot") @NotNull Slot slot, @QueryParam("rarity") @NotNull Rarity rarity) throws Exception {
-        return tokenService.getSlotItems(slotId, characterId, characterClass, slot, rarity);
+    public List<TokenDTO> getSlotTokens(@QueryParam("slotId") @NotNull @NotEmpty String slotId, @QueryParam("characterId") @NotNull @NotEmpty String characterId, @QueryParam("characterClass") @NotNull CharacterClass characterClass, @QueryParam("slot") @NotNull Slot slot, @QueryParam("rarity") @NotNull Rarity rarity) throws Exception {
+        return tokenService.getSlotItems(slotId, characterId, characterClass, slot, rarity).stream().map((token) -> {return TokenDTO.fromDAO(token);}).collect(Collectors.toList());
     }
 }
 
