@@ -17,9 +17,15 @@
             AND (td.range_wep = 1 OR td.thrown = 1)
             </if>
             <if test="slot.name() == 'RANGE_OFFHAND'">
-            AND t.slot= 'OFFHAND'
-            AND td.shield = 1
-            AND td.range_wep = if((select two_hand FROM token_details WHERE id = (SELECT item_id FROM character_items where character_id = #{characterId} AND slot = 'RANGE_MAINHAND')) = 1, 1,0) 
+                <if test="characterClass == 'MONK'">
+                    AND td.shuriken = 1
+                    AND td.range_wep = if((select shuriken FROM token_details WHERE id = (SELECT item_id FROM character_items where character_id = #{characterId} AND slot = 'RANGE_MAINHAND')) = 1, 1,0) 
+                </if>
+                <if test="characterClass != 'MONK'">
+                    AND t.slot= 'OFFHAND'
+                    AND td.shield = 1
+                    AND td.range_wep = if((select two_hand FROM token_details WHERE id = (SELECT item_id FROM character_items where character_id = #{characterId} AND slot = 'RANGE_MAINHAND')) = 1, 1,0) 
+                </if>
             </if>
             <if test="slot.name() == 'MAINHAND'">
             AND t.slot= 'MAINHAND'
@@ -31,8 +37,14 @@
                     AND td.ranger_off = 1
                     AND (t.slot= 'MAINHAND' OR t.slot= 'OFFHAND')
                 </if>
+                <if test="characterClass == 'MONK'">
+                    AND td.monk_offhand = 1
+                    AND (t.slot= 'MAINHAND' OR t.slot= 'OFFHAND')
+                </if>
                 <if test="characterClass != 'RANGER'">
-                    AND t.slot= 'OFFHAND'
+                    <if test="characterClass != 'MONK'">
+                        AND t.slot= 'OFFHAND'
+                    </if>
                 </if>
             AND (td.one_hand = 1 OR td.shield = 1)
             AND td.range_wep = 0

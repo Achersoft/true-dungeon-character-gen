@@ -71,12 +71,38 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public CharacterDetails setTokenSlot(String id, String soltId, String tokenId) {
+        CharacterDetails characterDetails = getCharacter(id);
+        
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(characterDetails.getUserId())))
+            throw new InvalidDataException("Operation is not allowed. Character does not belong to logged in user."); 
+
+        if(characterDetails.getCharacterClass() == CharacterClass.MONK){
+            if(characterDetails.getItems().stream().filter((item) -> item.getId().equalsIgnoreCase(soltId)&&item.getSlot()==Slot.RANGE_MAINHAND).count() > 0) {
+                characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RANGE_OFFHAND).findAny().ifPresent((item) -> {
+                    tokenMapper.unequipTokenSlot(item.getId());
+                });
+            }
+        }
+        
         tokenMapper.setTokenSlot(soltId, tokenId);
         return validateCharacterItems(id);
     }
     
     @Override
     public CharacterDetails unequipTokenSlot(String id, String soltId) {
+        CharacterDetails characterDetails = getCharacter(id);
+        
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(characterDetails.getUserId())))
+            throw new InvalidDataException("Operation is not allowed. Character does not belong to logged in user."); 
+        
+        if(characterDetails.getCharacterClass() == CharacterClass.MONK){
+            if(characterDetails.getItems().stream().filter((item) -> item.getId().equalsIgnoreCase(soltId)&&item.getSlot()==Slot.RANGE_MAINHAND).count() > 0) {
+                characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RANGE_OFFHAND).findAny().ifPresent((item) -> {
+                    tokenMapper.unequipTokenSlot(item.getId());
+                });
+            }
+        }
+            
         tokenMapper.unequipTokenSlot(soltId);
         return validateCharacterItems(id);
     }
@@ -829,6 +855,8 @@ public class CharacterServiceImpl implements CharacterService {
         final Set<ConditionalUse> metCondition = new HashSet();
         AtomicInteger mainWeaponHit = new AtomicInteger(0);
         AtomicInteger offWeaponHit = new AtomicInteger(0);
+        AtomicInteger rangeMainWeaponHit = new AtomicInteger(0);
+        AtomicInteger rangeOffWeaponHit = new AtomicInteger(0);
         AtomicInteger mightyRanged = new AtomicInteger(0);
         AtomicInteger additionalTreasureTokens = new AtomicInteger(0);
 
@@ -868,9 +896,19 @@ public class CharacterServiceImpl implements CharacterService {
                 stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
             if(item.getSlot() != Slot.RANGE_OFFHAND)
                 stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+            if(item.getSlot() == Slot.RANGE_MAINHAND) {
+                rangeMainWeaponHit.set(td.getRangeHit());
+                if(td.getRangeHit() > rangeOffWeaponHit.get())
+                    stats.setRangeHit(stats.getRangeHit() + td.getRangeHit() - rangeOffWeaponHit.get());
+            }
+            if(item.getSlot() == Slot.RANGE_OFFHAND) {
+                rangeOffWeaponHit.set(td.getRangeHit());
+                if(td.getRangeHit() > rangeMainWeaponHit.get())
+                    stats.setRangeHit(stats.getRangeHit() + td.getRangeHit() - rangeMainWeaponHit.get());
+            }
             if(item.getSlot() == Slot.RANGE_MAINHAND && (td.isThrown() || td.getName().toLowerCase().contains("mighty")))
                 mightyRanged.set(1);
-            if(item.getSlot() != Slot.MAINHAND && item.getSlot() != Slot.OFFHAND)    
+            if(item.getSlot() != Slot.MAINHAND && item.getSlot() != Slot.OFFHAND && item.getSlot() != Slot.RANGE_OFFHAND && item.getSlot() != Slot.RANGE_MAINHAND)    
                 stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
             if(item.getSlot() != Slot.OFFHAND) {
                 stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());

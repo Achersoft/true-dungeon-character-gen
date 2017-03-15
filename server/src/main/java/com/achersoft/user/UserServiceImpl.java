@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
         userMapper.editUser(user);
         emailClient.sendEmail(user.getEmail(), 
                               "TD Character Creator - Reset Password Request", 
-                              "Please use the following link to <a href=\"http://tdcharactercreator.com/tdcc/#/password/reset/" + user.getPasswordResetId() + "\">reset your password</a>" + 
+                              "Please use the following link to <a href=\"http://tdcharactercreator.com/#/password/reset/" + user.getPasswordResetId() + "\">reset your password</a>" + 
                               "<br><br>If you did not request this password change feel free to ignore it. <br><br> Regards, <br>TD Character Creator Admin");
     }
     

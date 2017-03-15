@@ -41,6 +41,8 @@ public class TokenFullDetailsDTO {
     public Boolean thrown;
     public Boolean rangerOffhand;
     public Boolean instrument;
+    public Boolean monkOffhand;
+    public Boolean shuriken;
     public Integer meleeHit;
     public Integer meleeDmg;
     public Boolean meleeFire;
@@ -125,6 +127,8 @@ public class TokenFullDetailsDTO {
                 .thrown(tokenFullDetails.isThrown())
                 .rangerOffhand(tokenFullDetails.isRangerOffhand())
                 .instrument(tokenFullDetails.isInstrument())
+                .monkOffhand(tokenFullDetails.isMonkOffhand())
+                .shuriken(tokenFullDetails.isShuriken())
                 .meleeHit(tokenFullDetails.getMeleeHit())
                 .meleeDmg(tokenFullDetails.getMeleeDmg())
                 .meleeFire(tokenFullDetails.isMeleeFire())
@@ -247,6 +251,8 @@ public class TokenFullDetailsDTO {
                 .thrown(thrown)
                 .rangerOffhand(rangerOffhand)
                 .instrument(instrument)
+                .monkOffhand(monkOffhand)
+                .shuriken(shuriken)
                 .meleeHit(meleeHit)
                 .meleeDmg(meleeDmg)
                 .meleeFire(meleeFire)
