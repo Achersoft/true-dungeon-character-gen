@@ -1,5 +1,5 @@
 <div>
-    <div style="position:absolute;right:0px;" ng-style="interactive && {'margin-top':'0px'} || {'margin-top': '10px'}">
+    <div style="position:absolute;right:0px;margin-right:15px" ng-style="interactive && {'margin-top':'0px'} || {'margin-top': '10px'}">
         <toggle-switch ng-model="interactive" knob-label="Interactive" ></toggle-switch>
     </div>
     <div ng-show="interactive === true">
@@ -20,10 +20,13 @@
                 <label class="error-text">{{charmError}}</label>
             </div>
             <div style="display:flex;max-width:866px;margin-top:10px">
-                <label class="text-right" style="font-size:28px;padding-right:15px;margin-top:8px">Slotless:</label>
+                <label class="text-right" ng-class="{'error-text': slotlessErrors !== null}" style="font-size:28px;padding-right:15px;margin-top:8px">Slotless:</label>
                 <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in characterContext.slotless track by $index" ng-repeat-end>
                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
                 </div>
+            </div>
+            <div style="display:flex;max-width:866px;margin-top:2px" ng-repeat-start="slotlessError in slotlessErrors track by $index" ng-repeat-end>
+                <label class="error-text">{{slotlessError}}</label>
             </div>
         </center>
         <div style="display:flex">
@@ -77,7 +80,19 @@
             </div>
             <div style="min-width:340px;width:50%">
                 <center>
-                <img src="images/Barbarian.png" width="325px" alt="" style="margin-top:25px;padding:0px"/></center>
+                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'BARBARIAN'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'BARD'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'CLERIC'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'DRUID'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'DWARF_FIGHTER'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Wizard.png" ng-if="characterContext.characterClass === 'ELF_WIZARD'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'FIGHTER'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Monk.png" ng-if="characterContext.characterClass === 'MONK'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'PALADIN'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'RANGER'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'ROGUE'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Wizard.png" ng-if="characterContext.characterClass === 'WIZARD'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                </center>
             </div>
             <div style="min-width:250px;width:25%">
                 <div style="display:flex;margin-top:10px">

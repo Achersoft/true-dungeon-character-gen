@@ -857,12 +857,19 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicInteger offWeaponHit = new AtomicInteger(0);
         AtomicInteger rangeMainWeaponHit = new AtomicInteger(0);
         AtomicInteger rangeOffWeaponHit = new AtomicInteger(0);
+        AtomicInteger scrollPro = new AtomicInteger(0);
         AtomicInteger mightyRanged = new AtomicInteger(0);
         AtomicInteger additionalTreasureTokens = new AtomicInteger(0);
 
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
             
+            if(td.getId().equals("c307398cc4eb769adccb78978693d79fa266b2f5") || td.getId().equals("c3c6de9b8951c4961976f147d64a0411cc6f730b") || td.getId().equals("c3c6de9b8951c4961976f147d64a0411cc6f730b")) {
+                if(scrollPro.incrementAndGet() > 1)
+                    metCondition.add(ConditionalUse.NOT_WITH_PRO_SCROLL);
+            }
+            if(td.getId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
+                metCondition.add(ConditionalUse.NOT_WITH_ROSP);
             if(td.getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
                 metCondition.add(ConditionalUse.NOT_WITH_COA);
             if(td.getTreasureMin()>0 && td.getRarity() != Rarity.PLAYER_REWARD)
@@ -871,8 +878,11 @@ public class CharacterServiceImpl implements CharacterService {
             
             if(td.isOneHanded() && !td.isRangedWeapon())
                 metCondition.add(ConditionalUse.WEAPON_1H);
-            if(td.isRangedWeapon())
+            if(td.isRangedWeapon()) {
                 metCondition.add(ConditionalUse.WEAPON_RANGED);
+                if(td.isTwoHanded())
+                    metCondition.add(ConditionalUse.WEAPON_RANGED_2H);
+            }
             if(td.isTwoHanded() && !td.isRangedWeapon())
                 metCondition.add(ConditionalUse.WEAPON_2H);
             
@@ -979,6 +989,15 @@ public class CharacterServiceImpl implements CharacterService {
                         token.setStatusText(null);
                         updateStats(stats, td, notes);
                     }   break;
+                case WEAPON_RANGED_2H:
+                    if(!metCondition.contains(ConditionalUse.WEAPON_RANGED_2H)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("This token requires a two handed range weapon to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;    
                 case DEXTERITY_18:
                     if(stats.getDex() < 18) {
                         token.setSlotStatus(SlotStatus.INVALID);
@@ -1033,6 +1052,24 @@ public class CharacterServiceImpl implements CharacterService {
                         token.setStatusText(null);
                         updateStats(stats, td, notes);
                     }   break;
+                case NOT_WITH_ROSP:
+                    if(metCondition.contains(ConditionalUse.NOT_WITH_ROSP)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with the Rod of Seven Parts.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;  
+                case NOT_WITH_PRO_SCROLL:
+                    if(metCondition.contains(ConditionalUse.NOT_WITH_PRO_SCROLL)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with other scroll protection items.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;    
                 case NO_OTHER_TREASURE:
                     if(metCondition.contains(ConditionalUse.NO_OTHER_TREASURE)) {
                         token.setSlotStatus(SlotStatus.INVALID);

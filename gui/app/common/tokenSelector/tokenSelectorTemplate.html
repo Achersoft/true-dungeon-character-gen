@@ -6,31 +6,31 @@
                 ng-class="{ 'common-token': model.rarity === 'COMMON', 'uncommon-token': model.rarity === 'UNCOMMON', 'rare-token': model.rarity === 'RARE', 'ultrarare-token': model.rarity === 'ULTRARARE', 'enhanced-token': model.rarity === 'ENHANCED', 'exalted-token': model.rarity === 'EXALTED', 'relic-token': model.rarity === 'RELIC', 'legendary-token': model.rarity === 'LEGENDARY', 'eldritch-token': model.rarity === 'ELDRITCH', 'premium-token': model.rarity === 'PREMIUM', 'artifact-token': model.rarity === 'ARTIFACT'}"></a>
 
 <script type="text/ng-template" id="tokenSelectorDetailsTemplate.html">
-    <div class="col-md-12 text-center" style="display:block;height:32px;margin:0px;padding:0px;margin-bottom:2px">
-        <span class="col-md-2 btn" ng-class="tabIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 0;reloadTokens('ALL')">All </span> 
-        <span class="col-md-2 btn" ng-class="tabIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 1;reloadTokens('COMMON')">Comn </span> 
-        <span class="col-md-2 btn" ng-class="tabIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 2;reloadTokens('UNCOMMON')">Uncom </span> 
-        <span class="col-md-2 btn" ng-class="tabIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 3;reloadTokens('RARE')">Rare </span> 
-        <span class="col-md-2 btn" ng-class="tabIndex === 4 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 4;reloadTokens('ULTRARARE')">Ultra </span> 
-        <span class="col-md-2 btn" ng-class="tabIndex === 5 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 5;reloadTokens('RELIC_PLUS')">Relic + </span>
+    <div class="col-xs-12 text-center" style="display:block;height:32px;margin:0px;padding:0px;margin-bottom:2px">
+        <span class="col-xs-2 btn" ng-class="tabIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 0;reloadTokens('ALL')">All </span> 
+        <span class="col-xs-2 btn" ng-class="tabIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 1;reloadTokens('COMMON')">Comn </span> 
+        <span class="col-xs-2 btn" ng-class="tabIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 2;reloadTokens('UNCOMMON')">Uncom </span> 
+        <span class="col-xs-2 btn" ng-class="tabIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 3;reloadTokens('RARE')">Rare </span> 
+        <span class="col-xs-2 btn" ng-class="tabIndex === 4 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 4;reloadTokens('ULTRARARE')">Ultra </span> 
+        <span class="col-xs-2 btn" ng-class="tabIndex === 5 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 5;reloadTokens('RELIC_PLUS')">Relic + </span>
     </div>
     <div style="height:410px;width:396px;overflow-y:scroll;padding-left:14px;padding-right:0px;"> 
-        <div class="col-md-12" style="padding-left:0px;padding-right:15px">
+        <div class="col-xs-12" style="padding-left:0px;padding-right:15px">
             <hr style="margin-bottom:5px;margin-top:5px;"/>
         </div>
         <div style="height:90px" ng-class-odd="'esi-row-alt'" ng-repeat-start="item in itemSelection track by $index" ng-click="selectToken(item)" data-dismiss="modal" >
-            <div class="col-md-3" style="padding-left:0px;padding-right:15px">
+            <div class="col-xs-3" style="padding-left:0px;padding-right:15px">
                 <img class="img-thumbnail img-responsive img-circle" ng-src="{{imgBaseURL+item.imgName+'.jpg'}}"  alt="" width="75px" style="border:none" 
                      ng-class="{ 'common-token': item.rarity === 'COMMON', 'uncommon-token': item.rarity === 'UNCOMMON', 'rare-token': item.rarity === 'RARE', 'ultrarare-token': item.rarity === 'ULTRARARE', 'enhanced-token': item.rarity === 'ENHANCED', 'exalted-token': item.rarity === 'EXALTED', 'relic-token': item.rarity === 'RELIC', 'legendary-token': item.rarity === 'LEGENDARY', 'eldritch-token': item.rarity === 'ELDRITCH', 'premium-token': item.rarity === 'PREMIUM', 'artifact-token': item.rarity === 'ARTIFACT' }"> 
             </div>
-            <div class="col-md-9" style="padding-left:0px;padding-right:15px">
+            <div class="col-xs-9" style="padding-left:0px;padding-right:15px">
                 <strong>{{item.name}}</strong>
             </div>
-            <div class="col-md-9" style="padding-left:0px;padding-right:15px">
+            <div class="col-xs-9" style="padding-left:0px;padding-right:15px">
                 {{item.text}}
             </div>
         </div>
-        <div class="col-md-12" style="padding-left:0px;padding-right:15px" ng-repeat-end>
+        <div class="col-xs-12" style="padding-left:0px;padding-right:15px" ng-repeat-end>
             <hr style="margin-bottom:5px;margin-top:5px;"/>
         </div>
     </div>

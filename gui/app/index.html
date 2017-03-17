@@ -19,7 +19,7 @@
   <script src="components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
 <body>
-  <div ng-controller="PrivilegeCtrl as privilegeCheck">
+  <div ng-style="!RESOURCES.IS_MOBILE && {'min-width':'1280px'}">
     <nav-bar style="margin-bottom:0px;"></nav-bar>
     <div ng-view class="col-xs-12"></div>
   </div>

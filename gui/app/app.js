@@ -57,6 +57,7 @@ angular.module('main', [
 }])
 .run(['$rootScope', '$location', '$uibModalStack', 'RESOURCES', function($rootScope, $location, $uibModalStack, RESOURCES) {
     $rootScope.loginRequired = false;
+    $rootScope.RESOURCES = RESOURCES;
     
     $rootScope.$on('$locationChangeStart', function(event, next, current){            
         if($uibModalStack.getTop()) {

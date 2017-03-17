@@ -57,6 +57,7 @@ angular.module('main')
     $scope.ringErrors = null;
     $scope.backErrors = null;
     $scope.charmErrors = null;
+    $scope.slotlessErrors = null;
     
     characterSvc.getCharacter($routeParams.characterId).then(function(result) {
         characterState.setContext(result.data);
@@ -94,6 +95,8 @@ angular.module('main')
         $scope.ringErrors = null;
         $scope.backErrors = null;
         $scope.charmErrors = null;
+        $scope.slotlessErrors = null;
+        
         if($scope.characterContext.rings.length > 0) {
             $scope.characterContext.rings.forEach(function(item, index) {
                 if(item.slotStatus === 'INVALID')
@@ -112,6 +115,15 @@ angular.module('main')
                     if($scope.charmErrors === null)
                         $scope.charmErrors = [];
                     $scope.charmErrors.push(item.statusText);
+                }
+            });
+        }
+        if($scope.characterContext.slotless.length > 0) {
+            $scope.characterContext.slotless.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID') {
+                    if($scope.slotlessErrors === null)
+                        $scope.slotlessErrors = [];
+                    $scope.slotlessErrors.push(item.statusText);
                 }
             });
         }
