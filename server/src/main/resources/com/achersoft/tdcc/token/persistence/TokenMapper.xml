@@ -161,6 +161,18 @@
             <if test="characterClass == 'ROGUE'">
             AND t.rogue = 1
             </if>
+            <if test="slot == 'SLOTLESS'">
+            AND t.id NOT IN
+                (SELECT item_id 
+                 FROM character_items
+                 WHERE character_id = #{characterId}
+                   AND item_id is not null
+                   AND id != #{slotId}    
+                   AND item_id != 'b3079a85fd23a441af7de7dfd794d6ece2760313'
+                   AND slot = #{slot})
+            AND t.id != if((SELECT count(*) FROM character_items WHERE character_id = #{characterId} AND id != #{slotId} AND item_id = 'b3079a85fd23a441af7de7dfd794d6ece2760313') >= 2, 'b3079a85fd23a441af7de7dfd794d6ece2760313','')        
+            </if>
+            <if test="slot != 'SLOTLESS'">
             AND t.id NOT IN
                 (SELECT item_id 
                  FROM character_items
@@ -168,6 +180,7 @@
                    AND item_id is not null
                    AND id != #{slotId}    
                    AND slot = #{slot})
+            </if>
        ORDER BY t.name
     </select>
     

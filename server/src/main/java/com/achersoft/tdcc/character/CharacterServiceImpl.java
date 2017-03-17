@@ -552,6 +552,26 @@ public class CharacterServiceImpl implements CharacterService {
             if(backCount > 1)
                 characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.BACK && item.getIndex() > 0)).collect(Collectors.toList()));
         }
+        
+        // Check Runestone Fitting Base
+        long runeCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RUNESTONE).count();
+        int fittingBaseCount = (int)characterDetails.getItems().stream().filter((item) -> (item.getItemId()!=null&&item.getItemId().equals("b3079a85fd23a441af7de7dfd794d6ece2760313"))).count();
+        switch (fittingBaseCount) {
+            case 2:
+                if(runeCount == 2)
+                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(2).slotStatus(SlotStatus.OK).build());
+                break;
+            case 1:
+                if(runeCount > 2)
+                    characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.RUNESTONE && item.getIndex() > 1)).collect(Collectors.toList()));
+                else if(runeCount == 1)
+                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(1).slotStatus(SlotStatus.OK).build());
+                break;
+            default:
+                if(runeCount > 1)
+                    characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.RUNESTONE && item.getIndex() > 0)).collect(Collectors.toList()));
+                break;
+        }
     } 
     
     private void addSlotsForFullItems(CharacterDetails characterDetails) {
@@ -565,16 +585,6 @@ public class CharacterServiceImpl implements CharacterService {
         characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.SLOTLESS).collect(Collectors.toList()));
         characterDetails.getItems().addAll(orderedSlotless);
 
-        // Check Runestone
-        List<CharacterItem> orderedRunestones = new ArrayList();
-        characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RUNESTONE).forEach((item) -> {
-            item.setIndex(orderedRunestones.size());
-            orderedRunestones.add(item);
-        });
-        orderedRunestones.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(orderedRunestones.size()).slotStatus(SlotStatus.OK).build());
-        characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.RUNESTONE).collect(Collectors.toList()));
-        characterDetails.getItems().addAll(orderedRunestones);
-        
         // Check Bard Instruments
         if(characterDetails.getCharacterClass() == CharacterClass.BARD) {
             List<CharacterItem> orderedInstruments = new ArrayList();

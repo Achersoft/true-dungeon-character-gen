@@ -16,7 +16,7 @@ public class TokenServiceImpl implements TokenService{
     public List<Token> getSlotItems(String slotId, String characterId, CharacterClass characterClass, Slot slot, Rarity rarity) {
         if(slot == Slot.MAINHAND || slot == Slot.OFFHAND || slot == Slot.RANGE_MAINHAND || slot == Slot.RANGE_OFFHAND)
             return mapper.getWeaponSlotItems(slotId, characterId, characterClass.name(), slot, rarity.name());
-        return mapper.getNonWeaponSlotItems(slotId, characterId, characterClass.name(), slot, rarity.name());
+        return mapper.getNonWeaponSlotItems(slotId, characterId, characterClass.name(), slot.name(), rarity.name());
     }
     
 }
