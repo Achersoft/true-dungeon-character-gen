@@ -32,7 +32,7 @@ public class CharacterRestService {
     @PUT 
     @Path("/create")
     @Produces({MediaType.APPLICATION_JSON})	
-    public CharacterDetailsDTO createCharacter(@QueryParam("characterClass") @NotNull CharacterClass characterClass, @QueryParam("name") @NotNull @NotEmpty String name) throws Exception {
+    public CharacterDetailsDTO createCharacter(@QueryParam("characterClass") CharacterClass characterClass, @QueryParam("name") String name) throws Exception {
         return CharacterDetailsDTO.fromDAO(characterService.validateCharacterItems(characterCreatorService.createCharacter(characterClass, name).getId()));
     }
 

@@ -13,10 +13,10 @@
 <div class="modal-body" style="padding:0px;margin-top:34px">
     <div style="height:calc(100% - 143px);position:fixed;overflow-y:scroll;width:100%;padding-left:0;padding-right:0;margin-left:-2px">  
         <div style="height:calc(100% - 141px);position:fixed;overflow-y:scroll;width:100%;padding-left:0;padding-right:0;">   
-            <div style="height:85px" ng-class-odd="'esi-row-alt'" ng-repeat-start="item in itemSelection track by $index" ng-repeat-end ng-click="selectToken(item)" data-dismiss="modal">
+            <div style="height:110px" ng-class-odd="'esi-row-alt'" ng-repeat-start="item in itemSelection track by $index" ng-repeat-end ng-click="selectToken(item)" data-dismiss="modal">
                 <div style="display:flex;margin-left:10px;margin-top:5px;margin-bottom:5px;">
-                    <div style="width:75px">
-                        <img class="img-thumbnail img-responsive img-circle" ng-src="{{imgBaseURL+item.imgName+'.jpg'}}" alt="" width="75px" style="border:none" 
+                    <div style="width:100px">
+                        <img class="img-thumbnail img-responsive img-circle" ng-src="{{imgBaseURL+item.imgName+'.jpg'}}" alt="" width="100px" style="border:none" 
                              ng-class="{ 'common-token': item.rarity === 'COMMON', 'uncommon-token': item.rarity === 'UNCOMMON', 'rare-token': item.rarity === 'RARE', 'ultrarare-token': item.rarity === 'ULTRARARE', 'enhanced-token': item.rarity === 'ENHANCED', 'exalted-token': item.rarity === 'EXALTED', 'relic-token': item.rarity === 'RELIC', 'legendary-token': item.rarity === 'LEGENDARY', 'eldritch-token': item.rarity === 'ELDRITCH', 'premium-token': item.rarity === 'PREMIUM', 'artifact-token': item.rarity === 'ARTIFACT' }"> 
                     </div>
                     <div style="flex: 1;">

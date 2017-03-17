@@ -26,11 +26,11 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
     public CharacterDetails createCharacter(CharacterClass characterClass, String name) throws Exception {
         String userId = userPrincipalProvider.getUserPrincipal().getSub();
         
-        if(name == null || name.isEmpty())
-            throw new AuthenticationException("Character name cannot be null."); 
+        if(name == null || name.isEmpty() || name.equals("null"))
+            throw new InvalidDataException("Character name cannot be null."); 
         
         if(characterClass == null)
-            throw new AuthenticationException("A character must have a class."); 
+            throw new InvalidDataException("A character must have a class."); 
         
         if(userId == null || userId.isEmpty())
             throw new AuthenticationException("User is not valid."); 
