@@ -51,7 +51,7 @@
 
 .desktop-item-modal-dialog .modal-dialog{
   width: 60%;
-  height: 70%;
+  height: 90%;
   margin-left: 20%;
 }
 
@@ -117,7 +117,7 @@
 }
 
 .uncommon-token {
-    background-color:lime;
+    background-color:#41A317;
 }
 
 .rare-token {
@@ -145,11 +145,11 @@
 }
 
 .eldritch-token {
-    background-color:green;
+    background-color:#165417;
 }
 
 .premium-token {
-    background-color:green;
+    background-color:#3E7C3F;
 }
 
 .artifact-token {

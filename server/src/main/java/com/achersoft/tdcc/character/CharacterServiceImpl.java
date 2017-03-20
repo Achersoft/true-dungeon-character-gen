@@ -667,29 +667,29 @@ public class CharacterServiceImpl implements CharacterService {
             }
         }
         
-        
         // Darkthorn Set
         // all 3 +2 ret dmg
-      //  if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("09a0ad7cb78d898992c96ab00487bc8ffdc66f5a") || item.getItemId().equals("4b4e1b22e1ce20a529920fd48f8b891ec8e0b74a") || item.getItemId().equals("c34921c9623d7d3c1eee054e646fc3cdc7f08659"))).count() == 3)
-            //characterDetails.getStats().setRetDmg(characterDetails.getStats().getRetDmg() + 2);
+        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("2439ce9af26dfa74294083c13b73e3cc00405793") || item.getItemId().equals("770a1850602b0854e7be9256f55f1b0ce2ac50ea") || item.getItemId().equals("e6d0a8722540345c6a236a0aeeaf92d12c66e370"))).count() == 3)
+            characterDetails.getStats().setRetDmg(characterDetails.getStats().getRetDmg() + 2);
        
         
         // Defender Set
         // all 3 free action movement and +1 AC
-        /*if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("09a0ad7cb78d898992c96ab00487bc8ffdc66f5a") || item.getItemId().equals("4b4e1b22e1ce20a529920fd48f8b891ec8e0b74a") || item.getItemId().equals("c34921c9623d7d3c1eee054e646fc3cdc7f08659"))).count() == 3) {
+        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("89abc3b184b2b30d1a967aee7a32ccbf107532ed") || item.getItemId().equals("b29ffe03ba83c567fb95ddedeb8cef8c515c003f") || item.getItemId().equals("debb8b6d4a22654fadfa4983b84cac3bd69db814"))).count() == 3) {
             characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 1);
             characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 1);
             characterDetails.getStats().setFreeMovement(true);
-        }*/
+        }
         
         // Dragonhide Set
         // 3 or more auto pass saves vs dragon breath, +3 saves
-        /*if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("67935e7e953d26c83d095fd188a226d16fc16e1f") || item.getItemId().equals("4b4e1b22e1ce20a529920fd48f8b891ec8e0b74a") || item.getItemId().equals("c34921c9623d7d3c1eee054e646fc3cdc7f08659"))).count() == 3) {
+        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("2a05d3436a948f9bb29e1ebfd9f3ac55115445a2") || item.getItemId().equals("33205cbfbe448541fae56600346027284edc52e1") || item.getItemId().equals("643e19c4273dcb6f2e8b2ce56241beb1efde902e") ||
+                                                                                                         item.getItemId().equals("67935e7e953d26c83d095fd188a226d16fc16e1f") || item.getItemId().equals("81fbf796065e19a88ea36b4b9413946839f10eb6") || item.getItemId().equals("90af6fea77a9670b41a34812b45be7ace7e11e37"))).count() == 3) {
             characterDetails.getStats().setFort(characterDetails.getStats().getFort() + 3);
             characterDetails.getStats().setReflex(characterDetails.getStats().getReflex() + 3);
             characterDetails.getStats().setWill(characterDetails.getStats().getWill() + 3);
             characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("You automatically make saving throws vs. dragon breath weapons").build());
-        }*/
+        }
         
         // Dragonscale Set
         // all 3 - 7 fire dr
@@ -706,11 +706,11 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Footman Set
         // all 3 +2 AC and cold DR 1
-        /*if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("09a0ad7cb78d898992c96ab00487bc8ffdc66f5a") || item.getItemId().equals("4b4e1b22e1ce20a529920fd48f8b891ec8e0b74a") || item.getItemId().equals("c34921c9623d7d3c1eee054e646fc3cdc7f08659"))).count() == 3) {
+        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("a0963d04a21f5987224588d320e66dcb1bec5e07") || item.getItemId().equals("c431e2d1507703f78db6d76a5c65c697e9a3f795") || item.getItemId().equals("dff11b4606afca716d94fafa81382a9078ff43d7"))).count() == 3) {
             characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 2);
             characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 2);
             characterDetails.getStats().setDrCold(characterDetails.getStats().getDrCold() + 1);
-        }*/
+        }
         
         // Might Set
         // 3 or more +1 level
@@ -734,9 +734,9 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Mountain Dwarf Set
         //all 3 1 cold DR
-        /*if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("09a0ad7cb78d898992c96ab00487bc8ffdc66f5a") || item.getItemId().equals("4b4e1b22e1ce20a529920fd48f8b891ec8e0b74a") || item.getItemId().equals("c34921c9623d7d3c1eee054e646fc3cdc7f08659")).count() == 3) {
+        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("886c908995eae55ebb33ff143b07b969fcab09b3") || item.getItemId().equals("d55ed0f77c4a340d2f7fe558e49700861a23d221") || item.getItemId().equals("f67c01d654eacdd3a021dc0d3fe3c319043d8caf"))).count() == 3) {
             characterDetails.getStats().setDrCold(characterDetails.getStats().getDrCold() + 1);
-        }*/
+        }
         
         // Redoubt Set
         // 3 or more +2 str and +5 HP
@@ -779,9 +779,9 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Wind Set
         // all 3 character gains the feather fall effect and immunity to non-magical physical missiles.
-        /*if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("d9ebb109843e8fa1aa04d90dbf7405e572042fa1") || item.getItemId().equals("e5b7a23fc4208752b6e29c1c0c040279425bc898") || item.getItemId().equals("4fb8d5b22892902f33a73630d5dddb8cff8e244b")).count() == 3) {
+        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("0d71d03613ff843d7a933d65f848375000e76641") || item.getItemId().equals("5118b837bd908c60e7dac00767c4836a31a85878") || item.getItemId().equals("db2de322945529f5dbf3c97030ffa6ff52df96c4"))).count() == 3) {
             characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("You have the feather fall effect and immunity to non-magical physical missiles.").build());
-        }*/
+        }
     }
     
     private void setCharacterNotes(CharacterDetails characterDetails) {
@@ -874,7 +874,7 @@ public class CharacterServiceImpl implements CharacterService {
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
             
-            if(td.getId().equals("c307398cc4eb769adccb78978693d79fa266b2f5") || td.getId().equals("c3c6de9b8951c4961976f147d64a0411cc6f730b") || td.getId().equals("c3c6de9b8951c4961976f147d64a0411cc6f730b")) {
+            if(td.getId().equals("c307398cc4eb769adccb78978693d79fa266b2f5") || td.getId().equals("c3c6de9b8951c4961976f147d64a0411cc6f730b") || td.getId().equals("106c29905b909c48ddf0f2a8ca7a04c2e94d253f") || td.getId().equals("d622edee8af0a1bf0c7e5171d50ba6b0e4a2d365")) {
                 if(scrollPro.incrementAndGet() > 1)
                     metCondition.add(ConditionalUse.NOT_WITH_PRO_SCROLL);
             }

@@ -81,7 +81,7 @@
             <div style="min-width:340px;width:50%">
                 <center>
                     <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'BARBARIAN'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
-                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'BARD'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Bard.png" ng-if="characterContext.characterClass === 'BARD'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
                     <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'CLERIC'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
                     <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'DRUID'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
                     <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'DWARF_FIGHTER'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
@@ -90,7 +90,7 @@
                     <img src="images/Monk.png" ng-if="characterContext.characterClass === 'MONK'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
                     <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'PALADIN'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
                     <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'RANGER'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
-                    <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'ROGUE'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
+                    <img src="images/Rogue.png" ng-if="characterContext.characterClass === 'ROGUE'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
                     <img src="images/Wizard.png" ng-if="characterContext.characterClass === 'WIZARD'" width="325px" alt="" style="margin-top:25px;padding:0px"/>
                 </center>
             </div>
@@ -198,6 +198,14 @@
                 <label  style="font-size:28px;padding-left:5px;margin-top:8px">Instruments:</label>
                 <div style="padding:0;width:70px" ng-repeat-start="instrument in characterContext.instruments track by $index" ng-repeat-end>
                     <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="instrument" label="Instrument"></token-selector>
+                </div>
+            </div>
+        </center>
+        <center>
+            <div style="display:flex;max-width:750px;margin-top:0px;margin-bottom:15px;">
+                <label  style="font-size:28px;padding-left:5px;margin-top:8px">Runestones:</label>
+                <div style="padding:0;width:70px" ng-repeat-start="runestone in characterContext.runestones track by $index" ng-repeat-end>
+                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="runestone" label="Runestone"></token-selector>
                 </div>
             </div>
         </center>
