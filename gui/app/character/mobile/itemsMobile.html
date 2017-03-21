@@ -72,6 +72,11 @@
             <item-mobile-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></item-mobile-selector>
         </div>
     </div>
+    <div ng-if="characterContext.figurines !== null && characterContext.figurines.length > 0">
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="figurine in characterContext.figurines track by $index" ng-repeat-end>
+            <item-mobile-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="figurine{{$index}}" model="figurine" label="Figurine"></item-mobile-selector>
+        </div>
+    </div>
     <div ng-if="characterContext.runestones !== null && characterContext.runestones.length > 0">
         <div class="col-xs-12" style="padding:0" ng-repeat-start="runestone in characterContext.runestones track by $index" ng-repeat-end>
             <item-mobile-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="runestone{{$index}}" model="runestone" label="Runestone"></item-mobile-selector>

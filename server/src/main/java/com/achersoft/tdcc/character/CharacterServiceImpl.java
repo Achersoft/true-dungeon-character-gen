@@ -966,6 +966,14 @@ public class CharacterServiceImpl implements CharacterService {
             default:
                 break;
         }
+        
+        long figurineCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FIGURINE).count();
+        if(stats.getCha() >= 16) {
+            if(figurineCount < 2)
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FIGURINE).index(1).slotStatus(SlotStatus.OK).build());
+        } else if(figurineCount > 1)       
+            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.FIGURINE && item.getIndex() > 0)).collect(Collectors.toList()));
+        
     }
     
     private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, List<CharacterNote> notes) {

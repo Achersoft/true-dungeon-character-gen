@@ -39,7 +39,7 @@ public class CharacterDetailsDTO {
     public CharacterItemDTO shirt;
     public CharacterItemDTO boots;
     public CharacterItemDTO legs;
-    public CharacterItemDTO figurine;
+    public List<CharacterItemDTO> figurines;
     public List<CharacterItemDTO> charms;
     public List<CharacterItemDTO> iounStones;
     public List<CharacterItemDTO> slotless;
@@ -62,6 +62,7 @@ public class CharacterDetailsDTO {
                 .charms(new ArrayList())
                 .iounStones(new ArrayList())
                 .slotless(new ArrayList())
+                .figurines(new ArrayList())
                 .runestones(new ArrayList())
                 .alwaysInEffect(new ArrayList())
                 .oncePerRound(new ArrayList())
@@ -113,7 +114,7 @@ public class CharacterDetailsDTO {
             if(item.getSlot() == Slot.LEGS)
                 build.legs = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.FIGURINE)
-                build.figurine = CharacterItemDTO.fromDAO(item);
+                build.figurines.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.CHARM)
                 build.charms.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.IOUNSTONE)
