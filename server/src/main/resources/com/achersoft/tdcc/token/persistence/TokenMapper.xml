@@ -184,6 +184,12 @@
        ORDER BY t.name
     </select>
     
+    <select id="getTokenSlotIndex" resultType="java.lang.Integer">
+        SELECT slot_index 
+          FROM character_items
+         WHERE id = #{soltId}
+    </select>
+    
     <update id="setTokenSlot">      
         UPDATE character_items SET
             item_id = #{tokenId}   

@@ -867,6 +867,7 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicInteger offWeaponHit = new AtomicInteger(0);
         AtomicInteger rangeMainWeaponHit = new AtomicInteger(0);
         AtomicInteger rangeOffWeaponHit = new AtomicInteger(0);
+        AtomicInteger sixLevelReward = new AtomicInteger(0);
         AtomicInteger scrollPro = new AtomicInteger(0);
         AtomicInteger mightyRanged = new AtomicInteger(0);
         AtomicInteger additionalTreasureTokens = new AtomicInteger(0);
@@ -874,7 +875,7 @@ public class CharacterServiceImpl implements CharacterService {
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
             
-            if(td.getId().equals("c307398cc4eb769adccb78978693d79fa266b2f5") || td.getId().equals("c3c6de9b8951c4961976f147d64a0411cc6f730b") || td.getId().equals("106c29905b909c48ddf0f2a8ca7a04c2e94d253f") || td.getId().equals("d622edee8af0a1bf0c7e5171d50ba6b0e4a2d365")) {
+            if(td.getId().equals("c307398cc4eb769adccb78978693d79fa266b2f5") || td.getId().equals("c3c6de9b8951c4961976f147d64a0411cc6f730b")) {
                 if(scrollPro.incrementAndGet() > 1)
                     metCondition.add(ConditionalUse.NOT_WITH_PRO_SCROLL);
             }
@@ -933,6 +934,14 @@ public class CharacterServiceImpl implements CharacterService {
             if(item.getSlot() != Slot.OFFHAND) {
                 stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                 stats.setRangeMissileAC(stats.getRangeMissileAC() + td.getRangeMissileAC());
+            }
+            if(td.getId().equals("8469e44d1b5890ad25506a2abbd2986987efb20a") || td.getId().equals("9f35f1840298549d070a818019bd6b7da131a6ec") || td.getId().equals("ab5d855dbeedfd400cfd417dbc1d25d01272203e")) {
+                stats.setPsychicLevel(stats.getPsychicLevel() + 1);
+            }
+            if((td.getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") || td.getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2")) && sixLevelReward.get() == 0) {
+                sixLevelReward.set(1);
+                stats.setTreasureMin(stats.getTreasureMin() + 1);
+                stats.setTreasureMax(stats.getTreasureMax() + 1);
             }
         });   
         
@@ -1147,6 +1156,7 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setPsychic(stats.isPsychic() || td.isPsychic());
         stats.setSpellDmg(stats.getSpellDmg() + td.getSpellDmg());
         stats.setSpellHeal(stats.getSpellHeal() + td.getSpellHeal());
+        stats.setInitiative(stats.getInitiative()+ td.getInitiative());
         stats.setTreasureMin(stats.getTreasureMin() + td.getTreasureMin());
         stats.setTreasureMax(stats.getTreasureMax() + td.getTreasureMax());
         stats.setDrMelee(stats.getDrMelee() + td.getDrMelee());
