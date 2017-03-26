@@ -15,6 +15,9 @@ public enum ConditionalUse {
     NO_OTHER_TREASURE,
     NOT_WITH_COA,
     NOT_WITH_PRO_SCROLL,
+    IRON_WEAPON,
+    SLING,
+    THRALL_WEAPON,
     NOT_WITH_ROSP;
 }
 

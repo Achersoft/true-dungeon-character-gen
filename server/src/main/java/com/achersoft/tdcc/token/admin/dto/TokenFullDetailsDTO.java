@@ -43,6 +43,7 @@ public class TokenFullDetailsDTO {
     public Boolean instrument;
     public Boolean monkOffhand;
     public Boolean shuriken;
+    public Boolean bracerWeapon;
     public Integer meleeHit;
     public Integer meleeDmg;
     public Boolean meleeFire;
@@ -127,6 +128,7 @@ public class TokenFullDetailsDTO {
                 .thrown(tokenFullDetails.isThrown())
                 .rangerOffhand(tokenFullDetails.isRangerOffhand())
                 .instrument(tokenFullDetails.isInstrument())
+                .bracerWeapon(tokenFullDetails.isBracerWeapon())
                 .monkOffhand(tokenFullDetails.isMonkOffhand())
                 .shuriken(tokenFullDetails.isShuriken())
                 .meleeHit(tokenFullDetails.getMeleeHit())
@@ -196,6 +198,7 @@ public class TokenFullDetailsDTO {
         
         if(tokenFullDetails.isUsableByBarbarian() && tokenFullDetails.isUsableByBard()&&
            tokenFullDetails.isUsableByCleric()&& tokenFullDetails.isUsableByDruid()&&
+           tokenFullDetails.isUsableByDwarfFighter()&& tokenFullDetails.isUsableByElfWizard()&&     
            tokenFullDetails.isUsableByFighter()&& tokenFullDetails.isUsableByMonk() &&
            tokenFullDetails.isUsableByPaladin()&& tokenFullDetails.isUsableByRanger()&&
            tokenFullDetails.isUsableByRogue()&& tokenFullDetails.isUsableByWizard())
@@ -253,6 +256,7 @@ public class TokenFullDetailsDTO {
                 .instrument(instrument)
                 .monkOffhand(monkOffhand)
                 .shuriken(shuriken)
+                .bracerWeapon(bracerWeapon)
                 .meleeHit(meleeHit)
                 .meleeDmg(meleeDmg)
                 .meleeFire(meleeFire)
@@ -322,6 +326,8 @@ public class TokenFullDetailsDTO {
             build.setUsableByBard(true);
             build.setUsableByCleric(true);
             build.setUsableByDruid(true);
+            build.setUsableByDwarfFighter(true);
+            build.setUsableByElfWizard(true);
             build.setUsableByFighter(true);
             build.setUsableByMonk(true);
             build.setUsableByPaladin(true);

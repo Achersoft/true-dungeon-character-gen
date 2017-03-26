@@ -21,7 +21,19 @@
             </div>
             <div style="display:flex;max-width:866px;margin-top:10px">
                 <label class="text-right" ng-class="{'error-text': slotlessErrors !== null}" style="font-size:28px;padding-right:15px;margin-top:8px">Slotless:</label>
-                <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in characterContext.slotless track by $index" ng-repeat-end>
+                <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow1 track by $index" ng-repeat-end>
+                   <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
+                </div>
+            </div>
+            <div style="display:flex;max-width:866px;margin-top:10px" ng-if="slotlessRow2.length > 0">
+                <div style="width:121px"></div>
+                <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow2 track by $index" ng-repeat-end>
+                   <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
+                </div>
+            </div>
+            <div style="display:flex;max-width:866px;margin-top:10px" ng-if="slotlessRow3.length > 0">
+                <div style="width:121px"></div>
+                <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow3 track by $index" ng-repeat-end>
                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
                 </div>
             </div>
@@ -40,7 +52,8 @@
                 <div style="display:flex;margin-top:10px">
                     <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Wrists:</label>
                     <div style="padding:0;width:60px">
-                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right" set-token="setTokenSlot" unequip="unequipItem" element-id="wrists" model="characterContext.wrists" label="Wrists"></token-selector>
+                        <img ng-if="characterContext.wrists === null" class="img-thumbnail img-responsive img-circle" style="border:none;" src="images/nullToken.jpg" alt="images/nullToken.jpg" width="60px" >
+                        <token-selector ng-if="characterContext.wrists !== null" editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right" set-token="setTokenSlot" unequip="unequipItem" element-id="wrists" model="characterContext.wrists" label="Wrists"></token-selector>
                     </div>
                 </div>
                 <div style="display:flex;margin-top:10px">
@@ -121,6 +134,12 @@
                 </div>
                 <div style="display:flex;" ng-show="characterContext.neck.slotStatus === 'INVALID'">
                     <label style="min-width:210px;" class="error-text">{{characterContext.neck.statusText}}</label>
+                </div>
+                <div style="display:flex;margin-top:10px" ng-if="characterContext.aow !== null">
+                    <div style="padding:0;width:60px">
+                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="left" set-token="setTokenSlot" unequip="unequipItem" element-id="aow" model="characterContext.aow" label="AoW Runestone"></token-selector>
+                    </div>
+                    <label class="text-left" style="font-size:28px;padding-left:15px;margin-top:8px">:AoW Runestone</label>
                 </div>
                 <div style="display:flex;margin-top:10px">
                     <div style="padding:0;width:60px">
@@ -245,6 +264,9 @@
         </div>
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.neck !== null">
             <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="neck" model="characterContext.neck" label="Neck"></item-desktop-selector>
+        </div>
+        <div class="col-xs-12" style="padding:0" ng-if="characterContext.aow !== null">
+            <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="aow" model="characterContext.aow" label="AoW Runestone"></item-desktop-selector>
         </div>
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.torso !== null">
             <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="torso" model="characterContext.torso" label="Torso"></item-desktop-selector>

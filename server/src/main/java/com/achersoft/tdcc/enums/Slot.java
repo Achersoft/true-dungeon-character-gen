@@ -10,6 +10,7 @@ public enum Slot {
     EYES("Eyes"),
     EAR("Ear"),
     NECK("Neck"),
+    AOW("AoW"),
     TORSO("Torso"),
     SHIRT("Shirt"),
     BACK("Back"),

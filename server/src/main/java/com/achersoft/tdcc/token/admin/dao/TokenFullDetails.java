@@ -46,6 +46,7 @@ public class TokenFullDetails {
     private boolean rangerOffhand;
     private boolean instrument;
     private boolean shuriken;
+    private boolean bracerWeapon;
     private int meleeHit;
     private int meleeDmg;
     private boolean meleeFire;

@@ -463,6 +463,14 @@ public class CharacterServiceImpl implements CharacterService {
                 }
             });
         }
+        
+        // Check for bracer weapons
+        if(characterDetails.getCharacterClass() == CharacterClass.MONK) {
+            if(characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||item.getSlot()==Slot.OFFHAND)&&tokenAdminMapper.getTokenDetails(item.getItemId()).isBracerWeapon()).findAny().isPresent())
+                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.WRIST)).collect(Collectors.toList()));
+            else if(characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.WRIST).count() == 0)
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.WRIST).index(0).slotStatus(SlotStatus.OK).build());
+        }
     }
     
     private void checkSlotModItems(CharacterDetails characterDetails) {
@@ -538,9 +546,40 @@ public class CharacterServiceImpl implements CharacterService {
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(5).slotStatus(SlotStatus.OK).build());
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(6).slotStatus(SlotStatus.OK).build());
             }
+            if(iounCount == 6) {
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(6).slotStatus(SlotStatus.OK).build());
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(7).slotStatus(SlotStatus.OK).build());
+            }
         } else {
-            if(iounCount > 5)
+            if(iounCount == 8)
+                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 5)).collect(Collectors.toList()));
+            else if(iounCount == 7)
                 characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 4)).collect(Collectors.toList()));
+        }
+        
+        // Check for Eldritch Runestone
+        iounCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.IOUNSTONE).count();
+        if(itemsMap.containsKey("db0c53293948567ee17fe0715828ba3e380e3d75")) {
+            if(iounCount == 7 ) 
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(7).slotStatus(SlotStatus.OK).build());
+            else if(iounCount == 5 )
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(5).slotStatus(SlotStatus.OK).build());
+        } else {
+            if(iounCount == 8)
+                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 6)).collect(Collectors.toList()));
+            else if(iounCount == 6)
+                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 4)).collect(Collectors.toList()));
+        }
+        
+        // Check for AoW
+        long aowCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.AOW).count();
+        if(itemsMap.containsKey("69174ff87b87325b034df0adc38d418859a11a09")) {
+            if(aowCount == 0) {
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.AOW).index(0).slotStatus(SlotStatus.OK).build());
+            }
+        } else {
+            if(aowCount > 0)
+                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.AOW)).collect(Collectors.toList()));
         }
         
         // Check for Charm of Brooching
@@ -623,7 +662,7 @@ public class CharacterServiceImpl implements CharacterService {
         if(itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") || 
         (eldrichCount >= 3 || (eldrichCount >= 2 && (characterDetails.getCharacterClass() == CharacterClass.RANGER || characterDetails.getCharacterClass() == CharacterClass.DRUID))) ||
         itemsMap.containsKey("2f1cfd3d3dbdd218f5cd5bd3935851b7acba5a9c") || itemsMap.containsKey("f44d007c35b18b83e85a1ee183cda08180030012") ||
-        mightCount >= 3 || charmingCount >= 3) {
+        mightCount >= 3 || charmingCount >= 3 || itemsMap.containsKey("942078ca2d04f25545a316c123a392c4d5d339fd")) {
             characterDetails.setStats(mapper.getStartingStats(characterDetails.getCharacterClass(), 5));
             characterDetails.getStats().setCharacterId(characterDetails.getId());
         } else {
@@ -646,7 +685,7 @@ public class CharacterServiceImpl implements CharacterService {
        
         // Charming items
         if(charmingCount > 0) {
-            int charmCount = (int) characterDetails.getItems().stream().distinct().filter((item) -> item.getSlot() == Slot.CHARM).count();
+            int charmCount = (int) characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && item.getSlot() == Slot.CHARM).count();
             if(charmCount > 6)
                 charmCount = 6;
             // Ear
@@ -875,78 +914,86 @@ public class CharacterServiceImpl implements CharacterService {
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
             
-            if(td.getId().equals("c307398cc4eb769adccb78978693d79fa266b2f5") || td.getId().equals("c3c6de9b8951c4961976f147d64a0411cc6f730b")) {
-                if(scrollPro.incrementAndGet() > 1)
-                    metCondition.add(ConditionalUse.NOT_WITH_PRO_SCROLL);
-            }
-            if(td.getId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
-                metCondition.add(ConditionalUse.NOT_WITH_ROSP);
-            if(td.getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
-                metCondition.add(ConditionalUse.NOT_WITH_COA);
-            if(td.getTreasureMin()>0 && td.getRarity() != Rarity.PLAYER_REWARD)
-                if(additionalTreasureTokens.addAndGet(1) > 1)
-                    metCondition.add(ConditionalUse.NO_OTHER_TREASURE);
-            
-            if(td.isOneHanded() && !td.isRangedWeapon())
-                metCondition.add(ConditionalUse.WEAPON_1H);
-            if(td.isRangedWeapon()) {
-                metCondition.add(ConditionalUse.WEAPON_RANGED);
-                if(td.isTwoHanded())
-                    metCondition.add(ConditionalUse.WEAPON_RANGED_2H);
-            }
-            if(td.isTwoHanded() && !td.isRangedWeapon())
-                metCondition.add(ConditionalUse.WEAPON_2H);
-            
-            if(td.getConditionalUse() != ConditionalUse.NONE){
-                conditionalTokens.add(item);
+            if(item.getSlot() == Slot.AOW){
+                updateStatsAoW(stats, td, characterDetails.getNotes(), 3);
+            } else if(item.getSlot() == Slot.RUNESTONE && item.getIndex() == 0 && characterDetails.getItems().stream().filter((i) -> i.getItemId()!=null&&i.getSlot()==Slot.AOW&&i.getItemId().equals(td.getId())).count() > 0) {
+                updateStatsAoW(stats, td, characterDetails.getNotes(), 1);
             } else {
-                item.setSlotStatus(SlotStatus.OK);
-                item.setStatusText(null);
-                updateStats(stats, td, characterDetails.getNotes());
-            }
-            
-            if(item.getSlot() == Slot.MAINHAND) {
-                mainWeaponHit.set(td.getMeleeHit());
-                if(td.getMeleeHit() > offWeaponHit.get())
-                    stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit() - offWeaponHit.get());
-            } else if(item.getSlot() == Slot.OFFHAND) {
-                offWeaponHit.set(td.getMeleeHit());
-                if(td.getMeleeHit() > mainWeaponHit.get())
-                    stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit() - mainWeaponHit.get());
-            } else if(item.getSlot() != Slot.RANGE_MAINHAND)
-                stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
-            if(item.getSlot() != Slot.RANGE_OFFHAND)
-                stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-            if(item.getSlot() == Slot.RANGE_MAINHAND) {
-                rangeMainWeaponHit.set(td.getRangeHit());
-                if(td.getRangeHit() > rangeOffWeaponHit.get())
-                    stats.setRangeHit(stats.getRangeHit() + td.getRangeHit() - rangeOffWeaponHit.get());
-            }
-            if(item.getSlot() == Slot.RANGE_OFFHAND) {
-                rangeOffWeaponHit.set(td.getRangeHit());
-                if(td.getRangeHit() > rangeMainWeaponHit.get())
-                    stats.setRangeHit(stats.getRangeHit() + td.getRangeHit() - rangeMainWeaponHit.get());
-            }
-            if(item.getSlot() == Slot.RANGE_MAINHAND && (td.isThrown() || td.getName().toLowerCase().contains("mighty")))
-                mightyRanged.set(1);
-            if(item.getSlot() != Slot.MAINHAND && item.getSlot() != Slot.OFFHAND && item.getSlot() != Slot.RANGE_OFFHAND && item.getSlot() != Slot.RANGE_MAINHAND)    
-                stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
-            if(item.getSlot() != Slot.OFFHAND) {
-                stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                stats.setRangeMissileAC(stats.getRangeMissileAC() + td.getRangeMissileAC());
-            }
-            if(td.getId().equals("8469e44d1b5890ad25506a2abbd2986987efb20a") || td.getId().equals("9f35f1840298549d070a818019bd6b7da131a6ec") || td.getId().equals("ab5d855dbeedfd400cfd417dbc1d25d01272203e")) {
-                stats.setPsychicLevel(stats.getPsychicLevel() + 1);
-            }
-            if((td.getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") || td.getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2")) && sixLevelReward.get() == 0) {
-                sixLevelReward.set(1);
-                stats.setTreasureMin(stats.getTreasureMin() + 1);
-                stats.setTreasureMax(stats.getTreasureMax() + 1);
+                if(td.getId().equals("c307398cc4eb769adccb78978693d79fa266b2f5") || td.getId().equals("c3c6de9b8951c4961976f147d64a0411cc6f730b")) {
+                    if(scrollPro.incrementAndGet() > 1)
+                        metCondition.add(ConditionalUse.NOT_WITH_PRO_SCROLL);
+                }
+                if(td.getId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
+                    metCondition.add(ConditionalUse.NOT_WITH_ROSP);
+                if(td.getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
+                    metCondition.add(ConditionalUse.NOT_WITH_COA);
+                if(td.getTreasureMin()>0 && td.getRarity() != Rarity.ARTIFACT)
+                    if(additionalTreasureTokens.addAndGet(1) > 1)
+                        metCondition.add(ConditionalUse.NO_OTHER_TREASURE);
+
+                if(td.isOneHanded() && !td.isRangedWeapon())
+                    metCondition.add(ConditionalUse.WEAPON_1H);
+                if(td.isRangedWeapon()) {
+                    metCondition.add(ConditionalUse.WEAPON_RANGED);
+                    if(td.getName().toLowerCase().contains("sling"))
+                        metCondition.add(ConditionalUse.SLING);
+                    if(td.isTwoHanded())
+                        metCondition.add(ConditionalUse.WEAPON_RANGED_2H);
+                }
+                if(td.isTwoHanded() && !td.isRangedWeapon())
+                    metCondition.add(ConditionalUse.WEAPON_2H);
+
+                if(td.getConditionalUse() != ConditionalUse.NONE){
+                    conditionalTokens.add(item);
+                } else {
+                    item.setSlotStatus(SlotStatus.OK);
+                    item.setStatusText(null);
+                    updateStats(stats, td, characterDetails.getNotes());
+                }
+
+                if(item.getSlot() == Slot.MAINHAND) {
+                    mainWeaponHit.set(td.getMeleeHit());
+                    if(td.getMeleeHit() > offWeaponHit.get())
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit() - offWeaponHit.get());
+                } else if(item.getSlot() == Slot.OFFHAND) {
+                    offWeaponHit.set(td.getMeleeHit());
+                    if(td.getMeleeHit() > mainWeaponHit.get())
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit() - mainWeaponHit.get());
+                } else if(item.getSlot() != Slot.RANGE_MAINHAND)
+                    stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                if(item.getSlot() != Slot.RANGE_OFFHAND)
+                    stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                if(item.getSlot() == Slot.RANGE_MAINHAND) {
+                    rangeMainWeaponHit.set(td.getRangeHit());
+                    if(td.getRangeHit() > rangeOffWeaponHit.get())
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit() - rangeOffWeaponHit.get());
+                }
+                if(item.getSlot() == Slot.RANGE_OFFHAND) {
+                    rangeOffWeaponHit.set(td.getRangeHit());
+                    if(td.getRangeHit() > rangeMainWeaponHit.get())
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit() - rangeMainWeaponHit.get());
+                }
+                if(item.getSlot() == Slot.RANGE_MAINHAND && (td.isThrown() || td.getName().toLowerCase().contains("mighty")))
+                    mightyRanged.set(1);
+                if(item.getSlot() != Slot.MAINHAND && item.getSlot() != Slot.OFFHAND && item.getSlot() != Slot.RANGE_OFFHAND && item.getSlot() != Slot.RANGE_MAINHAND)    
+                    stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                if(item.getSlot() != Slot.OFFHAND) {
+                    stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
+                    stats.setRangeMissileAC(stats.getRangeMissileAC() + td.getRangeMissileAC());
+                }
+                if(td.getId().equals("8469e44d1b5890ad25506a2abbd2986987efb20a") || td.getId().equals("9f35f1840298549d070a818019bd6b7da131a6ec") || td.getId().equals("ab5d855dbeedfd400cfd417dbc1d25d01272203e")) {
+                    stats.setPsychicLevel(stats.getPsychicLevel() + 1);
+                }
+                if((td.getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") || td.getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2")) && sixLevelReward.get() == 0) {
+                    sixLevelReward.set(1);
+                    stats.setTreasureMin(stats.getTreasureMin() + 1);
+                    stats.setTreasureMax(stats.getTreasureMax() + 1);
+                }
             }
         });   
         
         // Check Conditionals 
-        checkConditionals(conditionalTokens, metCondition, stats, characterDetails.getNotes());
+        checkConditionals(conditionalTokens, metCondition, stats, characterDetails);
         
         stats.setStrBonus((stats.getStr()-10)/2);
         stats.setDexBonus((stats.getDex()-10)/2);
@@ -985,7 +1032,8 @@ public class CharacterServiceImpl implements CharacterService {
         
     }
     
-    private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, List<CharacterNote> notes) {
+    private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails) {
+        List<CharacterNote> notes = characterDetails.getNotes();
         conditionalTokens.stream().forEach((token) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(token.getItemId());
             if(null != td.getConditionalUse()) switch (td.getConditionalUse()) {
@@ -1106,6 +1154,53 @@ public class CharacterServiceImpl implements CharacterService {
                         token.setStatusText(null);
                         updateStats(stats, td, notes);
                     }   break;
+                case SLING:
+                    if(!metCondition.contains(ConditionalUse.SLING)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " requires a Sling to be equipped.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;    
+                case THRALL_WEAPON:
+                    long thrallMelee = characterDetails.getItems().stream().filter((item) -> (item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("thrall")).count();
+                    long thrallRanged = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("thrall")).count();
+                    if(thrallMelee > 0) {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                    }
+                    if(thrallRanged > 0) {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                    }
+                    if(thrallMelee == 0 && thrallRanged == 0) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " requires a Thrall weapon to be equipped.");
+                    }   break;
+                case IRON_WEAPON:
+                    long ironMelee = characterDetails.getItems().stream().filter((item) -> (item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("iron")).count();
+                    long ironRanged = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("iron")).count();
+                    if(ironMelee > 0) {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                    }
+                    if(ironRanged > 0) {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                    }
+                    if(ironMelee == 0 && ironRanged == 0) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " requires a Iron weapon to be equipped.");
+                    }   break;    
                 default:
                     break;
             }
@@ -1171,6 +1266,38 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setDrDarkrift(stats.getDrDarkrift() + td.getDrDarkrift());
         stats.setDrSacred(stats.getDrSacred() + td.getDrSacred()); 
 
+        if(td.getSpecialText() != null && !td.getSpecialText().isEmpty()) {
+             notes.add(CharacterNote.builder().alwaysInEffect(td.isAlwaysInEffect()).oncePerRound(td.isOncePerRound()).oncePerRoom(td.isOncePerRoom()).oncePerGame(td.isOncePerGame()).note(td.getSpecialText()).build());
+        }
+    }
+    
+    private void updateStatsAoW(CharacterStats stats, TokenFullDetails td, List<CharacterNote> notes, int multiplier) {
+        stats.setMeleeHit(stats.getMeleeHit() + (td.getMeleeHit()*multiplier) + (td.getRangeHit()*multiplier));
+        stats.setMeleeDmg(stats.getMeleeDmg() + (td.getMeleeDmg()*multiplier) + (td.getRangeDmg()*multiplier));
+        stats.setMeleeFire(stats.isMeleeFire() || td.isMeleeFire() || td.isRangeFire());
+        stats.setMeleeCold(stats.isMeleeCold() || td.isMeleeCold() || td.isRangeCold());
+        stats.setMeleeShock(stats.isMeleeShock() || td.isMeleeShock() || td.isRangeShock());
+        stats.setMeleeSonic(stats.isMeleeSonic() || td.isMeleeSonic() || td.isRangeSonic());
+        stats.setMeleeEldritch(stats.isMeleeEldritch() || td.isMeleeEldritch() || td.isRangeEldritch());
+        stats.setMeleePoison(stats.isMeleePoison() || td.isMeleePoison() || td.isRangePoison());
+        stats.setMeleeDarkrift(stats.isMeleeDarkrift() || td.isMeleeDarkrift() || td.isRangeDarkrift());
+        stats.setMeleeSacred(stats.isMeleeSacred() || td.isMeleeSacred() || td.isRangeSacred());
+        stats.setRangeHit(stats.getRangeHit() + (td.getMeleeHit()*multiplier) + (td.getRangeHit()*multiplier));
+        stats.setRangeDmg(stats.getRangeDmg() + (td.getMeleeDmg()*multiplier) + (td.getRangeDmg()*multiplier));
+        stats.setRangeFire(stats.isRangeFire() || td.isMeleeFire() || td.isRangeFire());
+        stats.setRangeCold(stats.isRangeCold() || td.isMeleeCold() || td.isRangeCold());
+        stats.setRangeShock(stats.isRangeShock() || td.isMeleeShock() || td.isRangeShock());
+        stats.setRangeSonic(stats.isRangeSonic() || td.isMeleeSonic() || td.isRangeSonic());
+        stats.setRangeEldritch(stats.isRangeEldritch() || td.isMeleeEldritch() || td.isRangeEldritch());
+        stats.setRangePoison(stats.isRangePoison() || td.isMeleePoison() || td.isRangePoison());
+        stats.setRangeDarkrift(stats.isRangeDarkrift() || td.isMeleeDarkrift() || td.isRangeDarkrift());
+        stats.setRangeSacred(stats.isRangeSacred() || td.isMeleeSacred() || td.isRangeSacred());
+        stats.setFort(stats.getFort() + (td.getFort()*multiplier));
+        stats.setReflex(stats.getReflex() + (td.getReflex()*multiplier));
+        stats.setWill(stats.getWill() + (td.getWill()*multiplier));
+        stats.setSpellDmg(stats.getSpellDmg() + (td.getSpellDmg()*multiplier) + (td.getMeleeDmg()*multiplier) + (td.getRangeDmg()*multiplier));
+        stats.setSpellHeal(stats.getSpellHeal() + (td.getSpellHeal()*multiplier));
+        
         if(td.getSpecialText() != null && !td.getSpecialText().isEmpty()) {
              notes.add(CharacterNote.builder().alwaysInEffect(td.isAlwaysInEffect()).oncePerRound(td.isOncePerRound()).oncePerRoom(td.isOncePerRoom()).oncePerGame(td.isOncePerGame()).note(td.getSpecialText()).build());
         }

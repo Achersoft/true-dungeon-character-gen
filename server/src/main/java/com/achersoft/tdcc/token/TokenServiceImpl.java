@@ -18,6 +18,8 @@ public class TokenServiceImpl implements TokenService{
             return mapper.getWeaponSlotItems(slotId, characterId, characterClass.name(), slot, rarity.name());
         if(slot == Slot.RUNESTONE && mapper.getTokenSlotIndex(slotId) > 0)
             return mapper.getNonWeaponSlotItems(slotId, characterId, characterClass.name(), slot.name(), Rarity.RARE.name());
+        if(slot == Slot.AOW)
+            return mapper.getAoWSlotItems(characterClass.name(), rarity.name());
         return mapper.getNonWeaponSlotItems(slotId, characterId, characterClass.name(), slot.name(), rarity.name());
     }
     

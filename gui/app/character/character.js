@@ -58,6 +58,9 @@ angular.module('main')
     $scope.backErrors = null;
     $scope.charmErrors = null;
     $scope.slotlessErrors = null;
+    $scope.slotlessRow1 = [];
+    $scope.slotlessRow2 = [];
+    $scope.slotlessRow3 = [];
     
     characterSvc.getCharacter($routeParams.characterId).then(function(result) {
         characterState.setContext(result.data);
@@ -96,6 +99,24 @@ angular.module('main')
         $scope.backErrors = null;
         $scope.charmErrors = null;
         $scope.slotlessErrors = null;
+        slotlessRow1 = [];
+        slotlessRow2 = [];
+        slotlessRow3 = [];
+        
+        if($scope.characterContext.slotless.length > 0) {
+            $scope.characterContext.slotless.forEach(function(item, index) {
+                if(index < 10)
+                    slotlessRow1.push(item);
+                if(index >= 10 && index < 20)
+                    slotlessRow2.push(item);
+                if(index >= 20)
+                    slotlessRow3.push(item);
+            });
+            
+            $scope.slotlessRow1 = slotlessRow1;
+            $scope.slotlessRow2 = slotlessRow2;
+            $scope.slotlessRow3 = slotlessRow3;
+        }
         
         if($scope.characterContext.rings.length > 0) {
             $scope.characterContext.rings.forEach(function(item, index) {
