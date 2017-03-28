@@ -16,8 +16,19 @@ import com.achersoft.tdcc.enums.SlotStatus;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.PdfAnnotation;
+import com.itextpdf.text.pdf.PdfArray;
+import com.itextpdf.text.pdf.PdfBorderArray;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfDashPattern;
+import com.itextpdf.text.pdf.PdfImage;
+import com.itextpdf.text.pdf.PdfIndirectObject;
+import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import java.io.IOException;
@@ -121,7 +132,8 @@ public class CharacterServiceImpl implements CharacterService {
         return (OutputStream out) -> {
             try {
                 Resource pdfFile = null;
-                if(null != character.getCharacterClass())
+                pdfFile = new ClassPathResource("character.pdf");
+             /*   if(null != character.getCharacterClass())
                     switch (character.getCharacterClass()) {
                     case BARBARIAN:
                         pdfFile = new ClassPathResource("barbarian.pdf");
@@ -161,14 +173,14 @@ public class CharacterServiceImpl implements CharacterService {
                         break;
                     default:
                         break;
-                }
+                }*/
                 PdfReader reader = new PdfReader(pdfFile.getURL());
                 PdfStamper stamper = new PdfStamper(reader, out);
                 AcroFields fields = stamper.getAcroFields();
                 //System.err.println(fields.getFields().keySet());
                 
                 fields.setField("characterName", character.getName());
-                fields.setField("characterLevel", Integer.toString(character.getStats().getLevel()));
+                fields.setField("characterLevel", capitalize(character.getCharacterClass().name()) + " - Level " +Integer.toString(character.getStats().getLevel()));
                 
                 fields.setField("baseStr", Integer.toString(character.getStats().getBaseStr()));
                 fields.setField("baseDex", Integer.toString(character.getStats().getBaseDex()));
@@ -338,6 +350,8 @@ public class CharacterServiceImpl implements CharacterService {
                 final StringBuilder itemsListCnt = new StringBuilder();
                 AtomicInteger counter = new AtomicInteger(0);
                 character.getItems().stream().sorted().forEach((CharacterItem item) -> {
+                    if(item.getName() == null)
+                        item.setName("Empty");
                     if(counter.incrementAndGet() > 46)
                         itemsListCnt.append(item.getSlot().text()).append(": ").append(item.getName()).append("\n");
                     else
@@ -345,6 +359,30 @@ public class CharacterServiceImpl implements CharacterService {
                 });
                 fields.setField("itemList", itemsList.toString());
                 fields.setField("itemListCnt", itemsListCnt.toString());
+                
+                final StringBuilder notesList = new StringBuilder();
+                if(character.getNotes().stream().filter((note) -> note.isAlwaysInEffect()).count() > 0) {
+                    notesList.append("\n").append("Always In Effect:").append("\n");
+                    character.getNotes().stream().filter((note) -> note.isAlwaysInEffect()).forEach((note) -> {
+                        notesList.append("    ").append(note.getNote()).append("\n");
+                    });
+                } if(character.getNotes().stream().filter((note) -> note.isOncePerRound()).count() > 0) {
+                    notesList.append("\n").append("Once Per Round:").append("\n");
+                    character.getNotes().stream().filter((note) -> note.isOncePerRound()).forEach((note) -> {
+                        notesList.append("    ").append(note.getNote()).append("\n");
+                    });
+                } if(character.getNotes().stream().filter((note) -> note.isOncePerRoom()).count() > 0) {
+                    notesList.append("\n").append("Once Per Room:").append("\n");
+                    character.getNotes().stream().filter((note) -> note.isOncePerRoom()).forEach((note) -> {
+                        notesList.append("    ").append(note.getNote()).append("\n");
+                    });
+                } if(character.getNotes().stream().filter((note) -> note.isOncePerGame()).count() > 0) {
+                    notesList.append("\n").append("Once Per Game:").append("\n");
+                    character.getNotes().stream().filter((note) -> note.isOncePerGame()).forEach((note) -> {
+                        notesList.append("    ").append(note.getNote()).append("\n");
+                    });
+                }
+                fields.setField("gameNotes", notesList.toString());
                 
                 fields.setField("pcMeleeHit", Integer.toString(character.getStats().getMeleeHit()));
                 fields.setField("pcMeleeDmg", Integer.toString(character.getStats().getMeleeDmg()));
@@ -386,6 +424,29 @@ public class CharacterServiceImpl implements CharacterService {
                 fields.setField("pcP", (character.getStats().isPsychic())?"Yes":"No");
                 fields.setField("pcTreasureMin", Integer.toString(character.getStats().getTreasureMin()));
                 fields.setField("pcTreasureMax", Integer.toString(character.getStats().getTreasureMax()));
+                
+                
+                /*
+                Rectangle rect = new Rectangle(150, 770, 200, 820);
+        PdfAnnotation annotation = PdfAnnotation.createSquareCircle(
+            stamper.getWriter(), rect, "Circle", false);
+        annotation.setTitle("Circle");
+        annotation.setColor(BaseColor.BLUE);
+        annotation.setFlags(PdfAnnotation.FLAGS_PRINT);
+        annotation.setBorder(new PdfBorderArray(0, 0, 2, new PdfDashPattern()));
+        annotation.put(PdfName.IC, new PdfArray(new int[]{1, 0, 0}));
+        stamper.addAnnotation(annotation, 1);*/
+                
+        Image image = Image.getInstance("resources/Ranger.png");
+        PdfImage stream = new PdfImage(image, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        PdfIndirectObject ref = stamper.getWriter().addToBody(stream);
+        image.setDirectReference(ref.getIndirectReference());
+        image.setAbsolutePosition(36, 1200);
+        PdfContentByte over = stamper.getOverContent(1);
+        over.addImage(image);
+
+                
                 
                 fields.setGenerateAppearances(true);
                 stamper.setFormFlattening(true);
@@ -1301,5 +1362,9 @@ public class CharacterServiceImpl implements CharacterService {
         if(td.getSpecialText() != null && !td.getSpecialText().isEmpty()) {
              notes.add(CharacterNote.builder().alwaysInEffect(td.isAlwaysInEffect()).oncePerRound(td.isOncePerRound()).oncePerRoom(td.isOncePerRoom()).oncePerGame(td.isOncePerGame()).note(td.getSpecialText()).build());
         }
+    }
+    
+    private String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1).toLowerCase();
     }
 }
