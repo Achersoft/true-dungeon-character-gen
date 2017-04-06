@@ -54,8 +54,8 @@ public class CharacterRestService {
     @GET 
     @Path("/html/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public CharacterExportDTO getHTML(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
-        return CharacterExportDTO.fromDAO(characterService.exportCharacterHTML(id));
+    public String getHTML(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
+        return characterService.exportCharacterHTML(id);
     }
     
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
