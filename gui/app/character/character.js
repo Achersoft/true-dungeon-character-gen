@@ -51,7 +51,7 @@ angular.module('main')
     };
 }])
 
-.controller('CharacterEditCtrl', ['$scope', 'CharacterSvc', 'CharacterState', '$route', '$routeParams', function ($scope, characterSvc, characterState, $route, $routeParams) {
+.controller('CharacterEditCtrl', ['$scope', 'CharacterSvc', 'CharacterState', 'RESOURCES', '$routeParams', 'clipboard', function ($scope, characterSvc, characterState, RESOURCES, $routeParams, clipboard) {
     $scope.tabIndex = 0;
     $scope.characterContext = characterState.get();
     $scope.ringErrors = null;
@@ -92,6 +92,16 @@ angular.module('main')
             //change download.pdf to the name of whatever you want your file to be
             saveAs(blob, $scope.characterContext.name + ".pdf");
         });
+    };
+    
+    $scope.exportToHTML = function() {
+        var request = new XMLHttpRequest();
+        request.open('GET', RESOURCES.REST_BASE_URL + '/character/html/' + $scope.characterContext.id, false); 
+        request.send(null);
+        
+        if (request.status === 200) {
+            clipboard.copyText(request.responseText);
+        }
     };
     
     $scope.checkItemStatus = function() {
@@ -222,6 +232,14 @@ angular.module('main')
     
     tokenAdminSvc.exportToPDF = function(id) {
         return $http.get(RESOURCES.REST_BASE_URL + '/character/pdf/' + id, {responseType: 'arraybuffer'})
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    tokenAdminSvc.exportToHTML = function(id) {
+        return $http.get(RESOURCES.REST_BASE_URL + '/character/html/' + id)
             .catch(function(response) {
                 errorDialogSvc.showError(response);
                 return($q.reject(response));

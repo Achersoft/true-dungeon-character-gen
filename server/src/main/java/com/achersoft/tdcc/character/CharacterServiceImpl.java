@@ -131,49 +131,7 @@ public class CharacterServiceImpl implements CharacterService {
             throw new InvalidDataException("The requested character is currently in a invalid state and cannot be exported. Please correct any item conflicts and try again."); 
         return (OutputStream out) -> {
             try {
-                Resource pdfFile = null;
-                pdfFile = new ClassPathResource("character.pdf");
-             /*   if(null != character.getCharacterClass())
-                    switch (character.getCharacterClass()) {
-                    case BARBARIAN:
-                        pdfFile = new ClassPathResource("barbarian.pdf");
-                        break;
-                    case BARD:
-                        pdfFile = new ClassPathResource("bard.pdf");
-                        break;
-                    case CLERIC:
-                        pdfFile = new ClassPathResource("clearic.pdf");
-                        break;
-                    case DRUID:
-                        pdfFile = new ClassPathResource("druid.pdf");
-                        break;
-                    case DWARF_FIGHTER:
-                        pdfFile = new ClassPathResource("dwarfFighter.pdf");
-                        break;
-                    case ELF_WIZARD:
-                        pdfFile = new ClassPathResource("elfWizard.pdf");
-                        break;
-                    case FIGHTER:
-                        pdfFile = new ClassPathResource("fighter.pdf");
-                        break;
-                    case MONK:
-                        pdfFile = new ClassPathResource("monk.pdf");
-                        break;
-                    case PALADIN:
-                        pdfFile = new ClassPathResource("paladin.pdf");
-                        break;
-                    case RANGER:
-                        pdfFile = new ClassPathResource("ranger.pdf");
-                        break;
-                    case ROGUE:
-                        pdfFile = new ClassPathResource("rogue.pdf");
-                        break;
-                    case WIZARD:
-                        pdfFile = new ClassPathResource("wizard.pdf");
-                        break;
-                    default:
-                        break;
-                }*/
+                Resource pdfFile = new ClassPathResource("character.pdf");
                 PdfReader reader = new PdfReader(pdfFile.getURL());
                 PdfStamper stamper = new PdfStamper(reader, out);
                 AcroFields fields = stamper.getAcroFields();
@@ -391,29 +349,13 @@ public class CharacterServiceImpl implements CharacterService {
                 fields.setField("pcRangeDmg", Integer.toString(character.getStats().getRangeDmg()));
                 fields.setField("pcRangeAC", Integer.toString(character.getStats().getRangeAC()));
                 fields.setField("pcRangeMissileAC", Integer.toString(character.getStats().getRangeMissileAC()));
-                fields.setField("pcRangeFire", (character.getStats().isRangeFire())?"Yes":"No");
-                fields.setField("pcRangeCold", (character.getStats().isRangeCold())?"Yes":"No");
-                fields.setField("pcRangeShock", (character.getStats().isRangeShock())?"Yes":"No");
-                fields.setField("pcRangeSonic", (character.getStats().isRangeSonic())?"Yes":"No");
-                fields.setField("pcRangeEldritch", (character.getStats().isRangeEldritch())?"Yes":"No");
-                fields.setField("pcRangePoison", (character.getStats().isRangePoison())?"Yes":"No");
-                fields.setField("pcRangeDarkrift", (character.getStats().isRangeDarkrift())?"Yes":"No");
-                fields.setField("pcRangeSacred", (character.getStats().isRangeSacred())?"Yes":"No");
                 fields.setField("pcFort", Integer.toString(character.getStats().getFort()));
                 fields.setField("pcReflex", Integer.toString(character.getStats().getReflex()));
                 fields.setField("pcWill", Integer.toString(character.getStats().getWill()));
                 fields.setField("pcRetDmg", Integer.toString(character.getStats().getRetDmg()));
-                fields.setField("pcRetFire", (character.getStats().isRetFire())?"Yes":"No");
-                fields.setField("pcRetCold", (character.getStats().isRetCold())?"Yes":"No");
-                fields.setField("pcRetShock", (character.getStats().isRetShock())?"Yes":"No");
-                fields.setField("pcRetSonic", (character.getStats().isRetSonic())?"Yes":"No");
-                fields.setField("pcRetEldritch", (character.getStats().isRetEldritch())?"Yes":"No");
-                fields.setField("pcRetPoison", (character.getStats().isRetPoison())?"Yes":"No");
-                fields.setField("pcRetDarkrift", (character.getStats().isRetDarkrift())?"Yes":"No");
-                fields.setField("pcRetSacred", (character.getStats().isRetSacred())?"Yes":"No");
-                fields.setField("pcCBS", (character.getStats().isCannotBeSuprised())?"Yes":"No");
-                fields.setField("pcFM", (character.getStats().isFreeMovement())?"Yes":"No");
-                fields.setField("pcP", (character.getStats().isPsychic())?"Yes":"No");
+                fields.setField("pcHeal", Integer.toString(character.getStats().getSpellHeal()));
+                fields.setField("pcSpellDmg", Integer.toString(character.getStats().getSpellDmg()));
+                fields.setField("pcSpellResist", Integer.toString(character.getStats().getSpellResist()));
                 fields.setField("pcTreasureMin", Integer.toString(character.getStats().getTreasureMin()));
                 fields.setField("pcTreasureMax", Integer.toString(character.getStats().getTreasureMax()));
                
@@ -433,6 +375,7 @@ public class CharacterServiceImpl implements CharacterService {
                 Image eldritchHighlight = Image.getInstance(new ClassPathResource("eldritch-c.png").getURL());
                 Image poisonHighlight = Image.getInstance(new ClassPathResource("poison-c.png").getURL());
                 Image sacredHighlight = Image.getInstance(new ClassPathResource("sacred-c.png").getURL());
+                Image check = Image.getInstance(new ClassPathResource("check.png").getURL());
         
                 Image meleeCold = (character.getStats().isMeleeCold())?coldHighlight:cold;
                 PdfImage stream = new PdfImage(meleeCold, "", null);
@@ -441,7 +384,6 @@ public class CharacterServiceImpl implements CharacterService {
                 meleeCold.setDirectReference(ref.getIndirectReference());
                 meleeCold.setAbsolutePosition(84, 647);
                 meleeCold.scaleToFit(7,7);
-                //image.setTransparency(new int[]{ 0xF0, 0xFF });
                 PdfContentByte over = stamper.getOverContent(4);
                 over.addImage(meleeCold);
 
@@ -452,7 +394,6 @@ public class CharacterServiceImpl implements CharacterService {
                 meleeShock.setDirectReference(ref.getIndirectReference());
                 meleeShock.setAbsolutePosition(84, 640);
                 meleeShock.scaleToFit(7,7);
-                //image.setTransparency(new int[]{ 0xF0, 0xFF });
                 over = stamper.getOverContent(4);
                 over.addImage(meleeShock);
 
@@ -463,7 +404,6 @@ public class CharacterServiceImpl implements CharacterService {
                 meleeSonic.setDirectReference(ref.getIndirectReference());
                 meleeSonic.setAbsolutePosition(84, 633);
                 meleeSonic.scaleToFit(7,7);
-                //image.setTransparency(new int[]{ 0xF0, 0xFF });
                 over = stamper.getOverContent(4);
                 over.addImage(meleeSonic);
 
@@ -474,7 +414,6 @@ public class CharacterServiceImpl implements CharacterService {
                 meleeDarkrift.setDirectReference(ref.getIndirectReference());
                 meleeDarkrift.setAbsolutePosition(84, 626);
                 meleeDarkrift.scaleToFit(7,7);
-                //image.setTransparency(new int[]{ 0xF0, 0xFF });
                 over = stamper.getOverContent(4);
                 over.addImage(meleeDarkrift);
 
@@ -485,7 +424,6 @@ public class CharacterServiceImpl implements CharacterService {
                 meleeFire.setDirectReference(ref.getIndirectReference());
                 meleeFire.setAbsolutePosition(113, 647);
                 meleeFire.scaleToFit(7,7);
-                //image.setTransparency(new int[]{ 0xF0, 0xFF });
                 over = stamper.getOverContent(4);
                 over.addImage(meleeFire);
 
@@ -496,7 +434,6 @@ public class CharacterServiceImpl implements CharacterService {
                 meleeEldritch.setDirectReference(ref.getIndirectReference());
                 meleeEldritch.setAbsolutePosition(113, 640);
                 meleeEldritch.scaleToFit(7,7);
-                //image.setTransparency(new int[]{ 0xF0, 0xFF });
                 over = stamper.getOverContent(4);
                 over.addImage(meleeEldritch);
 
@@ -507,7 +444,6 @@ public class CharacterServiceImpl implements CharacterService {
                 meleePoison.setDirectReference(ref.getIndirectReference());
                 meleePoison.setAbsolutePosition(113, 633);
                 meleePoison.scaleToFit(7,7);
-                //image.setTransparency(new int[]{ 0xF0, 0xFF });
                 over = stamper.getOverContent(4);
                 over.addImage(meleePoison);
 
@@ -518,198 +454,214 @@ public class CharacterServiceImpl implements CharacterService {
                 meleeSacred.setDirectReference(ref.getIndirectReference());
                 meleeSacred.setAbsolutePosition(113, 626);
                 meleeSacred.scaleToFit(7,7);
-                //image.setTransparency(new int[]{ 0xF0, 0xFF });
                 over = stamper.getOverContent(4);
                 over.addImage(meleeSacred);
         
+                Image rangeCold = (character.getStats().isRangeCold())?coldHighlight:cold;
+                stream = new PdfImage(rangeCold, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                rangeCold.setDirectReference(ref.getIndirectReference());
+                rangeCold.setAbsolutePosition(176, 647);
+                rangeCold.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(rangeCold);
         
+                Image rangeShock = (character.getStats().isRangeShock())?shockHighlight:shock;
+                stream = new PdfImage(rangeShock, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                rangeShock.setDirectReference(ref.getIndirectReference());
+                rangeShock.setAbsolutePosition(176, 640);
+                rangeShock.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(rangeShock);
         
+                Image rangeSonic = (character.getStats().isRangeSonic())?sonicHighlight:sonic;
+                stream = new PdfImage(rangeSonic, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                rangeSonic.setDirectReference(ref.getIndirectReference());
+                rangeSonic.setAbsolutePosition(176, 633);
+                rangeSonic.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(rangeSonic);
         
+                Image rangeDarkrift = (character.getStats().isRangeDarkrift())?darkriftHighlight:darkrift;
+                stream = new PdfImage(rangeDarkrift, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                rangeDarkrift.setDirectReference(ref.getIndirectReference());
+                rangeDarkrift.setAbsolutePosition(176, 626);
+                rangeDarkrift.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(rangeDarkrift);
         
-        
-        
-        
-
-        stream = new PdfImage(coldHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        coldHighlight.setDirectReference(ref.getIndirectReference());
-        coldHighlight.setAbsolutePosition(176, 647);
-        coldHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(coldHighlight);
-        
-        stream = new PdfImage(shockHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        shockHighlight.setDirectReference(ref.getIndirectReference());
-        shockHighlight.setAbsolutePosition(176, 640);
-        shockHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(shockHighlight);
-        
-        stream = new PdfImage(sonicHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        sonicHighlight.setDirectReference(ref.getIndirectReference());
-        sonicHighlight.setAbsolutePosition(176, 633);
-        sonicHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(sonicHighlight);
-        
-        stream = new PdfImage(darkriftHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        darkriftHighlight.setDirectReference(ref.getIndirectReference());
-        darkriftHighlight.setAbsolutePosition(176, 626);
-        darkriftHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(darkriftHighlight);
-      
-        stream = new PdfImage(fireHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        fireHighlight.setDirectReference(ref.getIndirectReference());
-        fireHighlight.setAbsolutePosition(205, 647);
-        fireHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(fireHighlight);
-        
-        stream = new PdfImage(eldritchHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        eldritchHighlight.setDirectReference(ref.getIndirectReference());
-        eldritchHighlight.setAbsolutePosition(205, 640);
-        eldritchHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(eldritchHighlight);
-        
-        stream = new PdfImage(poisonHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        poisonHighlight.setDirectReference(ref.getIndirectReference());
-        poisonHighlight.setAbsolutePosition(205, 633);
-        poisonHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(poisonHighlight);
-        
-        stream = new PdfImage(sacredHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        sacredHighlight.setDirectReference(ref.getIndirectReference());
-        sacredHighlight.setAbsolutePosition(205, 626);
-        sacredHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(sacredHighlight);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        stream = new PdfImage(coldHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        coldHighlight.setDirectReference(ref.getIndirectReference());
-        coldHighlight.setAbsolutePosition(344, 647);
-        coldHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(coldHighlight);
-        
-        stream = new PdfImage(shockHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        shockHighlight.setDirectReference(ref.getIndirectReference());
-        shockHighlight.setAbsolutePosition(344, 640);
-        shockHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(shockHighlight);
-        
-        stream = new PdfImage(sonicHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        sonicHighlight.setDirectReference(ref.getIndirectReference());
-        sonicHighlight.setAbsolutePosition(344, 633);
-        sonicHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(sonicHighlight);
-        
-        stream = new PdfImage(darkriftHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        darkriftHighlight.setDirectReference(ref.getIndirectReference());
-        darkriftHighlight.setAbsolutePosition(344, 626);
-        darkriftHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(darkriftHighlight);
-      
-        stream = new PdfImage(fireHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        fireHighlight.setDirectReference(ref.getIndirectReference());
-        fireHighlight.setAbsolutePosition(373, 647);
-        fireHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(fireHighlight);
-        
-        stream = new PdfImage(eldritchHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        eldritchHighlight.setDirectReference(ref.getIndirectReference());
-        eldritchHighlight.setAbsolutePosition(373, 640);
-        eldritchHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(eldritchHighlight);
-        
-        stream = new PdfImage(poisonHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        poisonHighlight.setDirectReference(ref.getIndirectReference());
-        poisonHighlight.setAbsolutePosition(373, 633);
-        poisonHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(poisonHighlight);
-        
-        stream = new PdfImage(sacredHighlight, "", null);
-        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-        ref = stamper.getWriter().addToBody(stream);
-        sacredHighlight.setDirectReference(ref.getIndirectReference());
-        sacredHighlight.setAbsolutePosition(373, 626);
-        sacredHighlight.scaleToFit(7,7);
-        //image.setTransparency(new int[]{ 0xF0, 0xFF });
-        over = stamper.getOverContent(4);
-        over.addImage(sacredHighlight);
-        
-        
-        
-        
-        
-        
-        
-        
+                Image rangeFire = (character.getStats().isRangeFire())?fireHighlight:fire;
+                stream = new PdfImage(rangeFire, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                rangeFire.setDirectReference(ref.getIndirectReference());
+                rangeFire.setAbsolutePosition(205, 647);
+                rangeFire.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(rangeFire);
                 
+                Image rangeEldritch = (character.getStats().isRangeEldritch())?eldritchHighlight:eldritch;
+                stream = new PdfImage(rangeEldritch, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                rangeEldritch.setDirectReference(ref.getIndirectReference());
+                rangeEldritch.setAbsolutePosition(205, 640);
+                rangeEldritch.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(rangeEldritch);
+                
+                Image rangePoison = (character.getStats().isRangePoison())?poisonHighlight:poison;
+                stream = new PdfImage(rangePoison, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                rangePoison.setDirectReference(ref.getIndirectReference());
+                rangePoison.setAbsolutePosition(205, 633);
+                rangePoison.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(rangePoison);
+                
+                Image rangeSacred = (character.getStats().isRangeSacred())?sacredHighlight:sacred;
+                stream = new PdfImage(rangeSacred, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                rangeSacred.setDirectReference(ref.getIndirectReference());
+                rangeSacred.setAbsolutePosition(205, 626);
+                rangeSacred.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(rangeSacred);
+                
+                Image retCold = (character.getStats().isRetCold())?coldHighlight:cold;
+                stream = new PdfImage(retCold, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                retCold.setDirectReference(ref.getIndirectReference());
+                retCold.setAbsolutePosition(344, 647);
+                retCold.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(retCold);
+                
+                Image retShock = (character.getStats().isRetShock())?shockHighlight:shock;
+                stream = new PdfImage(retShock, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                retShock.setDirectReference(ref.getIndirectReference());
+                retShock.setAbsolutePosition(344, 640);
+                retShock.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(retShock);
+                
+                Image retSonic = (character.getStats().isRetSonic())?sonicHighlight:sonic;
+                stream = new PdfImage(retSonic, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                retSonic.setDirectReference(ref.getIndirectReference());
+                retSonic.setAbsolutePosition(344, 633);
+                retSonic.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(retSonic);
+                
+                Image retDarkrift = (character.getStats().isRetDarkrift())?darkriftHighlight:darkrift;
+                stream = new PdfImage(retDarkrift, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                retDarkrift.setDirectReference(ref.getIndirectReference());
+                retDarkrift.setAbsolutePosition(344, 626);
+                retDarkrift.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(retDarkrift);
+                
+                Image retFire = (character.getStats().isRetFire())?fireHighlight:fire;
+                stream = new PdfImage(retFire, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                retFire.setDirectReference(ref.getIndirectReference());
+                retFire.setAbsolutePosition(373, 647);
+                retFire.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(retFire);
+                
+                Image retEldritch = (character.getStats().isRetEldritch())?eldritchHighlight:eldritch;
+                stream = new PdfImage(retEldritch, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                retEldritch.setDirectReference(ref.getIndirectReference());
+                retEldritch.setAbsolutePosition(373, 640);
+                retEldritch.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(retEldritch);
+                
+                Image retPoison = (character.getStats().isRetPoison())?poisonHighlight:poison;
+                stream = new PdfImage(retPoison, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                retPoison.setDirectReference(ref.getIndirectReference());
+                retPoison.setAbsolutePosition(373, 633);
+                retPoison.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(retPoison);
+                
+                Image retSacred = (character.getStats().isRetSacred())?sacredHighlight:sacred;
+                stream = new PdfImage(retSacred, "", null);
+                stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                ref = stamper.getWriter().addToBody(stream);
+                retSacred.setDirectReference(ref.getIndirectReference());
+                retSacred.setAbsolutePosition(373, 626);
+                retSacred.scaleToFit(7,7);
+                over = stamper.getOverContent(4);
+                over.addImage(retSacred);
+        
+                if(character.getStats().isCannotBeSuprised()) {
+                    stream = new PdfImage(check, "", null);
+                    stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                    ref = stamper.getWriter().addToBody(stream);
+                    check.setDirectReference(ref.getIndirectReference());
+                    check.setAbsolutePosition(386, 635);
+                    check.scaleToFit(12,12);
+
+                    over = stamper.getOverContent(4);
+                    over.addImage(check);
+                }
+       
+                if(character.getStats().isFreeMovement()) {
+                     stream = new PdfImage(check, "", null);
+                     stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                     ref = stamper.getWriter().addToBody(stream);
+                     check.setDirectReference(ref.getIndirectReference());
+                     check.setAbsolutePosition(407, 635);
+                     check.scaleToFit(12,12);
+
+                     over = stamper.getOverContent(4);
+                     over.addImage(check);
+                }
+       
+                if(character.getStats().isPsychic()) {
+                     stream = new PdfImage(check, "", null);
+                     stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                     ref = stamper.getWriter().addToBody(stream);
+                     check.setDirectReference(ref.getIndirectReference());
+                     check.setAbsolutePosition(428, 635);
+                     check.scaleToFit(12,12);
+
+                     over = stamper.getOverContent(4);
+                     over.addImage(check);
+                }
+                
+                final StringBuilder collectedItemsList = new StringBuilder();
+                character.getItems().stream().filter((item) -> item.getSlot() == Slot.RUNESTONE && item.getItemId() != null).forEach((item) -> {
+                    collectedItemsList.append(item.getName()).append("\n");
+                });
+                if(character.getItems().stream().filter((item) -> item.getSlot() == Slot.SLOTLESS && item.getName().equals("Special")).count() > 0) 
+                    collectedItemsList.append("Special").append("\n");
+                if(collectedItemsList.length() == 0) 
+                    collectedItemsList.append("None").append("\n");
+                fields.setField("pcCollectedItems", collectedItemsList.toString());
                 
                 fields.setGenerateAppearances(true);
                 stamper.setFormFlattening(true);
@@ -721,6 +673,186 @@ public class CharacterServiceImpl implements CharacterService {
         };
     }
     
+    @Override
+    public String exportCharacterHTML(String id) {
+        final CharacterDetails character = getCharacter(id);
+        final StringBuilder characterHtml = new StringBuilder();
+        
+        if(character.getItems().stream().filter((item) -> item.getSlotStatus() == SlotStatus.INVALID).count() > 0)
+            throw new InvalidDataException("The requested character is currently in a invalid state and cannot be exported. Please correct any item conflicts and try again."); 
+        
+        characterHtml.append("[url=http://tdcharactercreator.com/#/character/edit/").append(character.getId()).append("]").append(character.getName()).append("[/url]\n\n");
+        characterHtml.append("[b]STR:[/b] ").append(character.getStats().getStr()).append("\n");
+        characterHtml.append("[b]DEX:[/b] ").append(character.getStats().getDex()).append("\n");
+        characterHtml.append("[b]CON:[/b] ").append(character.getStats().getCon()).append("\n");
+        characterHtml.append("[b]INT:[/b] ").append(character.getStats().getIntel()).append("\n");
+        characterHtml.append("[b]WIS:[/b] ").append(character.getStats().getWis()).append("\n");
+        characterHtml.append("[b]CHA:[/b] ").append(character.getStats().getCha()).append("\n\n");
+        characterHtml.append("[b]Melee:[/b]").append("\n");
+        characterHtml.append("[b]Hit:[/b] ").append(character.getStats().getMeleeHit()).append("  [b]Damage:[/b] ").append(character.getStats().getMeleeDmg()).append("  [b]AC:[/b] ").append(character.getStats().getMeleeAC()).append("\n\n");
+        characterHtml.append("[b]Range:[/b]").append("\n");
+        characterHtml.append("[b]Hit:[/b] ").append(character.getStats().getRangeHit()).append("  [b]Damage:[/b] ").append(character.getStats().getRangeDmg()).append("  [b]AC:[/b] ").append(character.getStats().getRangeAC()).append("  [b]Missle AC:[/b] ").append(character.getStats().getRangeMissileAC()).append("\n\n");
+        characterHtml.append("[b]Saves:[/b]").append("\n");
+        characterHtml.append("[b]Reflex:[/b] ").append(character.getStats().getReflex()).append("  [b]Fort:[/b] ").append(character.getStats().getFort()).append("  [b]Will:[/b] ").append(character.getStats().getWill()).append("\n\n");
+        characterHtml.append("[b]Health:[/b] ").append(character.getStats().getHealth());
+        if(character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getItemId().equals("333788757f49e48272a25e8b5994ac6503ad2adc")).count()>0)
+            characterHtml.append("(max ").append(character.getStats().getHealth()+9).append(" with Charm of Synergy)");
+        characterHtml.append("\n\n");
+        characterHtml.append("[b]Damage Reduction:[/b]").append("\n");
+        characterHtml.append("[table][tr][td]Melee[/td][td]Range[/td][td]Spell[/td][td]Fire[/td][td]Cold[/td][td]Shock[/td][td]Sonic[/td][td]Eldritch[/td][td]Poison[/td][td]Darkrift[/td][td]Sacred[/td][/tr]");
+        characterHtml.append("[tr]");
+        characterHtml.append("[td]").append(character.getStats().getDrMelee()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrRange()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrSpell()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrFire()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrCold()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrShock()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrSonic()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrEldritch()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrPoison()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrDarkrift()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrSacred()).append("[/td]");
+        characterHtml.append("[/tr][/table]\n\n");
+        
+        final StringBuilder meleeMainhand = new StringBuilder();
+        characterHtml.append("[b]Melee Mainhand:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.MAINHAND).forEach((item) ->{
+            meleeMainhand.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(meleeMainhand.length() == 0)
+            meleeMainhand.append("Empty");
+        characterHtml.append(meleeMainhand.toString()).append("\n");
+        final StringBuilder meleeOffhand = new StringBuilder();
+        characterHtml.append("[b]Melee Offhand:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.OFFHAND).forEach((item) ->{
+            meleeOffhand.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(meleeOffhand.length() == 0)
+            meleeOffhand.append("Empty");
+        characterHtml.append(meleeOffhand.toString()).append("\n");
+        final StringBuilder rangedMainhand = new StringBuilder();
+        characterHtml.append("[b]Ranged Mainhand:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND).forEach((item) ->{
+            rangedMainhand.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(rangedMainhand.length() == 0)
+            rangedMainhand.append("Empty");
+        characterHtml.append(rangedMainhand.toString()).append("\n");
+        final StringBuilder rangedOffhand = new StringBuilder();
+        characterHtml.append("[b]Ranged Offhand:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_OFFHAND).forEach((item) ->{
+            rangedOffhand.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(rangedOffhand.length() == 0)
+            rangedOffhand.append("Empty");
+        characterHtml.append(rangedOffhand.toString()).append("\n");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.INSTRUMENT).forEach((item) ->{
+            characterHtml.append("[b]Instrument:[/b] ").append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]").append("\n");
+        });
+        final StringBuilder head = new StringBuilder();
+        characterHtml.append("[b]Head:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HEAD).forEach((item) ->{
+            head.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(head.length() == 0)
+            head.append("Empty");
+        characterHtml.append(head.toString()).append("\n");
+        final StringBuilder eyes = new StringBuilder();
+        characterHtml.append("[b]Eyes:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.EYES).forEach((item) ->{
+            eyes.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(eyes.length() == 0)
+            eyes.append("Empty");
+        characterHtml.append(eyes.toString()).append("\n");
+        final StringBuilder leftEar = new StringBuilder();
+        characterHtml.append("[b]Left Ear:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==0).forEach((item) ->{
+            leftEar.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(leftEar.length() == 0)
+            leftEar.append("Empty");
+        characterHtml.append(leftEar.toString()).append("\n");
+        final StringBuilder rightEar = new StringBuilder();
+        characterHtml.append("[b]Right Ear:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==1).forEach((item) ->{
+            rightEar.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(rightEar.length() == 0)
+            rightEar.append("Empty");
+        characterHtml.append(rightEar.toString()).append("\n");
+        final StringBuilder neck = new StringBuilder();
+        characterHtml.append("[b]Neck:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.NECK).forEach((item) ->{
+            neck.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(neck.length() == 0)
+            neck.append("Empty");
+        characterHtml.append(neck.toString()).append("\n");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.AOW).forEach((item) ->{
+            characterHtml.append("[b]AoW Runestone:[/b] ").append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]").append("\n");
+        });
+        final StringBuilder torso = new StringBuilder();
+        characterHtml.append("[b]Torso:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.TORSO).forEach((item) ->{
+            torso.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(torso.length() == 0)
+            torso.append("Empty");
+        characterHtml.append(torso.toString()).append("\n");
+        final StringBuilder wrists = new StringBuilder();
+        characterHtml.append("[b]Wrist:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WRIST).forEach((item) ->{
+            wrists.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(wrists.length() == 0)
+            wrists.append("Empty");
+        characterHtml.append(wrists.toString()).append("\n");
+        final StringBuilder hands = new StringBuilder();
+        characterHtml.append("[b]Hands:[/b] ");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HANDS).forEach((item) ->{
+            hands.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
+        });
+        if(hands.length() == 0)
+            hands.append("Empty");
+        characterHtml.append(hands.toString()).append("\n");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BACK).forEach((item) ->{
+            characterHtml.append("[b]Back:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FINGER).forEach((item) ->{
+            characterHtml.append("[b]Ring:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WAIST).forEach((item) ->{
+            characterHtml.append("[b]Waist:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHIRT).forEach((item) ->{
+            characterHtml.append("[b]Shirt:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.LEGS).forEach((item) ->{
+            characterHtml.append("[b]Legs:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FEET).forEach((item) ->{
+            characterHtml.append("[b]Boots:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FIGURINE).forEach((item) ->{
+            characterHtml.append("[b]Figurine:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.CHARM).forEach((item) ->{
+            characterHtml.append("[b]Charm:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.IOUNSTONE).forEach((item) ->{
+            characterHtml.append("[b]Ioun Stone:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SLOTLESS).forEach((item) ->{
+            characterHtml.append("[b]Slotless:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RUNESTONE).forEach((item) ->{
+            characterHtml.append("[b]Runestone:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
+     
+        return characterHtml.toString();
+    }
+   
     @Override
     public CharacterDetails validateCharacterItems(String id) {
         CharacterDetails characterDetails = getCharacter(id);

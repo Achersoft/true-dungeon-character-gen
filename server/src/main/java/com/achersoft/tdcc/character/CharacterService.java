@@ -12,5 +12,6 @@ public interface CharacterService {
     public CharacterDetails unequipTokenSlot(String id, String soltId);
     public List<CharacterName> deleteCharacter(String id);
     public StreamingOutput exportCharacterPdf(String id);
+    public String exportCharacterHTML(String id);
     public CharacterDetails validateCharacterItems(String id);
 }

@@ -7,6 +7,7 @@ angular.module('main', [
   'ngRoute',
   'angular-storage',
   'angular-jwt',
+  'angular-clipboard',
   'http-auth-interceptor',
   'toggle-switch'
 ])

@@ -6,6 +6,7 @@ import com.achersoft.tdcc.character.CharacterService;
 import com.achersoft.tdcc.character.create.CharacterCreatorService;
 import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.character.dto.CharacterDetailsDTO;
+import com.achersoft.tdcc.character.dto.CharacterExportDTO;
 import com.achersoft.tdcc.enums.CharacterClass;
 import java.util.List;
 import javax.inject.Inject;
@@ -48,6 +49,13 @@ public class CharacterRestService {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public StreamingOutput getPDF(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
         return characterService.exportCharacterPdf(id);
+    }
+    
+    @GET 
+    @Path("/html/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public CharacterExportDTO getHTML(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
+        return CharacterExportDTO.fromDAO(characterService.exportCharacterHTML(id));
     }
     
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
