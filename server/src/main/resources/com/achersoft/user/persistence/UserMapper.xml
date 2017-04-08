@@ -37,6 +37,7 @@
     
     <select id="getUsers" resultType="com.achersoft.user.dao.User"> 
         <include refid="userSelection"/>
+      ORDER BY u.user_name
     </select>
     
     <select id="getUser" resultType="com.achersoft.user.dao.User"> 

@@ -4,21 +4,17 @@
             <thead>
                 <tr>
                     <th>Username</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
                     <th>Email</th>
-                    <th>Locked</th>
+                    <th>Last Access</th>
                     <th>Delete</th>
                 </tr>
             </thead>
             <tbody> 
                 <tr ng-repeat-start="user in users track by $index" ng-repeat-end>
                     <td><a ng-href="#/users/edit/{{user.id}}">{{user.username}}</a></td>
-                    <td>{{user.firstName}}</td>
-                    <td>{{user.lastName}}</td>
                     <td>{{user.email}}</td>
-                    <td>{{user.locked}}</td>
-                    <td></td>
+                    <td>{{user.lastAccessed | date: 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                    <td><a ng-click="deleteUser(user.id, user.username)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
                 </tr>
             </tbody>
         </table>

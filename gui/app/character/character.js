@@ -16,16 +16,18 @@ angular.module('main')
     });
 }])
 
-.controller('MyCharactersCtrl', ['$scope', 'CharacterSvc', function ($scope, characterSvc) {
+.controller('MyCharactersCtrl', ['$scope', 'CharacterSvc', 'ConfirmDialogSvc', function ($scope, characterSvc, confirmDialogSvc) {
     $scope.myCharacterContext = {};
     
     characterSvc.getCharacters().then(function(result) {
         $scope.myCharacterContext = result.data;
     });
     
-    $scope.deleteCharacter = function(id){
-        characterSvc.deleteCharacter(id).then(function(result) {
-            $scope.myCharacterContext = result.data;
+    $scope.deleteCharacter = function(id, name){
+        confirmDialogSvc.confirm("Are you sure you wish to delete character " + name +"?", function(){
+           characterSvc.deleteCharacter(id).then(function(result) {
+                $scope.myCharacterContext = result.data;
+            });
         });
     };
 }])

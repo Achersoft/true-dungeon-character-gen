@@ -20,12 +20,20 @@ angular.module('main')
     });
 }])
 
-.controller('UserListCtrl', ['$scope', 'UserSvc', function ($scope, userSvc) {
+.controller('UserListCtrl', ['$scope', 'UserSvc', '$route', 'ConfirmDialogSvc', function ($scope, userSvc, $route, confirmDialogSvc) {
     $scope.users = {};
     
     userSvc.getUsers().then(function (result) {
         $scope.users = result.data;
     });
+    
+    $scope.deleteUser = function(userId, userName) {
+        confirmDialogSvc.confirm("Are you sure you wish to delete user " + userName +"?", function(){
+            userSvc.deleteUser(userId).then(function() {
+                $route.reload();
+            });
+        });
+    }; 
 }])
 
 .controller('UserCtrl', ['$scope', '$location', '$route', '$routeParams', 'UserSvc', function ($scope, $location, $route, $routeParams, userSvc) {

@@ -26,7 +26,7 @@
                         <td><a ng-href="#/character/edit/{{myCharacter.id}}">{{myCharacter.name | limitTo : 25}}</a></td>
                         <td>{{myCharacter.characterClass | characterclassformat}}</td>
                         <td>{{myCharacter.level}}</td>
-                        <td><a ng-click="deleteCharacter(myCharacter.id)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
+                        <td><a ng-click="deleteCharacter(myCharacter.id, myCharacter.name)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
                     </tr>
                 </tbody>
             </table>
