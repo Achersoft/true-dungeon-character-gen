@@ -692,8 +692,12 @@ public class CharacterServiceImpl implements CharacterService {
         characterHtml.append("[b]Hit:[/b] ").append(character.getStats().getMeleeHit()).append("  [b]Damage:[/b] ").append(character.getStats().getMeleeDmg()).append("  [b]AC:[/b] ").append(character.getStats().getMeleeAC()).append("\n\n");
         characterHtml.append("[b]Range:[/b]").append("\n");
         characterHtml.append("[b]Hit:[/b] ").append(character.getStats().getRangeHit()).append("  [b]Damage:[/b] ").append(character.getStats().getRangeDmg()).append("  [b]AC:[/b] ").append(character.getStats().getRangeAC()).append("  [b]Missle AC:[/b] ").append(character.getStats().getRangeMissileAC()).append("\n\n");
+        characterHtml.append("[b]Spell:[/b]").append("\n");
+        characterHtml.append("[b]Damage:[/b] ").append(character.getStats().getSpellDmg()).append("  [b]Heal:[/b] ").append(character.getStats().getSpellHeal()).append("  [b]Resist:[/b] ").append(character.getStats().getSpellResist()).append("\n\n");
         characterHtml.append("[b]Saves:[/b]").append("\n");
         characterHtml.append("[b]Reflex:[/b] ").append(character.getStats().getReflex()).append("  [b]Fort:[/b] ").append(character.getStats().getFort()).append("  [b]Will:[/b] ").append(character.getStats().getWill()).append("\n\n");
+        characterHtml.append("[b]Treasure:[/b]").append("\n");
+        characterHtml.append("[b]Min:[/b] ").append(character.getStats().getTreasureMin()).append("  [b]Max:[/b] ").append(character.getStats().getTreasureMax()).append("\n\n");
         characterHtml.append("[b]Health:[/b] ").append(character.getStats().getHealth());
         if(character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getItemId().equals("333788757f49e48272a25e8b5994ac6503ad2adc")).count()>0)
             characterHtml.append("(max ").append(character.getStats().getHealth()+9).append(" with Charm of Synergy)");
@@ -1366,6 +1370,7 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicInteger scrollPro = new AtomicInteger(0);
         AtomicInteger mightyRanged = new AtomicInteger(0);
         AtomicInteger additionalTreasureTokens = new AtomicInteger(0);
+        StringBuilder sheildId = new StringBuilder();
 
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
@@ -1401,6 +1406,22 @@ public class CharacterServiceImpl implements CharacterService {
 
                 if(td.getConditionalUse() != ConditionalUse.NONE){
                     conditionalTokens.add(item);
+                } else if (item.getSlot() == Slot.OFFHAND && td.isShield()) {
+                    item.setSlotStatus(SlotStatus.OK);
+                    item.setStatusText(null);
+                    stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                    if(!sheildId.toString().equals(td.getId())) {
+                        sheildId.append(td.getId()); 
+                        updateStats(stats, td, characterDetails.getNotes());
+                    }
+                } else if (item.getSlot() == Slot.RANGE_OFFHAND && td.isShield()) {
+                    item.setSlotStatus(SlotStatus.OK);
+                    item.setStatusText(null);
+                    stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
+                    if(!sheildId.toString().equals(td.getId())) {
+                        sheildId.append(td.getId());
+                        updateStats(stats, td, characterDetails.getNotes());
+                    }
                 } else {
                     item.setSlotStatus(SlotStatus.OK);
                     item.setStatusText(null);
@@ -1417,8 +1438,6 @@ public class CharacterServiceImpl implements CharacterService {
                         stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit() - mainWeaponHit.get());
                 } else if(item.getSlot() != Slot.RANGE_MAINHAND)
                     stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
-                if(item.getSlot() != Slot.RANGE_OFFHAND)
-                    stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
                 if(item.getSlot() == Slot.RANGE_MAINHAND) {
                     rangeMainWeaponHit.set(td.getRangeHit());
                     if(td.getRangeHit() > rangeOffWeaponHit.get())
@@ -1433,10 +1452,6 @@ public class CharacterServiceImpl implements CharacterService {
                     mightyRanged.set(1);
                 if(item.getSlot() != Slot.MAINHAND && item.getSlot() != Slot.OFFHAND && item.getSlot() != Slot.RANGE_OFFHAND && item.getSlot() != Slot.RANGE_MAINHAND)    
                     stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
-                if(item.getSlot() != Slot.OFFHAND) {
-                    stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                    stats.setRangeMissileAC(stats.getRangeMissileAC() + td.getRangeMissileAC());
-                }
                 if(td.getId().equals("8469e44d1b5890ad25506a2abbd2986987efb20a") || td.getId().equals("9f35f1840298549d070a818019bd6b7da131a6ec") || td.getId().equals("ab5d855dbeedfd400cfd417dbc1d25d01272203e")) {
                     stats.setPsychicLevel(stats.getPsychicLevel() + 1);
                 }
@@ -1681,6 +1696,7 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setMeleePoison(stats.isMeleePoison() || td.isMeleePoison());
         stats.setMeleeDarkrift(stats.isMeleeDarkrift() || td.isMeleeDarkrift());
         stats.setMeleeSacred(stats.isMeleeSacred() || td.isMeleeSacred());
+        stats.setRangeMissileAC(stats.getRangeMissileAC() + td.getRangeMissileAC());
         stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
         stats.setRangeFire(stats.isRangeFire() || td.isRangeFire());
         stats.setRangeCold(stats.isRangeCold() || td.isRangeCold());
