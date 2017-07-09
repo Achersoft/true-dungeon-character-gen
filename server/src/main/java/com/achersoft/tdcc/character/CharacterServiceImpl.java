@@ -1425,6 +1425,8 @@ public class CharacterServiceImpl implements CharacterService {
                 } else {
                     item.setSlotStatus(SlotStatus.OK);
                     item.setStatusText(null);
+                    stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                    stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                     updateStats(stats, td, characterDetails.getNotes());
                 }
 
@@ -1515,6 +1517,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
                 case WEAPON_1H:
@@ -1524,6 +1528,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
                 case WEAPON_RANGED:
@@ -1533,6 +1539,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
                 case WEAPON_RANGED_2H:
@@ -1542,6 +1550,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;    
                 case DEXTERITY_18:
@@ -1551,6 +1561,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
                 case DEXTERITY_20:
@@ -1560,6 +1572,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
                 case INTELLECT_20:
@@ -1569,6 +1583,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
                 case WISDOM_20:
@@ -1578,6 +1594,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
                 case STRENGTH_24:
@@ -1587,6 +1605,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
                 case NOT_WITH_COA:
@@ -1596,6 +1616,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
                 case NOT_WITH_ROSP:
@@ -1605,6 +1627,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;  
                 case NOT_WITH_PRO_SCROLL:
@@ -1623,6 +1647,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
                 case SLING:
@@ -1632,6 +1658,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;    
                 case THRALL_WEAPON:
