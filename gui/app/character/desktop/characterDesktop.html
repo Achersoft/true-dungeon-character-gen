@@ -69,10 +69,14 @@
                     </div>
                 </div>
                 <div style="display:flex;margin-top:10px">
-                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Waist:</label>
+                    <label class="text-right" ng-class="{'error-text': characterContext.waist.slotStatus === 'INVALID'}" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Waist:</label>
                     <div style="padding:0;width:60px">
                         <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.waist" label="Waist"></token-selector>
                     </div>
+                </div>
+                <div style="display:flex;" ng-show="characterContext.waist.slotStatus === 'INVALID'">
+                    <div style="min-width:40px;width:75%;"></div>
+                    <label style="min-width:210px;" class="error-text">{{characterContext.waist.statusText}}</label>
                 </div>
                 <div style="display:flex;margin-top:10px">
                     <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Legs:</label>

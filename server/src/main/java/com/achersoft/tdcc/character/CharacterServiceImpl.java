@@ -1635,8 +1635,8 @@ public class CharacterServiceImpl implements CharacterService {
                         updateStats(stats, td, notes);
                     }   break;    
                 case THRALL_WEAPON:
-                    long thrallMelee = characterDetails.getItems().stream().filter((item) -> (item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("thrall")).count();
-                    long thrallRanged = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("thrall")).count();
+                    long thrallMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("thrall")).count();
+                    long thrallRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("thrall")).count();
                     if(thrallMelee > 0) {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -1654,8 +1654,8 @@ public class CharacterServiceImpl implements CharacterService {
                         token.setStatusText(token.getName() + " requires a Thrall weapon to be equipped.");
                     }   break;
                 case IRON_WEAPON:
-                    long ironMelee = characterDetails.getItems().stream().filter((item) -> (item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("iron")).count();
-                    long ironRanged = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("iron")).count();
+                    long ironMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("iron")).count();
+                    long ironRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("iron")).count();
                     if(ironMelee > 0) {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
