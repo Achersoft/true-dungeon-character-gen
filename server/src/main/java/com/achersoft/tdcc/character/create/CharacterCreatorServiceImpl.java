@@ -78,7 +78,7 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
         mapper.addCharacter(characterDetails);
         
         characterDetails.setStats(mapper.getStartingStats(CharacterClass.BARBARIAN, 4));
-        characterDetails.getStats().setCharacterId(characterDetails.getId());;
+        characterDetails.getStats().setCharacterId(characterDetails.getId());
         mapper.addCharacterStats(characterDetails.getStats());
         
         characterDetails.setItems(createDefaultItems(characterDetails.getId()));
@@ -341,6 +341,7 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.SHIRT).index(0).slotStatus(SlotStatus.OK).build());
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.FEET).index(0).slotStatus(SlotStatus.OK).build());
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.LEGS).index(0).slotStatus(SlotStatus.OK).build());
+        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.SHINS).index(0).slotStatus(SlotStatus.OK).build());
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.CHARM).index(0).slotStatus(SlotStatus.OK).build());
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.CHARM).index(1).slotStatus(SlotStatus.OK).build());
         items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.CHARM).index(2).slotStatus(SlotStatus.OK).build());

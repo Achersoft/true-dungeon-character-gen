@@ -835,6 +835,9 @@ public class CharacterServiceImpl implements CharacterService {
         character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.LEGS).forEach((item) ->{
             characterHtml.append("[b]Legs:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
         });
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHINS).forEach((item) ->{
+            characterHtml.append("[b]Shins:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
         character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FEET).forEach((item) ->{
             characterHtml.append("[b]Boots:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
         });

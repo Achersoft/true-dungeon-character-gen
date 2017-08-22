@@ -19,6 +19,7 @@ public enum Slot {
     FINGER("Finger"),
     WAIST("Waist"),
     LEGS("Legs"),
+    SHINS("Shins"),
     FEET("Feet"),
     CHARM("Charm"),
     IOUNSTONE("Ioun Stone"),

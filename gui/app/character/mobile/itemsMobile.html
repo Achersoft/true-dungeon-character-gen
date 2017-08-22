@@ -57,6 +57,9 @@
     <div class="col-xs-12" style="padding:0" ng-if="characterContext.legs !== null">
         <item-mobile-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="legs" model="characterContext.legs" label="Legs"></item-mobile-selector>
     </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.shins !== null">
+        <item-mobile-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="legs" model="characterContext.shins" label="Shins"></item-mobile-selector>
+    </div>
     <div class="col-xs-12" style="padding:0" ng-if="characterContext.boots !== null">
         <item-mobile-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="boots" model="characterContext.boots" label="Feet"></item-mobile-selector>
     </div>

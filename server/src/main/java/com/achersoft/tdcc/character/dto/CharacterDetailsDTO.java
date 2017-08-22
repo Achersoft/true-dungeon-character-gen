@@ -39,6 +39,7 @@ public class CharacterDetailsDTO {
     public CharacterItemDTO waist;
     public CharacterItemDTO shirt;
     public CharacterItemDTO boots;
+    public CharacterItemDTO shins;
     public CharacterItemDTO legs;
     public List<CharacterItemDTO> figurines;
     public List<CharacterItemDTO> charms;
@@ -114,6 +115,8 @@ public class CharacterDetailsDTO {
                 build.shirt = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.FEET)
                 build.boots = CharacterItemDTO.fromDAO(item);
+            if(item.getSlot() == Slot.SHINS)
+                build.shins = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.LEGS)
                 build.legs = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.FIGURINE)

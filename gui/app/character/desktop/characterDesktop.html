@@ -85,6 +85,12 @@
                     </div>
                 </div>
                 <div style="display:flex;margin-top:10px">
+                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Shins:</label>
+                    <div style="padding:0;width:60px">
+                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.shins" label="Shins"></token-selector>
+                    </div>
+                </div>
+                <div style="display:flex;margin-top:10px">
                     <label class="text-right" ng-class="{'error-text': characterContext.boots.slotStatus === 'INVALID'}" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Feet:</label>
                     <div style="padding:0;width:60px">
                         <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.boots" label="Feet"></token-selector>
@@ -176,6 +182,12 @@
                     </div>
                     <label class="text-left" style="font-size:28px;padding-left:5px;margin-top:8px">:Figurine</label>
                 </div>
+                <div style="display:flex;margin-top:10px">
+                    <div style="padding:0;width:70px" ng-repeat-start="runestone in characterContext.runestones track by $index" ng-repeat-end>
+                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="left-bottom" set-token="setTokenSlot" unequip="unequipItem" model="runestone" label="Runestone"></token-selector>
+                    </div>
+                    <label class="text-left" style="font-size:28px;padding-left:5px;margin-top:8px">:Runestones</label>
+                </div>
             </div>
         </div>
         <center>
@@ -221,14 +233,6 @@
                 <label  style="font-size:28px;padding-left:5px;margin-top:8px">Instruments:</label>
                 <div style="padding:0;width:70px" ng-repeat-start="instrument in characterContext.instruments track by $index" ng-repeat-end>
                     <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="instrument" label="Instrument"></token-selector>
-                </div>
-            </div>
-        </center>
-        <center>
-            <div style="display:flex;max-width:750px;margin-top:0px;margin-bottom:15px;">
-                <label  style="font-size:28px;padding-left:5px;margin-top:8px">Runestones:</label>
-                <div style="padding:0;width:70px" ng-repeat-start="runestone in characterContext.runestones track by $index" ng-repeat-end>
-                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="runestone" label="Runestone"></token-selector>
                 </div>
             </div>
         </center>
@@ -299,6 +303,9 @@
         </div>
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.legs !== null">
             <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="legs" model="characterContext.legs" label="Legs"></item-desktop-selector>
+        </div>
+        <div class="col-xs-12" style="padding:0" ng-if="characterContext.shins !== null">
+            <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="legs" model="characterContext.shins" label="Shins"></item-desktop-selector>
         </div>
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.boots !== null">
             <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="boots" model="characterContext.boots" label="Feet"></item-desktop-selector>
