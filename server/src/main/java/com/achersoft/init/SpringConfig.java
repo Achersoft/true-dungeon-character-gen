@@ -12,6 +12,9 @@ import com.achersoft.tdcc.character.CharacterServiceImpl;
 import com.achersoft.tdcc.character.create.CharacterCreatorService;
 import com.achersoft.tdcc.character.create.CharacterCreatorServiceImpl;
 import com.achersoft.tdcc.character.persistence.CharacterMapper;
+import com.achersoft.tdcc.party.PartyService;
+import com.achersoft.tdcc.party.PartyServiceImpl;
+import com.achersoft.tdcc.party.persistence.PartyMapper;
 import com.achersoft.tdcc.token.TokenService;
 import com.achersoft.tdcc.token.TokenServiceImpl;
 import com.achersoft.tdcc.token.admin.TokenAdminService;
@@ -50,7 +53,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan(basePackageClasses = { UserMapper.class,
                                    TokenAdminMapper.class,
                                    TokenMapper.class,
-                                   CharacterMapper.class
+                                   CharacterMapper.class,
+                                   PartyMapper.class
                                  })
 public class SpringConfig {
     
@@ -69,6 +73,11 @@ public class SpringConfig {
     @Bean
     public CharacterCreatorService characterCreatorService() {
         return new CharacterCreatorServiceImpl();
+    }
+    
+    @Bean
+    public PartyService partyService() {
+        return new PartyServiceImpl();
     }
     
     @Bean

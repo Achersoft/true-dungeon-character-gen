@@ -1,0 +1,62 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.achersoft.tdcc.party.persistence.PartyMapper">
+    
+    <insert id="createParty">
+        INSERT INTO party (id,
+                           user_id,
+                           name,
+                           difficulty,
+                           size,
+                           barbarian,
+                           bard,
+                           cleric,
+                           druid,
+                           fighter,
+                           dwarf,
+                           elf,
+                           monk,
+                           paladin,
+                           ranger,
+                           rogue,
+                           wizard,
+                           created) 
+                   VALUES (#{id},
+                           #{userId},
+                           #{name},
+                           #{difficulty},
+                           0,
+                           null,
+                           null,
+                           null,
+                           null,
+                           null,
+                           null,
+                           null,
+                           null,
+                           null,
+                           null,
+                           null,
+                           null,
+                           #{createdOn})
+    </insert>
+    
+    <select id="getParties" resultType="com.achersoft.tdcc.party.dao.Party"> 
+        SELECT id 'id',
+               user_id 'userId',
+               name 'name',
+               difficulty 'difficulty',
+               size 'difficulty',
+               created 'createdOn'
+          FROM party
+         WHERE user_id = #{userId}
+    </select>  
+    
+    <delete id="deleteParty">
+        DELETE FROM party
+         WHERE id = #{id}
+           AND user_id = #{userId}
+    </delete>
+    
+</mapper>                          

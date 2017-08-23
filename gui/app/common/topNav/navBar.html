@@ -15,6 +15,11 @@
         </li>
       </ul>
       <ul class="nav navbar-nav">
+        <li class="dropdown" ng-if="privilegeCheck.isUserAuthorized('ADMIN') || privilegeCheck.isUserAuthorized('SYSTEM_USER')">
+          <a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/party/mine"><b>My Parties</b></a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav">
         <li class="dropdown">
           <a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/contact"><b>Contact Us</b></a>
         </li>
