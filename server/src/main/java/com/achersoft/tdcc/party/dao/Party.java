@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Party {
     private String id;
+    private String userId;
     private String name;
     private Difficulty difficulty;
     private int size;

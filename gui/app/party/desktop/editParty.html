@@ -1,0 +1,18 @@
+<div class="col-xs-12 row">
+    <div class="row">
+        <div class="col-md-5">
+            <h2>{{partyContext.name}}</h2>
+        </div>
+        <div class="col-md-5">
+            <label uib-tooltip="" tooltip-trigger="mouseenter" tooltip-popup-delay='500' for="difficultySelect"> </label>
+            <select class="form-control" id="difficultySelect" name="difficultySelect" ng-change="updateDifficulty()" ng-model="partyContext.difficulty" ng-options="difficulty as difficulty for difficulty in difficulties"></select>
+        </div>
+        <div class="col-md-2">
+            <h2 style="text-align:right">Initiative: {{partyContext.initiative}}</h2>
+        </div>
+    </div>
+    <h2 style="border-bottom:1pt solid black;margin-bottom:15px;margin-top:0px"></h2>
+    
+    <party-character-desktop model="partyContext.ranger" character-class="Ranger"></party-character-desktop>
+    
+</div>

@@ -1,5 +1,6 @@
 package com.achersoft.tdcc.party.dao;
 
+import com.achersoft.tdcc.character.dao.CharacterDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,6 +55,59 @@ public class PartyCharacter {
     private int psychicLevel = 0;
     private int spellDmg = 0;
     private int spellHeal = 0;
-    private int spellResist = 0;
+    private int spellResist = 0;  
     private int treasure = 0;   
+    private boolean hasCoGF = false;
+    private boolean hasCoS = false;
+    
+    public static PartyCharacter fromCharacterDetails(CharacterDetails cd) {
+        return PartyCharacter.builder()
+                .id(cd.getId())
+                .name(cd.getName())
+                .health(cd.getStats().getHealth())
+                .meleeHit(cd.getStats().getMeleeHit())
+                .meleeDmg(cd.getStats().getMeleeDmg())
+                .meleeFire(cd.getStats().isMeleeFire())
+                .meleeCold(cd.getStats().isMeleeCold()) 
+                .meleeShock(cd.getStats().isMeleeShock()) 
+                .meleeSonic(cd.getStats().isMeleeSonic())
+                .meleeEldritch(cd.getStats().isMeleeEldritch()) 
+                .meleePoison(cd.getStats().isMeleePoison())
+                .meleeDarkrift(cd.getStats().isMeleeDarkrift())
+                .meleeSacred(cd.getStats().isMeleeSacred())
+                .meleeAC(cd.getStats().getMeleeAC())
+                .rangeHit(cd.getStats().getRangeHit())
+                .rangeDmg(cd.getStats().getRangeDmg())
+                .rangeFire(cd.getStats().isRangeFire())
+                .rangeCold(cd.getStats().isRangeCold())
+                .rangeShock(cd.getStats().isRangeShock())
+                .rangeSonic(cd.getStats().isRangeSonic())
+                .rangeEldritch(cd.getStats().isRangeEldritch())
+                .rangePoison(cd.getStats().isRangePoison())
+                .rangeDarkrift(cd.getStats().isRangeDarkrift())
+                .rangeSacred(cd.getStats().isRangeSacred())
+                .rangeAC(cd.getStats().getRangeAC())
+                .rangeMissileAC(cd.getStats().getRangeMissileAC())
+                .fort(cd.getStats().getFort())
+                .reflex(cd.getStats().getReflex())
+                .will(cd.getStats().getWill())
+                .retDmg(cd.getStats().getRetDmg())
+                .retFire(cd.getStats().isRetFire())
+                .retCold(cd.getStats().isRetCold())
+                .retShock(cd.getStats().isRetShock())
+                .retSonic(cd.getStats().isRetSonic())
+                .retEldritch(cd.getStats().isRetEldritch())
+                .retPoison(cd.getStats().isRetPoison())
+                .retDarkrift(cd.getStats().isRetDarkrift())
+                .retSacred(cd.getStats().isRetSacred())
+                .cannotBeSuprised(cd.getStats().isCannotBeSuprised())
+                .freeMovement(cd.getStats().isFreeMovement())
+                .psychic(cd.getStats().isPsychic())
+                .psychicLevel(cd.getStats().getPsychicLevel())
+                .spellDmg(cd.getStats().getSpellDmg())
+                .spellHeal(cd.getStats().getSpellHeal())
+                .spellResist(cd.getStats().getSpellResist())
+                .treasure(cd.getStats().getTreasureMin())
+                .build();
+    }
 }

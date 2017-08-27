@@ -9,6 +9,10 @@ angular.module('main')
     .when('/party/create', {
         templateUrl: (RESOURCES.IS_MOBILE)?'party/mobile/createParty.html':'party/desktop/createParty.html',
         controller: 'CreatePartyCtrl'
+    })
+    .when('/party/edit/:partyId', {
+        templateUrl: (RESOURCES.IS_MOBILE)?'party/mobile/editParty.html':'party/desktop/editParty.html',
+        controller: 'EditPartyCtrl'
     });
 }])
 
@@ -33,27 +37,41 @@ angular.module('main')
 
 .controller('CreatePartyCtrl', ['$scope', 'PartySvc', '$location', '$route', function ($scope, partySvc, $location, $route) {
     $scope.name = null;
-    $scope.difficulty = null;
-    $scope.difficulties = ["BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
     
     $scope.createParty = function(){
-        partySvc.createCharacter($scope.characterClass, $scope.name).then(function(result) {
+        partySvc.createParty($scope.name).then(function(result) {
             $location.path("/party/edit/" + result.data.id);
             $route.reload();
         });
     };
 }])
 
+.controller('EditPartyCtrl', ['$scope', 'PartySvc', 'PartyState', 'RESOURCES', '$routeParams', 'clipboard', function ($scope, partySvc, partyState, RESOURCES, $routeParams, clipboard) {
+    $scope.difficulties = ["NONLETHAL", "NORMAL", "HARDCORE", "NIGHTMARE", "EPIC"];
+    $scope.partyContext = partyState.get();
+    
+    partySvc.getParty($routeParams.partyId).then(function(result) {
+        partyState.setContext(result.data);
+        $scope.partyContext = partyState.get();
+    });
+    
+    $scope.updateDifficulty = function(){
+        /*partySvc.getCards($scope.selectedSet, $scope.selectedLanguage, clearQty).then(function(response) {
+            $scope.data = response.data;
+        });*/
+    };
+}])
+
 .factory('PartyState', [
     function() {                    
-        var characterState = {};
+        var partyState = {};
         
         function setContext(data) {
-            characterState = data;
+            partyState = data;
         }
         
         function get() {
-            return characterState;
+            return partyState;
         }
 
         return {
@@ -67,6 +85,22 @@ angular.module('main')
     
     partySvc.getParties = function() {
         return $http.get(RESOURCES.REST_BASE_URL + '/party/all');
+    };
+    
+    partySvc.createParty = function(name) {
+        return $http.put(RESOURCES.REST_BASE_URL + '/party/create?name=' + name)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    partySvc.getParty = function(id) {
+        return $http.get(RESOURCES.REST_BASE_URL + '/party/' + id)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
     };
     
     return partySvc;

@@ -42,12 +42,35 @@
                            #{createdOn})
     </insert>
     
+    <select id="getParty" resultType="com.achersoft.tdcc.party.dao.Party"> 
+        SELECT id 'id',
+               user_id 'userId',
+               name 'name',
+               difficulty 'difficulty',
+               size 'size',
+               barbarian 'barbarian',
+               bard 'bard',
+               cleric 'cleric',
+               druid 'druid',
+               fighter 'fighter',
+               dwarf 'dwarfFighter',
+               elf 'elfWizard',
+               monk 'monk',
+               paladin 'paladin',
+               ranger 'ranger',
+               rogue 'rogue',
+               wizard 'wizard',
+               created 'createdOn'
+          FROM party
+         WHERE id = #{id}
+    </select>   
+    
     <select id="getParties" resultType="com.achersoft.tdcc.party.dao.Party"> 
         SELECT id 'id',
                user_id 'userId',
                name 'name',
                difficulty 'difficulty',
-               size 'difficulty',
+               size 'size',
                created 'createdOn'
           FROM party
          WHERE user_id = #{userId}
