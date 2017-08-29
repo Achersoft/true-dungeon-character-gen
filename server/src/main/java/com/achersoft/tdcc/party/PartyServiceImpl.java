@@ -11,6 +11,7 @@ import com.achersoft.tdcc.party.persistence.PartyMapper;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,6 @@ public class PartyServiceImpl implements PartyService {
         party.setId(UUID.randomUUID().toString());
         party.setUserId(userPrincipalProvider.getUserPrincipal().getSub());
         party.setCreatedOn(new Date());
-        party.setSize(0);
         party.setDifficulty(Difficulty.NORMAL);
         mapper.createParty(party);
         return PartyDetails.builder().id(party.getId()).name(party.getName()).difficulty(party.getDifficulty()).initiative(0).build();
@@ -173,7 +173,35 @@ public class PartyServiceImpl implements PartyService {
 
     @Override
     public List<Party> getParties() {
-        return mapper.getParties(userPrincipalProvider.getUserPrincipal().getSub());
+        return mapper.getParties(userPrincipalProvider.getUserPrincipal().getSub()).stream().map((party) -> {
+            int size = 0;
+            if(party.getBarbarian()!= null)
+                size++;
+            if(party.getBard()!= null)
+                size++;
+            if(party.getCleric()!= null)
+                size++;
+            if(party.getDruid()!= null)
+                size++;
+            if(party.getDwarfFighter()!= null)
+                size++;
+            if(party.getElfWizard()!= null)
+                size++;
+            if(party.getFighter()!= null)
+                size++;
+            if(party.getMonk()!= null)
+                size++;
+            if(party.getPaladin()!= null)
+                size++;
+            if(party.getRanger()!= null)
+                size++;
+            if(party.getRogue()!= null)
+                size++;
+            if(party.getWizard() != null)
+                size++;
+            party.setSize(size);
+            return party;
+        }).collect(Collectors.toList());
     }
 
     @Override

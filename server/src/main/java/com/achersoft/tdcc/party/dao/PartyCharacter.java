@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class PartyCharacter {
     private String id;
     private String name;
+    private String userName;
     private int health = 0;
     private int meleeHit = 0;
     private int meleeDmg = 0;

@@ -8,7 +8,6 @@
                            user_id,
                            name,
                            difficulty,
-                           size,
                            barbarian,
                            bard,
                            cleric,
@@ -26,7 +25,6 @@
                            #{userId},
                            #{name},
                            #{difficulty},
-                           0,
                            null,
                            null,
                            null,
@@ -47,7 +45,6 @@
                user_id 'userId',
                name 'name',
                difficulty 'difficulty',
-               size 'size',
                barbarian 'barbarian',
                bard 'bard',
                cleric 'cleric',
@@ -70,7 +67,6 @@
                user_id 'userId',
                name 'name',
                difficulty 'difficulty',
-               size 'size',
                created 'createdOn'
           FROM party
          WHERE user_id = #{userId}
