@@ -67,10 +67,173 @@
                user_id 'userId',
                name 'name',
                difficulty 'difficulty',
+               barbarian 'barbarian',
+               bard 'bard',
+               cleric 'cleric',
+               druid 'druid',
+               fighter 'fighter',
+               dwarf 'dwarfFighter',
+               elf 'elfWizard',
+               monk 'monk',
+               paladin 'paladin',
+               ranger 'ranger',
+               rogue 'rogue',
+               wizard 'wizard',
                created 'createdOn'
           FROM party
          WHERE user_id = #{userId}
     </select>  
+    
+    <select id="getUsers" resultType="com.achersoft.user.dao.User"> 
+        SELECT u.id 'id', 
+               u.user_name 'username'
+          FROM user u
+      ORDER BY u.user_name
+    </select>
+    
+    <update id="addBarbarian">
+        UPDATE party SET
+            barbarian = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addBard">
+        UPDATE party SET
+            bard = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addCleric">
+        UPDATE party SET
+            cleric = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addDruid">
+        UPDATE party SET
+            druid = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addDwarf">
+        UPDATE party SET
+            dwarf = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addElf">
+        UPDATE party SET
+            elf = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addFighter">
+        UPDATE party SET
+            fighter = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addMonk">
+        UPDATE party SET
+            monk = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addPaladin">
+        UPDATE party SET
+            paladin = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addRanger">
+        UPDATE party SET
+            ranger = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addRogue">
+        UPDATE party SET
+            rogue = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="addWizard">
+        UPDATE party SET
+            wizard = #{characterId}
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeBarbarian">
+        UPDATE party SET
+            barbarian = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeBard">
+        UPDATE party SET
+            bard = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeCleric">
+        UPDATE party SET
+            cleric = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeDruid">
+        UPDATE party SET
+            druid = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeDwarf">
+        UPDATE party SET
+            dwarf = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeElf">
+        UPDATE party SET
+            elf = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeFighter">
+        UPDATE party SET
+            fighter = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeMonk">
+        UPDATE party SET
+            monk = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removePaladin">
+        UPDATE party SET
+            paladin = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeRanger">
+        UPDATE party SET
+            ranger = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeRogue">
+        UPDATE party SET
+            rogue = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="removeWizard">
+        UPDATE party SET
+            wizard = null
+      WHERE id = #{partyId}
+    </update>
     
     <delete id="deleteParty">
         DELETE FROM party

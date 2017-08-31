@@ -26,7 +26,7 @@ angular.module('main')
         $scope.myPartiesContext = result.data;
     });
     
-    $scope.deleteCharacter = function(id, name){
+    $scope.deleteParty = function(id, name){
         confirmDialogSvc.confirm("Are you sure you wish to delete party " + name +"?", function(){
            partySvc.deleteParty(id).then(function(result) {
                 $scope.myPartiesContext = result.data;
@@ -46,7 +46,7 @@ angular.module('main')
     };
 }])
 
-.controller('EditPartyCtrl', ['$scope', 'PartySvc', 'PartyState', 'RESOURCES', '$routeParams', 'clipboard', function ($scope, partySvc, partyState, RESOURCES, $routeParams, clipboard) {
+.controller('EditPartyCtrl', ['$scope', 'PartySvc', 'PartyState', 'RESOURCES', '$routeParams', 'clipboard', 'ConfirmDialogSvc', function ($scope, partySvc, partyState, RESOURCES, $routeParams, clipboard, confirmDialogSvc) {
     $scope.difficulties = ["NONLETHAL", "NORMAL", "HARDCORE", "NIGHTMARE", "EPIC"];
     $scope.partyContext = partyState.get();
     
@@ -54,6 +54,22 @@ angular.module('main')
         partyState.setContext(result.data);
         $scope.partyContext = partyState.get();
     });
+    
+    $scope.addCharacter = function(partyId, character) {
+        partySvc.addCharacter(partyId, character).then(function(result) {
+            partyState.setContext(result.data);
+            $scope.partyContext = partyState.get();
+        });
+    };
+    
+    $scope.removeCharacter = function(partyId, characterClass) {
+        confirmDialogSvc.confirm("Are you sure you wish to remove this character?", function(){
+            partySvc.removeCharacter(partyId, characterClass).then(function(result) {
+                partyState.setContext(result.data);
+                $scope.partyContext = partyState.get();
+            });
+        });
+    };
     
     $scope.updateDifficulty = function(){
         /*partySvc.getCards($scope.selectedSet, $scope.selectedLanguage, clearQty).then(function(response) {
@@ -103,5 +119,37 @@ angular.module('main')
             });
     };
     
+    partySvc.getSelectableCharacters = function(userid, cClass) {
+        return $http.get(RESOURCES.REST_BASE_URL + '/party/selectablecharacters?userid=' + userid + '&class=' + cClass)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    partySvc.addCharacter = function(id, characterId) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/party/' + id + '/addcharacter?characterId=' + characterId)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    partySvc.removeCharacter = function(partyId, characterClass) {
+        return $http.delete(RESOURCES.REST_BASE_URL + '/party/' + partyId + '/removecharacter?characterClass=' + characterClass)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    partySvc.deleteParty = function(id) {
+        return $http.delete(RESOURCES.REST_BASE_URL + '/party/' + id)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+
     return partySvc;
 }]);

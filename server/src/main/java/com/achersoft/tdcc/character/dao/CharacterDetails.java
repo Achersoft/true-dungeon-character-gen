@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class CharacterDetails {
     private String id;
     private String userId;
+    private String username;
     private boolean editable;
     private String name;
     private CharacterClass characterClass;

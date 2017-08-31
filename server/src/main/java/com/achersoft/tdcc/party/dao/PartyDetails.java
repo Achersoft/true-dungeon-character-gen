@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PartyDetails {
     private String id;
+    private Boolean editable;
     private String name;
     private Difficulty difficulty;
     private int initiative = 0;  

@@ -220,13 +220,16 @@
     </select>  
     
     <select id="getCharacter" resultType="com.achersoft.tdcc.character.dao.CharacterDetails"> 
-        SELECT id 'id',
-               user_id 'userId',
-               name 'name',
-               character_class 'characterClass',
-               created 'createdOn'
-          FROM character_name
-         WHERE id = #{id}
+        SELECT cn.id 'id',
+               cn.user_id 'userId',
+               u.user_name 'username',
+               cn.name 'name',
+               cn.character_class 'characterClass',
+               cn.created 'createdOn'
+          FROM character_name cn,
+               user u
+         WHERE cn.id = #{id}
+           AND u.id = cn.user_id
     </select>  
     
     <select id="getCharacters" resultType="com.achersoft.tdcc.character.dao.CharacterName"> 
@@ -240,6 +243,21 @@
                character_stats cs
          WHERE cn.user_id = #{userId}
            AND cn.id = cs.id
+      ORDER BY cn.name
+    </select>  
+    
+    <select id="getCharactersClass" resultType="com.achersoft.tdcc.character.dao.CharacterName"> 
+        SELECT cn.id 'id',
+               cn.user_id 'userId',
+               cn.name 'name',
+               cn.character_class 'characterClass',
+               cn.created 'createdOn',
+               cs.level 'level'
+          FROM character_name cn,
+               character_stats cs
+         WHERE cn.user_id = #{userId}
+           AND cn.id = cs.id
+           AND cn.character_class = #{characterClass}
       ORDER BY cn.name
     </select>  
     

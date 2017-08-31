@@ -17,6 +17,7 @@ public interface CharacterMapper {
     public int getCharacterCount(@Param("userId") String userId);
     public CharacterDetails getCharacter(@Param("id") String id);
     public List<CharacterName> getCharacters(@Param("userId") String userId);
+    public List<CharacterName> getCharactersClass(@Param("userId") String userId, @Param("characterClass") CharacterClass characterClass);
     public CharacterStats getCharacterStats(@Param("id") String id);
     public List<CharacterItem> getCharacterItems(@Param("id") String id);
     public List<CharacterNote> getCharacterNotes(@Param("id") String id);

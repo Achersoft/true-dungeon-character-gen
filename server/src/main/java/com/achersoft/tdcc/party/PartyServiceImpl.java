@@ -1,12 +1,17 @@
 package com.achersoft.tdcc.party;
 
+import com.achersoft.exception.InvalidDataException;
 import com.achersoft.security.providers.UserPrincipalProvider;
 import com.achersoft.tdcc.character.CharacterService;
 import com.achersoft.tdcc.character.dao.CharacterDetails;
+import com.achersoft.tdcc.character.persistence.CharacterMapper;
+import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.enums.Difficulty;
 import com.achersoft.tdcc.party.dao.Party;
 import com.achersoft.tdcc.party.dao.PartyCharacter;
 import com.achersoft.tdcc.party.dao.PartyDetails;
+import com.achersoft.tdcc.party.dao.PartyEnhancements;
+import com.achersoft.tdcc.party.dao.SelectableCharacters;
 import com.achersoft.tdcc.party.persistence.PartyMapper;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PartyServiceImpl implements PartyService {
     
     private @Inject PartyMapper mapper;
+    private @Inject CharacterMapper characterMapper;
     private @Inject CharacterService characterService; 
     private @Inject UserPrincipalProvider userPrincipalProvider;
     
@@ -35,9 +41,7 @@ public class PartyServiceImpl implements PartyService {
     @Override
     public PartyDetails getParty(String id) {
         Party party = mapper.getParty(id);
-        Integer charmOfAwareness = 0;
-        Integer charmOfSynergy = 0;
-        Integer charmOfGoodFortune = 0;
+        PartyEnhancements enhancements = PartyEnhancements.builder().charmOfAwareness(0).charmOfGoodFortune(0).charmOfSynergy(0).build();
         Integer treasures = 0;
         PartyDetails details = PartyDetails.builder()
                 .id(party.getId())
@@ -47,85 +51,85 @@ public class PartyServiceImpl implements PartyService {
                 .build();
         
         if(party.getBarbarian() != null) {
-            details.setBarbarian(getCharacterInfo(party.getBarbarian(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setBarbarian(getCharacterInfo(party.getBarbarian(), enhancements));
         }
         if(party.getBard() != null) {
-            details.setBard(getCharacterInfo(party.getBard(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setBard(getCharacterInfo(party.getBard(), enhancements));
         }
         if(party.getCleric() != null) {
-            details.setCleric(getCharacterInfo(party.getCleric(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setCleric(getCharacterInfo(party.getCleric(), enhancements));
         }
         if(party.getDruid() != null) {
-            details.setDruid(getCharacterInfo(party.getDruid(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setDruid(getCharacterInfo(party.getDruid(), enhancements));
         }
         if(party.getDwarfFighter() != null) {
-            details.setDwarfFighter(getCharacterInfo(party.getDwarfFighter(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setDwarfFighter(getCharacterInfo(party.getDwarfFighter(), enhancements));
         }
         if(party.getElfWizard() != null) {
-            details.setElfWizard(getCharacterInfo(party.getElfWizard(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setElfWizard(getCharacterInfo(party.getElfWizard(), enhancements));
         }
         if(party.getFighter() != null) {
-            details.setFighter(getCharacterInfo(party.getFighter(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setFighter(getCharacterInfo(party.getFighter(), enhancements));
         }
         if(party.getMonk() != null) {
-            details.setMonk(getCharacterInfo(party.getMonk(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setMonk(getCharacterInfo(party.getMonk(), enhancements));
         }
         if(party.getPaladin() != null) {
-            details.setPaladin(getCharacterInfo(party.getPaladin(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setPaladin(getCharacterInfo(party.getPaladin(), enhancements));
         }
         if(party.getRanger() != null) {
-            details.setRanger(getCharacterInfo(party.getRanger(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setRanger(getCharacterInfo(party.getRanger(), enhancements));
         }
         if(party.getRogue() != null) {
-            details.setRogue(getCharacterInfo(party.getRogue(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setRogue(getCharacterInfo(party.getRogue(), enhancements));
         }
         if(party.getWizard() != null) {
-            details.setWizard(getCharacterInfo(party.getWizard(), charmOfAwareness, charmOfSynergy, charmOfGoodFortune));
+            details.setWizard(getCharacterInfo(party.getWizard(), enhancements));
         }
         
-        if(charmOfSynergy > 1) {
+        if(enhancements.getCharmOfSynergy() > 1) {
             if(party.getBarbarian() != null && details.getBarbarian().isHasCoS()) {
-                details.getBarbarian().setHealth(details.getBarbarian().getHealth() + (charmOfSynergy-1));
+                details.getBarbarian().setHealth(details.getBarbarian().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getBard()!= null && details.getBard().isHasCoS()) {
-                details.getBard().setHealth(details.getBard().getHealth() + (charmOfSynergy-1));
+                details.getBard().setHealth(details.getBard().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getCleric()!= null && details.getCleric().isHasCoS()) {
-                details.getCleric().setHealth(details.getCleric().getHealth() + (charmOfSynergy-1));
+                details.getCleric().setHealth(details.getCleric().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getDruid()!= null && details.getDruid().isHasCoS()) {
-                details.getDruid().setHealth(details.getDruid().getHealth() + (charmOfSynergy-1));
+                details.getDruid().setHealth(details.getDruid().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getDwarfFighter() != null && details.getDwarfFighter().isHasCoS()) {
-                details.getDwarfFighter().setHealth(details.getDwarfFighter().getHealth() + (charmOfSynergy-1));
+                details.getDwarfFighter().setHealth(details.getDwarfFighter().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getElfWizard() != null && details.getElfWizard().isHasCoS()) {
-                details.getElfWizard().setHealth(details.getElfWizard().getHealth() + (charmOfSynergy-1));
+                details.getElfWizard().setHealth(details.getElfWizard().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getFighter() != null && details.getFighter().isHasCoS()) {
-                details.getFighter().setHealth(details.getFighter().getHealth() + (charmOfSynergy-1));
+                details.getFighter().setHealth(details.getFighter().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getMonk() != null && details.getMonk().isHasCoS()) {
-                details.getMonk().setHealth(details.getMonk().getHealth() + (charmOfSynergy-1));
+                details.getMonk().setHealth(details.getMonk().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getPaladin() != null && details.getPaladin().isHasCoS()) {
-                details.getPaladin().setHealth(details.getPaladin().getHealth() + (charmOfSynergy-1));
+                details.getPaladin().setHealth(details.getPaladin().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getRanger() != null && details.getRanger().isHasCoS()) {
-                details.getRanger().setHealth(details.getRanger().getHealth() + (charmOfSynergy-1));
+                details.getRanger().setHealth(details.getRanger().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getRogue() != null && details.getRogue().isHasCoS()) {
-                details.getRogue().setHealth(details.getRogue().getHealth() + (charmOfSynergy-1));
+                details.getRogue().setHealth(details.getRogue().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
             if(party.getWizard() != null && details.getWizard().isHasCoS()) {
-                details.getWizard().setHealth(details.getWizard().getHealth() + (charmOfSynergy-1));
+                details.getWizard().setHealth(details.getWizard().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
         }
         
-        if(charmOfGoodFortune > 5) {
+        if(enhancements.getCharmOfGoodFortune() > 5) {
             treasures++;
         }
-        if(charmOfGoodFortune > 9) {
+        if(enhancements.getCharmOfGoodFortune() > 9) {
             treasures++;
         }
         
@@ -168,6 +172,8 @@ public class PartyServiceImpl implements PartyService {
             }
         }
         
+        details.setInitiative(enhancements.getCharmOfAwareness());
+        
         return details;
     }
 
@@ -203,33 +209,140 @@ public class PartyServiceImpl implements PartyService {
             return party;
         }).collect(Collectors.toList());
     }
-
+    
     @Override
-    public List<Party> deleteParty(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public SelectableCharacters getSelectableCharacters(String userid, CharacterClass cClass) {
+        return SelectableCharacters.builder()
+                .characters(characterMapper.getCharactersClass(userid, cClass))
+                .userAccounts(mapper.getUsers())
+                .build();
+    }
+    
+    @Override
+    public PartyDetails addPartyCharacter(String id, String characterId) {
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(mapper.getParty(id).getUserId())))
+            throw new InvalidDataException("Operation is not allowed. Party does not belong to logged in user."); 
+        
+        switch(characterMapper.getCharacter(characterId).getCharacterClass()) {
+            case BARBARIAN:
+                mapper.addBarbarian(id, characterId);
+                break;
+            case BARD:
+                mapper.addBard(id, characterId);
+                break;
+            case CLERIC:
+                mapper.addCleric(id, characterId);
+                break;
+            case DRUID:
+                mapper.addDruid(id, characterId);
+                break;
+            case DWARF_FIGHTER:
+                mapper.addDwarf(id, characterId);
+                break;
+            case ELF_WIZARD:
+                mapper.addElf(id, characterId);
+                break;
+            case FIGHTER:
+                mapper.addFighter(id, characterId);
+                break;
+            case MONK:
+                mapper.addMonk(id, characterId);
+                break;
+            case PALADIN:
+                mapper.addPaladin(id, characterId);
+                break;
+            case RANGER:
+                mapper.addRanger(id, characterId);
+                break;
+            case ROGUE:
+                mapper.addRogue(id, characterId);
+                break;
+            case WIZARD:
+                mapper.addWizard(id, characterId);
+                break;
+            default:
+                break;
+        }
+        return getParty(id);
     }
 
-    public PartyCharacter getCharacterInfo(String id, Integer CoA, Integer CoS, Integer CoGF) {
+    @Override
+    public PartyDetails removePartyCharacter(String id, CharacterClass cClass) {
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(mapper.getParty(id).getUserId())))
+            throw new InvalidDataException("Operation is not allowed. Party does not belong to logged in user."); 
+        
+        switch(cClass) {
+            case BARBARIAN:
+                mapper.removeBarbarian(id);
+                break;
+            case BARD:
+                mapper.removeBard(id);
+                break;
+            case CLERIC:
+                mapper.removeCleric(id);
+                break;
+            case DRUID:
+                mapper.removeDruid(id);
+                break;
+            case DWARF_FIGHTER:
+                mapper.removeDwarf(id);
+                break;
+            case ELF_WIZARD:
+                mapper.removeElf(id);
+                break;
+            case FIGHTER:
+                mapper.removeFighter(id);
+                break;
+            case MONK:
+                mapper.removeMonk(id);
+                break;
+            case PALADIN:
+                mapper.removePaladin(id);
+                break;
+            case RANGER:
+                mapper.removeRanger(id);
+                break;
+            case ROGUE:
+                mapper.removeRogue(id);
+                break;
+            case WIZARD:
+                mapper.removeWizard(id);
+                break;
+            default:
+                break;
+        }
+        return getParty(id);
+    }
+            
+    @Override
+    public List<Party> deleteParty(String id) {
+        mapper.deleteParty(id, userPrincipalProvider.getUserPrincipal().getSub());
+        return getParties();
+    }
+
+    public PartyCharacter getCharacterInfo(String id, PartyEnhancements enhancements) {
         CharacterDetails cd = characterService.getCharacter(id);
         PartyCharacter pc = PartyCharacter.fromCharacterDetails(cd);
 
         // Check GoGF and Averice 
         if(cd.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getItemId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c")||item.getItemId().equals("853d3fae881bf8907db600f8c4fc6d09e3e8f34d"))).count() > 0) {
-            CoGF++;
+            enhancements.setCharmOfGoodFortune(enhancements.getCharmOfGoodFortune()+1);
             pc.setHasCoGF(true);
         }
 
         // Check CoS
         if(cd.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getItemId().equals("333788757f49e48272a25e8b5994ac6503ad2adc"))).count() > 0) {
-            CoS++;
+            enhancements.setCharmOfSynergy(enhancements.getCharmOfSynergy()+1);
             pc.setHasCoS(true);
         }
 
         // Check CoA
-        if(cd.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getItemId().equals("853b569fa247d18d6f4d542d38c79df8fce50fe3"))).count() > 0)
-            CoA++;
-
-        return PartyCharacter.fromCharacterDetails(cd);
+        enhancements.setCharmOfAwareness(enhancements.getCharmOfAwareness()+cd.getStats().getInitiative());
+       
+        if(!userPrincipalProvider.getUserPrincipal().getSub().equals(cd.getUserId()))
+            pc.setUserName(cd.getUsername());
+                
+        return pc;
     }
  
 }

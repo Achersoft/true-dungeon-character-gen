@@ -1,154 +1,170 @@
-<div class="col-md-12" style="padding-right:0px;padding-left:0px">
-    <div style="display:flex">
-        <div style="width:175px;height:75px;border:3px solid black;border-right-width: 0px;">
-            <div style="display:flex;width:175px;">
-                <div style="width:113px;font-weight:bold;font-size:16px;padding-left:2px">
-                    {{characterClass}}
-                </div>
-                <div style="width:57px;font-size:16px;text-align:right;padding-right:3px">
-                    {{model.health}} HP
-                </div>
-            </div>
-            <div style="width:172px;font-size:14px;padding-left:3px">
-                {{model.name}}
-            </div>
-            <div style="width:172px;font-size:14px;padding-left:3px">
-                {{model.userName}}
-            </div>
+<center>
+    <div ng-if="model === null" style="display:flex;padding-right:0px;padding-left:0px;width:1218px;height:75px">
+        <div style="width:50px"></div>
+        <div style="flex:1;background-color:#333333;border:3px solid black;">
+            <button ng-if="editable" type="button" class="btn btn-default" ng-click="openModal()" style="margin-top:6px;height:50px;width:175px;font-weight:bold;border-right-width: 5px;border-bottom-width: 5px;">
+                Add {{characterClass | characterclassformat}}
+            </button>
+            <span ng-if="!editable" style="font-weight:bold;font-size:20px;text-align:center;color:white;padding-top: 35px;vertical-align:middle;">
+                No {{characterClass | characterclassformat}} Selected
+            </span>
         </div>
-        <div style="width:225px">
-            <div style="display:flex;text-align:center;height:75px">
-                <div style="width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                    <span style="vertical-align:middle;padding-top:35px">{{model.meleeHit}}</span>
-                </div>
-                <div style="display:flex;width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                    <div style="width:15px;height:75px">
-                        <img src="images/cold.png" ng-if="!model.meleeCold" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/cold-c.png" ng-if="model.meleeCold" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/shock.png" ng-if="!model.meleeShock" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/shock-c.png" ng-if="model.meleeShock" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/sonic.png" ng-if="!model.meleeSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/sonic-c.png" ng-if="model.meleeSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/darkrift.png" ng-if="!model.meleeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
-                        <img src="images/darkrift-c.png" ng-if="model.meleeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
+    </div>
+    <div ng-if="model !== null" style="padding-right:0px;padding-left:0px;width:1218px">
+        <div style="display:flex">
+            <div style="width:50px;height:75px;">
+                <a ng-click="removeCharacterFromParty(characterClass)" href=""><span class="fa fa-close" style="color:grey;font-size:50px;margin-top:12px;margin-right:5px"></span></a>
+            </div>
+            <div style="width:175px;height:75px;border:3px solid black;border-right-width: 0px;">
+                <div style="display:flex;width:175px;">
+                    <div style="width:113px;font-weight:bold;font-size:16px;text-align:left;padding-left:2px">
+                        {{characterClass | characterclassformat}}
                     </div>
-                    <div style="width:45px;height:75px">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.meleeDmg}}</span>
-                    </div>
-                    <div style="width:15px;height:75px">
-                        <img src="images/fire.png" ng-if="!model.meleeFire" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/fire-c.png" ng-if="model.meleeFire" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/eldritch.png" ng-if="!model.meleeEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/eldritch-c.png" ng-if="model.meleeEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/poison.png" ng-if="!model.meleePoison" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/poison-c.png" ng-if="model.meleePoison" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/sacred.png" ng-if="!model.meleeSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
-                        <img src="images/sacred-c.png" ng-if="model.meleeSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
+                    <div style="width:58px;font-size:16px;text-align:right;padding-right:2px">
+                        {{model.health}} HP
                     </div>
                 </div>
-                <div style="width:75px;font-weight:bold;font-size:16px;border:3px solid black;">
-                    <span style="vertical-align:middle;padding-top:35px">{{model.meleeAC}}</span>
+                <div style="width:172px;font-size:14px;text-align:left;padding-left:3px">
+                    {{model.name}}
+                </div>
+                <div style="width:172px;font-size:14px;text-align:left;padding-left:3px">
+                    {{model.userName}}
                 </div>
             </div>
-        </div>
-        <div style="width:225px">
-            <div style="display:flex;text-align:center;height:75px">
-                <div style="width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                    <span style="vertical-align:middle;padding-top:35px">{{model.rangeHit}}</span>
-                </div>
-                <div style="display:flex;width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                    <div style="width:15px;height:75px">
-                        <img src="images/cold.png" ng-if="!model.rangeCold" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/cold-c.png" ng-if="model.rangeCold" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/shock.png" ng-if="!model.rangeShock" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/shock-c.png" ng-if="model.rangeShock" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/sonic.png" ng-if="!model.rangeSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/sonic-c.png" ng-if="model.rangeSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/darkrift.png" ng-if="!model.rangeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
-                        <img src="images/darkrift-c.png" ng-if="model.rangeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
+            <div style="width:200px">
+                <div style="display:flex;text-align:center;height:75px">
+                    <div style="width:63px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                        <span style="vertical-align:middle;padding-top:35px">{{model.meleeHit}}</span>
                     </div>
-                    <div style="width:45px;height:75px">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.rangeDmg}}</span>
+                    <div style="display:flex;width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                        <div style="width:15px;height:75px">
+                            <img src="images/cold.png" ng-if="!model.meleeCold" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/cold-c.png" ng-if="model.meleeCold" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/shock.png" ng-if="!model.meleeShock" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/shock-c.png" ng-if="model.meleeShock" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/sonic.png" ng-if="!model.meleeSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/sonic-c.png" ng-if="model.meleeSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/darkrift.png" ng-if="!model.meleeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
+                            <img src="images/darkrift-c.png" ng-if="model.meleeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
+                        </div>
+                        <div style="width:45px;height:75px">
+                            <span style="vertical-align:middle;padding-top:35px">{{model.meleeDmg}}</span>
+                        </div>
+                        <div style="width:15px;height:75px">
+                            <img src="images/fire.png" ng-if="!model.meleeFire" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/fire-c.png" ng-if="model.meleeFire" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/eldritch.png" ng-if="!model.meleeEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/eldritch-c.png" ng-if="model.meleeEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/poison.png" ng-if="!model.meleePoison" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/poison-c.png" ng-if="model.meleePoison" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/sacred.png" ng-if="!model.meleeSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
+                            <img src="images/sacred-c.png" ng-if="model.meleeSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
+                        </div>
                     </div>
-                    <div style="width:15px;height:75px">
-                        <img src="images/fire.png" ng-if="!model.rangeFire" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/fire-c.png" ng-if="model.rangeFire" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/eldritch.png" ng-if="!model.rangeEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/eldritch-c.png" ng-if="model.rangeEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/poison.png" ng-if="!model.rangePoison" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/poison-c.png" ng-if="model.rangePoison" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/sacred.png" ng-if="!model.rangeSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
-                        <img src="images/sacred-c.png" ng-if="model.rangeSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
+                    <div style="width:62px;font-weight:bold;font-size:16px;border:3px solid black;">
+                        <span style="vertical-align:middle;padding-top:35px">{{model.meleeAC}}</span>
                     </div>
-                </div>
-                <div style="width:75px;font-weight:bold;font-size:16px;border:3px solid black;">
-                    <span style="vertical-align:middle;padding-top:35px">{{model.rangeAC}}</span>
                 </div>
             </div>
-        </div>
-        <div style="width:53px">
-            <div style="display:flex;height:75px">
-                <div style="flex:1;text-align:center;font-weight:bold;font-size:16px;border:3px solid black;">
-                    <span style="vertical-align:middle;padding-top:35px">{{model.rangeMissileAC}}</span>
+            <div style="width:200px">
+                <div style="display:flex;text-align:center;height:75px">
+                    <div style="width:63px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                        <span style="vertical-align:middle;padding-top:35px">{{model.rangeHit}}</span>
+                    </div>
+                    <div style="display:flex;width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                        <div style="width:15px;height:75px">
+                            <img src="images/cold.png" ng-if="!model.rangeCold" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/cold-c.png" ng-if="model.rangeCold" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/shock.png" ng-if="!model.rangeShock" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/shock-c.png" ng-if="model.rangeShock" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/sonic.png" ng-if="!model.rangeSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/sonic-c.png" ng-if="model.rangeSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/darkrift.png" ng-if="!model.rangeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
+                            <img src="images/darkrift-c.png" ng-if="model.rangeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
+                        </div>
+                        <div style="width:45px;height:75px">
+                            <span style="vertical-align:middle;padding-top:35px">{{model.rangeDmg}}</span>
+                        </div>
+                        <div style="width:15px;height:75px">
+                            <img src="images/fire.png" ng-if="!model.rangeFire" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/fire-c.png" ng-if="model.rangeFire" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/eldritch.png" ng-if="!model.rangeEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/eldritch-c.png" ng-if="model.rangeEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/poison.png" ng-if="!model.rangePoison" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/poison-c.png" ng-if="model.rangePoison" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/sacred.png" ng-if="!model.rangeSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
+                            <img src="images/sacred-c.png" ng-if="model.rangeSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
+                        </div>
+                    </div>
+                    <div style="width:62px;font-weight:bold;font-size:16px;border:3px solid black;">
+                        <span style="vertical-align:middle;padding-top:35px">{{model.rangeAC}}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div style="width:150px">
-            <div style="display:flex;text-align:center;height:75px">
-                <div style="width:50px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                    <span style="vertical-align:middle;padding-top:35px">{{model.fort}}</span>
-                </div>
-                <div style="width:50px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                    <span style="vertical-align:middle;padding-top:35px">{{model.reflex}}</span>
-                </div>
-                <div style="width:50px;font-weight:bold;font-size:16px;border:3px solid black;">
-                    <span style="vertical-align:middle;padding-top:35px">{{model.will}}</span>
+            <div style="width:53px">
+                <div style="display:flex;height:75px">
+                    <div style="flex:1;text-align:center;font-weight:bold;font-size:16px;border:3px solid black;">
+                        <span style="vertical-align:middle;padding-top:35px">{{model.rangeMissileAC}}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div style="width:390px">
-            <div style="display:flex;text-align:center;height:75px">
-                <div style="display:flex;width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                    <div style="width:15px;height:75px">
-                        <img src="images/cold.png" ng-if="!model.retCold" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/cold-c.png" ng-if="model.retCold" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/shock.png" ng-if="!model.retShock" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/shock-c.png" ng-if="model.retShock" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/sonic.png" ng-if="!model.retSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/sonic-c.png" ng-if="model.retSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/darkrift.png" ng-if="!model.retDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
-                        <img src="images/darkrift-c.png" ng-if="model.retDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
+            <div style="width:150px">
+                <div style="display:flex;text-align:center;height:75px">
+                    <div style="width:50px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                        <span style="vertical-align:middle;padding-top:35px">{{model.fort}}</span>
                     </div>
-                    <div style="width:45px;height:75px">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.retDmg}}</span>
+                    <div style="width:50px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                        <span style="vertical-align:middle;padding-top:35px">{{model.reflex}}</span>
                     </div>
-                    <div style="width:15px;height:75px">
-                        <img src="images/fire.png" ng-if="!model.retFire" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/fire-c.png" ng-if="model.retFire" width="12px" style="padding:0px;margin-top:-10px;"/>
-                        <img src="images/eldritch.png" ng-if="!model.retEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/eldritch-c.png" ng-if="model.retEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
-                        <img src="images/poison.png" ng-if="!model.retPoison" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/poison-c.png" ng-if="model.retPoison" width="12px" style="padding:0px;margin-top:-30px;"/>
-                        <img src="images/sacred.png" ng-if="!model.retSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
-                        <img src="images/sacred-c.png" ng-if="model.retSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
+                    <div style="width:50px;font-weight:bold;font-size:16px;border:3px solid black;">
+                        <span style="vertical-align:middle;padding-top:35px">{{model.will}}</span>
                     </div>
                 </div>
-                <div style="width:60px;border:3px solid black;border-right-width:0px;">
-                    <img src="images/check.png" ng-if="model.cannotBeSuprised" width="35px" style="padding:0px;margin-top:15px"/>
-                </div>
-                <div style="width:60px;border:3px solid black;border-right-width:0px;">
-                    <img src="images/check.png" ng-if="model.freeMovement" width="35px" style="padding:0px;margin-top:15px"/>
-                </div>
-                <div style="width:60px;border:3px solid black;border-right-width:0px;">
-                    <img src="images/check.png" ng-if="model.psychic" width="35px" style="padding:0px;margin-top:15px"/>
-                </div>
-                <div style="width:75px;border:3px solid black;border-right-width:0px;">
-                    
-                </div>
-                <div style="width:60px;font-weight:bold;font-size:16px;border:3px solid black;">
-                    <span style="vertical-align:middle;padding-top:35px">{{model.treasure}}</span>
+            </div>
+            <div style="width:390px">
+                <div style="display:flex;text-align:center;height:75px">
+                    <div style="display:flex;width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                        <div style="width:15px;height:75px">
+                            <img src="images/cold.png" ng-if="!model.retCold" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/cold-c.png" ng-if="model.retCold" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/shock.png" ng-if="!model.retShock" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/shock-c.png" ng-if="model.retShock" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/sonic.png" ng-if="!model.retSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/sonic-c.png" ng-if="model.retSonic" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/darkrift.png" ng-if="!model.retDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
+                            <img src="images/darkrift-c.png" ng-if="model.retDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
+                        </div>
+                        <div style="width:45px;height:75px">
+                            <span style="vertical-align:middle;padding-top:35px">{{model.retDmg}}</span>
+                        </div>
+                        <div style="width:15px;height:75px">
+                            <img src="images/fire.png" ng-if="!model.retFire" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/fire-c.png" ng-if="model.retFire" width="12px" style="padding:0px;margin-top:-10px;"/>
+                            <img src="images/eldritch.png" ng-if="!model.retEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/eldritch-c.png" ng-if="model.retEldritch" width="12px" style="padding:0px;margin-top:-20px;"/>
+                            <img src="images/poison.png" ng-if="!model.retPoison" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/poison-c.png" ng-if="model.retPoison" width="12px" style="padding:0px;margin-top:-30px;"/>
+                            <img src="images/sacred.png" ng-if="!model.retSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
+                            <img src="images/sacred-c.png" ng-if="model.retSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
+                        </div>
+                    </div>
+                    <div style="width:60px;border:3px solid black;border-right-width:0px;">
+                        <img src="images/check.png" ng-if="model.cannotBeSuprised" width="35px" style="padding:0px;margin-top:15px"/>
+                    </div>
+                    <div style="width:60px;border:3px solid black;border-right-width:0px;">
+                        <img src="images/check.png" ng-if="model.freeMovement" width="35px" style="padding:0px;margin-top:15px"/>
+                    </div>
+                    <div style="width:60px;border:3px solid black;border-right-width:0px;">
+                        <img src="images/check.png" ng-if="model.psychic" width="35px" style="padding:0px;margin-top:15px"/>
+                    </div>
+                    <div style="width:75px;border:3px solid black;border-right-width:0px;">
+
+                    </div>
+                    <div style="width:60px;font-weight:bold;font-size:16px;border:3px solid black;">
+                        <span style="vertical-align:middle;padding-top:35px">{{model.treasure}}</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</center>

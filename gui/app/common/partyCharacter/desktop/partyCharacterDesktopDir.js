@@ -1,24 +1,26 @@
-angular.module('main').directive('partyCharacterDesktop',['PartySvc', '$uibModal', 'RESOURCES', function(characterSvc, $uibModal, RESOURCES){
+angular.module('main').directive('partyCharacterDesktop',['PartySvc', '$uibModal', 'AuthorizationState', 'RESOURCES', function(partySvc, $uibModal, AuthorizationState, RESOURCES){
     return {
         restrict:'E',
         scope:{
             model:'=',
             editable: '=',
+            partyId: '=',
             characterClass: '@',
-            elementId: '@',
-            setCharacter: '&?',
-            unSetCharacter: '&?'
+            addCharacter: '&?',
+            removeCharacter: '&?'
         },
         link: function(scope) {
-            scope.itemSelection = {};
-            scope.tabIndex = 0;
-            scope.imgBaseURL = RESOURCES.IMG_BASE_URL;
+            scope.userAccounts = {};
+            scope.userCharacters = {};
+            scope.user = AuthorizationState.getLoggedInUserId();
+            scope.character = null;
             scope.modalInstance = null;
             
             scope.openModal = function() {
                 if(scope.editable === true) {
-                    characterSvc.getSlotTokens(scope.model.id, scope.model.characterId, scope.characterClass, scope.model.slot, 'ALL').then(function(result) {
-                        scope.itemSelection = result.data;
+                    partySvc.getSelectableCharacters(scope.user, scope.characterClass).then(function(result) {
+                        scope.userAccounts = result.data.userAccounts;
+                        scope.userCharacters = result.data.characters;
 
                         scope.modalInstance = $uibModal.open({
                             ariaLabelledBy: 'modal-title',
@@ -26,27 +28,32 @@ angular.module('main').directive('partyCharacterDesktop',['PartySvc', '$uibModal
                             bindToController: true,
                             scope: scope,
                             windowClass: 'desktop-item-modal-dialog',
-                            openedClass: 'desktop-item-modal-content',
-                            templateUrl: 'common/tokenSelector/desktop/itemDesktopSelectorModalTemplate.html'
+                            openedClass: 'desktop-modal-content',
+                            templateUrl: 'common/partyCharacter/desktop/partyCharacterDesktopModalTemplate.html'
                         });
                     });
                 }
             };
             
-            scope.reloadTokens = function(rarity) {
-                characterSvc.getSlotTokens(scope.model.id, scope.model.characterId, scope.characterClass, scope.model.slot, rarity).then(function(result) {
-                    scope.itemSelection = result.data;
+            scope.updateCharacters = function(user) {
+                partySvc.getSelectableCharacters(user, scope.characterClass).then(function(result) {
+                    scope.userAccounts = result.data.userAccounts;
+                    scope.userCharacters = result.data.characters;
+                    scope.character = null;
                 });
             };
+
+            scope.addCharacterToParty = function(character) {
+                if(character !== null) {
+                    scope.addCharacter()(scope.partyId, character); 
+                    scope.modalInstance.close();
+                }
+            };
             
-            scope.selectToken = function(item) {
-                scope.setToken()(scope.model.characterId, scope.model.id, item.id); 
-                scope.modalInstance.close();
-            };    
-            
-            scope.unequipItemSlot = function() {
-                scope.unequip()(scope.model.characterId, scope.model.id); 
-                scope.modalInstance.close();
+            scope.removeCharacterFromParty = function(characterClass) {
+                if(characterClass !== null) {
+                    scope.removeCharacter()(scope.partyId, characterClass); 
+                }
             };
             
             scope.closeModal = function() {

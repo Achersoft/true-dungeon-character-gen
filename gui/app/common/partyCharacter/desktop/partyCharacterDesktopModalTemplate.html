@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="closeModal()" style="font-size:30px;color: rgb(255, 255, 255)">&times;</button>
+    <h4 class="modal-title">{{characterClass | characterclassformat}} Selection</h4>
+</div>
+<div class="modal-body" style="padding:0px;margin-top:34px;height:300px">
+    <div style="display:flex;">
+        <span style="width:275px;font-size:25px;text-align:right;">User Account:&nbsp;</span>
+        <select class="form-control" style="width:700px;" ng-change="updateCharacters(user)" ng-model="user" ng-options="account.id as account.username for account in userAccounts"></select>
+    </div>
+    <div style="display:flex;margin-top:34px">
+        <span style="width:275px;font-size:25px;text-align:right;">Character Name:&nbsp;</span>
+        <select class="form-control" style="width:700px;" ng-model="character" ng-options="character.id as character.name for character in userCharacters"></select>
+    </div>
+
+    <div class="text-center" style="margin-top:50px">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeModal()" style="width:150px">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="addCharacterToParty(character)" style="width:150px">
+            Add Character
+        </button>
+    </div>
+</div>
