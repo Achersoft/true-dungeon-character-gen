@@ -57,9 +57,15 @@ public class PartyCharacter {
     private int spellDmg = 0;
     private int spellHeal = 0;
     private int spellResist = 0;  
+    private boolean commonScroll = false;
+    private boolean uncommonScroll = false;
+    private boolean rareScroll = false;
     private int treasure = 0;   
     private boolean hasCoGF = false;
     private boolean hasCoS = false;
+    private boolean hasGoC = false;
+    private boolean hasBoC = false;
+    private boolean hasCoC = false;
     
     public static PartyCharacter fromCharacterDetails(CharacterDetails cd) {
         return PartyCharacter.builder()

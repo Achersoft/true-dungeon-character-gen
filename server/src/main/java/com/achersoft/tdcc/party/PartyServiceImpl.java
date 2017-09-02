@@ -43,6 +43,8 @@ public class PartyServiceImpl implements PartyService {
         Party party = mapper.getParty(id);
         PartyEnhancements enhancements = PartyEnhancements.builder().charmOfAwareness(0).charmOfGoodFortune(0).charmOfSynergy(0).build();
         Integer treasures = 0;
+        Integer spell = 0;
+        Integer resist = 0;
         PartyDetails details = PartyDetails.builder()
                 .id(party.getId())
                 .initiative(0)
@@ -91,6 +93,7 @@ public class PartyServiceImpl implements PartyService {
             details.setWizard(getCharacterInfo(party.getWizard(), enhancements));
         }
         
+        // CoS
         if(enhancements.getCharmOfSynergy() > 1) {
             if(party.getBarbarian() != null && details.getBarbarian().isHasCoS()) {
                 details.getBarbarian().setHealth(details.getBarbarian().getHealth() + (enhancements.getCharmOfSynergy()-1));
@@ -130,13 +133,11 @@ public class PartyServiceImpl implements PartyService {
             }
         }
         
-        if(enhancements.getCharmOfGoodFortune() > 5) {
+        // Teasures
+        if(enhancements.getCharmOfGoodFortune() > 5) 
             treasures++;
-        }
-        if(enhancements.getCharmOfGoodFortune() > 9) {
+        if(enhancements.getCharmOfGoodFortune() > 9) 
             treasures++;
-        }
-        
         if(treasures > 0) {
             if(party.getBarbarian() != null && details.getBarbarian().isHasCoGF()) {
                 details.getBarbarian().setTreasure(details.getBarbarian().getTreasure() + treasures);
@@ -176,7 +177,96 @@ public class PartyServiceImpl implements PartyService {
             }
         }
         
+        // CoA
         details.setInitiative(enhancements.getCharmOfAwareness());
+        
+        // Bracelets of Cabal
+        if(enhancements.getBraceletsOfCabal() > 2) 
+            spell++;
+        if(enhancements.getBraceletsOfCabal() > 4) 
+            spell++;
+        if(spell > 0) {
+            if(party.getBard()!= null && details.getBard().isHasBoC()) {
+                details.getBard().setSpellHeal(details.getBard().getSpellHeal()+spell);
+                details.getBard().setSpellDmg(details.getBard().getSpellDmg()+spell);
+            }
+            if(party.getCleric()!= null && details.getCleric().isHasBoC()) {
+                details.getCleric().setSpellHeal(details.getCleric().getSpellHeal()+spell);
+                details.getBard().setSpellDmg(details.getBard().getSpellDmg()+spell);
+            }
+            if(party.getDruid()!= null && details.getDruid().isHasBoC()) {
+                details.getDruid().setSpellHeal(details.getDruid().getSpellHeal()+spell);
+                details.getBard().setSpellDmg(details.getBard().getSpellDmg()+spell);
+            }
+            if(party.getElfWizard() != null && details.getElfWizard().isHasBoC()) {
+                details.getElfWizard().setSpellDmg(details.getElfWizard().getSpellDmg()+spell);
+            }
+            if(party.getWizard() != null && details.getWizard().isHasBoC()) {
+                details.getWizard().setSpellDmg(details.getWizard().getSpellDmg()+spell);
+            }
+        }
+        
+        // Gloves of Cabal
+        if(enhancements.getGlovesOfCabal() > 0) {
+            if(party.getBard()!= null && details.getBard().isHasGoC()) {
+                details.getBard().setCommonScroll(true);
+                if(enhancements.getGlovesOfCabal() > 2)
+                    details.getBard().setUncommonScroll(true);
+                if(enhancements.getGlovesOfCabal() > 4)
+                    details.getBard().setRareScroll(true);
+            }
+            if(party.getCleric()!= null && details.getCleric().isHasGoC()) {
+                details.getCleric().setCommonScroll(true);
+                if(enhancements.getGlovesOfCabal() > 2)
+                    details.getCleric().setUncommonScroll(true);
+                if(enhancements.getGlovesOfCabal() > 4)
+                    details.getCleric().setRareScroll(true);
+            }
+            if(party.getDruid()!= null && details.getDruid().isHasGoC()) {
+                details.getDruid().setCommonScroll(true);
+                if(enhancements.getGlovesOfCabal() > 2)
+                    details.getDruid().setUncommonScroll(true);
+                if(enhancements.getGlovesOfCabal() > 4)
+                    details.getDruid().setRareScroll(true);
+            }
+            if(party.getElfWizard() != null && details.getElfWizard().isHasGoC()) {
+                details.getElfWizard().setCommonScroll(true);
+                if(enhancements.getGlovesOfCabal() > 2)
+                    details.getElfWizard().setUncommonScroll(true);
+                if(enhancements.getGlovesOfCabal() > 4)
+                    details.getElfWizard().setRareScroll(true);
+            }
+            if(party.getWizard() != null && details.getWizard().isHasGoC()) {
+                details.getWizard().setCommonScroll(true);
+                if(enhancements.getGlovesOfCabal() > 2)
+                    details.getWizard().setUncommonScroll(true);
+                if(enhancements.getGlovesOfCabal() > 4)
+                    details.getWizard().setRareScroll(true);
+            }
+        }
+        
+        // Charm of Cabal
+        if(enhancements.getCharmOfCabal() > 2) 
+            resist+=5;
+        if(enhancements.getCharmOfCabal() > 4) 
+            resist+=5;
+        if(spell > 0) {
+            if(party.getBard()!= null && details.getBard().isHasCoC() && details.getBard().getSpellResist() < 100) {
+                details.getBard().setSpellResist(details.getBard().getSpellResist()+resist);
+            }
+            if(party.getCleric()!= null && details.getCleric().isHasCoC() && details.getCleric().getSpellResist() < 100) {
+                details.getCleric().setSpellResist(details.getCleric().getSpellResist()+resist);
+            }
+            if(party.getDruid()!= null && details.getDruid().isHasCoC() && details.getDruid().getSpellResist() < 100) {
+                details.getDruid().setSpellResist(details.getDruid().getSpellResist()+resist);
+            }
+            if(party.getElfWizard() != null && details.getElfWizard().isHasCoC() && details.getElfWizard().getSpellResist() < 100) {
+                details.getElfWizard().setSpellResist(details.getElfWizard().getSpellResist()+resist);
+            }
+            if(party.getWizard() != null && details.getWizard().isHasCoC() && details.getWizard().getSpellResist() < 100) {
+                details.getWizard().setSpellResist(details.getWizard().getSpellResist()+resist);
+            }
+        }
         
         return details;
     }
@@ -348,8 +438,24 @@ public class PartyServiceImpl implements PartyService {
 
         // Check CoA
         enhancements.setCharmOfAwareness(enhancements.getCharmOfAwareness()+cd.getStats().getInitiative());
+        
+        // Gloves
+        if(cd.getItems().stream().distinct().filter((item) -> item.getItemId()!=null&&(item.getItemId().equals("3dcfd7948a3c9196556ef7e069a36174396297ad"))).count() > 0){
+            enhancements.setGlovesOfCabal(enhancements.getGlovesOfCabal()+1);
+            pc.setHasGoC(true);
+        }
+        // Bracelets
+        if(cd.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("f225241f60605ef641beeecd5003ba4129dbf46e"))).count() > 0) {
+            enhancements.setBraceletsOfCabal(enhancements.getBraceletsOfCabal()+1);
+            pc.setHasBoC(true);
+        }
+        // Charm
+        if(cd.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65"))).count() > 0) {
+            enhancements.setCharmOfCabal(enhancements.getCharmOfCabal()+1);
+            pc.setHasCoC(true);
+        }
        
-        if(userPrincipalProvider.getUserPrincipal().getSub() != null && !userPrincipalProvider.getUserPrincipal().getSub().equals(cd.getUserId()))
+        if(userPrincipalProvider.getUserPrincipal().getSub() == null || !userPrincipalProvider.getUserPrincipal().getSub().equals(cd.getUserId()))
             pc.setUserName(cd.getUsername());
                 
         return pc;

@@ -1137,6 +1137,18 @@ public class CharacterServiceImpl implements CharacterService {
         setCharacterNotes(characterDetails);
         
         // Cabal set
+        // Gloves
+        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("3dcfd7948a3c9196556ef7e069a36174396297ad"))).count() > 0)
+            characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("You may have a second target for and COMMON scroll used.").build());
+        // Bracelets
+        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("f225241f60605ef641beeecd5003ba4129dbf46e"))).count() > 0) {
+            characterDetails.getStats().setSpellDmg(characterDetails.getStats().getSpellDmg()+1);
+            characterDetails.getStats().setSpellHeal(characterDetails.getStats().getSpellHeal()+1);
+        }
+        // Charm
+        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65"))).count() > 0) {
+            characterDetails.getStats().setSpellResist(10);
+        }
         // all three two spells in one round once per room
         if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("3dcfd7948a3c9196556ef7e069a36174396297ad") || item.getItemId().equals("f225241f60605ef641beeecd5003ba4129dbf46e") || item.getItemId().equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65"))).count() == 3)
             characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("You may cast two spells in one round.  Spell modifiers apply to both.").build());
@@ -1203,6 +1215,7 @@ public class CharacterServiceImpl implements CharacterService {
         // 2 piece ignore spell resistence, healing spells +10, melee igonore DR
         if(eldrichCount >= 2) {
             characterDetails.getStats().setSpellHeal(characterDetails.getStats().getSpellHeal() + 10);
+            characterDetails.getStats().setSpellResist(100);
             characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Your spells and melee attack ignore spell resistance and damage reduction.").build());
         }
         
@@ -1513,6 +1526,24 @@ public class CharacterServiceImpl implements CharacterService {
         conditionalTokens.stream().forEach((token) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(token.getItemId());
             if(null != td.getConditionalUse()) switch (td.getConditionalUse()) {
+                case NOT_WITH_ROSP:
+                    if(metCondition.contains(ConditionalUse.NOT_WITH_ROSP)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with the Rod of Seven Parts.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
+                        updateStats(stats, td, notes);
+                    }   break;
+                default:
+                    break;
+            }
+        });
+        conditionalTokens.stream().forEach((token) -> {
+            TokenFullDetails td = tokenAdminMapper.getTokenDetails(token.getItemId());
+            if(null != td.getConditionalUse()) switch (td.getConditionalUse()) {
                 case WEAPON_2H:
                     if(!metCondition.contains(ConditionalUse.WEAPON_2H)) {
                         token.setSlotStatus(SlotStatus.INVALID);
@@ -1623,17 +1654,6 @@ public class CharacterServiceImpl implements CharacterService {
                         stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break;
-                case NOT_WITH_ROSP:
-                    if(metCondition.contains(ConditionalUse.NOT_WITH_ROSP)) {
-                        token.setSlotStatus(SlotStatus.INVALID);
-                        token.setStatusText(token.getName() + " cannot be used with the Rod of Seven Parts.");
-                    } else {
-                        token.setSlotStatus(SlotStatus.OK);
-                        token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
-                    }   break;  
                 case NOT_WITH_PRO_SCROLL:
                     if(metCondition.contains(ConditionalUse.NOT_WITH_PRO_SCROLL)) {
                         token.setSlotStatus(SlotStatus.INVALID);

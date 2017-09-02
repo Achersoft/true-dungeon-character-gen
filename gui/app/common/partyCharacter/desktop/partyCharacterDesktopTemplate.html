@@ -5,9 +5,9 @@
             <button ng-if="editable" type="button" class="btn btn-default" ng-click="openModal()" style="margin-top:6px;height:50px;width:175px;font-weight:bold;border-right-width: 5px;border-bottom-width: 5px;">
                 Add {{characterClass | characterclassformat}}
             </button>
-            <span ng-if="!editable" style="font-weight:bold;font-size:20px;text-align:center;color:white;padding-top:35px;vertical-align:middle;">
-                No {{characterClass | characterclassformat}} Selected
-            </span>
+            <div ng-if="!editable" style="height:45px;font-weight:bold;font-size:20px;text-align:center;color:white;margin-top:20px">
+                <span style="vertical-align:middle">No {{characterClass | characterclassformat}} Selected</span>
+            </div>
         </div>
     </div>
     <div ng-if="model !== null" style="padding-right:0px;padding-left:0px;width:1218px">
@@ -33,8 +33,10 @@
             </div>
             <div style="width:200px">
                 <div style="display:flex;text-align:center;height:75px">
-                    <div style="width:63px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.meleeHit}}</span>
+                    <div style="width:63px;border:3px solid black;border-right-width: 0px;">
+                        <div style="height:45px;font-weight:bold;font-size:16px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.meleeHit}}</span>
+                        </div>
                     </div>
                     <div style="display:flex;width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
                         <div style="width:15px;height:75px">
@@ -47,8 +49,8 @@
                             <img src="images/darkrift.png" ng-if="!model.meleeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
                             <img src="images/darkrift-c.png" ng-if="model.meleeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
                         </div>
-                        <div style="width:45px;height:75px">
-                            <span style="vertical-align:middle;padding-top:35px">{{model.meleeDmg}}</span>
+                        <div style="width:45px;height:45px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.meleeDmg}}</span>
                         </div>
                         <div style="width:15px;height:75px">
                             <img src="images/fire.png" ng-if="!model.meleeFire" width="12px" style="padding:0px;margin-top:-10px;"/>
@@ -61,15 +63,19 @@
                             <img src="images/sacred-c.png" ng-if="model.meleeSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
                         </div>
                     </div>
-                    <div style="width:62px;font-weight:bold;font-size:16px;border:3px solid black;">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.meleeAC}}</span>
+                    <div style="width:62px;border:3px solid black;">
+                        <div style="height:45px;font-weight:bold;font-size:16px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.meleeAC}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div style="width:200px">
                 <div style="display:flex;text-align:center;height:75px">
-                    <div style="width:63px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.rangeHit}}</span>
+                    <div style="width:63px;border:3px solid black;border-right-width: 0px;">
+                        <div style="height:45px;font-weight:bold;font-size:16px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.rangeHit}}</span>
+                        </div>
                     </div>
                     <div style="display:flex;width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
                         <div style="width:15px;height:75px">
@@ -82,8 +88,8 @@
                             <img src="images/darkrift.png" ng-if="!model.rangeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
                             <img src="images/darkrift-c.png" ng-if="model.rangeDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
                         </div>
-                        <div style="width:45px;height:75px">
-                            <span style="vertical-align:middle;padding-top:35px">{{model.rangeDmg}}</span>
+                        <div style="width:45px;height:45px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.rangeDmg}}</span>
                         </div>
                         <div style="width:15px;height:75px">
                             <img src="images/fire.png" ng-if="!model.rangeFire" width="12px" style="padding:0px;margin-top:-10px;"/>
@@ -96,28 +102,38 @@
                             <img src="images/sacred-c.png" ng-if="model.rangeSacred" width="12px" style="padding:0px;margin-top:-40px;"/>
                         </div>
                     </div>
-                    <div style="width:62px;font-weight:bold;font-size:16px;border:3px solid black;">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.rangeAC}}</span>
+                    <div style="width:62px;border:3px solid black;">
+                        <div style="height:45px;font-weight:bold;font-size:16px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.rangeAC}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div style="width:53px">
                 <div style="display:flex;height:75px">
-                    <div style="flex:1;text-align:center;font-weight:bold;font-size:16px;border:3px solid black;">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.rangeMissileAC}}</span>
+                    <div style="flex:1;border:3px solid black;">
+                        <div style="height:45px;font-weight:bold;font-size:16px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.rangeMissileAC}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div style="width:150px">
                 <div style="display:flex;text-align:center;height:75px">
-                    <div style="width:50px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.fort}}</span>
+                    <div style="width:50px;border:3px solid black;border-right-width: 0px;">
+                        <div style="height:45px;font-weight:bold;font-size:16px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.fort}}</span>
+                        </div>
                     </div>
-                    <div style="width:50px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.reflex}}</span>
+                    <div style="width:50px;border:3px solid black;border-right-width: 0px;">
+                        <div style="height:45px;font-weight:bold;font-size:16px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.reflex}}</span>
+                        </div>
                     </div>
-                    <div style="width:50px;font-weight:bold;font-size:16px;border:3px solid black;">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.will}}</span>
+                    <div style="width:50px;border:3px solid black;">
+                        <div style="height:45px;font-weight:bold;font-size:16px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.will}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -135,7 +151,9 @@
                             <img src="images/darkrift-c.png" ng-if="model.retDarkrift" width="12px" style="padding:0px;margin-top:-40px;"/>
                         </div>
                         <div style="width:45px;height:75px">
-                            <span style="vertical-align:middle;padding-top:35px">{{model.retDmg}}</span>
+                            <div style="height:45px;font-weight:bold;font-size:16px;margin-top:20px">
+                                <span style="vertical-align:middle">{{model.retDmg}}</span>
+                            </div>
                         </div>
                         <div style="width:15px;height:75px">
                             <img src="images/fire.png" ng-if="!model.retFire" width="12px" style="padding:0px;margin-top:-10px;"/>
@@ -157,11 +175,63 @@
                     <div style="width:60px;border:3px solid black;border-right-width:0px;">
                         <img src="images/check.png" ng-if="model.psychic" width="35px" style="padding:0px;margin-top:15px"/>
                     </div>
-                    <div style="width:75px;border:3px solid black;border-right-width:0px;">
-
+                    <div style="width:75px;height:75px;border:3px solid black;border-right-width:0px;">
+                        <div ng-if="characterClass === 'BARD' || characterClass === 'CLERIC' || characterClass === 'DRUID'">
+                            <div style="display:flex;height:17px">
+                                <div style="flex:1;font-weight:bold;font-size:10px;text-align:left;margin-top:2px;margin-left:5px">
+                                    Heal + <u style="font-weight:normal">{{model.spellHeal}}</u>
+                                </div>
+                            </div>
+                            <div style="display:flex;height:17px">
+                                <div style="flex:1;font-weight:bold;font-size:10px;text-align:left;margin-left:5px">
+                                    Dmg + <u style="font-weight:normal">{{model.spellDmg}}</u>
+                                </div>
+                            </div>
+                            <div style="display:flex;height:17px">
+                                <div style="flex:1;font-weight:bold;font-size:10px;text-align:left;margin-left:5px">
+                                    Spell Res <u style="font-weight:normal">{{model.spellResist}}</u>
+                                </div>
+                            </div>
+                            <div style="display:flex;height:17px">
+                                <div style="flex:1;font-weight:bold;font-size:8px;text-align:left;margin-left:5px">
+                                    2x<img src="images/scroll.png" width="12px"/>
+                                    <span ng-if="!model.commonScroll">C</span> 
+                                    <mark ng-if="model.commonScroll" style="background-color: yellow">C</mark> 
+                                    <span ng-if="!model.uncommonScroll">U</span> 
+                                    <mark ng-if="model.uncommonScroll" style="background-color: yellow">U</mark> 
+                                    <span ng-if="!model.rareScroll">R</span>
+                                    <mark ng-if="model.rareScroll" style="background-color: yellow">R</mark>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="characterClass === 'ELF_WIZARD' || characterClass === 'WIZARD'">
+                            <div style="display:flex;height:27px">
+                                <div style="flex:1;font-weight:bold;font-size:10px;text-align:left;margin-top:10px;margin-left:5px">
+                                    Dmg + <u style="font-weight:normal">{{model.spellDmg}}</u>
+                                </div>
+                            </div>
+                            <div style="display:flex;height:17px">
+                                <div style="flex:1;font-weight:bold;font-size:10px;text-align:left;margin-left:5px">
+                                    Spell Res <u style="font-weight:normal">{{model.spellResist}}</u>
+                                </div>
+                            </div>
+                            <div style="display:flex;height:17px">
+                                <div style="flex:1;font-weight:bold;font-size:8px;text-align:left;margin-left:5px">
+                                    2x<img src="images/scroll.png" width="12px"/>
+                                    <span ng-if="!model.commonScroll">C</span> 
+                                    <mark ng-if="model.commonScroll" style="background-color: yellow">C</mark> 
+                                    <span ng-if="!model.uncommonScroll">U</span> 
+                                    <mark ng-if="model.uncommonScroll" style="background-color: yellow">U</mark> 
+                                    <span ng-if="!model.rareScroll">R</span>
+                                    <mark ng-if="model.rareScroll" style="background-color: yellow">R</mark>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div style="width:60px;font-weight:bold;font-size:16px;border:3px solid black;">
-                        <span style="vertical-align:middle;padding-top:35px">{{model.treasure}}</span>
+                    <div style="width:60px;border:3px solid black;">
+                        <div style="height:45px;font-weight:bold;font-size:16px;margin-top:20px">
+                            <span style="vertical-align:middle">{{model.treasure}}</span>
+                        </div>
                     </div>
                 </div>
             </div>

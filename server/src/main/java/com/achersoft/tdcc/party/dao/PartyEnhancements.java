@@ -14,4 +14,7 @@ public class PartyEnhancements {
     int charmOfAwareness = 0;
     int charmOfSynergy = 0;
     int charmOfGoodFortune = 0;
+    int glovesOfCabal = 0;
+    int braceletsOfCabal = 0;
+    int charmOfCabal = 0;
 }

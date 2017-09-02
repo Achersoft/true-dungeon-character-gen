@@ -5,11 +5,11 @@
 <div class="modal-body" style="padding:0px;margin-top:34px;height:300px">
     <div style="display:flex;">
         <span style="width:275px;font-size:25px;text-align:right;">User Account:&nbsp;</span>
-        <select class="form-control" style="width:700px;" ng-change="updateCharacters(user)" ng-model="user" ng-options="account.id as account.username for account in userAccounts"></select>
+        <select class="form-control" style="width:60%" ng-change="updateCharacters(user)" ng-model="user" ng-options="account.id as account.username for account in userAccounts"></select>
     </div>
     <div style="display:flex;margin-top:34px">
         <span style="width:275px;font-size:25px;text-align:right;">Character Name:&nbsp;</span>
-        <select class="form-control" style="width:700px;" ng-model="character" ng-options="character.id as character.name for character in userCharacters"></select>
+        <select class="form-control" style="width:60%;" ng-model="character" ng-options="character.id as character.name for character in userCharacters"></select>
     </div>
 
     <div class="text-center" style="margin-top:50px">
