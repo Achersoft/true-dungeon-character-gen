@@ -88,6 +88,7 @@
         SELECT u.id 'id', 
                u.user_name 'username'
           FROM user u
+         WHERE u.user_name != 'admin'
       ORDER BY u.user_name
     </select>
     
@@ -232,6 +233,12 @@
     <update id="removeWizard">
         UPDATE party SET
             wizard = null
+      WHERE id = #{partyId}
+    </update>
+    
+    <update id="updatePartyDifficulty">
+        UPDATE party SET
+            difficulty = #{difficulty}
       WHERE id = #{partyId}
     </update>
     

@@ -3,6 +3,7 @@ package com.achersoft.rest.services;
 import com.achersoft.security.annotations.RequiresPrivilege;
 import com.achersoft.security.type.Privilege;
 import com.achersoft.tdcc.enums.CharacterClass;
+import com.achersoft.tdcc.enums.Difficulty;
 import com.achersoft.tdcc.party.PartyService;
 import com.achersoft.tdcc.party.dao.Party;
 import com.achersoft.tdcc.party.dao.PartyDetails;
@@ -55,6 +56,14 @@ public class PartyRestService {
     @Produces({MediaType.APPLICATION_JSON})	
     public SelectableCharacters getSelectableCharacters(@QueryParam("userid") String userid, @QueryParam("class") CharacterClass cClass) throws Exception {
         return partyService.getSelectableCharacters(userid, cClass);
+    }
+    
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST 
+    @Path("/{id}/difficulty")
+    @Produces({MediaType.APPLICATION_JSON})	
+    public PartyDetails updatePartyDifficulty(@PathParam("id") String id, @QueryParam("difficulty") Difficulty difficulty) throws Exception {
+        return partyService.updatePartyDifficulty(id, difficulty);
     }
     
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})

@@ -5,7 +5,7 @@
         </div>
         <div class="col-md-5">
             <label uib-tooltip="" tooltip-trigger="mouseenter" tooltip-popup-delay='500' for="difficultySelect"> </label>
-            <select class="form-control" id="difficultySelect" name="difficultySelect" ng-change="updateDifficulty()" ng-model="partyContext.difficulty" ng-options="difficulty as difficulty for difficulty in difficulties"></select>
+            <select class="form-control" id="difficultySelect" ng-disabled="!partyContext.editable" name="difficultySelect" ng-change="updateDifficulty(partyContext.id, partyContext.difficulty)" ng-model="partyContext.difficulty" ng-options="difficulty.id as difficulty.name for difficulty in difficulties"></select>
         </div>
         <div class="col-md-2">
             <h2 style="text-align:right">Initiative: {{partyContext.initiative}}</h2>
@@ -108,17 +108,17 @@
             </div>
         </div>
     </center>
-    <party-character-desktop model="partyContext.barbarian" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="BARBARIAN" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.bard" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="BARD" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.cleric" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="CLERIC" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.druid" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="DRUID" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.dwarfFighter" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="DWARF_FIGHTER" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.elfWizard" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="ELF_WIZARD" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.fighter" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="FIGHTER" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.monk" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="MONK" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.paladin" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="PALADIN" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.ranger" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="RANGER" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.rogue" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="ROGUE" editable="true"></party-character-desktop>
-    <party-character-desktop model="partyContext.wizard" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="WIZARD" editable="true"></party-character-desktop>
+    <party-character-desktop model="partyContext.barbarian" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="BARBARIAN" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.bard" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="BARD" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.cleric" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="CLERIC" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.druid" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="DRUID" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.dwarfFighter" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="DWARF_FIGHTER" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.elfWizard" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="ELF_WIZARD" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.fighter" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="FIGHTER" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.monk" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="MONK" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.paladin" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="PALADIN" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.ranger" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="RANGER" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.rogue" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="ROGUE" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.wizard" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="WIZARD" editable="partyContext.editable"></party-character-desktop>
     
 </div>

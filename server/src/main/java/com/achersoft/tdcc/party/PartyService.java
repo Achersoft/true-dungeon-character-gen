@@ -1,6 +1,7 @@
 package com.achersoft.tdcc.party;
 
 import com.achersoft.tdcc.enums.CharacterClass;
+import com.achersoft.tdcc.enums.Difficulty;
 import com.achersoft.tdcc.party.dao.Party;
 import com.achersoft.tdcc.party.dao.PartyDetails;
 import com.achersoft.tdcc.party.dao.SelectableCharacters;
@@ -11,6 +12,7 @@ public interface PartyService {
     public PartyDetails getParty(String id);
     public List<Party> getParties();
     public SelectableCharacters getSelectableCharacters(String userid, CharacterClass cClass);
+    public PartyDetails updatePartyDifficulty(String id, Difficulty difficulty);
     public PartyDetails addPartyCharacter(String id, String characterId);
     public PartyDetails removePartyCharacter(String id, CharacterClass cClass);
     public List<Party> deleteParty(String id);

@@ -7,11 +7,11 @@ angular.module('main')
         controller: 'MyPartiesCtrl'
     })
     .when('/party/create', {
-        templateUrl: (RESOURCES.IS_MOBILE)?'party/mobile/createParty.html':'party/desktop/createParty.html',
+        templateUrl: (RESOURCES.IS_MOBILE)?'party/desktop/createParty.html':'party/desktop/createParty.html',
         controller: 'CreatePartyCtrl'
     })
     .when('/party/edit/:partyId', {
-        templateUrl: (RESOURCES.IS_MOBILE)?'party/mobile/editParty.html':'party/desktop/editParty.html',
+        templateUrl: (RESOURCES.IS_MOBILE)?'party/desktop/editParty.html':'party/desktop/editParty.html',
         controller: 'EditPartyCtrl'
     });
 }])
@@ -19,8 +19,6 @@ angular.module('main')
 .controller('MyPartiesCtrl', ['$scope', 'PartySvc', 'ConfirmDialogSvc', function ($scope, partySvc, confirmDialogSvc) {
     $scope.myPartiesContext = {};
     $scope.name = null;
-    $scope.characterClass = null;
-    $scope.characterClasses = ["BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
     
     partySvc.getParties().then(function(result) {
         $scope.myPartiesContext = result.data;
@@ -47,7 +45,8 @@ angular.module('main')
 }])
 
 .controller('EditPartyCtrl', ['$scope', 'PartySvc', 'PartyState', 'RESOURCES', '$routeParams', 'clipboard', 'ConfirmDialogSvc', function ($scope, partySvc, partyState, RESOURCES, $routeParams, clipboard, confirmDialogSvc) {
-    $scope.difficulties = ["NONLETHAL", "NORMAL", "HARDCORE", "NIGHTMARE", "EPIC"];
+    //$scope.difficulties = ["NON_LETHAL", "NORMAL", "HARDCORE", "NIGHTMARE", "EPIC"];
+    $scope.difficulties = [{"id":"NON_LETHAL","name":"Non Lethal"},{"id":"NORMAL","name":"Normal"},{"id":"HARDCORE","name":"Hardcore"},{"id":"NIGHTMARE","name":"Nightmare"},{"id":"EPIC","name":"Epic"}];
     $scope.partyContext = partyState.get();
     
     partySvc.getParty($routeParams.partyId).then(function(result) {
@@ -71,10 +70,11 @@ angular.module('main')
         });
     };
     
-    $scope.updateDifficulty = function(){
-        /*partySvc.getCards($scope.selectedSet, $scope.selectedLanguage, clearQty).then(function(response) {
-            $scope.data = response.data;
-        });*/
+    $scope.updateDifficulty = function(partyId, difficulty){
+        partySvc.updateDifficulty(partyId, difficulty).then(function(result) {
+            partyState.setContext(result.data);
+            $scope.partyContext = partyState.get();
+        });
     };
 }])
 
@@ -121,6 +121,14 @@ angular.module('main')
     
     partySvc.getSelectableCharacters = function(userid, cClass) {
         return $http.get(RESOURCES.REST_BASE_URL + '/party/selectablecharacters?userid=' + userid + '&class=' + cClass)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    partySvc.updateDifficulty = function(id, difficulty) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/party/' + id + '/difficulty?difficulty=' + difficulty)
             .catch(function(response) {
                 errorDialogSvc.showError(response);
                 return($q.reject(response));

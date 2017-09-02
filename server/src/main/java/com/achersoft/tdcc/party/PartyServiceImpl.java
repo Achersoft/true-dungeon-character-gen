@@ -46,9 +46,13 @@ public class PartyServiceImpl implements PartyService {
         PartyDetails details = PartyDetails.builder()
                 .id(party.getId())
                 .initiative(0)
+                .editable(false)
                 .difficulty(party.getDifficulty())
                 .name(party.getName())
                 .build();
+        
+        if(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(party.getUserId()))
+            details.setEditable(true);
         
         if(party.getBarbarian() != null) {
             details.setBarbarian(getCharacterInfo(party.getBarbarian(), enhancements));
@@ -219,6 +223,12 @@ public class PartyServiceImpl implements PartyService {
     }
     
     @Override
+    public PartyDetails updatePartyDifficulty(String id, Difficulty difficulty) {
+        mapper.updatePartyDifficulty(id, difficulty);
+        return getParty(id);
+    }
+            
+    @Override
     public PartyDetails addPartyCharacter(String id, String characterId) {
         if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(mapper.getParty(id).getUserId())))
             throw new InvalidDataException("Operation is not allowed. Party does not belong to logged in user."); 
@@ -339,7 +349,7 @@ public class PartyServiceImpl implements PartyService {
         // Check CoA
         enhancements.setCharmOfAwareness(enhancements.getCharmOfAwareness()+cd.getStats().getInitiative());
        
-        if(!userPrincipalProvider.getUserPrincipal().getSub().equals(cd.getUserId()))
+        if(userPrincipalProvider.getUserPrincipal().getSub() != null && !userPrincipalProvider.getUserPrincipal().getSub().equals(cd.getUserId()))
             pc.setUserName(cd.getUsername());
                 
         return pc;

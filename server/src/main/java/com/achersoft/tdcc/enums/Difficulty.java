@@ -1,7 +1,7 @@
 package com.achersoft.tdcc.enums;
 
 public enum Difficulty {
-    NONLETHAL,
+    NON_LETHAL,
     NORMAL,
     HARDCORE,
     NIGHTMARE,

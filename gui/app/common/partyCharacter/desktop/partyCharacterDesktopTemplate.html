@@ -5,7 +5,7 @@
             <button ng-if="editable" type="button" class="btn btn-default" ng-click="openModal()" style="margin-top:6px;height:50px;width:175px;font-weight:bold;border-right-width: 5px;border-bottom-width: 5px;">
                 Add {{characterClass | characterclassformat}}
             </button>
-            <span ng-if="!editable" style="font-weight:bold;font-size:20px;text-align:center;color:white;padding-top: 35px;vertical-align:middle;">
+            <span ng-if="!editable" style="font-weight:bold;font-size:20px;text-align:center;color:white;padding-top:35px;vertical-align:middle;">
                 No {{characterClass | characterclassformat}} Selected
             </span>
         </div>
@@ -13,7 +13,7 @@
     <div ng-if="model !== null" style="padding-right:0px;padding-left:0px;width:1218px">
         <div style="display:flex">
             <div style="width:50px;height:75px;">
-                <a ng-click="removeCharacterFromParty(characterClass)" href=""><span class="fa fa-close" style="color:grey;font-size:50px;margin-top:12px;margin-right:5px"></span></a>
+                <a ng-if="editable" ng-click="removeCharacterFromParty(characterClass)" href=""><span class="fa fa-close" style="color:grey;font-size:50px;margin-top:12px;margin-right:5px"></span></a>
             </div>
             <div style="width:175px;height:75px;border:3px solid black;border-right-width: 0px;">
                 <div style="display:flex;width:175px;">

@@ -1,5 +1,6 @@
 package com.achersoft.tdcc.party.persistence;
 
+import com.achersoft.tdcc.enums.Difficulty;
 import com.achersoft.tdcc.party.dao.Party;
 import com.achersoft.user.dao.User;
 import java.util.List;
@@ -34,6 +35,7 @@ public interface PartyMapper {
     public void removeRanger(@Param("partyId") String partyId);
     public void removeRogue(@Param("partyId") String partyId);
     public void removeWizard(@Param("partyId") String partyId);
+    public void updatePartyDifficulty(@Param("partyId") String partyId, @Param("difficulty") Difficulty difficulty);
     public void deleteParty(@Param("id") String id, @Param("userId") String userId);
 }
 
