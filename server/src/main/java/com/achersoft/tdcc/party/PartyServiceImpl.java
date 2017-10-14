@@ -4,20 +4,38 @@ import com.achersoft.exception.InvalidDataException;
 import com.achersoft.security.providers.UserPrincipalProvider;
 import com.achersoft.tdcc.character.CharacterService;
 import com.achersoft.tdcc.character.dao.CharacterDetails;
+import com.achersoft.tdcc.character.dao.CharacterItem;
 import com.achersoft.tdcc.character.persistence.CharacterMapper;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.enums.Difficulty;
+import com.achersoft.tdcc.enums.Slot;
+import com.achersoft.tdcc.enums.SlotStatus;
 import com.achersoft.tdcc.party.dao.Party;
 import com.achersoft.tdcc.party.dao.PartyCharacter;
 import com.achersoft.tdcc.party.dao.PartyDetails;
 import com.achersoft.tdcc.party.dao.PartyEnhancements;
 import com.achersoft.tdcc.party.dao.SelectableCharacters;
 import com.achersoft.tdcc.party.persistence.PartyMapper;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfImage;
+import com.itextpdf.text.pdf.PdfIndirectObject;
+import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.core.StreamingOutput;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(rollbackFor = Exception.class)
@@ -305,6 +323,42 @@ public class PartyServiceImpl implements PartyService {
     }
     
     @Override
+    public StreamingOutput exportPartyPdf(String id) {
+        final PartyDetails party = getParty(id);
+        return (OutputStream out) -> {
+            try {
+                Resource pdfFile = new ClassPathResource("party.pdf");
+                PdfReader reader = new PdfReader(pdfFile.getURL());
+                PdfStamper stamper = new PdfStamper(reader, out);
+                AcroFields fields = stamper.getAcroFields();
+                //System.err.println(fields.getFields().keySet());
+                
+                partyCardSetDetails("barb", party.getBarbarian(),fields);
+                partyCardSetDetails("bard", party.getBard(),fields);
+                partyCardSetDetails("cleric", party.getCleric(),fields);
+                partyCardSetDetails("druid", party.getDruid(),fields);
+                partyCardSetDetails("dfighter", party.getDwarfFighter(),fields);
+                partyCardSetDetails("fighter", party.getFighter(),fields);
+                partyCardSetDetails("monk", party.getMonk(),fields);
+                partyCardSetDetails("paladin", party.getPaladin(),fields);
+                partyCardSetDetails("ewizard", party.getElfWizard(),fields);
+                partyCardSetDetails("ranger", party.getRanger(),fields);
+                partyCardSetDetails("rogue", party.getRogue(),fields);
+                partyCardSetDetails("wizard", party.getWizard(),fields);
+                
+                fields.setField("initiative", Integer.toString(party.getInitiative()));
+
+                fields.setGenerateAppearances(true);
+                stamper.setFormFlattening(true);
+                stamper.close();
+                reader.close();
+            } catch (DocumentException ex) {
+                throw new IOException(ex);
+            }
+        };
+    }
+    
+    @Override
     public SelectableCharacters getSelectableCharacters(String userid, CharacterClass cClass) {
         return SelectableCharacters.builder()
                 .characters(characterMapper.getCharactersClass(userid, cClass))
@@ -459,6 +513,26 @@ public class PartyServiceImpl implements PartyService {
             pc.setUserName(cd.getUsername());
                 
         return pc;
+    }
+    
+    private void partyCardSetDetails(String prefix,PartyCharacter character, AcroFields fields) throws IOException, DocumentException{
+        if(character != null) {
+            fields.setField(prefix+"MeleeHit", Integer.toString(character.getMeleeHit()));
+            fields.setField(prefix+"MeleeDamage", Integer.toString(character.getMeleeDmg()));
+            fields.setField(prefix+"MeleeAC", Integer.toString(character.getMeleeAC()));
+            fields.setField(prefix+"RangeHit", Integer.toString(character.getRangeHit()));
+            fields.setField(prefix+"RangeDamage", Integer.toString(character.getRangeDmg()));
+            fields.setField(prefix+"RangeAC", Integer.toString(character.getRangeAC()));
+            fields.setField(prefix+"RangeBonusAC", Integer.toString(character.getRangeMissileAC()));
+            fields.setField(prefix+"Fort", Integer.toString(character.getFort()));
+            fields.setField(prefix+"Reflex", Integer.toString(character.getReflex()));
+            fields.setField(prefix+"Will", Integer.toString(character.getWill()));
+            fields.setField(prefix+"SpellDamage", Integer.toString(character.getSpellDmg()));
+            fields.setField(prefix+"SpellHeal", Integer.toString(character.getSpellHeal()));
+            fields.setField(prefix+"SpellResist", Integer.toString(character.getSpellResist()));
+            fields.setField(prefix+"TreasureHigh", Integer.toString(character.getTreasure()/10));
+            fields.setField(prefix+"TreasureLow", Integer.toString(character.getTreasure()%10));
+        }
     }
  
 }

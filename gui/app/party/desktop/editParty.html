@@ -3,12 +3,17 @@
         <div class="col-md-5">
             <h2>{{partyContext.name}}</h2>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-3">
             <label uib-tooltip="" tooltip-trigger="mouseenter" tooltip-popup-delay='500' for="difficultySelect"> </label>
             <select class="form-control" id="difficultySelect" ng-disabled="!partyContext.editable" name="difficultySelect" ng-change="updateDifficulty(partyContext.id, partyContext.difficulty)" ng-model="partyContext.difficulty" ng-options="difficulty.id as difficulty.name for difficulty in difficulties"></select>
         </div>
         <div class="col-md-2">
             <h2 style="text-align:right">Initiative: {{partyContext.initiative}}</h2>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary" style="margin-top: 20px;" ng-click="exportToPDF()">
+                Download Party as PDF 
+            </button>
         </div>
     </div>
     <h2 style="border-bottom:1pt solid black;margin-bottom:15px;margin-top:0px"></h2>

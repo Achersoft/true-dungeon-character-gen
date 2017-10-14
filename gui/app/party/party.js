@@ -76,6 +76,16 @@ angular.module('main')
             $scope.partyContext = partyState.get();
         });
     };
+    
+    $scope.exportToPDF = function() {
+        partySvc.exportToPDF($scope.partyContext.id).then(function(response) {
+            //console.log(response);
+            var blob = new Blob([response.data], {type:"blob"});
+            //console.log(blob);
+            //change download.pdf to the name of whatever you want your file to be
+            saveAs(blob, $scope.partyContext.name + ".pdf");
+        });
+    };
 }])
 
 .factory('PartyState', [
@@ -153,6 +163,14 @@ angular.module('main')
     
     partySvc.deleteParty = function(id) {
         return $http.delete(RESOURCES.REST_BASE_URL + '/party/' + id)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    partySvc.exportToPDF = function(id) {
+        return $http.get(RESOURCES.REST_BASE_URL + '/party/pdf/' + id, {responseType: 'arraybuffer'})
             .catch(function(response) {
                 errorDialogSvc.showError(response);
                 return($q.reject(response));

@@ -20,6 +20,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.StreamingOutput;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Path("/party")
@@ -88,6 +89,13 @@ public class PartyRestService {
     @Produces({MediaType.APPLICATION_JSON})	
     public List<Party> deleteParty(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
         return partyService.deleteParty(id);
+    }
+    
+    @GET 
+    @Path("/pdf/{id}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public StreamingOutput getPDF(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
+        return partyService.exportPartyPdf(id);
     }
 }
 
