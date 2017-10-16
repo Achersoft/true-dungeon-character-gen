@@ -515,7 +515,7 @@ public class PartyServiceImpl implements PartyService {
         return pc;
     }
     
-    private void partyCardSetDetails(String prefix,PartyCharacter character, AcroFields fields, PdfStamper stamper) throws IOException, DocumentException{
+    private void partyCardSetDetails(String prefix,PartyCharacter character, AcroFields fields, PdfStamper stamper) throws IOException, DocumentException {
         if(character != null) {
             fields.setField(prefix+"MeleeHit", Integer.toString(character.getMeleeHit()));
             fields.setField(prefix+"MeleeDamage", Integer.toString(character.getMeleeDmg()));
@@ -532,173 +532,307 @@ public class PartyServiceImpl implements PartyService {
             fields.setField(prefix+"SpellResist", Integer.toString(character.getSpellResist()));
             fields.setField(prefix+"TreasureHigh", Integer.toString(character.getTreasure()/10));
             fields.setField(prefix+"TreasureLow", Integer.toString(character.getTreasure()%10));
-            
-            Image cold= Image.getInstance(new ClassPathResource("cold.png").getURL());
-            Image shock = Image.getInstance(new ClassPathResource("shock.png").getURL());
-            Image sonic = Image.getInstance(new ClassPathResource("sonic.png").getURL());
-            Image darkrift = Image.getInstance(new ClassPathResource("darkrift.png").getURL());
-            Image fire = Image.getInstance(new ClassPathResource("fire.png").getURL());
-            Image eldritch = Image.getInstance(new ClassPathResource("eldritch.png").getURL());
-            Image poison = Image.getInstance(new ClassPathResource("poison.png").getURL());
-            Image sacred = Image.getInstance(new ClassPathResource("sacred.png").getURL());
-            Image coldHighlight = Image.getInstance(new ClassPathResource("cold-c.png").getURL());
-            Image shockHighlight = Image.getInstance(new ClassPathResource("shock-c.png").getURL());
-            Image sonicHighlight = Image.getInstance(new ClassPathResource("sonic-c.png").getURL());
-            Image darkriftHighlight = Image.getInstance(new ClassPathResource("darkrift-c.png").getURL());
-            Image fireHighlight = Image.getInstance(new ClassPathResource("fire-c.png").getURL());
-            Image eldritchHighlight = Image.getInstance(new ClassPathResource("eldritch-c.png").getURL());
-            Image poisonHighlight = Image.getInstance(new ClassPathResource("poison-c.png").getURL());
-            Image sacredHighlight = Image.getInstance(new ClassPathResource("sacred-c.png").getURL());
-            Image check = Image.getInstance(new ClassPathResource("check.png").getURL());
-            PdfContentByte over = stamper.getOverContent(1);
-            
-            Image meleeCold = character.isMeleeCold()?coldHighlight:cold;
-            PdfImage stream = new PdfImage(meleeCold, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            PdfIndirectObject ref = stamper.getWriter().addToBody(stream);
-            meleeCold.setDirectReference(ref.getIndirectReference());
-            meleeCold.scaleToFit(8,8);
-            
-            Image meleeShock = character.isMeleeShock()?shockHighlight:shock;
-            stream = new PdfImage(meleeShock, "", null);
+        }
+        
+        if(character == null)
+            character = PartyCharacter.builder()
+                    .meleeCold(false)
+                    .meleeShock(false)
+                    .meleeSonic(false)
+                    .meleeDarkrift(false)
+                    .meleeFire(false)
+                    .meleeEldritch(false)
+                    .meleePoison(false)
+                    .meleeSacred(false)
+                    .rangeCold(false)
+                    .rangeShock(false)
+                    .rangeSonic(false)
+                    .rangeDarkrift(false)
+                    .rangeFire(false)
+                    .rangeEldritch(false)
+                    .rangePoison(false)
+                    .rangeSacred(false)
+                    .retCold(false)
+                    .retShock(false)
+                    .retSonic(false)
+                    .retDarkrift(false)
+                    .retFire(false)
+                    .retEldritch(false)
+                    .retPoison(false)
+                    .retSacred(false)
+                    .build();
+        
+        Image cold= Image.getInstance(new ClassPathResource("cold.png").getURL());
+        Image shock = Image.getInstance(new ClassPathResource("shock.png").getURL());
+        Image sonic = Image.getInstance(new ClassPathResource("sonic.png").getURL());
+        Image darkrift = Image.getInstance(new ClassPathResource("darkrift.png").getURL());
+        Image fire = Image.getInstance(new ClassPathResource("fire.png").getURL());
+        Image eldritch = Image.getInstance(new ClassPathResource("eldritch.png").getURL());
+        Image poison = Image.getInstance(new ClassPathResource("poison.png").getURL());
+        Image sacred = Image.getInstance(new ClassPathResource("sacred.png").getURL());
+        Image coldHighlight = Image.getInstance(new ClassPathResource("cold-c.png").getURL());
+        Image shockHighlight = Image.getInstance(new ClassPathResource("shock-c.png").getURL());
+        Image sonicHighlight = Image.getInstance(new ClassPathResource("sonic-c.png").getURL());
+        Image darkriftHighlight = Image.getInstance(new ClassPathResource("darkrift-c.png").getURL());
+        Image fireHighlight = Image.getInstance(new ClassPathResource("fire-c.png").getURL());
+        Image eldritchHighlight = Image.getInstance(new ClassPathResource("eldritch-c.png").getURL());
+        Image poisonHighlight = Image.getInstance(new ClassPathResource("poison-c.png").getURL());
+        Image sacredHighlight = Image.getInstance(new ClassPathResource("sacred-c.png").getURL());
+        Image check = Image.getInstance(new ClassPathResource("check.png").getURL());
+        PdfContentByte over = stamper.getOverContent(1);
+
+        Image meleeCold = character.isMeleeCold()?coldHighlight:cold;
+        PdfImage stream = new PdfImage(meleeCold, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        PdfIndirectObject ref = stamper.getWriter().addToBody(stream);
+        meleeCold.setDirectReference(ref.getIndirectReference());
+        meleeCold.scaleToFit(8,8);
+
+        Image meleeShock = character.isMeleeShock()?shockHighlight:shock;
+        stream = new PdfImage(meleeShock, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        meleeShock.setDirectReference(ref.getIndirectReference());
+        meleeShock.scaleToFit(8,8);
+
+        Image meleeSonic = character.isMeleeSonic()?sonicHighlight:sonic;
+        stream = new PdfImage(meleeSonic, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        meleeSonic.setDirectReference(ref.getIndirectReference());
+        meleeSonic.scaleToFit(8,8);
+
+        Image meleeDarkrift = character.isMeleeDarkrift()?darkriftHighlight:darkrift;
+        stream = new PdfImage(meleeDarkrift, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        meleeDarkrift.setDirectReference(ref.getIndirectReference());
+        meleeDarkrift.scaleToFit(8,8);
+
+        Image meleeFire = character.isMeleeFire()?fireHighlight:fire;
+        stream = new PdfImage(meleeFire, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        meleeFire.setDirectReference(ref.getIndirectReference());
+        meleeFire.scaleToFit(8,8);
+
+        Image meleeEldritch = character.isMeleeEldritch()?eldritchHighlight:eldritch;
+        stream = new PdfImage(meleeEldritch, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        meleeEldritch.setDirectReference(ref.getIndirectReference());
+        meleeEldritch.scaleToFit(8,8);
+
+        Image meleePoison = character.isMeleePoison()?poisonHighlight:poison;
+        stream = new PdfImage(meleePoison, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        meleePoison.setDirectReference(ref.getIndirectReference());
+        meleePoison.scaleToFit(8,8);
+
+        Image meleeSacred = character.isMeleeSacred()?sacredHighlight:sacred;
+        stream = new PdfImage(meleeSacred, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        meleeSacred.setDirectReference(ref.getIndirectReference());
+        meleeSacred.scaleToFit(8,8);
+
+        Image rangeCold = character.isRangeCold()?coldHighlight:cold;
+        stream = new PdfImage(rangeCold, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        rangeCold.setDirectReference(ref.getIndirectReference());
+        rangeCold.scaleToFit(8,8);
+
+        Image rangeShock = character.isRangeShock()?shockHighlight:shock;
+        stream = new PdfImage(rangeShock, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        rangeShock.setDirectReference(ref.getIndirectReference());
+        rangeShock.scaleToFit(8,8);
+
+        Image rangeSonic = character.isRangeSonic()?sonicHighlight:sonic;
+        stream = new PdfImage(rangeSonic, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        rangeSonic.setDirectReference(ref.getIndirectReference());
+        rangeSonic.scaleToFit(8,8);
+
+        Image rangeDarkrift = character.isRangeDarkrift()?darkriftHighlight:darkrift;
+        stream = new PdfImage(rangeDarkrift, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        rangeDarkrift.setDirectReference(ref.getIndirectReference());
+        rangeDarkrift.scaleToFit(8,8);
+
+        Image rangeFire = character.isRangeFire()?fireHighlight:fire;
+        stream = new PdfImage(rangeFire, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        rangeFire.setDirectReference(ref.getIndirectReference());
+        rangeFire.scaleToFit(8,8);
+
+        Image rangeEldritch = character.isRangeEldritch()?eldritchHighlight:eldritch;
+        stream = new PdfImage(rangeEldritch, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        rangeEldritch.setDirectReference(ref.getIndirectReference());
+        rangeEldritch.scaleToFit(8,8);
+
+        Image rangePoison = character.isRangePoison()?poisonHighlight:poison;
+        stream = new PdfImage(rangePoison, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        rangePoison.setDirectReference(ref.getIndirectReference());
+        rangePoison.scaleToFit(8,8);
+
+        Image rangeSacred = character.isRangeSacred()?sacredHighlight:sacred;
+        stream = new PdfImage(rangeSacred, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        rangeSacred.setDirectReference(ref.getIndirectReference());
+        rangeSacred.scaleToFit(8,8);
+
+        Image retCold = character.isRetCold()?coldHighlight:cold;
+        stream = new PdfImage(retCold, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        retCold.setDirectReference(ref.getIndirectReference());
+        retCold.scaleToFit(8,8);
+
+        Image retShock = character.isRetShock()?shockHighlight:shock;
+        stream = new PdfImage(retShock, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        retShock.setDirectReference(ref.getIndirectReference());
+        retShock.scaleToFit(8,8);
+
+        Image retSonic = character.isRetSonic()?sonicHighlight:sonic;
+        stream = new PdfImage(retSonic, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        retSonic.setDirectReference(ref.getIndirectReference());
+        retSonic.scaleToFit(8,8);
+
+        Image retDarkrift = character.isRetDarkrift()?darkriftHighlight:darkrift;
+        stream = new PdfImage(retDarkrift, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        retDarkrift.setDirectReference(ref.getIndirectReference());
+        retDarkrift.scaleToFit(8,8);
+
+        Image retFire = character.isRetFire()?fireHighlight:fire;
+        stream = new PdfImage(retFire, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        retFire.setDirectReference(ref.getIndirectReference());
+        retFire.scaleToFit(8,8);
+
+        Image retEldritch = character.isRetEldritch()?eldritchHighlight:eldritch;
+        stream = new PdfImage(retEldritch, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        retEldritch.setDirectReference(ref.getIndirectReference());
+        retEldritch.scaleToFit(8,8);
+
+        Image retPoison = character.isRetPoison()?poisonHighlight:poison;
+        stream = new PdfImage(retPoison, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        retPoison.setDirectReference(ref.getIndirectReference());
+        retPoison.scaleToFit(8,8);
+
+        Image retSacred = character.isRetSacred()?sacredHighlight:sacred;
+        stream = new PdfImage(retSacred, "", null);
+        stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+        ref = stamper.getWriter().addToBody(stream);
+        retSacred.setDirectReference(ref.getIndirectReference());
+        retSacred.scaleToFit(8,8);
+        
+      //  if(character.isCannotBeSuprised()) {
+            stream = new PdfImage(check, "", null);
             stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
             ref = stamper.getWriter().addToBody(stream);
-            meleeShock.setDirectReference(ref.getIndirectReference());
-            meleeShock.scaleToFit(8,8);
-            
-            Image meleeSonic = character.isMeleeSonic()?sonicHighlight:sonic;
-            stream = new PdfImage(meleeSonic, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            meleeSonic.setDirectReference(ref.getIndirectReference());
-            meleeSonic.scaleToFit(8,8);
-            
-            Image meleeDarkrift = character.isMeleeDarkrift()?darkriftHighlight:darkrift;
-            stream = new PdfImage(meleeDarkrift, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            meleeDarkrift.setDirectReference(ref.getIndirectReference());
-            meleeDarkrift.scaleToFit(8,8);
-                
-            Image meleeFire = character.isMeleeFire()?fireHighlight:fire;
-            stream = new PdfImage(meleeFire, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            meleeFire.setDirectReference(ref.getIndirectReference());
-            meleeFire.scaleToFit(8,8);
-                
-            Image meleeEldritch = character.isMeleeEldritch()?eldritchHighlight:eldritch;
-            stream = new PdfImage(meleeEldritch, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            meleeEldritch.setDirectReference(ref.getIndirectReference());
-            meleeEldritch.scaleToFit(8,8);
-                
-            Image meleePoison = character.isMeleePoison()?poisonHighlight:poison;
-            stream = new PdfImage(meleePoison, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            meleePoison.setDirectReference(ref.getIndirectReference());
-            meleePoison.scaleToFit(8,8);
-                
-            Image meleeSacred = character.isMeleeSacred()?sacredHighlight:sacred;
-            stream = new PdfImage(meleeSacred, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            meleeSacred.setDirectReference(ref.getIndirectReference());
-            meleeSacred.scaleToFit(8,8);
-            
-            Image rangeCold = character.isRangeCold()?coldHighlight:cold;
-            stream = new PdfImage(rangeCold, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            rangeCold.setDirectReference(ref.getIndirectReference());
-            rangeCold.scaleToFit(8,8);
-            
-            Image rangeShock = character.isRangeShock()?shockHighlight:shock;
-            stream = new PdfImage(rangeShock, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            rangeShock.setDirectReference(ref.getIndirectReference());
-            rangeShock.scaleToFit(8,8);
-            
-            Image rangeSonic = character.isRangeSonic()?sonicHighlight:sonic;
-            stream = new PdfImage(rangeSonic, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            rangeSonic.setDirectReference(ref.getIndirectReference());
-            rangeSonic.scaleToFit(8,8);
-            
-            Image rangeDarkrift = character.isRangeDarkrift()?darkriftHighlight:darkrift;
-            stream = new PdfImage(rangeDarkrift, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            rangeDarkrift.setDirectReference(ref.getIndirectReference());
-            rangeDarkrift.scaleToFit(8,8);
-                
-            Image rangeFire = character.isRangeFire()?fireHighlight:fire;
-            stream = new PdfImage(rangeFire, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            rangeFire.setDirectReference(ref.getIndirectReference());
-            rangeFire.scaleToFit(8,8);
-                
-            Image rangeEldritch = character.isRangeEldritch()?eldritchHighlight:eldritch;
-            stream = new PdfImage(rangeEldritch, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            rangeEldritch.setDirectReference(ref.getIndirectReference());
-            rangeEldritch.scaleToFit(8,8);
-                
-            Image rangePoison = character.isRangePoison()?poisonHighlight:poison;
-            stream = new PdfImage(rangePoison, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            rangePoison.setDirectReference(ref.getIndirectReference());
-            rangePoison.scaleToFit(8,8);
-                
-            Image rangeSacred = character.isRangeSacred()?sacredHighlight:sacred;
-            stream = new PdfImage(rangeSacred, "", null);
-            stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
-            ref = stamper.getWriter().addToBody(stream);
-            rangeSacred.setDirectReference(ref.getIndirectReference());
-            rangeSacred.scaleToFit(8,8);
-                
-            if(prefix.equals("barb")) {
-                meleeCold.setAbsolutePosition(241, 534);
-                over.addImage(meleeCold);
-                meleeShock.setAbsolutePosition(241, 524);
-                over.addImage(meleeShock);
-                meleeSonic.setAbsolutePosition(241, 514);
-                over.addImage(meleeSonic);
-                meleeDarkrift.setAbsolutePosition(241, 504);
-                over.addImage(meleeDarkrift);
-                meleeFire.setAbsolutePosition(285, 534);
-                over.addImage(meleeFire);
-                meleeEldritch.setAbsolutePosition(285, 524);
-                over.addImage(meleeEldritch);
-                meleePoison.setAbsolutePosition(285, 514);
-                over.addImage(meleePoison);
-                meleeSacred.setAbsolutePosition(285, 504);
-                over.addImage(meleeSacred);
-                rangeCold.setAbsolutePosition(386, 534);
-                over.addImage(rangeCold);
-                rangeShock.setAbsolutePosition(386, 524);
-                over.addImage(rangeShock);
-                rangeSonic.setAbsolutePosition(386, 514);
-                over.addImage(rangeSonic);
-                rangeDarkrift.setAbsolutePosition(386, 504);
-                over.addImage(rangeDarkrift);
-                rangeFire.setAbsolutePosition(430, 534);
-                over.addImage(rangeFire);
-                rangeEldritch.setAbsolutePosition(430, 524);
-                over.addImage(rangeEldritch);
-                rangePoison.setAbsolutePosition(430, 514);
-                over.addImage(rangePoison);
-                rangeSacred.setAbsolutePosition(430, 504);
-                over.addImage(rangeSacred);
-            }
+            check.setDirectReference(ref.getIndirectReference());
+            check.setAbsolutePosition(688, 520);
+            check.scaleToFit(15,15);
+
+            over = stamper.getOverContent(1);
+            over.addImage(check);
+       // }
+
+        //if(character.isFreeMovement()) {
+             stream = new PdfImage(check, "", null);
+             stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+             ref = stamper.getWriter().addToBody(stream);
+             check.setDirectReference(ref.getIndirectReference());
+             check.setAbsolutePosition(720, 525);
+             check.scaleToFit(17,17);
+             over = stamper.getOverContent(1);
+             over.addImage(check);
+        //}
+
+      //  if(character.isPsychic()) {
+             stream = new PdfImage(check, "", null);
+             stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+             ref = stamper.getWriter().addToBody(stream);
+             check.setDirectReference(ref.getIndirectReference());
+             check.setAbsolutePosition(740, 520);
+             check.scaleToFit(19,19);
+
+             over = stamper.getOverContent(1);
+             over.addImage(check);
+       // }
+
+        if(prefix.equals("barb")) {
+            meleeCold.setAbsolutePosition(241, 534);
+            over.addImage(meleeCold);
+            meleeShock.setAbsolutePosition(241, 524);
+            over.addImage(meleeShock);
+            meleeSonic.setAbsolutePosition(241, 514);
+            over.addImage(meleeSonic);
+            meleeDarkrift.setAbsolutePosition(241, 504);
+            over.addImage(meleeDarkrift);
+            meleeFire.setAbsolutePosition(285, 534);
+            over.addImage(meleeFire);
+            meleeEldritch.setAbsolutePosition(285, 524);
+            over.addImage(meleeEldritch);
+            meleePoison.setAbsolutePosition(285, 514);
+            over.addImage(meleePoison);
+            meleeSacred.setAbsolutePosition(285, 504);
+            over.addImage(meleeSacred);
+            rangeCold.setAbsolutePosition(386, 534);
+            over.addImage(rangeCold);
+            rangeShock.setAbsolutePosition(386, 524);
+            over.addImage(rangeShock);
+            rangeSonic.setAbsolutePosition(386, 514);
+            over.addImage(rangeSonic);
+            rangeDarkrift.setAbsolutePosition(386, 504);
+            over.addImage(rangeDarkrift);
+            rangeFire.setAbsolutePosition(430, 534);
+            over.addImage(rangeFire);
+            rangeEldritch.setAbsolutePosition(430, 524);
+            over.addImage(rangeEldritch);
+            rangePoison.setAbsolutePosition(430, 514);
+            over.addImage(rangePoison);
+            rangeSacred.setAbsolutePosition(430, 504);
+            over.addImage(rangeSacred);
+            retCold.setAbsolutePosition(646, 534);
+            over.addImage(retCold);
+            retShock.setAbsolutePosition(646, 524);
+            over.addImage(retShock);
+            retSonic.setAbsolutePosition(646, 514);
+            over.addImage(retSonic);
+            retDarkrift.setAbsolutePosition(646, 504);
+            over.addImage(retDarkrift);
+            retFire.setAbsolutePosition(668, 534);
+            over.addImage(retFire);
+            retEldritch.setAbsolutePosition(668, 524);
+            over.addImage(retEldritch);
+            retPoison.setAbsolutePosition(668, 514);
+            over.addImage(retPoison);
+            retSacred.setAbsolutePosition(668, 504);
+            over.addImage(retSacred);
         }
     }
- 
 }
