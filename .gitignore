@@ -3,3 +3,7 @@
 /gui/app/components/
 /server/target/
 /gui/bower_components/
+/server/.idea
+/gui/.idea/*.iml
+/gui/.idea
+/server/*.iml

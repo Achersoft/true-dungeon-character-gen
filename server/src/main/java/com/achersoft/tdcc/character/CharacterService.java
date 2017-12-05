@@ -6,12 +6,13 @@ import java.util.List;
 import javax.ws.rs.core.StreamingOutput;
 
 public interface CharacterService {
-    public CharacterDetails getCharacter(String id);
-    public List<CharacterName> getCharacters();
-    public CharacterDetails setTokenSlot(String id, String soltId, String tokenId);
-    public CharacterDetails unequipTokenSlot(String id, String soltId);
-    public List<CharacterName> deleteCharacter(String id);
-    public StreamingOutput exportCharacterPdf(String id);
-    public String exportCharacterHTML(String id);
-    public CharacterDetails validateCharacterItems(String id);
+    CharacterDetails getCharacter(String id);
+    List<CharacterName> getCharacters();
+    CharacterDetails setTokenSlot(String id, String soltId, String tokenId);
+    CharacterDetails unequipTokenSlot(String id, String soltId);
+    List<CharacterName> deleteCharacter(String id);
+    StreamingOutput exportCharacterPdf(String id);
+    String exportCharacterHTML(String id);
+    CharacterDetails validateCharacterItems(String id);
+    CharacterDetails getCharacterMaxLevel(String id);
 }

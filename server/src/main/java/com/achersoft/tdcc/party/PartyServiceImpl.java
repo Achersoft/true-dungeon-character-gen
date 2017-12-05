@@ -75,40 +75,81 @@ public class PartyServiceImpl implements PartyService {
             details.setEditable(true);
         
         if(party.getBarbarian() != null) {
-            details.setBarbarian(getCharacterInfo(party.getBarbarian(), enhancements));
+            details.setBarbarian(getCharacterInfo(characterService.getCharacter(party.getBarbarian()), enhancements));
         }
         if(party.getBard() != null) {
-            details.setBard(getCharacterInfo(party.getBard(), enhancements));
+            details.setBard(getCharacterInfo(characterService.getCharacter(party.getBard()), enhancements));
         }
         if(party.getCleric() != null) {
-            details.setCleric(getCharacterInfo(party.getCleric(), enhancements));
+            details.setCleric(getCharacterInfo(characterService.getCharacter(party.getCleric()), enhancements));
         }
         if(party.getDruid() != null) {
-            details.setDruid(getCharacterInfo(party.getDruid(), enhancements));
+            details.setDruid(getCharacterInfo(characterService.getCharacter(party.getDruid()), enhancements));
         }
         if(party.getDwarfFighter() != null) {
-            details.setDwarfFighter(getCharacterInfo(party.getDwarfFighter(), enhancements));
+            details.setDwarfFighter(getCharacterInfo(characterService.getCharacter(party.getDwarfFighter()), enhancements));
         }
         if(party.getElfWizard() != null) {
-            details.setElfWizard(getCharacterInfo(party.getElfWizard(), enhancements));
+            details.setElfWizard(getCharacterInfo(characterService.getCharacter(party.getElfWizard()), enhancements));
         }
         if(party.getFighter() != null) {
-            details.setFighter(getCharacterInfo(party.getFighter(), enhancements));
+            details.setFighter(getCharacterInfo(characterService.getCharacter(party.getFighter()), enhancements));
         }
         if(party.getMonk() != null) {
-            details.setMonk(getCharacterInfo(party.getMonk(), enhancements));
+            details.setMonk(getCharacterInfo(characterService.getCharacter(party.getMonk()), enhancements));
         }
         if(party.getPaladin() != null) {
-            details.setPaladin(getCharacterInfo(party.getPaladin(), enhancements));
+            details.setPaladin(getCharacterInfo(characterService.getCharacter(party.getPaladin()), enhancements));
         }
         if(party.getRanger() != null) {
-            details.setRanger(getCharacterInfo(party.getRanger(), enhancements));
+            details.setRanger(getCharacterInfo(characterService.getCharacter(party.getRanger()), enhancements));
         }
         if(party.getRogue() != null) {
-            details.setRogue(getCharacterInfo(party.getRogue(), enhancements));
+            details.setRogue(getCharacterInfo(characterService.getCharacter(party.getRogue()), enhancements));
         }
         if(party.getWizard() != null) {
-            details.setWizard(getCharacterInfo(party.getWizard(), enhancements));
+            details.setWizard(getCharacterInfo(characterService.getCharacter(party.getWizard()), enhancements));
+        }
+
+        // Group level enhancing items
+        if(enhancements.isLevelEnhancer()) {
+            enhancements = PartyEnhancements.builder().charmOfAwareness(0).charmOfGoodFortune(0).charmOfSynergy(0).build();
+            if(party.getBarbarian() != null) {
+                details.setBarbarian(getCharacterInfo(characterService.getCharacterMaxLevel(party.getBarbarian()), enhancements));
+            }
+            if(party.getBard() != null) {
+                details.setBard(getCharacterInfo(characterService.getCharacterMaxLevel(party.getBard()), enhancements));
+            }
+            if(party.getCleric() != null) {
+                details.setCleric(getCharacterInfo(characterService.getCharacterMaxLevel(party.getCleric()), enhancements));
+            }
+            if(party.getDruid() != null) {
+                details.setDruid(getCharacterInfo(characterService.getCharacterMaxLevel(party.getDruid()), enhancements));
+            }
+            if(party.getDwarfFighter() != null) {
+                details.setDwarfFighter(getCharacterInfo(characterService.getCharacterMaxLevel(party.getDwarfFighter()), enhancements));
+            }
+            if(party.getElfWizard() != null) {
+                details.setElfWizard(getCharacterInfo(characterService.getCharacterMaxLevel(party.getElfWizard()), enhancements));
+            }
+            if(party.getFighter() != null) {
+                details.setFighter(getCharacterInfo(characterService.getCharacterMaxLevel(party.getFighter()), enhancements));
+            }
+            if(party.getMonk() != null) {
+                details.setMonk(getCharacterInfo(characterService.getCharacterMaxLevel(party.getMonk()), enhancements));
+            }
+            if(party.getPaladin() != null) {
+                details.setPaladin(getCharacterInfo(characterService.getCharacterMaxLevel(party.getPaladin()), enhancements));
+            }
+            if(party.getRanger() != null) {
+                details.setRanger(getCharacterInfo(characterService.getCharacterMaxLevel(party.getRanger()), enhancements));
+            }
+            if(party.getRogue() != null) {
+                details.setRogue(getCharacterInfo(characterService.getCharacterMaxLevel(party.getRogue()), enhancements));
+            }
+            if(party.getWizard() != null) {
+                details.setWizard(getCharacterInfo(characterService.getCharacterMaxLevel(party.getWizard()), enhancements));
+            }
         }
         
         // CoS
@@ -501,8 +542,7 @@ public class PartyServiceImpl implements PartyService {
         return getParties();
     }
 
-    public PartyCharacter getCharacterInfo(String id, PartyEnhancements enhancements) {
-        CharacterDetails cd = characterService.getCharacter(id);
+    public PartyCharacter getCharacterInfo(CharacterDetails cd, PartyEnhancements enhancements) {
         PartyCharacter pc = PartyCharacter.fromCharacterDetails(cd);
 
         // Check GoGF and Averice 
@@ -534,6 +574,11 @@ public class PartyServiceImpl implements PartyService {
         if(cd.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65"))).count() > 0) {
             enhancements.setCharmOfCabal(enhancements.getCharmOfCabal()+1);
             pc.setHasCoC(true);
+        }
+
+        // Check for level boosting items
+        if(cd.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("f44d007c35b18b83e85a1ee183cda08180030012"))).count() > 0) {
+            enhancements.setLevelEnhancer(true);
         }
        
         if(userPrincipalProvider.getUserPrincipal().getSub() == null || !userPrincipalProvider.getUserPrincipal().getSub().equals(cd.getUserId()))

@@ -17,4 +17,5 @@ public class PartyEnhancements {
     int glovesOfCabal = 0;
     int braceletsOfCabal = 0;
     int charmOfCabal = 0;
+    boolean levelEnhancer = false;
 }

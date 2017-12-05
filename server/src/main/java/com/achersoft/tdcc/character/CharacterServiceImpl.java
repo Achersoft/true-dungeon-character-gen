@@ -867,7 +867,7 @@ public class CharacterServiceImpl implements CharacterService {
         chackWeaponAvailability(characterDetails);
         checkSlotModItems(characterDetails);
         addSlotsForFullItems(characterDetails);
-        checkSetItems(characterDetails);
+        checkSetItems(characterDetails, false);
         calculateStats(characterDetails);
         
         // Set Items
@@ -882,6 +882,19 @@ public class CharacterServiceImpl implements CharacterService {
         if(!characterDetails.getNotes().isEmpty())
             mapper.addCharacterNotes(characterDetails.getId(), characterDetails.getNotes());
         
+        return characterDetails;
+    }
+
+    @Override
+    public CharacterDetails getCharacterMaxLevel(String id) {
+        CharacterDetails characterDetails = getCharacter(id);
+
+        chackWeaponAvailability(characterDetails);
+        checkSlotModItems(characterDetails);
+        addSlotsForFullItems(characterDetails);
+        checkSetItems(characterDetails, true);
+        calculateStats(characterDetails);
+
         return characterDetails;
     }
     
@@ -1100,7 +1113,7 @@ public class CharacterServiceImpl implements CharacterService {
         }
     }
     
-    private void checkSetItems(CharacterDetails characterDetails) {
+    private void checkSetItems(CharacterDetails characterDetails, boolean levelBoost) {
         final Map<String, CharacterItem> itemsMap = new HashMap();
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             itemsMap.put(item.getItemId(), item);
@@ -1122,7 +1135,7 @@ public class CharacterServiceImpl implements CharacterService {
         
         // First check if we need to boost character level
         // Charm of Heroism, Medallion of Heroism, Ring of Heroism, Eldrich Set, Kubu’s Coin of Coincidence, Smackdown’s Charm of Comraderie
-        if(itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") || 
+        if(levelBoost || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
         (eldrichCount >= 3 || (eldrichCount >= 2 && (characterDetails.getCharacterClass() == CharacterClass.RANGER || characterDetails.getCharacterClass() == CharacterClass.DRUID))) ||
         itemsMap.containsKey("2f1cfd3d3dbdd218f5cd5bd3935851b7acba5a9c") || itemsMap.containsKey("f44d007c35b18b83e85a1ee183cda08180030012") ||
         mightCount >= 3 || charmingCount >= 3 || itemsMap.containsKey("942078ca2d04f25545a316c123a392c4d5d339fd")) {
