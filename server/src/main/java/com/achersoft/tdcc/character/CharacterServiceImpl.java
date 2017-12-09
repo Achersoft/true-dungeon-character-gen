@@ -16,16 +16,10 @@ import com.achersoft.tdcc.enums.SlotStatus;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.AcroFields;
-import com.itextpdf.text.pdf.PdfAnnotation;
-import com.itextpdf.text.pdf.PdfArray;
-import com.itextpdf.text.pdf.PdfBorderArray;
 import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfDashPattern;
 import com.itextpdf.text.pdf.PdfImage;
 import com.itextpdf.text.pdf.PdfIndirectObject;
 import com.itextpdf.text.pdf.PdfName;
@@ -793,6 +787,9 @@ public class CharacterServiceImpl implements CharacterService {
         if(neck.length() == 0)
             neck.append("Empty");
         characterHtml.append(neck.toString()).append("\n");
+        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BEAD).forEach((item) ->{
+            characterHtml.append("[b]Bead:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+        });
         character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.AOW).forEach((item) ->{
             characterHtml.append("[b]AoW Runestone:[/b] ").append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]").append("\n");
         });

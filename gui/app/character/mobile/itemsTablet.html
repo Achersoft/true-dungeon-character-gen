@@ -31,6 +31,9 @@
     <div class="col-xs-12" style="padding:0" ng-if="characterContext.neck !== null">
         <item-tablet-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="neck" model="characterContext.neck" label="Neck"></item-tablet-selector>
     </div>
+    <div class="col-xs-12" style="padding:0" ng-if="characterContext.bead !== null">
+        <item-tablet-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="bead" model="characterContext.bead" label="Bead"></item-tablet-selector>
+    </div>
     <div class="col-xs-12" style="padding:0" ng-if="characterContext.aow !== null">
         <item-tablet-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="aow" model="characterContext.aow" label="AoW Runestone"></item-tablet-selector>
     </div>

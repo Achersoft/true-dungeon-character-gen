@@ -35,7 +35,7 @@ angular.module('main')
 .controller('CharacterCreationCtrl', ['$scope', 'CharacterSvc', '$location', '$route', function ($scope, characterSvc, $location, $route) {
     $scope.name = null;
     $scope.characterClass = null;
-    $scope.characterClasses = ["BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
+    $scope.characterClasses = ["BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "MONK", "PALADIN", "RANGER", "ROGUE", "WIZARD"];
 
     $scope.characterClassSelected =  function(charClass){
         return charClass === $scope.characterClass;

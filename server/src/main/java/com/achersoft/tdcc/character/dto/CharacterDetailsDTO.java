@@ -24,6 +24,7 @@ public class CharacterDetailsDTO {
     public CharacterItemDTO eyes;
     public CharacterItemDTO leftEar;
     public CharacterItemDTO rightEar;
+    public CharacterItemDTO bead;
     public CharacterItemDTO neck;
     public CharacterItemDTO aow;
     public CharacterItemDTO torso;
@@ -87,6 +88,8 @@ public class CharacterDetailsDTO {
             }
             if(item.getSlot() == Slot.NECK)
                 build.neck = CharacterItemDTO.fromDAO(item);
+            if(item.getSlot() == Slot.BEAD)
+                build.bead = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.AOW)
                 build.aow = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.TORSO)

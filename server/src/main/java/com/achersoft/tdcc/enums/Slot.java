@@ -7,6 +7,7 @@ public enum Slot {
     RANGE_OFFHAND("Range Offhand"),
     INSTRUMENT("Instrument"),
     HEAD("Head"),
+    BEAD("Bead"),
     EYES("Eyes"),
     EAR("Ear"),
     NECK("Neck"),

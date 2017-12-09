@@ -15,7 +15,7 @@ angular.module('main')
 .controller('TokenManagementCtrl', ['$scope', 'TokenAdminState', 'TokenAdminSvc', '$location', '$route', function ($scope, tokenAdminState, tokenAdminSvc, $location, $route) {
     $scope.search = tokenAdminState.reset();
     $scope.tokenUsability = ["ALL", "BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
-    $scope.tokenSlots = ["BACK", "CHARM", "EAR", "EYES", "FEET", "FIGURINE", "FINGER", "HANDS", "HEAD", "INSTRUMENT", "IOUNSTONE", "LEGS", "MAINHAND", 
+    $scope.tokenSlots = ["BACK", "BEAD", "CHARM", "EAR", "EYES", "FEET", "FIGURINE", "FINGER", "HANDS", "HEAD", "INSTRUMENT", "IOUNSTONE", "LEGS", "MAINHAND", 
         "NECK", "OFFHAND", "RUNESTONE", "SHINS", "SHIRT", "SLOTLESS", "TORSO", "WAIST", "WRIST"];
     $scope.tokenRarities = ["COMMON", "UNCOMMON", "RARE", "ULTRARARE", "ENHANCED", "EXALTED", "RELIC", "LEGENDARY", "ELDRITCH", "PREMIUM", "ARTIFACT", "PLAYER_REWARD"];
     $scope.tokenConditionals = ["NONE", "DEXTERITY_18", "DEXTERITY_20", "INTELLECT_20", "WISDOM_20", "WEAPON_2H", "WEAPON_1H", "WEAPON_RANGED", "WEAPON_RANGED_2H", "MAY_NOT_USE_SHIELDS", "STRENGTH_24", "NOT_WITH_COA", "NO_OTHER_TREASURE", "NOT_WITH_PRO_SCROLL", "NOT_WITH_ROSP", "IRON_WEAPON", "SLING", "THRALL_WEAPON"];
@@ -65,7 +65,7 @@ angular.module('main')
 .controller('TokenEditCtrl', ['$scope', 'TokenAdminState', 'TokenAdminSvc', '$location', '$route', function ($scope, tokenAdminState, tokenAdminSvc, $location, $route) {
     $scope.search = tokenAdminState.reset();
     $scope.tokenUsability = ["ALL", "BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "WIZARD", "MONK", "PALADIN", "RANGER", "ROGUE"];
-    $scope.tokenSlots = ["BACK", "CHARM", "EAR", "EYES", "FEET", "FIGURINE", "FINGER", "HANDS", "HEAD", "INSTRUMENT", "IOUNSTONE", "LEGS", "MAINHAND", 
+    $scope.tokenSlots = ["BACK", "BEAD", "CHARM", "EAR", "EYES", "FEET", "FIGURINE", "FINGER", "HANDS", "HEAD", "INSTRUMENT", "IOUNSTONE", "LEGS", "MAINHAND", 
         "NECK", "OFFHAND", "RUNESTONE", "SHINS", "SHIRT", "SLOTLESS", "TORSO", "WAIST", "WRIST"];
     $scope.tokenRarities = ["COMMON", "UNCOMMON", "RARE", "ULTRARARE", "ENHANCED", "EXALTED", "RELIC", "LEGENDARY", "ELDRITCH", "PREMIUM", "ARTIFACT", "PLAYER_REWARD"];
     $scope.tokenConditionals = ["NONE", "DEXTERITY_18", "DEXTERITY_20", "INTELLECT_20", "WISDOM_20", "WEAPON_2H", "WEAPON_1H", "WEAPON_RANGED", "WEAPON_RANGED_2H", "MAY_NOT_USE_SHIELDS", "STRENGTH_24", "NOT_WITH_COA", "NO_OTHER_TREASURE", "NOT_WITH_PRO_SCROLL", "NOT_WITH_ROSP", "IRON_WEAPON", "SLING", "THRALL_WEAPON"];

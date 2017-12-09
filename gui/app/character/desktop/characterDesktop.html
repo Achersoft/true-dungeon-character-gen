@@ -50,6 +50,12 @@
                     </div>
                 </div>
                 <div style="display:flex;margin-top:10px">
+                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Bead:</label>
+                    <div style="padding:0;width:60px">
+                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right" set-token="setTokenSlot" unequip="unequipItem" element-id="bead" model="characterContext.bead" label="Bead"></token-selector>
+                    </div>
+                </div>
+                <div style="display:flex;margin-top:10px">
                     <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Wrists:</label>
                     <div style="padding:0;width:60px">
                         <img ng-if="characterContext.wrists === null" class="img-thumbnail img-responsive img-circle" style="border:none;" src="images/nullToken.jpg" alt="images/nullToken.jpg" width="60px" >
@@ -272,6 +278,9 @@
         </div>
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.neck !== null">
             <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="neck" model="characterContext.neck" label="Neck"></item-desktop-selector>
+        </div>
+        <div class="col-xs-12" style="padding:0" ng-if="characterContext.bead !== null">
+            <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="bead" model="characterContext.bead" label="Bead"></item-desktop-selector>
         </div>
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.aow !== null">
             <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="aow" model="characterContext.aow" label="AoW Runestone"></item-desktop-selector>

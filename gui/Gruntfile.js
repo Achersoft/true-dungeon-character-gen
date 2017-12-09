@@ -5,6 +5,14 @@ module.exports = function (grunt) {
             build:{
                 cwd:'app',
                 src:['**'],
+                dest:'/Program Files (x86)/Apache Software Foundation/Apache Tomcat/webapps/tdcc/',
+                expand:true
+            }
+        },
+        copyLaptop:{
+            build:{
+                cwd:'app',
+                src:['**'],
                 dest:'/Program Files/Apache Software Foundation/Tomcat 8.5/webapps/tdcc/',
                 expand:true
             }
@@ -20,6 +28,6 @@ module.exports = function (grunt) {
     grunt.registerTask(
         'build',
         'Compiles all the assets and copies the files to the build directory.',
-       [ 'clean', 'copy' ]
+       [ 'clean', 'copy', 'copyLaptop' ]
     );
 };
