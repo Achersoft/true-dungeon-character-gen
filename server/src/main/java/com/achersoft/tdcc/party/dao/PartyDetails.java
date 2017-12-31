@@ -16,6 +16,7 @@ public class PartyDetails {
     private String name;
     private Difficulty difficulty;
     private int initiative = 0;  
+    private int size;
     private PartyCharacter barbarian;
     private PartyCharacter bard;
     private PartyCharacter cleric;

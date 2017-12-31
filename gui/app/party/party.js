@@ -11,7 +11,7 @@ angular.module('main')
         controller: 'CreatePartyCtrl'
     })
     .when('/party/edit/:partyId', {
-        templateUrl: (RESOURCES.IS_MOBILE)?'party/desktop/editParty.html':'party/desktop/editParty.html',
+        templateUrl: (RESOURCES.IS_MOBILE)?'party/mobile/editParty.html':'party/desktop/editParty.html',
         controller: 'EditPartyCtrl'
     });
 }])
@@ -45,7 +45,7 @@ angular.module('main')
 }])
 
 .controller('EditPartyCtrl', ['$scope', 'PartySvc', 'PartyState', 'RESOURCES', '$routeParams', 'clipboard', 'ConfirmDialogSvc', function ($scope, partySvc, partyState, RESOURCES, $routeParams, clipboard, confirmDialogSvc) {
-    //$scope.difficulties = ["NON_LETHAL", "NORMAL", "HARDCORE", "NIGHTMARE", "EPIC"];
+    $scope.tabIndex = 0;
     $scope.difficulties = [{"id":"NON_LETHAL","name":"Non Lethal"},{"id":"NORMAL","name":"Normal"},{"id":"HARDCORE","name":"Hardcore"},{"id":"NIGHTMARE","name":"Nightmare"},{"id":"EPIC","name":"Epic"}];
     $scope.partyContext = partyState.get();
     

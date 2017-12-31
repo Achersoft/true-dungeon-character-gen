@@ -323,6 +323,33 @@ public class PartyServiceImpl implements PartyService {
             }
         }
         
+        int size = 0;
+        if(party.getBarbarian()!= null)
+            size++;
+        if(party.getBard()!= null)
+            size++;
+        if(party.getCleric()!= null)
+            size++;
+        if(party.getDruid()!= null)
+            size++;
+        if(party.getDwarfFighter()!= null)
+            size++;
+        if(party.getElfWizard()!= null)
+            size++;
+        if(party.getFighter()!= null)
+            size++;
+        if(party.getMonk()!= null)
+            size++;
+        if(party.getPaladin()!= null)
+            size++;
+        if(party.getRanger()!= null)
+            size++;
+        if(party.getRogue()!= null)
+            size++;
+        if(party.getWizard() != null)
+            size++;
+        details.setSize(size);
+        
         return details;
     }
 

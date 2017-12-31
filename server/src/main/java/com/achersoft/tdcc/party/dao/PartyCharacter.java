@@ -14,6 +14,7 @@ public class PartyCharacter {
     private String id;
     private String name;
     private String userName;
+    private int level = 0;
     private int health = 0;
     private int meleeHit = 0;
     private int meleeDmg = 0;
@@ -71,6 +72,7 @@ public class PartyCharacter {
         return PartyCharacter.builder()
                 .id(cd.getId())
                 .name(cd.getName())
+                .level(cd.getStats().getLevel())
                 .health(cd.getStats().getHealth())
                 .meleeHit(cd.getStats().getMeleeHit())
                 .meleeDmg(cd.getStats().getMeleeDmg())
