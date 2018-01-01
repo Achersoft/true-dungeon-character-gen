@@ -22,13 +22,19 @@
             </div> 
 
             <div class="col-md-4">
-                <label class="checkbox-inline" style="padding-top: 35px"><input type="checkbox" ng-model="user.locked">User is Locked?</label>
+                <label>Email</label>
+                <input ng-model="user.email" type="text" class="form-control" id="userEmail" name="userEmail" placeholder="Email" ng-maxlength="255"/>
             </div> 
 
             <div class="col-md-4" >
                 <label>Last Accessed</label>
                 <input value="{{user.lastAccessed | date: 'MM/dd/yyyy hh:mm:ss a'}}" type="text" class="form-control" ng-readonly="true"/>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="checkbox-inline" style="padding-top: 35px"><input type="checkbox" ng-model="user.locked">User is Locked?</label>
+            </div> 
         </div>
         <div class="row" style="margin-top:15px;margin-left:10px">
             <label class="checkbox-inline"><input type="checkbox" ng-model="user.admin" ng-disabled="!userContext.editMode">Admin</label>
@@ -37,7 +43,7 @@
     </form>
    
     <div class="text-right" style="margin-top:15px">
-        <button class="btn btn-primary" ng-click="editUser()">
+        <button class="btn btn-primary" ng-click="edit()">
             <span class="fa fa-save" ></span> Save 
         </button>
         <a href="#/users/viewAll"> 

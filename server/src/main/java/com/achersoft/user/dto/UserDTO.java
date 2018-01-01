@@ -22,7 +22,7 @@ public class UserDTO {
     private @NotNull @NotEmpty String firstName;
     private @NotNull @NotEmpty String lastName;
     private @NotNull @NotEmpty String email;
-    private @NotNull @NotEmpty String password;
+    private String password;
     private Boolean locked;
     private Integer loginAttempts;
     private Date lastAccessed;

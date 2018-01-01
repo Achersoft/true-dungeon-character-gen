@@ -44,14 +44,8 @@ angular.module('main')
     });
 
     $scope.edit = function() {
-        userSvc.editUser($scope.userContext.user.id, $scope.userContext.user).then(function() {
+        userSvc.editUser($scope.user.id, $scope.user).then(function() {
             $location.path("/users/viewAll");
-        });
-    }; 
-    
-    $scope.delete = function(userId) {
-        userSvc.deleteUser(userId).then(function() {
-            $route.reload();
         });
     }; 
 }])
