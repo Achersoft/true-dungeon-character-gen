@@ -24,6 +24,7 @@
                 <if test="characterClass != 'MONK'">
                     AND t.slot= 'OFFHAND'
                     AND td.shield = 1 
+                    AND td.range_wep = if((select two_hand FROM token_details WHERE id = (SELECT item_id FROM character_items where character_id = #{characterId} AND slot = 'RANGE_MAINHAND')) = 1, 1,0)
                 </if>
             </if>
             <if test="slot.name() == 'MAINHAND'">

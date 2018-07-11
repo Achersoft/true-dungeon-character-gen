@@ -575,7 +575,7 @@ public class PartyServiceImpl implements PartyService {
         }
 
         // Check CoS
-        if(cd.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getItemId().equals("333788757f49e48272a25e8b5994ac6503ad2adc"))).count() > 0) {
+        if(cd.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getItemId().equals("333788757f49e48272a25e8b5994ac6503ad2adc")||item.getItemId().equals("63cc231ebcbb18e23c9979ba26b38f3ff9f21d92"))).count() > 0) {
             enhancements.setCharmOfSynergy(enhancements.getCharmOfSynergy()+1);
             pc.setHasCoS(true);
         }

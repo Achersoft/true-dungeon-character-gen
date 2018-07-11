@@ -919,16 +919,20 @@ public class CharacterServiceImpl implements CharacterService {
                             if (tokenDetails.isTwoHanded()) {
                                 if(!(td.isRangedWeapon()&& td.isShield())) {
                                     i.setItemId(null);
+                                    i.setRarity(null);
                                     i.setName(null);
                                     i.setSlotStatus(SlotStatus.OK);
                                     i.setStatusText(null);
+                                    i.setText(null);
                                 }
                             } else if (tokenDetails.isOneHanded()) {
                                 if(td.isRangedWeapon() && td.isShield()) {
                                     i.setItemId(null);
+                                    i.setRarity(null);
                                     i.setName(null);
                                     i.setSlotStatus(SlotStatus.OK);
                                     i.setStatusText(null);
+                                    i.setText(null);
                                 }
                             }
                         }); 
@@ -1125,10 +1129,10 @@ public class CharacterServiceImpl implements CharacterService {
         // Mithral Set
         long mithralCount = characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("e3d537d7b1067df3a7f67d121d1394c26efd7937") || item.getItemId().equals("02ffaca2c458066d4b35f1ba20839eef907e5fcb") || item.getItemId().equals("73710528811a2b6167a21b5bc3b8cab3fc071c84") || item.getItemId().equals("b9b4a18df47664a937b54d583f8b4966f928beae") || item.getItemId().equals("52b576b2fbe4b187d6fae824ab645398820f3b12") || item.getItemId().equals("2cc50950b2cfdc3c2abb8100354d2fcf82a6ba51") || item.getItemId().equals("f5649eb2e2450f67aa05af1d7c7d3076e44bf6bd") || item.getItemId().equals("d268fcfd2466c0f21d791c9a18c3f42bc3c61be9"))).count();
         // Redoubt Set
-        long redoubtCount = characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("f2b637457bc71b5fefd203388e84ba0e362c805a") || item.getItemId().equals("b07a7dad6b7094f91d5a080d4d16a2f505cfb343") || item.getItemId().equals("acaf3474f747654a2e0a3131f578762525173031") || item.getItemId().equals("94fa53c957b26cc84e0934b8425eeb82e77e3fa2") || item.getItemId().equals("b090451773359bd10b8e2d48cb2057c0a5ab9197") || item.getItemId().equals("d7a7ec69cff4f728559b57f4a4abb5beb092079b") || item.getItemId().equals("7784bba18a9c0f2021af27c6d1b07e20d0e774f2") || item.getItemId().equals("807e09264b752e61a405333ee1f5f165a2187848") || item.getItemId().equals("5a9dfb7089e81ad8995db870c890e5f93e4ed764") || item.getItemId().equals("30d3dc0bf82c9524c8f7874eb86571936cab8dd8"))).count();
-        // Viper Strike Set
-        long viperCount = characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && (item.getItemId().equals("9431d39ad2fba9953bf4b526d86f41f37022efeb") || item.getItemId().equals("f2ff2a508dd3075633ca2fd9e58c0e1a76088af8") || item.getItemId().equals("dd565d74807cc9094990b324465612d52b3070bf") || item.getItemId().equals("09ad5527813c4f087f3123cd6a40404b9377a4bc"))).count();
-        viperCount += characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && item.getItemId().equals("bd21afd63114346decea5fc899ff697106e99429")).count();
+        long redoubtCount = characterDetails.getItems().stream().filter((item) -> item.getItemId() != null).filter((item) -> item.getName().contains("Redoubt")).map(CharacterItem::getName).distinct().count();
+        // Viper Strike Set  
+        long viperCount = characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && (item.getItemId().equals("4b469b628a8c57e294268dfac4b51d302b1e9123") || item.getItemId().equals("9431d39ad2fba9953bf4b526d86f41f37022efeb") || item.getItemId().equals("f2ff2a508dd3075633ca2fd9e58c0e1a76088af8") || item.getItemId().equals("dd565d74807cc9094990b324465612d52b3070bf") || item.getItemId().equals("09ad5527813c4f087f3123cd6a40404b9377a4bc"))).count();
+        viperCount += characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && item.getItemId().equals("bd21afd63114346decea5fc899ff697106e99429")).map(CharacterItem::getName).distinct().count();
         
         // First check if we need to boost character level
         // Charm of Heroism, Medallion of Heroism, Ring of Heroism, Eldrich Set, Kubu’s Coin of Coincidence, Smackdown’s Charm of Comraderie
@@ -1414,6 +1418,8 @@ public class CharacterServiceImpl implements CharacterService {
                     metCondition.add(ConditionalUse.NOT_WITH_ROSP);
                 if(td.getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
                     metCondition.add(ConditionalUse.NOT_WITH_COA);
+                if(td.getId().equals("63cc231ebcbb18e23c9979ba26b38f3ff9f21d92"))
+                    metCondition.add(ConditionalUse.NOT_WITH_COS_COA);
                 if(td.getTreasureMin()>0 && td.getRarity() != Rarity.ARTIFACT)
                     if(additionalTreasureTokens.addAndGet(1) > 1)
                         metCondition.add(ConditionalUse.NO_OTHER_TREASURE);
@@ -1462,7 +1468,10 @@ public class CharacterServiceImpl implements CharacterService {
                         stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit() - offWeaponHit.get());
                 } else if(item.getSlot() == Slot.OFFHAND) {
                     offWeaponHit.set(td.getMeleeHit());
-                    if(td.getMeleeHit() > mainWeaponHit.get())
+                    if(td.getId().equals("8a8856030c0e1ef2fd16a4b8ab38d312d218df6f")) {
+                        offWeaponHit.set(0);
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                    } else if(td.getMeleeHit() > mainWeaponHit.get())
                         stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit() - mainWeaponHit.get());
                 } else if(item.getSlot() != Slot.RANGE_MAINHAND)
                     stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
@@ -1480,7 +1489,7 @@ public class CharacterServiceImpl implements CharacterService {
                     mightyRanged.set(1);
                 if(item.getSlot() != Slot.MAINHAND && item.getSlot() != Slot.OFFHAND && item.getSlot() != Slot.RANGE_OFFHAND && item.getSlot() != Slot.RANGE_MAINHAND)    
                     stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
-                if(td.getId().equals("8469e44d1b5890ad25506a2abbd2986987efb20a") || td.getId().equals("9f35f1840298549d070a818019bd6b7da131a6ec") || td.getId().equals("ab5d855dbeedfd400cfd417dbc1d25d01272203e")) {
+                if(td.getId().equals("c7212941453b5970f3bf40daf50271dc5dcb80b4") || td.getId().equals("8469e44d1b5890ad25506a2abbd2986987efb20a") || td.getId().equals("9f35f1840298549d070a818019bd6b7da131a6ec") || td.getId().equals("ab5d855dbeedfd400cfd417dbc1d25d01272203e")) {
                     stats.setPsychicLevel(stats.getPsychicLevel() + 1);
                 }
                 if((td.getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") || td.getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2")) && sixLevelReward.get() == 0) {
@@ -1651,6 +1660,15 @@ public class CharacterServiceImpl implements CharacterService {
                         token.setStatusText(null);
                         stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
                         stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
+                        updateStats(stats, td, notes);
+                    }   break;
+                case NOT_WITH_COS_COA:
+                    if(metCondition.contains(ConditionalUse.NOT_WITH_COS_COA)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with the Charm of Awakened Synergy.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
                         updateStats(stats, td, notes);
                     }   break;
                 case NOT_WITH_COA:

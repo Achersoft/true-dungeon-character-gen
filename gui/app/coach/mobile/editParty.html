@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-xs-12 col-md-12 text-center" style="margin:0px;padding:0px">
+        <span class="col-xs-6 col-md-6 btn" ng-class="tabIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 0">Party </span> 
+        <span class="col-xs-6 col-md-6 btn" ng-class="tabIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 1">Members </span> 
+    </div>
+    <div class="col-md-12 hidden-sm hidden-xs">
+        <div ng-if="tabIndex === 0">
+            <party-mobile></party-mobile>
+        </div>
+        <div ng-if="tabIndex === 1">
+            <members-mobile></members-mobile>
+        </div>
+    </div>
+    <div class="col-xs-12 visible-sm visible-xs">
+        <div ng-if="tabIndex === 0">
+            <party-mobile></party-mobile>
+        </div>
+        <div ng-if="tabIndex === 1">
+            <members-mobile></members-mobile>
+        </div>
+    </div>
+</div>
+

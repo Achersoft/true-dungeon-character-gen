@@ -6,7 +6,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>                        
         </button>
-        <a class="navbar-brand" ><img src="images/logo.png" height="75px" alt="" /></a>
+        <a class="navbar-brand" ><img src="images/square-banner.png" height="75px" alt="" /></a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
@@ -19,21 +19,26 @@
           <a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/party/mine"><b>My Parties</b></a>
         </li>
       </ul>
-      <ul class="nav navbar-nav">
-        <li class="dropdown">
-          <a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/contact"><b>Contact Us</b></a>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav">
-        <li class="dropdown" ng-if="privilegeCheck.isUserAuthorized('ADMIN')">
-            <a class="dropdown-toggle" data-toggle="dropdown" href=""><b>Admin </b><span class="caret"></span></a>
-          <ul class="dropdown-menu">
-              <li><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/admin/tokens/management"><b>Add Token</b></a></li>
-              <li><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/admin/tokens/edit"><b>Edit Token</b></a></li>
-              <li><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/users/viewAll"><b>User Management</b></a></li>
-          </ul>
-        </li>
-      </ul>
+        <ul class="nav navbar-nav">
+            <li class="dropdown" ng-if="privilegeCheck.isUserAuthorized('ADMIN')">
+                <a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/coach/parties"><b>Coach</b></a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav">
+            <li class="dropdown" ng-if="privilegeCheck.isUserAuthorized('ADMIN')">
+                <a class="dropdown-toggle" data-toggle="dropdown" href=""><b>Admin </b><span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/admin/tokens/management"><b>Add Token</b></a></li>
+                    <li><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/admin/tokens/edit"><b>Edit Token</b></a></li>
+                    <li><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/users/viewAll"><b>User Management</b></a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/contact"><b>Contact Us</b></a>
+            </li>
+        </ul>
       <ul class="nav navbar-nav navbar-right">
         <li ng-if="!privilegeCheck.isLoggedIn()"><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/login"><span class="fa fa-sign-in"></span><b>Login</b></a></li>
         <li ng-if="privilegeCheck.isLoggedIn()"><a data-toggle="collapse" data-target=".navbar-collapse.in" href="" ng-click="logout()"><span class="fa fa-sign-out"></span><b>Logout</b></a></li>

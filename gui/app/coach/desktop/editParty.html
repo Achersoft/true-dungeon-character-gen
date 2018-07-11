@@ -1,0 +1,129 @@
+<div class="col-xs-12 row">
+    <div class="row">
+        <div class="col-md-5">
+            <h2>{{partyContext.name}}</h2>
+        </div>
+        <div class="col-md-3">
+            <label uib-tooltip="" tooltip-trigger="mouseenter" tooltip-popup-delay='500' for="difficultySelect"> </label>
+            <select class="form-control" id="difficultySelect" ng-disabled="!partyContext.editable" name="difficultySelect" ng-change="updateDifficulty(partyContext.id, partyContext.difficulty)" ng-model="partyContext.difficulty" ng-options="difficulty.id as difficulty.name for difficulty in difficulties"></select>
+        </div>
+        <div class="col-md-2">
+            <h2 style="text-align:right">Initiative: {{partyContext.initiative}}</h2>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary" style="margin-top: 20px;" ng-click="exportToPDF()">
+                Download Party as PDF 
+            </button>
+        </div>
+    </div>
+    <h2 style="border-bottom:1pt solid black;margin-bottom:15px;margin-top:0px"></h2>
+    <center>
+        <div style="padding-right:0px;padding-left:0px;width:1218px">
+
+            <div style="display:flex;margin-bottom:0px">
+                <div style="width:225px;"></div>
+                <div style="width:200px">
+                    <div style="display:flex;height:25px">
+                        <div style="flex:1;text-align:center;background-color:black;color:white;font-size:12px;font-weight:bold;border-right: 3px solid white">
+                            <span style="vertical-align:middle;padding-top:8px">When using MELEE weapon(s)</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;text-align:center;;height:45px">
+                        <div style="width:63px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                            <span style="vertical-align:middle;padding-top:12px">To Hit</span>
+                        </div>
+                        <div style="width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                            <span style="vertical-align:middle;padding-top:12px">Damage</span>
+                        </div>
+                        <div style="width:62px;font-weight:bold;font-size:16px;border:3px solid black;">
+                            <span style="vertical-align:middle;padding-top:12px">AC</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:200px">
+                    <div style="display:flex;height:25px">
+                        <div style="flex:1;text-align:center;background-color:black;color:white;font-size:12px;font-weight:bold;border-left: 3px solid white">
+                            <span style="vertical-align:middle;padding-top:8px">When using RANGED weapon(s)</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;text-align:center;height:45px">
+                        <div style="width:63px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                            <span style="vertical-align:middle;padding-top:12px">To Hit</span>
+                        </div>
+                        <div style="width:75px;font-weight:bold;font-size:16px;border:3px solid black;border-right-width: 0px;">
+                            <span style="vertical-align:middle;padding-top:12px">Damage</span>
+                        </div>
+                        <div style="width:62px;font-weight:bold;font-size:16px;border:3px solid black;">
+                            <span style="vertical-align:middle;padding-top:12px">AC</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:53px">
+                    <div style="display:flex;height:70px">
+                        <div style="flex:1;text-align:center;font-size:9px;border:3px solid black;">
+                            AC Bonus if Monster Attacks with a Missile
+                        </div>
+                    </div>
+                </div>
+                <div style="width:150px">
+                    <div style="display:flex;height:25px">
+                        <div style="flex:1;text-align:center;font-size:12px;font-weight:bold;border:3px solid black;border-bottom:0px">
+                            <span style="vertical-align:middle;padding-top:2px">Saves</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;text-align:center;height:45px">
+                        <div style="width:50px;font-weight:bold;background-color:black;color:white;font-size:16px;border:3px solid black;border-right-width: 0px;border-top:0px">
+                            <span style="vertical-align:middle;padding-top:12px">FORT</span>
+                        </div>
+                        <div style="width:50px;font-weight:bold;background-color:black;color:white;font-size:16px;border:3px solid black;border-right-width: 0px;;border-top:0px">
+                            <span style="vertical-align:middle;padding-top:12px">REFX</span>
+                        </div>
+                        <div style="width:50px;font-weight:bold;background-color:black;color:white;font-size:16px;border:3px solid black;;border-top:0px">
+                            <span style="vertical-align:middle;padding-top:12px">WILL</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:390px">
+                    <div style="display:flex;height:25px">
+                        <div style="flex:1;text-align:center;background-color:black;color:white;font-weight:bold">
+                            <span style="vertical-align:middle;padding-top:2px">Special Abilities</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;text-align:center;height:45px">
+                        <div style="width:75px;font-weight:bold;font-size:10px;border:3px solid black;border-right-width: 0px;">
+                            <span style="vertical-align:middle;padding-top:4px">Retribution Damage</span> 
+                        </div>
+                        <div style="width:60px;font-weight:bold;font-size:10px;border:3px solid black;border-right-width: 0px;">
+                            <span style="vertical-align:middle;padding-top:4px">Cannot Be Surprised</span> 
+                        </div>
+                        <div style="width:60px;font-weight:bold;font-size:10px;border:3px solid black;border-right-width: 0px;">
+                            <span style="vertical-align:middle;padding-top:4px">Free Movement</span> 
+                        </div>
+                        <div style="width:60px;font-weight:bold;font-size:10px;border:3px solid black;border-right-width: 0px;">
+                            <span style="vertical-align:middle;padding-top:24px">Psychic</span> 
+                        </div>
+                        <div style="width:75px;font-weight:bold;font-size:10px;border:3px solid black;border-right-width: 0px;">
+                            <span style="vertical-align:middle;padding-top:24px">Spell Bonuses</span> 
+                        </div>
+                        <div style="width:60px;font-weight:bold;font-size:10px;border:3px solid black;">
+                            <span style="vertical-align:middle;padding-top:4px">Total Treasure</span> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+    <party-character-desktop model="partyContext.barbarian" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="BARBARIAN" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.bard" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="BARD" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.cleric" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="CLERIC" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.druid" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="DRUID" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.dwarfFighter" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="DWARF_FIGHTER" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.elfWizard" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="ELF_WIZARD" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.fighter" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="FIGHTER" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.monk" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="MONK" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.paladin" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="PALADIN" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.ranger" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="RANGER" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.rogue" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="ROGUE" editable="partyContext.editable"></party-character-desktop>
+    <party-character-desktop model="partyContext.wizard" add-character="addCharacter" remove-character="removeCharacter" party-id="partyContext.id" character-class="WIZARD" editable="partyContext.editable"></party-character-desktop>
+    
+</div>

@@ -1,0 +1,69 @@
+<div class="row">
+    <div class="col-md-12 hidden-xs">
+        <h2 style="border-bottom:1pt solid black;margin-top:0px">My Parties</h2>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <a ng-href="#/party/create">
+                    <span class="btn btn-primary" style="margin-top:6px">
+                        <span class="fa fa-plus-circle" ></span>
+                        Create New Party
+                    </span>
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive" style="border:none;margin-top:10px">          
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Difficulty</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="myParty in myPartiesContext" ng-repeat-end>
+                        <td><a ng-href="#/party/edit/{{myParty.id}}">{{myParty.name | limitTo : 25}}</a></td>
+                        <td>{{myParty.size}}</td>
+                        <td>{{myParty.difficulty | characterclassformat}}</td>
+                        <td><a ng-click="deleteParty(myParty.id, myParty.name)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12 visible-xs">
+        <div style="height:100%;width:100%;position:fixed;">
+            <div style="height:calc(100% - 155px);width:100%;position:fixed;overflow-y:scroll;padding-left:0;padding-right:0">
+                <div class="table-responsive" style="border:none;padding-right:15px">          
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Size</th>
+                                <th>Difficulty</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat-start="myParty in myPartiesContext" ng-repeat-end>
+                                <td><a ng-href="#/party/edit/{{myParty.id}}">{{myParty.name | limitTo : 25}}</a></td>
+                                <td>{{myParty.size}}</td>
+                                <td>{{myParty.difficulty | characterclassformat}}</td>
+                                <td><a ng-click="deleteParty(myParty.id, myParty.name)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="text-center" style="position:absolute;bottom:80px;width:calc(100% - 30px);height:70px">
+                <a ng-href="#/party/create">
+                    <span class="btn btn-primary" style="margin-top:12px;width:100%;padding-right:15px">
+                        <span class="fa fa-plus-circle" ></span>
+                        Create New Party
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
