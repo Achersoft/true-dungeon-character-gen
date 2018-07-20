@@ -185,6 +185,54 @@
        ORDER BY t.name
     </select>
     
+    <select id="getRunestoneSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
+         SELECT t.id,
+                t.name,
+                t.text,
+                t.rarity,
+                t.slot
+           FROM token t
+          WHERE t.slot= #{slot}
+            AND t.rarity = 'RARE'
+            <if test="characterClass == 'BARBARIAN'">
+            AND t.barbarian = 1
+            </if>
+            <if test="characterClass == 'BARD'">
+            AND t.bard = 1
+            </if>
+            <if test="characterClass == 'CLERIC'">
+            AND t.cleric = 1
+            </if>
+            <if test="characterClass == 'DRUID'">
+            AND t.druid = 1
+            </if>
+            <if test="characterClass == 'DWARF_FIGHTER'">
+            AND t.dwarf_fighter = 1
+            </if>
+            <if test="characterClass == 'ELF_WIZARD'">
+            AND t.elf_wizard = 1
+            </if>
+            <if test="characterClass == 'FIGHTER'">
+            AND t.fighter = 1
+            </if>
+            <if test="characterClass == 'WIZARD'">
+            AND t.wizard = 1
+            </if>
+            <if test="characterClass == 'MONK'">
+            AND t.monk = 1
+            </if>
+            <if test="characterClass == 'PALADIN'">
+            AND t.paladin = 1
+            </if>
+            <if test="characterClass == 'RANGER'">
+            AND t.ranger = 1
+            </if>
+            <if test="characterClass == 'ROGUE'">
+            AND t.rogue = 1
+            </if>
+       ORDER BY t.name
+    </select>
+    
     <select id="getAoWSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
          SELECT t.id,
                 t.name,

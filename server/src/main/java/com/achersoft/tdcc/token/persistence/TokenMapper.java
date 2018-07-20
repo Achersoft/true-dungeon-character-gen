@@ -9,6 +9,7 @@ public interface TokenMapper {
     public int getTokenSlotIndex(@Param("soltId") String soltId);
     public List<Token> getWeaponSlotItems(@Param("slotId") String slotId, @Param("characterId") String characterId, @Param("characterClass") String characterClass, @Param("slot") Slot slot, @Param("rarity") String rarity);
     public List<Token> getNonWeaponSlotItems(@Param("slotId") String slotId, @Param("characterId") String characterId, @Param("characterClass") String characterClass, @Param("slot") String slot, @Param("rarity") String rarity);
+    public List<Token> getRunestoneSlotItems(@Param("slotId") String slotId, @Param("characterId") String characterId, @Param("characterClass") String characterClass, @Param("slot") String slot);
     public List<Token> getAoWSlotItems(@Param("characterClass") String characterClass, @Param("rarity") String rarity);
     public void setTokenSlot(@Param("soltId") String soltId, @Param("tokenId") String tokenId);
     public void unequipTokenSlot(@Param("soltId") String soltId);

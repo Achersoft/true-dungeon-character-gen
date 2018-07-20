@@ -431,8 +431,10 @@ public class PartyServiceImpl implements PartyService {
                         fillBox.setAbsolutePosition(127, 432);
                         break;
                     case NIGHTMARE:
-                    case EPIC:
                         fillBox.setAbsolutePosition(127, 401);
+                        break;
+                    case EPIC:
+                        fillBox.setAbsolutePosition(127, 369);
                         break;
                     default:
                         break;
