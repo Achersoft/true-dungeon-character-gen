@@ -10,6 +10,10 @@ angular.module('main')
         templateUrl: (RESOURCES.IS_MOBILE)?'character/mobile/createCharacter.html':'character/desktop/createCharacter.html',
         controller: 'CharacterCreationCtrl'
     })
+    .when('/character/clone', {
+        templateUrl: (RESOURCES.IS_MOBILE)?'character/mobile/cloneCharacter.html':'character/desktop/cloneCharacter.html',
+        controller: 'CharacterCloneCtrl'
+    })
     .when('/character/edit/:characterId', {
         templateUrl: (RESOURCES.IS_MOBILE)?'character/mobile/editCharacter.html':'character/desktop/editCharacter.html',
         controller: 'CharacterEditCtrl'
@@ -49,6 +53,44 @@ angular.module('main')
         characterSvc.createCharacter($scope.characterClass, $scope.name).then(function(result) {
             $location.path("/character/edit/" + result.data.id);
             $route.reload();
+        });
+    };
+}])
+
+.controller('CharacterCloneCtrl', ['$scope', 'CharacterSvc', 'AuthorizationState', '$location', '$route', function ($scope, characterSvc, AuthorizationState, $location, $route) {
+    $scope.name = null;
+    $scope.characterClass = null;
+    $scope.characterClasses = ["BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "MONK", "PALADIN", "RANGER", "ROGUE", "WIZARD"];
+    $scope.userAccounts = {};
+    $scope.userCharacters = {};
+    $scope.character = null;
+    $scope.user = AuthorizationState.getLoggedInUserId();
+    
+    characterSvc.getSelectableCharacters($scope.user).then(function(result) {
+        $scope.userAccounts = result.data.userAccounts;
+        $scope.userCharacters = result.data.characters;
+    });
+
+    $scope.characterClassSelected =  function(charClass){
+        return charClass === $scope.characterClass;
+    };
+    
+    $scope.toggleCharacterClassSelected =  function(charClass){
+        $scope.characterClass = charClass;
+    };
+    
+    $scope.cloneCharacter = function(){
+        characterSvc.cloneCharacter($scope.character, $scope.characterClass, $scope.name).then(function(result) {
+            $location.path("/character/edit/" + result.data.id);
+            $route.reload();
+        });
+    };
+    
+    $scope.updateCharacters = function(user) {
+        characterSvc.getSelectableCharacters(user).then(function(result) {
+            $scope.userAccounts = result.data.userAccounts;
+            $scope.userCharacters = result.data.characters;
+            $scope.character = null;
         });
     };
 }])
@@ -186,6 +228,22 @@ angular.module('main')
 
     tokenAdminSvc.createCharacter = function(characterClass, name) {
         return $http.put(RESOURCES.REST_BASE_URL + '/character/create?characterClass=' + characterClass + "&name=" + name)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    tokenAdminSvc.cloneCharacter = function(cloneId, characterClass, name) {
+        return $http.put(RESOURCES.REST_BASE_URL + '/character/clone/' + cloneId + '?characterClass=' + characterClass + "&name=" + name)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    tokenAdminSvc.getSelectableCharacters = function(userid) {
+        return $http.get(RESOURCES.REST_BASE_URL + '/character/selectablecharacters?userid=' + userid)
             .catch(function(response) {
                 errorDialogSvc.showError(response);
                 return($q.reject(response));

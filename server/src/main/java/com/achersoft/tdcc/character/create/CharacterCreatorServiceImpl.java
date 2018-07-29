@@ -12,9 +12,11 @@ import com.achersoft.tdcc.enums.Slot;
 import com.achersoft.tdcc.enums.SlotStatus;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,25 +87,20 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
     
     @Override
     public CharacterDetails copyCharacter(CharacterClass characterClass, String name, String cloneId) throws Exception {
-        CharacterDetails characterDetails = createCharacter(characterClass, name);
+        AtomicReference<CharacterDetails> characterDetails = new AtomicReference<>(createCharacter(characterClass, name));
         
         try {
-            CharacterDetails cloneCharacter = characterService.getCharacter(cloneId);
-            characterDetails.setItems(cloneCharacter.getItems());
-            
-            characterDetails.getItems().stream().forEach(token -> {
-                token.setCharacterId(characterDetails.getId());
-                token.setId(UUID.randomUUID().toString());
-                if (!tokenMapper.itemUsableByClass(token.getItemId(), characterClass.name())) {
-                    token.setName(null);
-                    token.setRarity(null);
-                    token.setText(null);
-                    token.setItemId(null);
+            characterService.getCharacter(cloneId).getItems().stream().forEach(token -> {
+                if (token.getItemId() != null && !token.getItemId().isEmpty() && tokenMapper.itemUsableByClass(token.getItemId(), characterClass.name())) {
+                    CharacterItem charItem = characterDetails.get().getItems().stream().filter(item -> (item.getItemId()==null || item.getItemId().isEmpty()) && item.getSlot().equals(token.getSlot()))
+                            .min(Comparator.comparing(CharacterItem::getIndex)).orElse(null);
+                    if (charItem != null)
+                        characterDetails.set(characterService.setTokenSlot(characterDetails.get().getId(), charItem.getId(), token.getItemId()));
                 }
             });
-        } catch(Exception e) {}
+        } catch(Exception e) { }
 
-        return characterService.getCharacter(characterDetails.getId());
+        return characterService.getCharacter(characterDetails.get().getId());
     }
     
     private CharacterDetails createBarbarian(String userId, String name) {

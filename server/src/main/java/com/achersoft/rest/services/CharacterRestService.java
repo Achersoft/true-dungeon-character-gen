@@ -6,8 +6,8 @@ import com.achersoft.tdcc.character.CharacterService;
 import com.achersoft.tdcc.character.create.CharacterCreatorService;
 import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.character.dto.CharacterDetailsDTO;
-import com.achersoft.tdcc.character.dto.CharacterExportDTO;
 import com.achersoft.tdcc.enums.CharacterClass;
+import com.achersoft.tdcc.party.dao.SelectableCharacters;
 import java.util.List;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
@@ -80,6 +80,14 @@ public class CharacterRestService {
     @Produces({MediaType.APPLICATION_JSON})	
     public List<CharacterName> getCharacters() throws Exception {
         return characterService.getCharacters();
+    }
+    
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @GET 
+    @Path("/selectablecharacters")
+    @Produces({MediaType.APPLICATION_JSON})	
+    public SelectableCharacters getSelectableCharacters(@QueryParam("userid") String userid) throws Exception {
+        return characterService.getSelectableCharacters(userid);
     }
     
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
