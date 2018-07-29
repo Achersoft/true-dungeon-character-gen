@@ -36,6 +36,22 @@ public class CharacterRestService {
     public CharacterDetailsDTO createCharacter(@QueryParam("characterClass") CharacterClass characterClass, @QueryParam("name") String name) throws Exception {
         return CharacterDetailsDTO.fromDAO(characterService.validateCharacterItems(characterCreatorService.createCharacter(characterClass, name).getId()));
     }
+    
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @PUT 
+    @Path("/clone/{id}")
+    @Produces({MediaType.APPLICATION_JSON})	
+    public CharacterDetailsDTO cloneCharacter(@PathParam("id") @NotNull @NotEmpty String id, @QueryParam("characterClass") CharacterClass characterClass, @QueryParam("name") String name) throws Exception {
+        return CharacterDetailsDTO.fromDAO(characterService.validateCharacterItems(characterCreatorService.copyCharacter(characterClass, name, id).getId()));
+    }
+    
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @PUT 
+    @Path("/rename/{id}")
+    @Produces({MediaType.APPLICATION_JSON})	
+    public CharacterDetailsDTO renameCharacter(@PathParam("id") @NotNull @NotEmpty String id, @QueryParam("name") String name) throws Exception {
+        return CharacterDetailsDTO.fromDAO(characterCreatorService.renameCharacter(id, name));
+    }
 
     @GET 
     @Path("/{id}")

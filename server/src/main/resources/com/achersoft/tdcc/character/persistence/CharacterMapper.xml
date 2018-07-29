@@ -535,6 +535,12 @@
       WHERE id = #{characterId};
     </update>
     
+    <update id="updateCharacterName">
+        UPDATE character_name SET
+               name = #{name}
+         WHERE id = #{id};
+    </update>
+    
     <delete id="deleteCharacter">
         DELETE FROM character_name WHERE id = #{id}
            AND user_id = #{userId}

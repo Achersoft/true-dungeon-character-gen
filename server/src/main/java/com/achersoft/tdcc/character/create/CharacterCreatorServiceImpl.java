@@ -3,12 +3,14 @@ package com.achersoft.tdcc.character.create;
 import com.achersoft.exception.AuthenticationException;
 import com.achersoft.exception.InvalidDataException;
 import com.achersoft.security.providers.UserPrincipalProvider;
+import com.achersoft.tdcc.character.CharacterService;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.character.dao.CharacterDetails;
 import com.achersoft.tdcc.character.dao.CharacterItem;
 import com.achersoft.tdcc.character.persistence.CharacterMapper;
 import com.achersoft.tdcc.enums.Slot;
 import com.achersoft.tdcc.enums.SlotStatus;
+import com.achersoft.tdcc.token.persistence.TokenMapper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +23,8 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
     
     private @Inject CharacterMapper mapper;
     private @Inject UserPrincipalProvider userPrincipalProvider;
+    private @Inject CharacterService characterService; 
+    private @Inject TokenMapper tokenMapper;
     
     @Override
     public CharacterDetails createCharacter(CharacterClass characterClass, String name) throws Exception {
@@ -35,7 +39,7 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
         if(userId == null || userId.isEmpty())
             throw new AuthenticationException("User is not valid."); 
         
-        if(mapper.getCharacterCount(userId) >= 30)
+        if(mapper.getCharacterCount(userId) >= 50)
             throw new InvalidDataException("Maximum character limit exceeded. Due to storage capabilities of the serer each account is limited to 30 characters. In order to create additional characters you must delete one or more existing characters");
         
         if(characterClass == CharacterClass.BARBARIAN)
@@ -64,6 +68,42 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
             return createWizard(userId, name);
 
         throw new InvalidDataException("Character class requested is not valid."); 
+    }
+    
+    @Override
+    public CharacterDetails renameCharacter(String id, String name) throws Exception {
+        CharacterDetails characterDetails = characterService.getCharacter(id);
+        
+        if(name == null || name.isEmpty() || name.equals("null"))
+            throw new InvalidDataException("Character name cannot be null."); 
+        
+        characterDetails.setName(name);
+        mapper.updateCharacterName(id, name);
+        
+        return characterDetails;
+    }
+    
+    @Override
+    public CharacterDetails copyCharacter(CharacterClass characterClass, String name, String cloneId) throws Exception {
+        CharacterDetails characterDetails = createCharacter(characterClass, name);
+        
+        try {
+            CharacterDetails cloneCharacter = characterService.getCharacter(cloneId);
+            characterDetails.setItems(cloneCharacter.getItems());
+            
+            characterDetails.getItems().stream().forEach(token -> {
+                token.setCharacterId(characterDetails.getId());
+                token.setId(UUID.randomUUID().toString());
+                if (!tokenMapper.itemUsableByClass(token.getItemId(), characterClass.name())) {
+                    token.setName(null);
+                    token.setRarity(null);
+                    token.setText(null);
+                    token.setItemId(null);
+                }
+            });
+        } catch(Exception e) {}
+
+        return characterService.getCharacter(characterDetails.getId());
     }
     
     private CharacterDetails createBarbarian(String userId, String name) {

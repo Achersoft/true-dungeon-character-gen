@@ -1033,17 +1033,11 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Check for Eldritch Runestone
         iounCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.IOUNSTONE).count();
-        if(itemsMap.containsKey("db0c53293948567ee17fe0715828ba3e380e3d75")) {
-            if(iounCount == 7 ) 
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(7).slotStatus(SlotStatus.OK).build());
-            else if(iounCount == 5 )
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(5).slotStatus(SlotStatus.OK).build());
-        } else {
-            if(iounCount == 8)
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 6)).collect(Collectors.toList()));
-            else if(iounCount == 6)
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 4)).collect(Collectors.toList()));
-        }
+        //if(itemsMap.containsKey("db0c53293948567ee17fe0715828ba3e380e3d75")) {}
+        if(iounCount == 8)
+            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 6)).collect(Collectors.toList()));
+        else if(iounCount == 6)
+            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 4)).collect(Collectors.toList()));
         
         // Check for AoW
        /* long aowCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.AOW).count();

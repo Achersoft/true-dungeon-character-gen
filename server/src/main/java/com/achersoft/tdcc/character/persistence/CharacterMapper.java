@@ -23,6 +23,7 @@ public interface CharacterMapper {
     public List<CharacterNote> getCharacterNotes(@Param("id") String id);
     public CharacterStats getStartingStats(@Param("characterClass") CharacterClass characterClass, @Param("level") int level);
     public void updateCharacterStats(CharacterStats characterStats); 
+    public void updateCharacterName(@Param("id") String id, @Param("name") String name);
     public void deleteCharacter(@Param("id") String id, @Param("userId") String userId);
     public void deleteCharacterItems(@Param("id") String id);
     public void deleteCharacterNotes(@Param("id") String id);

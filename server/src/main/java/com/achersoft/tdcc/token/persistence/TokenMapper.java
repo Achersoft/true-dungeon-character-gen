@@ -13,4 +13,5 @@ public interface TokenMapper {
     public List<Token> getAoWSlotItems(@Param("characterClass") String characterClass, @Param("rarity") String rarity);
     public void setTokenSlot(@Param("soltId") String soltId, @Param("tokenId") String tokenId);
     public void unequipTokenSlot(@Param("soltId") String soltId);
+    public boolean itemUsableByClass(@Param("tokenId") String tokenId, @Param("characterClass") String characterClass);
 }
