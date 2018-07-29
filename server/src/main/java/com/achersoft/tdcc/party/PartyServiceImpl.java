@@ -71,40 +71,100 @@ public class PartyServiceImpl implements PartyService {
             details.setEditable(true);
         
         if(party.getBarbarian() != null) {
-            details.setBarbarian(getCharacterInfo(characterService.getCharacter(party.getBarbarian()), enhancements));
+            try {
+                details.setBarbarian(getCharacterInfo(characterService.getCharacter(party.getBarbarian()), enhancements));
+            } catch(Exception e) {
+                party.setBarbarian(null);
+                mapper.removeBarbarian(id);
+            }
         }
         if(party.getBard() != null) {
-            details.setBard(getCharacterInfo(characterService.getCharacter(party.getBard()), enhancements));
+            try {
+                details.setBard(getCharacterInfo(characterService.getCharacter(party.getBard()), enhancements));
+            } catch(Exception e) {
+                party.setBard(null);
+                mapper.removeBard(id);
+            }
         }
         if(party.getCleric() != null) {
-            details.setCleric(getCharacterInfo(characterService.getCharacter(party.getCleric()), enhancements));
+            try {
+                details.setCleric(getCharacterInfo(characterService.getCharacter(party.getCleric()), enhancements));
+            } catch(Exception e) {
+                party.setCleric(null);
+                mapper.removeCleric(id);
+            }
         }
         if(party.getDruid() != null) {
-            details.setDruid(getCharacterInfo(characterService.getCharacter(party.getDruid()), enhancements));
+            try {
+                details.setDruid(getCharacterInfo(characterService.getCharacter(party.getDruid()), enhancements));
+            } catch(Exception e) {
+                party.setDruid(null);
+                mapper.removeDruid(id);
+            }
         }
         if(party.getDwarfFighter() != null) {
-            details.setDwarfFighter(getCharacterInfo(characterService.getCharacter(party.getDwarfFighter()), enhancements));
+            try {
+                details.setDwarfFighter(getCharacterInfo(characterService.getCharacter(party.getDwarfFighter()), enhancements));
+            } catch(Exception e) {
+                party.setDwarfFighter(null);
+                mapper.removeDwarf(id);
+            }
         }
         if(party.getElfWizard() != null) {
-            details.setElfWizard(getCharacterInfo(characterService.getCharacter(party.getElfWizard()), enhancements));
+            try {
+                details.setElfWizard(getCharacterInfo(characterService.getCharacter(party.getElfWizard()), enhancements));
+            } catch(Exception e) {
+                party.setElfWizard(null);
+                mapper.removeElf(id);
+            }
         }
         if(party.getFighter() != null) {
-            details.setFighter(getCharacterInfo(characterService.getCharacter(party.getFighter()), enhancements));
+            try {
+                details.setFighter(getCharacterInfo(characterService.getCharacter(party.getFighter()), enhancements)); 
+            } catch(Exception e) {
+                party.setFighter(null);
+                mapper.removeFighter(id);
+            }
         }
         if(party.getMonk() != null) {
-            details.setMonk(getCharacterInfo(characterService.getCharacter(party.getMonk()), enhancements));
+            try {
+                details.setMonk(getCharacterInfo(characterService.getCharacter(party.getMonk()), enhancements)); 
+            } catch(Exception e) {
+                party.setMonk(null);
+                mapper.removeMonk(id);
+            }
         }
         if(party.getPaladin() != null) {
-            details.setPaladin(getCharacterInfo(characterService.getCharacter(party.getPaladin()), enhancements));
+            try {
+                details.setPaladin(getCharacterInfo(characterService.getCharacter(party.getPaladin()), enhancements));
+            } catch(Exception e) {
+                party.setPaladin(null);
+                mapper.removePaladin(id);
+            }
         }
         if(party.getRanger() != null) {
-            details.setRanger(getCharacterInfo(characterService.getCharacter(party.getRanger()), enhancements));
+            try {
+                details.setRanger(getCharacterInfo(characterService.getCharacter(party.getRanger()), enhancements));
+            } catch(Exception e) {
+                party.setRanger(null);
+                mapper.removeRanger(id);
+            }
         }
         if(party.getRogue() != null) {
-            details.setRogue(getCharacterInfo(characterService.getCharacter(party.getRogue()), enhancements));
+            try {
+                details.setRogue(getCharacterInfo(characterService.getCharacter(party.getRogue()), enhancements)); 
+            } catch(Exception e) {
+                party.setRogue(null);
+                mapper.removeRogue(id);
+            }
         }
         if(party.getWizard() != null) {
-            details.setWizard(getCharacterInfo(characterService.getCharacter(party.getWizard()), enhancements));
+            try {
+                details.setWizard(getCharacterInfo(characterService.getCharacter(party.getWizard()), enhancements));
+            } catch(Exception e) {
+                party.setWizard(null);
+                mapper.removeWizard(id);
+            }
         }
 
         // Group level enhancing items

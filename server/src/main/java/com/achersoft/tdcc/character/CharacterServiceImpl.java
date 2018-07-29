@@ -915,6 +915,16 @@ public class CharacterServiceImpl implements CharacterService {
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
         });
         
+        // Check to make sure dual is valid
+        if (characterDetails.getCharacterClass() != CharacterClass.RANGER && characterDetails.getCharacterClass() != CharacterClass.MONK) {
+            characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.OFFHAND).findAny().ifPresent((item) ->{
+                if(item.getItemId()!=null && tokenAdminMapper.getTokenDetails(item.getItemId()).isOneHanded()) {
+                    characterDetails.setItems(characterDetails.getItems().stream().filter((i) -> i.getSlot()!=Slot.OFFHAND).collect(Collectors.toList()));
+                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
+                }
+            });
+        }
+        
         // Check for two handed range weapon
         if(characterDetails.getCharacterClass() != CharacterClass.WIZARD && characterDetails.getCharacterClass() != CharacterClass.MONK && characterDetails.getCharacterClass() != CharacterClass.ROGUE) {
             characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND).findAny().ifPresent((item) ->{
