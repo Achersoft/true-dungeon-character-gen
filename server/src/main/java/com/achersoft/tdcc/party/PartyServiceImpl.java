@@ -207,7 +207,7 @@ public class PartyServiceImpl implements PartyService {
                 details.setWizard(getCharacterInfo(characterService.getCharacterMaxLevel(party.getWizard()), enhancements));
             }
         }
-        
+
         // CoS
         if(enhancements.getCharmOfSynergy() > 1) {
             if(party.getBarbarian() != null && details.getBarbarian().isHasCoS()) {
@@ -247,8 +247,8 @@ public class PartyServiceImpl implements PartyService {
                 details.getWizard().setHealth(details.getWizard().getHealth() + (enhancements.getCharmOfSynergy()-1));
             }
         }
-        
-        // Teasures
+
+        // Treasures
         if(enhancements.getCharmOfGoodFortune() > 5) 
             treasures++;
         if(enhancements.getCharmOfGoodFortune() > 9) 

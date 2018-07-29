@@ -44,7 +44,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(rollbackFor = Exception.class)
 public class CharacterServiceImpl implements CharacterService {
     
     private @Inject CharacterMapper mapper;
@@ -89,6 +88,7 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CharacterDetails setTokenSlot(String id, String soltId, String tokenId) {
         CharacterDetails characterDetails = getCharacter(id);
         
@@ -108,6 +108,7 @@ public class CharacterServiceImpl implements CharacterService {
     }
     
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CharacterDetails unequipTokenSlot(String id, String soltId) {
         CharacterDetails characterDetails = getCharacter(id);
         
@@ -127,6 +128,7 @@ public class CharacterServiceImpl implements CharacterService {
     }
     
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<CharacterName> deleteCharacter(String id) {
         mapper.deleteCharacter(id, userPrincipalProvider.getUserPrincipal().getSub());
         return mapper.getCharacters(userPrincipalProvider.getUserPrincipal().getSub());
@@ -869,6 +871,7 @@ public class CharacterServiceImpl implements CharacterService {
     }
    
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CharacterDetails validateCharacterItems(String id) {
         CharacterDetails characterDetails = getCharacter(id);
 
