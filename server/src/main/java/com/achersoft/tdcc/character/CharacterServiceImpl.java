@@ -920,8 +920,9 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Check to make sure dual is valid
         if (characterDetails.getCharacterClass() != CharacterClass.RANGER && characterDetails.getCharacterClass() != CharacterClass.MONK) {
-            characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.OFFHAND).findAny().ifPresent((item) ->{
-                if(item.getItemId()!=null && tokenAdminMapper.getTokenDetails(item.getItemId()).isOneHanded()) {
+            characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.OFFHAND).findAny().ifPresent((item) -> {
+                TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
+                if(item.getItemId()!=null && td.isOneHanded() && !td.isShield()) {
                     characterDetails.setItems(characterDetails.getItems().stream().filter((i) -> i.getSlot()!=Slot.OFFHAND).collect(Collectors.toList()));
                     characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
                 }

@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,8 +42,8 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
         if(userId == null || userId.isEmpty())
             throw new AuthenticationException("User is not valid."); 
         
-        if(mapper.getCharacterCount(userId) >= 50)
-            throw new InvalidDataException("Maximum character limit exceeded. Due to storage capabilities of the serer each account is limited to 30 characters. In order to create additional characters you must delete one or more existing characters");
+        if(mapper.getCharacterCount(userId) >= 100)
+            throw new InvalidDataException("Maximum character limit exceeded. Due to storage capabilities of the serer each account is limited to 100 characters. In order to create additional characters you must delete one or more existing characters");
         
         if(characterClass == CharacterClass.BARBARIAN)
             return createBarbarian(userId, name);
@@ -90,7 +91,61 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
         AtomicReference<CharacterDetails> characterDetails = new AtomicReference<>(createCharacter(characterClass, name));
         
         try {
-            characterService.getCharacter(cloneId).getItems().stream().forEach(token -> {
+            List<CharacterItem> items = characterService.getCharacter(cloneId).getItems();
+            List<CharacterItem> necks = items.stream().filter(token -> token.getSlot() == Slot.NECK).collect(Collectors.toList());
+            List<CharacterItem> wrists = items.stream().filter(token -> token.getSlot() == Slot.WRIST).collect(Collectors.toList());
+            List<CharacterItem> ears = items.stream().filter(token -> token.getSlot() == Slot.EAR).collect(Collectors.toList());
+            List<CharacterItem> slotless = items.stream().filter(token -> token.getSlot() == Slot.SLOTLESS).collect(Collectors.toList());
+            List<CharacterItem> charms = items.stream().filter(token -> token.getSlot() == Slot.CHARM).collect(Collectors.toList());
+            items = items.stream().filter(token -> token.getSlot() != Slot.NECK && token.getSlot() != Slot.WRIST && token.getSlot() != Slot.EAR &&
+                    token.getSlot() != Slot.SLOTLESS && token.getSlot() != Slot.CHARM).collect(Collectors.toList());
+           
+            necks.stream().filter(t -> t != null).forEach(token -> {
+                if (token.getItemId() != null && !token.getItemId().isEmpty() && tokenMapper.itemUsableByClass(token.getItemId(), characterClass.name())) {
+                    CharacterItem charItem = characterDetails.get().getItems().stream().filter(item -> (item.getItemId()==null || item.getItemId().isEmpty()) && item.getSlot().equals(token.getSlot()))
+                            .min(Comparator.comparing(CharacterItem::getIndex)).orElse(null);
+                    if (charItem != null)
+                        characterDetails.set(characterService.setTokenSlot(characterDetails.get().getId(), charItem.getId(), token.getItemId()));
+                }
+            });
+            
+            wrists.stream().filter(t -> t != null).forEach(token -> {
+                if (token.getItemId() != null && !token.getItemId().isEmpty() && tokenMapper.itemUsableByClass(token.getItemId(), characterClass.name())) {
+                    CharacterItem charItem = characterDetails.get().getItems().stream().filter(item -> (item.getItemId()==null || item.getItemId().isEmpty()) && item.getSlot().equals(token.getSlot()))
+                            .min(Comparator.comparing(CharacterItem::getIndex)).orElse(null);
+                    if (charItem != null)
+                        characterDetails.set(characterService.setTokenSlot(characterDetails.get().getId(), charItem.getId(), token.getItemId()));
+                }
+            });
+            
+            ears.stream().filter(t -> t != null).forEach(token -> {
+                if (token.getItemId() != null && !token.getItemId().isEmpty() && tokenMapper.itemUsableByClass(token.getItemId(), characterClass.name())) {
+                    CharacterItem charItem = characterDetails.get().getItems().stream().filter(item -> (item.getItemId()==null || item.getItemId().isEmpty()) && item.getSlot().equals(token.getSlot()))
+                            .min(Comparator.comparing(CharacterItem::getIndex)).orElse(null);
+                    if (charItem != null)
+                        characterDetails.set(characterService.setTokenSlot(characterDetails.get().getId(), charItem.getId(), token.getItemId()));
+                }
+            });
+            
+            slotless.stream().filter(t -> t != null).forEach(token -> {
+                if (token.getItemId() != null && !token.getItemId().isEmpty() && tokenMapper.itemUsableByClass(token.getItemId(), characterClass.name())) {
+                    CharacterItem charItem = characterDetails.get().getItems().stream().filter(item -> (item.getItemId()==null || item.getItemId().isEmpty()) && item.getSlot().equals(token.getSlot()))
+                            .min(Comparator.comparing(CharacterItem::getIndex)).orElse(null);
+                    if (charItem != null)
+                        characterDetails.set(characterService.setTokenSlot(characterDetails.get().getId(), charItem.getId(), token.getItemId()));
+                }
+            });
+            
+            charms.stream().filter(t -> t != null).forEach(token -> {
+                if (token.getItemId() != null && !token.getItemId().isEmpty() && tokenMapper.itemUsableByClass(token.getItemId(), characterClass.name())) {
+                    CharacterItem charItem = characterDetails.get().getItems().stream().filter(item -> (item.getItemId()==null || item.getItemId().isEmpty()) && item.getSlot().equals(token.getSlot()))
+                            .min(Comparator.comparing(CharacterItem::getIndex)).orElse(null);
+                    if (charItem != null)
+                        characterDetails.set(characterService.setTokenSlot(characterDetails.get().getId(), charItem.getId(), token.getItemId()));
+                }
+            });
+           
+            items.stream().filter(t -> t != null).forEach(token -> {
                 if (token.getItemId() != null && !token.getItemId().isEmpty() && tokenMapper.itemUsableByClass(token.getItemId(), characterClass.name())) {
                     CharacterItem charItem = characterDetails.get().getItems().stream().filter(item -> (item.getItemId()==null || item.getItemId().isEmpty()) && item.getSlot().equals(token.getSlot()))
                             .min(Comparator.comparing(CharacterItem::getIndex)).orElse(null);
