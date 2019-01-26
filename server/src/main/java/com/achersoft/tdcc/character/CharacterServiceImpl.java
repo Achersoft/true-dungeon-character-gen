@@ -1134,13 +1134,13 @@ public class CharacterServiceImpl implements CharacterService {
     }
     
     private void checkSetItems(CharacterDetails characterDetails, boolean levelBoost) {
-        final Map<String, CharacterItem> itemsMap = new HashMap();
+        final Map<String, CharacterItem> itemsMap = new HashMap<>();
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             itemsMap.put(item.getItemId(), item);
         });
         
         // Rod of Seven Parts
-        long eldrichCount = characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3") || item.getItemId().equals("11dcc7b0267b2e622d58d5ba7219d8f7248b02b7") || item.getItemId().equals("260584166d4d9736a9de96bfe57e32fbe4a0e656"))).count();
+        long eldrichCount = characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && item.getRarity() == Rarity.ELDRITCH).count();
         // Might Set
         long mightCount = characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("ab48a5c6a8f12cfff15d100f8bc217e28c3a0d5f") || item.getItemId().equals("facad47c2da2c265b50ad33dc573bb4988ee2155") || item.getItemId().equals("526f1405624d9704ee44b0f901a8191e95db1f91") || item.getItemId().equals("f94bb88bddf8a88480f7b30d8c81eb65d9703c45") || item.getItemId().equals("5bf7eed1b3dfd81eb772e5ced6075871d9cd1b3e"))).count();
         // Charming Set
@@ -1155,10 +1155,8 @@ public class CharacterServiceImpl implements CharacterService {
         
         // First check if we need to boost character level
         // Charm of Heroism, Medallion of Heroism, Ring of Heroism, Eldrich Set, Kubu’s Coin of Coincidence, Smackdown’s Charm of Comraderie
-        if(levelBoost || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
-        (eldrichCount >= 3 || (eldrichCount >= 2 && (characterDetails.getCharacterClass() == CharacterClass.RANGER || characterDetails.getCharacterClass() == CharacterClass.DRUID))) ||
-        itemsMap.containsKey("2f1cfd3d3dbdd218f5cd5bd3935851b7acba5a9c") || itemsMap.containsKey("f44d007c35b18b83e85a1ee183cda08180030012") ||
-        mightCount >= 3 || charmingCount >= 3) {
+        if(levelBoost || eldrichCount >= 2 || mightCount >= 3 || charmingCount >= 3 || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
+                itemsMap.containsKey("2f1cfd3d3dbdd218f5cd5bd3935851b7acba5a9c") || itemsMap.containsKey("f44d007c35b18b83e85a1ee183cda08180030012") || itemsMap.containsKey("c289cd1accbbcc7af656de459c157bdc40dbaf45")) {
             characterDetails.setStats(mapper.getStartingStats(characterDetails.getCharacterClass(), 5));
             characterDetails.getStats().setCharacterId(characterDetails.getId());
         } else {
@@ -1246,10 +1244,26 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Eldritch Set
         // 2 piece ignore spell resistence, healing spells +10, melee igonore DR
-        if(eldrichCount >= 2) {
+        if (eldrichCount >= 5) {
             characterDetails.getStats().setSpellHeal(characterDetails.getStats().getSpellHeal() + 10);
-            characterDetails.getStats().setSpellResist(100);
-            characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("Your spells and melee attack ignore spell resistance and damage reduction.").build());
+            characterDetails.getStats().setSpellDmg(characterDetails.getStats().getSpellDmg() + 4);
+            characterDetails.getStats().setMeleeDmg(characterDetails.getStats().getMeleeDmg() + 4);
+            characterDetails.getStats().setRangeDmg(characterDetails.getStats().getRangeDmg() + 4);
+        } else if (eldrichCount == 4) {
+            characterDetails.getStats().setSpellHeal(characterDetails.getStats().getSpellHeal() + 8);
+            characterDetails.getStats().setSpellDmg(characterDetails.getStats().getSpellDmg() + 3);
+            characterDetails.getStats().setMeleeDmg(characterDetails.getStats().getMeleeDmg() + 3);
+            characterDetails.getStats().setRangeDmg(characterDetails.getStats().getRangeDmg() + 3);
+        } else if (eldrichCount == 3) {
+            characterDetails.getStats().setSpellHeal(characterDetails.getStats().getSpellHeal() + 6);
+            characterDetails.getStats().setSpellDmg(characterDetails.getStats().getSpellDmg() + 2);
+            characterDetails.getStats().setMeleeDmg(characterDetails.getStats().getMeleeDmg() + 2);
+            characterDetails.getStats().setRangeDmg(characterDetails.getStats().getRangeDmg() + 2);
+        } else if (eldrichCount == 2) {
+            characterDetails.getStats().setSpellHeal(characterDetails.getStats().getSpellHeal() + 4);
+            characterDetails.getStats().setSpellDmg(characterDetails.getStats().getSpellDmg() + 1);
+            characterDetails.getStats().setMeleeDmg(characterDetails.getStats().getMeleeDmg() + 1);
+            characterDetails.getStats().setRangeDmg(characterDetails.getStats().getRangeDmg() + 1);
         }
         
         // Footman Set
@@ -1503,7 +1517,7 @@ public class CharacterServiceImpl implements CharacterService {
                 mightyRanged.set(1);
             if(item.getSlot() != Slot.MAINHAND && item.getSlot() != Slot.OFFHAND && item.getSlot() != Slot.RANGE_OFFHAND && item.getSlot() != Slot.RANGE_MAINHAND)    
                 stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
-            if(td.getId().equals("c7212941453b5970f3bf40daf50271dc5dcb80b4") || td.getId().equals("8469e44d1b5890ad25506a2abbd2986987efb20a") || td.getId().equals("9f35f1840298549d070a818019bd6b7da131a6ec") || td.getId().equals("ab5d855dbeedfd400cfd417dbc1d25d01272203e")) {
+            if(td.getName().contains("Tooth of Cavadar")) {
                 stats.setPsychicLevel(stats.getPsychicLevel() + 1);
             }
             if((td.getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") || td.getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2")) && sixLevelReward.get() == 0) {
