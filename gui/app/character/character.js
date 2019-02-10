@@ -100,6 +100,7 @@ angular.module('main')
     $scope.characterContext = characterState.get();
     $scope.ringErrors = null;
     $scope.backErrors = null;
+    $scope.iounStoneErrors = null;
     $scope.charmErrors = null;
     $scope.slotlessErrors = null;
     $scope.slotlessRow1 = [];
@@ -151,6 +152,7 @@ angular.module('main')
     $scope.checkItemStatus = function() {
         $scope.ringErrors = null;
         $scope.backErrors = null;
+        $scope.iounStoneErrors = null;
         $scope.charmErrors = null;
         $scope.slotlessErrors = null;
         slotlessRow1 = [];
@@ -182,6 +184,15 @@ angular.module('main')
             $scope.characterContext.backs.forEach(function(item, index) {
                 if(item.slotStatus === 'INVALID')
                     $scope.backErrors = item.statusText;
+            });
+        }
+        if($scope.characterContext.iounStones.length > 0) {
+            $scope.characterContext.iounStones.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID') {
+                    if($scope.iounStoneErrors === null)
+                        $scope.iounStoneErrors = [];
+                    $scope.iounStoneErrors.push(item.statusText);
+                }
             });
         }
         if($scope.characterContext.charms.length > 0) {

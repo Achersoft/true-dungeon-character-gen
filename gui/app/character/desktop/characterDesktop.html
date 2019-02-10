@@ -5,10 +5,13 @@
     <div ng-show="interactive === true">
         <center>
             <div style="display:flex;max-width:866px;margin-top:10px;margin-left:-105px">
-                <label class="text-right" style="font-size:28px;padding-right:15px;margin-top:8px">Ioun Stones:</label>
+                <label class="text-right" ng-class="{'error-text': iounStoneErrors !== null} style="font-size:28px;padding-right:15px;margin-top:8px">Ioun Stones:</label>
                 <div style="padding:0;width:70px" ng-repeat-start="iounStone in characterContext.iounStones track by $index" ng-repeat-end>
                     <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="iounStone{{$index}}" model="iounStone" label="Ioun Stone"></token-selector>
                 </div>
+            </div>
+            <div style="display:flex;max-width:866px;margin-top:2px" ng-repeat-start="iounStoneError in iounStoneErrors track by $index" ng-repeat-end>
+                <label class="error-text">{{iounStoneError}}</label>
             </div>
             <div style="display:flex;max-width:866px;margin-top:10px">
                 <label class="text-right" ng-class="{'error-text': charmErrors !== null}" style="font-size:28px;padding-right:15px;margin-top:8px">Charms:</label>
@@ -44,10 +47,14 @@
         <div style="display:flex">
             <div style="min-width:250px;width:25%">
                 <div style="display:flex;margin-top:10px">
-                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Head:</label>
+                    <label class="text-right" ng-class="{'error-text': characterContext.head.slotStatus === 'INVALID'}" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Head:</label>
                     <div style="padding:0;width:60px">
                         <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-top" set-token="setTokenSlot" unequip="unequipItem" element-id="head" model="characterContext.head" label="Head"></token-selector>
                     </div>
+                </div>
+                <div style="display:flex;" ng-show="characterContext.head.slotStatus === 'INVALID'">
+                    <div style="min-width:40px;width:75%;"></div>
+                    <label style="min-width:210px;" class="error-text">{{characterContext.head.statusText}}</label>
                 </div>
                 <div style="display:flex;margin-top:10px">
                     <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Bead:</label>
