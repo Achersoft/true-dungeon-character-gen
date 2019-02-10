@@ -25,5 +25,6 @@ public enum ConditionalUse {
     DIRK_WEAPON,
     RARE_WEAPON,
     NO_OTHER_IOUN_STONE,
-    MISSILE_ATTACK;
+    MISSILE_ATTACK,
+    NOT_RARE_PLUS_TORSO;
 }

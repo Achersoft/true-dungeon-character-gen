@@ -1468,6 +1468,9 @@ public class CharacterServiceImpl implements CharacterService {
             }
             if(td.isTwoHanded() && !td.isRangedWeapon())
                 metCondition.add(ConditionalUse.WEAPON_2H);
+            
+            if(item.getSlot() == Slot.TORSO && item.getRarity().ordinal() > Rarity.UNCOMMON.ordinal())
+                metCondition.add(ConditionalUse.NOT_RARE_PLUS_TORSO);
 
             if(td.getConditionalUse() != ConditionalUse.NONE){
                 conditionalTokens.add(item);
@@ -1852,6 +1855,17 @@ public class CharacterServiceImpl implements CharacterService {
                         stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
                         updateStats(stats, td, notes);
                     }   break; 
+                case NOT_RARE_PLUS_TORSO:
+                    if(metCondition.contains(ConditionalUse.NOT_RARE_PLUS_TORSO)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with a rare or higher torso armor.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
+                        updateStats(stats, td, notes);
+                    }   break;
                 default:
                     break;
             }
