@@ -985,9 +985,10 @@ public class CharacterServiceImpl implements CharacterService {
         long fingerCount = 0;
         if(itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78"))
             characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER).collect(Collectors.toList()));
-        else if (itemsMap.containsKey("c289cd1accbbcc7af656de459c157bdc40dbaf45")) //Ring of Fateful Heroism 
-            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER||item.getId().equals("c289cd1accbbcc7af656de459c157bdc40dbaf45")).collect(Collectors.toList())); 
-        else {
+        else if (itemsMap.containsKey("c289cd1accbbcc7af656de459c157bdc40dbaf45")) { //Ring of Fateful Heroism 
+            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER && !item.getId().equals("c289cd1accbbcc7af656de459c157bdc40dbaf45")).collect(Collectors.toList())); 
+            fingerCount = 1;
+        } else {
             fingerCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FINGER).count();
             if(fingerCount < 2) {
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FINGER).index(0).slotStatus(SlotStatus.OK).build());
