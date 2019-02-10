@@ -5,7 +5,7 @@
     <div ng-show="interactive === true">
         <center>
             <div style="display:flex;max-width:866px;margin-top:10px;margin-left:-105px">
-                <label class="text-right" ng-class="{'error-text': iounStoneErrors !== null} style="font-size:28px;padding-right:15px;margin-top:8px">Ioun Stones:</label>
+                <label class="text-right" ng-class="{'error-text': iounStoneErrors !== null}" style="font-size:28px;padding-right:15px;margin-top:8px">Ioun Stones:</label>
                 <div style="padding:0;width:70px" ng-repeat-start="iounStone in characterContext.iounStones track by $index" ng-repeat-end>
                     <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="iounStone{{$index}}" model="iounStone" label="Ioun Stone"></token-selector>
                 </div>
