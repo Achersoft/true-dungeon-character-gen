@@ -24,6 +24,10 @@ public enum Rarity {
     public String htmlColor() {
         return htmlColor;
     }
+    
+    public boolean isHigherThanUlraRare() {
+        return this.ordinal() > ULTRARARE.ordinal();
+    }
 }
 
 

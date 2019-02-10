@@ -985,9 +985,11 @@ public class CharacterServiceImpl implements CharacterService {
         long fingerCount = 0;
         if(itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78"))
             characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER).collect(Collectors.toList()));
+        else if (itemsMap.containsKey("c289cd1accbbcc7af656de459c157bdc40dbaf45")) //Ring of Fateful Heroism 
+            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER||item.getId().equals("c289cd1accbbcc7af656de459c157bdc40dbaf45")).collect(Collectors.toList())); 
         else {
             fingerCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FINGER).count();
-            if(fingerCount == 0) {
+            if(fingerCount < 2) {
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FINGER).index(0).slotStatus(SlotStatus.OK).build());
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FINGER).index(1).slotStatus(SlotStatus.OK).build());
                 fingerCount = 2;
@@ -1448,9 +1450,12 @@ public class CharacterServiceImpl implements CharacterService {
                 metCondition.add(ConditionalUse.NOT_WITH_COA);
             if(td.getId().equals("63cc231ebcbb18e23c9979ba26b38f3ff9f21d92"))
                 metCondition.add(ConditionalUse.NOT_WITH_COS_COA);
-            if(td.getTreasureMin()>0 && td.getRarity() != Rarity.ARTIFACT)
+            if(td.getTreasureMin() > 0 && td.getRarity() != Rarity.ARTIFACT && !td.getName().equals("Charm of Treasure Boosting")) {
                 if(additionalTreasureTokens.addAndGet(1) > 1)
                     metCondition.add(ConditionalUse.NO_OTHER_TREASURE);
+                if (td.getRarity().isHigherThanUlraRare() || additionalTreasureTokens.get() > 1)
+                    metCondition.add(ConditionalUse.ONE_OTHER_UR_TREASURE);
+            }
 
             if(td.isOneHanded() && !td.isRangedWeapon())
                 metCondition.add(ConditionalUse.WEAPON_1H);
@@ -1504,6 +1509,7 @@ public class CharacterServiceImpl implements CharacterService {
             } else if(item.getSlot() != Slot.RANGE_MAINHAND)
                 stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
             if(item.getSlot() == Slot.RANGE_MAINHAND) {
+                metCondition.add(ConditionalUse.MISSILE_ATTACK);
                 rangeMainWeaponHit.set(td.getRangeHit());
                 if(td.getRangeHit() > rangeOffWeaponHit.get())
                     stats.setRangeHit(stats.getRangeHit() + td.getRangeHit() - rangeOffWeaponHit.get());
@@ -1782,7 +1788,70 @@ public class CharacterServiceImpl implements CharacterService {
                     if(ironMelee == 0 && ironRanged == 0) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " requires a Iron weapon to be equipped.");
-                    }   break;    
+                    }   break;  
+                case ONE_OTHER_UR_TREASURE:
+                    if(metCondition.contains(ConditionalUse.ONE_OTHER_UR_TREASURE)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with more than one other treasure enchancing token that is UR or lower.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes);
+                    }   break;
+                case DIRK_WEAPON:
+                    long dirkMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("dirk")).count();
+                    long dirkRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("dirk")).count();
+                    if(dirkMelee > 0) {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                    }
+                    if(dirkRanged > 0) {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                    }
+                    if(dirkMelee == 0 && dirkRanged == 0) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " requires a Dirk to be equipped.");
+                    }   break;
+                case RARE_WEAPON:
+                    long rareMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getRarity() == Rarity.RARE).count();
+                    long rareRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getRarity() == Rarity.RARE).count();
+                    if(rareMelee > 0) {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                    }
+                    if(rareRanged > 0) {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                    }
+                    if(rareMelee == 0 && rareRanged == 0) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " requires a Rare weapon to be equipped.");
+                    }   break;
+                case NO_OTHER_IOUN_STONE:
+                    if(characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.IOUNSTONE).count() > 1) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be equipped with any other ioun stone.");
+                    }   break;
+                case MISSILE_ATTACK:
+                    if(!metCondition.contains(ConditionalUse.MISSILE_ATTACK)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("This token requires a missile projectile range weapon to use.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
+                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
+                        updateStats(stats, td, notes);
+                    }   break; 
                 default:
                     break;
             }

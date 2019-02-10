@@ -59,6 +59,8 @@ public class PartyServiceImpl implements PartyService {
         Integer treasures = 0;
         Integer spell = 0;
         Integer resist = 0;
+        Integer earcuffAC = 0;
+        Integer shieldAC = 0;
         PartyDetails details = PartyDetails.builder()
                 .id(party.getId())
                 .initiative(0)
@@ -295,6 +297,94 @@ public class PartyServiceImpl implements PartyService {
         // CoA
         details.setInitiative(enhancements.getCharmOfAwareness());
         
+        // Earcuff of the Phalanx 
+        if(enhancements.getEarcuffOfThePhalanx() > 5) 
+            earcuffAC++;
+        if(enhancements.getEarcuffOfThePhalanx() > 9) 
+            earcuffAC++;
+        if(earcuffAC > 0) {
+            if(party.getBarbarian() != null && details.getBarbarian().isHasEotP()) {
+                details.getBarbarian().setMeleeAC(details.getBarbarian().getMeleeAC()+earcuffAC);
+                details.getBarbarian().setRangeAC(details.getBarbarian().getRangeAC()+earcuffAC);
+            }
+            if(party.getBard()!= null && details.getBard().isHasEotP()) {
+                details.getBard().setMeleeAC(details.getBard().getMeleeAC()+earcuffAC);
+                details.getBard().setRangeAC(details.getBard().getRangeAC()+earcuffAC);
+            }
+            if(party.getCleric()!= null && details.getCleric().isHasEotP()) {
+                details.getCleric().setMeleeAC(details.getCleric().getMeleeAC()+earcuffAC);
+                details.getCleric().setRangeAC(details.getCleric().getRangeAC()+earcuffAC);
+            }
+            if(party.getDruid()!= null && details.getDruid().isHasEotP()) {
+                details.getDruid().setMeleeAC(details.getDruid().getMeleeAC()+earcuffAC);
+                details.getDruid().setRangeAC(details.getDruid().getRangeAC()+earcuffAC);
+            }
+            if(party.getDwarfFighter() != null && details.getDwarfFighter().isHasEotP()) {
+                details.getDwarfFighter().setMeleeAC(details.getDwarfFighter().getMeleeAC()+earcuffAC);
+                details.getDwarfFighter().setRangeAC(details.getDwarfFighter().getRangeAC()+earcuffAC);
+            }
+            if(party.getElfWizard() != null && details.getElfWizard().isHasEotP()) {
+                details.getElfWizard().setMeleeAC(details.getElfWizard().getMeleeAC()+earcuffAC);
+                details.getElfWizard().setRangeAC(details.getElfWizard().getRangeAC()+earcuffAC);
+            }
+            if(party.getFighter() != null && details.getFighter().isHasEotP()) {
+                details.getFighter().setMeleeAC(details.getFighter().getMeleeAC()+earcuffAC);
+                details.getFighter().setRangeAC(details.getFighter().getRangeAC()+earcuffAC);
+            }
+            if(party.getMonk() != null && details.getMonk().isHasEotP()) {
+                details.getMonk().setMeleeAC(details.getMonk().getMeleeAC()+earcuffAC);
+                details.getMonk().setRangeAC(details.getMonk().getRangeAC()+earcuffAC);
+            }
+            if(party.getPaladin() != null && details.getPaladin().isHasEotP()) {
+                details.getPaladin().setMeleeAC(details.getPaladin().getMeleeAC()+earcuffAC);
+                details.getPaladin().setRangeAC(details.getPaladin().getRangeAC()+earcuffAC);
+            }
+            if(party.getRanger() != null && details.getRanger().isHasEotP()) {
+                details.getRanger().setMeleeAC(details.getRanger().getMeleeAC()+earcuffAC);
+                details.getRanger().setRangeAC(details.getRanger().getRangeAC()+earcuffAC);
+            }
+            if(party.getRogue() != null && details.getRogue().isHasEotP()) {
+                details.getRogue().setMeleeAC(details.getRogue().getMeleeAC()+earcuffAC);
+                details.getRogue().setRangeAC(details.getRogue().getRangeAC()+earcuffAC);
+            }
+            if(party.getWizard() != null && details.getWizard().isHasEotP()) {
+                details.getWizard().setMeleeAC(details.getWizard().getMeleeAC()+earcuffAC);
+                details.getWizard().setRangeAC(details.getWizard().getRangeAC()+earcuffAC);
+            }
+        }
+        
+        // Shield of the Phalanx 
+        if(enhancements.getSheildOfThePhalanx() > 1) 
+            shieldAC++;
+        if(enhancements.getSheildOfThePhalanx() > 2) 
+            shieldAC++;
+        if(enhancements.getSheildOfThePhalanx() > 3) 
+            shieldAC++;
+        if(enhancements.getSheildOfThePhalanx() > 4) 
+            shieldAC++;
+        if(shieldAC > 0) {
+            if(party.getBarbarian() != null && details.getBarbarian().isHasSotP()) {
+                details.getBarbarian().setMeleeAC(details.getBarbarian().getMeleeAC()+shieldAC);
+                details.getBarbarian().setRangeAC(details.getBarbarian().getRangeAC()+shieldAC);
+            }
+            if(party.getCleric() != null && details.getCleric().isHasSotP()) {
+                details.getCleric().setMeleeAC(details.getCleric().getMeleeAC()+shieldAC);
+                details.getCleric().setRangeAC(details.getCleric().getRangeAC()+shieldAC);
+            }
+            if(party.getDwarfFighter() != null && details.getDwarfFighter().isHasSotP()) {
+                details.getDwarfFighter().setMeleeAC(details.getDwarfFighter().getMeleeAC()+shieldAC);
+                details.getDwarfFighter().setRangeAC(details.getDwarfFighter().getRangeAC()+shieldAC);
+            }
+            if(party.getFighter() != null && details.getFighter().isHasSotP()) {
+                details.getFighter().setMeleeAC(details.getFighter().getMeleeAC()+shieldAC);
+                details.getFighter().setRangeAC(details.getFighter().getRangeAC()+shieldAC);
+            }
+            if(party.getPaladin() != null && details.getPaladin().isHasSotP()) {
+                details.getPaladin().setMeleeAC(details.getPaladin().getMeleeAC()+shieldAC);
+                details.getPaladin().setRangeAC(details.getPaladin().getRangeAC()+shieldAC);
+            }
+        }
+        
         // Bracelets of Cabal
         if(enhancements.getBraceletsOfCabal() > 2) 
             spell++;
@@ -307,11 +397,11 @@ public class PartyServiceImpl implements PartyService {
             }
             if(party.getCleric()!= null && details.getCleric().isHasBoC()) {
                 details.getCleric().setSpellHeal(details.getCleric().getSpellHeal()+spell);
-                details.getBard().setSpellDmg(details.getBard().getSpellDmg()+spell);
+                details.getCleric().setSpellDmg(details.getCleric().getSpellDmg()+spell);
             }
             if(party.getDruid()!= null && details.getDruid().isHasBoC()) {
                 details.getDruid().setSpellHeal(details.getDruid().getSpellHeal()+spell);
-                details.getBard().setSpellDmg(details.getBard().getSpellDmg()+spell);
+                details.getDruid().setSpellDmg(details.getDruid().getSpellDmg()+spell);
             }
             if(party.getElfWizard() != null && details.getElfWizard().isHasBoC()) {
                 details.getElfWizard().setSpellDmg(details.getElfWizard().getSpellDmg()+spell);
@@ -644,6 +734,18 @@ public class PartyServiceImpl implements PartyService {
 
         // Check CoA
         enhancements.setCharmOfAwareness(enhancements.getCharmOfAwareness()+cd.getStats().getInitiative());
+        
+        // Check Earcuff of the Phalanx
+        if(cd.getItems().stream().distinct().filter((item) -> item.getItemId()!=null&&(item.getItemId().equals("b8291a0675a0230bce3102b5d91e06068610b6c6"))).count() > 0){
+            enhancements.setEarcuffOfThePhalanx(enhancements.getEarcuffOfThePhalanx()+1);
+            pc.setHasEotP(true);
+        }
+        
+        // Check Shield of the Phalanx
+        if(cd.getItems().stream().distinct().filter((item) -> item.getItemId()!=null&&(item.getItemId().equals("1bbf38e319f899841c7cbef78516229b0174c644"))).count() > 0){
+            enhancements.setSheildOfThePhalanx(enhancements.getSheildOfThePhalanx()+1);
+            pc.setHasSotP(true);
+        }
         
         // Gloves
         if(cd.getItems().stream().distinct().filter((item) -> item.getItemId()!=null&&(item.getItemId().equals("3dcfd7948a3c9196556ef7e069a36174396297ad"))).count() > 0){

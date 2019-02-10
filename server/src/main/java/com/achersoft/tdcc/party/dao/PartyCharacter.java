@@ -67,6 +67,8 @@ public class PartyCharacter {
     private boolean hasGoC = false;
     private boolean hasBoC = false;
     private boolean hasCoC = false;
+    private boolean hasEotP = false;
+    private boolean hasSotP = false;
     
     public static PartyCharacter fromCharacterDetails(CharacterDetails cd) {
         return PartyCharacter.builder()

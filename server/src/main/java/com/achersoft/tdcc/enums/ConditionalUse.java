@@ -14,7 +14,6 @@ public enum ConditionalUse {
     MAY_NOT_USE_SHIELDS,
     STRENGTH_24,
     NO_OTHER_TREASURE,
-    ONE_OTHER_TREASURE, *
     NOT_WITH_COA,
     NOT_WITH_COS_COA,
     NOT_WITH_PRO_SCROLL,
@@ -22,12 +21,9 @@ public enum ConditionalUse {
     SLING,
     THRALL_WEAPON,
     NOT_WITH_ROSP,
-    DIRK_WEAPON*,
-    RARE_WEAPON*,
-    NO_OTHER_IOUN_STONE Ioun Stone Marble Sphere,
+    ONE_OTHER_UR_TREASURE, 
+    DIRK_WEAPON,
+    RARE_WEAPON,
+    NO_OTHER_IOUN_STONE,
     MISSILE_ATTACK;
 }
-
-
-Earcuff of the Phalanx
-Ring of Fateful Heroism - no rings
