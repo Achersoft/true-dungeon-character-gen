@@ -152,6 +152,7 @@ angular.module('main')
     $scope.checkItemStatus = function() {
         $scope.ringErrors = null;
         $scope.backErrors = null;
+        $scope.headErrors = null;
         $scope.iounStoneErrors = null;
         $scope.charmErrors = null;
         $scope.slotlessErrors = null;
@@ -178,6 +179,12 @@ angular.module('main')
             $scope.characterContext.rings.forEach(function(item, index) {
                 if(item.slotStatus === 'INVALID')
                     $scope.ringErrors = item.statusText;
+            });
+        }
+        if($scope.characterContext.heads.length > 0) {
+            $scope.characterContext.heads.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID')
+                    $scope.headErrors = item.statusText;
             });
         }
         if($scope.characterContext.backs.length > 0) {

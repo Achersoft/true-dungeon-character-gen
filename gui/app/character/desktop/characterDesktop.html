@@ -46,71 +46,71 @@
         </center>
         <div style="display:flex">
             <div style="min-width:250px;width:25%">
-                <div style="display:flex;margin-top:10px">
-                    <label class="text-right" ng-class="{'error-text': characterContext.head.slotStatus === 'INVALID'}" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Head:</label>
-                    <div style="padding:0;width:60px">
-                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-top" set-token="setTokenSlot" unequip="unequipItem" element-id="head" model="characterContext.head" label="Head"></token-selector>
+                <div style="display:flex;margin-top:10px;min-width:250px;float:right">
+                    <label class="text-right" ng-class="{'error-text': headErrors !== null}" style="min-width:150px;font-size:28px;margin-top:8px;margin-left:auto;margin-right:0">Head:</label>
+                    <div style="padding:0;padding-left:15px;margin-left:auto;margin-right:0" ng-repeat-start="head in characterContext.heads track by $index" ng-repeat-end>
+                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-top" set-token="setTokenSlot" unequip="unequipItem" model="head" label="Head"></token-selector>
                     </div>
                 </div>
-                <div style="display:flex;" ng-show="characterContext.head.slotStatus === 'INVALID'">
-                    <div style="min-width:40px;width:75%;"></div>
-                    <label style="min-width:210px;" class="error-text">{{characterContext.head.statusText}}</label>
+                <div style="display:flex;min-width:250px;float:right" ng-show="headErrors !== null">
+                    <div style="width:20%;"></div>
+                    <label style="min-width:210px;" class="error-text">{{headErrors}}</label>
                 </div>
-                <div style="display:flex;margin-top:10px">
-                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Bead:</label>
-                    <div style="padding:0;width:60px">
+                <div style="display:flex;margin-top:10px;min-width:250px;float:right">
+                    <label class="text-right" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Bead:</label>
+                    <div style="padding:0;width:60px;margin-left:auto;margin-right:0">
                         <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right" set-token="setTokenSlot" unequip="unequipItem" element-id="bead" model="characterContext.bead" label="Bead"></token-selector>
                     </div>
                 </div>
-                <div style="display:flex;margin-top:10px">
-                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Wrists:</label>
-                    <div style="padding:0;width:60px">
+                <div style="display:flex;margin-top:10px;min-width:250px;float:right">
+                    <label class="text-right" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Wrists:</label>
+                    <div style="padding:0;width:60px;margin-left:auto;margin-right:0">
                         <img ng-if="characterContext.wrists === null" class="img-thumbnail img-responsive img-circle" style="border:none;" src="images/nullToken.jpg" alt="images/nullToken.jpg" width="60px" >
                         <token-selector ng-if="characterContext.wrists !== null" editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right" set-token="setTokenSlot" unequip="unequipItem" element-id="wrists" model="characterContext.wrists" label="Wrists"></token-selector>
                     </div>
                 </div>
-                <div style="display:flex;margin-top:10px">
-                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Hands:</label>
-                    <div style="padding:0;width:60px">
+                <div style="display:flex;margin-top:10px;min-width:250px;float:right">
+                    <label class="text-right" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Hands:</label>
+                    <div style="padding:0;width:60px;margin-left:auto;margin-right:0">
                         <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right" set-token="setTokenSlot" unequip="unequipItem" element-id="hands" model="characterContext.hands" label="Hands"></token-selector>
                     </div>
                 </div>
-                <div style="display:flex;margin-top:10px">
-                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Torso:</label>
-                    <div style="padding:0;width:60px">
+                <div style="display:flex;margin-top:10px;min-width:250px;float:right">
+                    <label class="text-right" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Torso:</label>
+                    <div style="padding:0;width:60px;margin-left:auto;margin-right:0">
                         <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right" placement="right-top" set-token="setTokenSlot" unequip="unequipItem" element-id="torso" model="characterContext.torso" label="Torso"></token-selector>
                     </div>
                 </div>
-                <div style="display:flex;margin-top:10px">
-                    <label class="text-right" ng-class="{'error-text': characterContext.waist.slotStatus === 'INVALID'}" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Waist:</label>
-                    <div style="padding:0;width:60px">
+                <div style="display:flex;margin-top:10px;min-width:250px;float:right">
+                    <label class="text-right" ng-class="{'error-text': characterContext.waist.slotStatus === 'INVALID'}" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Waist:</label>
+                    <div style="padding:0;width:60px;margin-left:auto;margin-right:0">
                         <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.waist" label="Waist"></token-selector>
                     </div>
                 </div>
-                <div style="display:flex;" ng-show="characterContext.waist.slotStatus === 'INVALID'">
-                    <div style="min-width:40px;width:75%;"></div>
+                <div style="display:flex;min-width:250px;float:right" ng-show="characterContext.waist.slotStatus === 'INVALID'">
+                    <div style="width:20%;"></div>
                     <label style="min-width:210px;" class="error-text">{{characterContext.waist.statusText}}</label>
                 </div>
-                <div style="display:flex;margin-top:10px">
-                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Legs:</label>
-                    <div style="padding:0;width:60px">
+                <div style="display:flex;margin-top:10px;min-width:250px;float:right">
+                    <label class="text-right" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Legs:</label>
+                    <div style="padding:0;width:60px;margin-left:auto;margin-right:0">
                         <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.legs" label="Legs"></token-selector>
                     </div>
                 </div>
-                <div style="display:flex;margin-top:10px">
-                    <label class="text-right" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Shins:</label>
-                    <div style="padding:0;width:60px">
+                <div style="display:flex;margin-top:10px;min-width:250px;float:right">
+                    <label class="text-right" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Shins:</label>
+                    <div style="padding:0;width:60px;margin-left:auto;margin-right:0">
                         <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.shins" label="Shins"></token-selector>
                     </div>
                 </div>
-                <div style="display:flex;margin-top:10px">
-                    <label class="text-right" ng-class="{'error-text': characterContext.boots.slotStatus === 'INVALID'}" style="min-width:150px;width:75%;font-size:28px;padding-right:15px;margin-top:8px">Feet:</label>
-                    <div style="padding:0;width:60px">
+                <div style="display:flex;margin-top:10px;min-width:250px;float:right">
+                    <label class="text-right" ng-class="{'error-text': characterContext.boots.slotStatus === 'INVALID'}" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Feet:</label>
+                    <div style="padding:0;width:60px;margin-left:auto;margin-right:0">
                         <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="characterContext.boots" label="Feet"></token-selector>
                     </div>
                 </div>
-                <div style="display:flex;" ng-show="characterContext.boots.slotStatus === 'INVALID'">
-                    <div style="min-width:40px;width:75%;"></div>
+                <div style="display:flex;min-width:250px;float:right" ng-show="characterContext.boots.slotStatus === 'INVALID'">
+                    <div style="width:20%;"></div>
                     <label style="min-width:210px;" class="error-text">{{characterContext.boots.statusText}}</label>
                 </div>
             </div>
@@ -132,7 +132,7 @@
                             <img src="images/Bard-instrument.png" ng-if="characterContext.instruments[0].itemId !== null" width="425px" alt="" style="z-index:11;position:absolute;margin-top:25px;padding:0px"/>
                             <img src="images/Bard-arm.png" width="425px" alt="" style="z-index:12;position:absolute;margin-top:25px;padding:0px"/>
                             <img src="images/Bard-head.png" width="425px" alt="" style="z-index:13;position:absolute;margin-top:25px;padding:0px"/>
-                            <img src="images/Bard-hat.png" ng-if="characterContext.head.itemId !== null" width="425px" alt="" style="z-index:14;position:absolute;margin-top:25px;padding:0px"/>
+                            <img src="images/Bard-hat.png" ng-if="characterContext.heads[0].itemId !== null" width="425px" alt="" style="z-index:14;position:absolute;margin-top:25px;padding:0px"/>
                         </div>
                     </div>
                     <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'BARBARIAN'" width="425px" alt="" style="margin-top:25px;padding:0px"/>
@@ -289,8 +289,10 @@
                 <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="instrument{{$index}}" model="instrument" label="Instrument"></item-desktop-selector>
             </div>
         </div>
-        <div class="col-xs-12" style="padding:0" ng-if="characterContext.head !== null">
-            <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="head" model="characterContext.head" label="Head"></item-desktop-selector>
+        <div ng-if="characterContext.heads !== null && characterContext.heads.length > 0">
+            <div class="col-xs-12" style="padding:0" ng-repeat-start="head in characterContext.heads track by $index" ng-repeat-end>
+                <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="head{{$index}}" model="head" label="Head"></item-desktop-selector>
+            </div>
         </div>
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.eyes !== null">
             <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="eyes" model="characterContext.eyes" label="Eyes"></item-desktop-selector>

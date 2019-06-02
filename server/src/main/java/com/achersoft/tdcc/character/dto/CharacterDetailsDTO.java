@@ -20,7 +20,7 @@ public class CharacterDetailsDTO {
     public String name;
     public CharacterClass characterClass;
     public CharacterStats stats;
-    public CharacterItemDTO head;
+    public List<CharacterItemDTO> heads;
     public CharacterItemDTO eyes;
     public CharacterItemDTO leftEar;
     public CharacterItemDTO rightEar;
@@ -60,6 +60,7 @@ public class CharacterDetailsDTO {
                 .characterClass(dao.getCharacterClass())
                 .stats(dao.getStats())
                 .instruments(new ArrayList())
+                .heads(new ArrayList())
                 .backs(new ArrayList())
                 .rings(new ArrayList())
                 .charms(new ArrayList())
@@ -77,7 +78,7 @@ public class CharacterDetailsDTO {
             if(item.getName() == null)
                 item.setName("Empty");
             if(item.getSlot() == Slot.HEAD)
-                build.head = CharacterItemDTO.fromDAO(item);
+                build.heads.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.EYES)
                 build.eyes = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.EAR) {

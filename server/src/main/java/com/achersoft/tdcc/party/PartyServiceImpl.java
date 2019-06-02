@@ -295,7 +295,10 @@ public class PartyServiceImpl implements PartyService {
         }
         
         // CoA
-        details.setInitiative(enhancements.getCharmOfAwareness());
+        if (enhancements.getCharmOfAwareness() > 10)
+            details.setInitiative(10);
+        else
+            details.setInitiative(enhancements.getCharmOfAwareness());
         
         // Earcuff of the Phalanx 
         if(enhancements.getEarcuffOfThePhalanx() > 5) 

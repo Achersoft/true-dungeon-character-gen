@@ -30,14 +30,18 @@ import com.itextpdf.text.pdf.PdfStamper;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.ws.rs.core.StreamingOutput;
 import org.springframework.core.io.ClassPathResource;
@@ -763,109 +767,174 @@ public class CharacterServiceImpl implements CharacterService {
         character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.INSTRUMENT).forEach((item) ->{
             characterHtml.append("[b]Instrument:[/b] ").append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]").append("\n");
         });
-        final StringBuilder head = new StringBuilder();
-        characterHtml.append("[b]Head:[/b] ");
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HEAD).forEach((item) ->{
-            head.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
-        });
-        if(head.length() == 0)
-            head.append("Empty");
-        characterHtml.append(head.toString()).append("\n");
-        final StringBuilder eyes = new StringBuilder();
-        characterHtml.append("[b]Eyes:[/b] ");
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.EYES).forEach((item) ->{
-            eyes.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
-        });
-        if(eyes.length() == 0)
-            eyes.append("Empty");
-        characterHtml.append(eyes.toString()).append("\n");
-        final StringBuilder leftEar = new StringBuilder();
-        characterHtml.append("[b]Left Ear:[/b] ");
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==0).forEach((item) ->{
-            leftEar.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
-        });
-        if(leftEar.length() == 0)
-            leftEar.append("Empty");
-        characterHtml.append(leftEar.toString()).append("\n");
-        final StringBuilder rightEar = new StringBuilder();
-        characterHtml.append("[b]Right Ear:[/b] ");
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==1).forEach((item) ->{
-            rightEar.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
-        });
-        if(rightEar.length() == 0)
-            rightEar.append("Empty");
-        characterHtml.append(rightEar.toString()).append("\n");
-        final StringBuilder neck = new StringBuilder();
-        characterHtml.append("[b]Neck:[/b] ");
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.NECK).forEach((item) ->{
-            neck.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
-        });
-        if(neck.length() == 0)
-            neck.append("Empty");
-        characterHtml.append(neck.toString()).append("\n");
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BEAD).forEach((item) ->{
-            characterHtml.append("[b]Bead:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        final StringBuilder torso = new StringBuilder();
-        characterHtml.append("[b]Torso:[/b] ");
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.TORSO).forEach((item) ->{
-            torso.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
-        });
-        if(torso.length() == 0)
-            torso.append("Empty");
-        characterHtml.append(torso.toString()).append("\n");
-        final StringBuilder wrists = new StringBuilder();
-        characterHtml.append("[b]Wrist:[/b] ");
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WRIST).forEach((item) ->{
-            wrists.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
-        });
-        if(wrists.length() == 0)
-            wrists.append("Empty");
-        characterHtml.append(wrists.toString()).append("\n");
-        final StringBuilder hands = new StringBuilder();
-        characterHtml.append("[b]Hands:[/b] ");
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HANDS).forEach((item) ->{
-            hands.append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]");
-        });
-        if(hands.length() == 0)
-            hands.append("Empty");
-        characterHtml.append(hands.toString()).append("\n");
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BACK).forEach((item) ->{
-            characterHtml.append("[b]Back:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FINGER).forEach((item) ->{
-            characterHtml.append("[b]Ring:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WAIST).forEach((item) ->{
-            characterHtml.append("[b]Waist:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHIRT).forEach((item) ->{
-            characterHtml.append("[b]Shirt:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.LEGS).forEach((item) ->{
-            characterHtml.append("[b]Legs:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHINS).forEach((item) ->{
-            characterHtml.append("[b]Shins:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FEET).forEach((item) ->{
-            characterHtml.append("[b]Boots:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FIGURINE).forEach((item) ->{
-            characterHtml.append("[b]Figurine:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.CHARM).forEach((item) ->{
-            characterHtml.append("[b]Charm:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.IOUNSTONE).forEach((item) ->{
-            characterHtml.append("[b]Ioun Stone:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SLOTLESS).forEach((item) ->{
-            characterHtml.append("[b]Slotless:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
-        character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RUNESTONE).forEach((item) ->{
-            characterHtml.append("[b]Runestone:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
-        });
+        
+        Stream<CharacterItem> headItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HEAD);
+        if (headItems.count() > 0) {
+            headItems.forEach((item) ->{
+                characterHtml.append("[b]Head:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Head:[/b] Empty");
+
+        Stream<CharacterItem> eyeItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.EYES);
+        if (eyeItems.count() > 0) {
+            eyeItems.forEach((item) ->{
+                characterHtml.append("[b]Eyes:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Eyes:[/b] Empty");
+        
+        Stream<CharacterItem> leftEarItems = character.getItems().stream().filter((item) ->item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==0);
+        if (leftEarItems.count() > 0) {
+            leftEarItems.forEach((item) ->{
+                characterHtml.append("[b]Left Ear:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Left Ear:[/b] Empty");
+
+        Stream<CharacterItem> rightEarItems = character.getItems().stream().filter((item) ->item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==1);
+        if (rightEarItems.count() > 0) {
+            rightEarItems.forEach((item) ->{
+                characterHtml.append("[b]Right Ear:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Right Ear:[/b] Empty");
+       
+        Stream<CharacterItem> neckItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.NECK);
+        if (neckItems.count() > 0) {
+            neckItems.forEach((item) ->{
+                characterHtml.append("[b]Neck:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Neck:[/b] Empty");
+        
+        Stream<CharacterItem> beadItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BEAD);
+        if (beadItems.count() > 0) {
+            beadItems.forEach((item) ->{
+                characterHtml.append("[b]Bead:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Bead:[/b] Empty");
+        
+        Stream<CharacterItem> torsoItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.TORSO);
+        if (torsoItems.count() > 0) {
+            torsoItems.forEach((item) ->{
+                characterHtml.append("[b]Torso:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Torso:[/b] Empty");
+        
+        Stream<CharacterItem> wristItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WRIST);
+        if (wristItems.count() > 0) {
+            wristItems.forEach((item) ->{
+                characterHtml.append("[b]Wrist:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Wrist:[/b] Empty");
+        
+        Stream<CharacterItem> handItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HANDS);
+        if (handItems.count() > 0) {
+            handItems.forEach((item) ->{
+                characterHtml.append("[b]Hands:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Hands:[/b] Empty");
+        
+        Stream<CharacterItem> backItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BACK);
+        if (backItems.count() > 0) {
+            backItems.forEach((item) ->{
+                characterHtml.append("[b]Back:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Back:[/b] Empty");
+        
+        Stream<CharacterItem> fingerItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FINGER);
+        if (fingerItems.count() > 0) {
+            fingerItems.forEach((item) ->{
+                characterHtml.append("[b]Ring:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Ring:[/b] Empty");
+        
+        Stream<CharacterItem> waistItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WAIST);
+        if (waistItems.count() > 0) {
+            waistItems.forEach((item) ->{
+                characterHtml.append("[b]Waist:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Waist:[/b] Empty");
+        
+        Stream<CharacterItem> shirtItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHIRT);
+        if (shirtItems.count() > 0) {
+            shirtItems.forEach((item) ->{
+                characterHtml.append("[b]Shirt:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Shirt:[/b] Empty");
+        
+        Stream<CharacterItem> legItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.LEGS);
+        if (legItems.count() > 0) {
+            legItems.forEach((item) ->{
+                characterHtml.append("[b]Legs:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Legs:[/b] Empty");
+        
+        Stream<CharacterItem> shinItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHINS);
+        if (shinItems.count() > 0) {
+            shinItems.forEach((item) ->{
+                characterHtml.append("[b]Shins:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Shins:[/b] Empty");
+        
+        Stream<CharacterItem> footItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FEET);
+        if (footItems.count() > 0) {
+            footItems.forEach((item) ->{
+                characterHtml.append("[b]Boots:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Boots:[/b] Empty");
+        
+        Stream<CharacterItem> figurineItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FIGURINE);
+        if (figurineItems.count() > 0) {
+            figurineItems.forEach((item) ->{
+                characterHtml.append("[b]Figurine:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Figurine:[/b] Empty");
+        
+        Stream<CharacterItem> charmItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.CHARM);
+        if (charmItems.count() > 0) {
+            charmItems.forEach((item) ->{
+                characterHtml.append("[b]Charm:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Charm:[/b] Empty");
+        
+       Stream<CharacterItem> iounStoneItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.IOUNSTONE);
+        if (iounStoneItems.count() > 0) {
+            iounStoneItems.forEach((item) ->{
+                characterHtml.append("[b]Ioun Stone:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Ioun Stone:[/b] Empty");
+        
+        Stream<CharacterItem> slotlessItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SLOTLESS);
+        if (slotlessItems.count() > 0) {
+            slotlessItems.forEach((item) ->{
+                characterHtml.append("[b]Slotless:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Slotless:[/b] Empty");
+        
+        Stream<CharacterItem> runestoneItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RUNESTONE);
+        if (runestoneItems.count() > 0) {
+            runestoneItems.forEach((item) ->{
+                characterHtml.append("[b]Runestone:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
+            });
+        } else
+            characterHtml.append("[b]Runestone:[/b] Empty");
      
         return characterHtml.toString();
     }
@@ -986,11 +1055,13 @@ public class CharacterServiceImpl implements CharacterService {
         if(itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78"))
             characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER).collect(Collectors.toList()));
         else if (itemsMap.containsKey("c289cd1accbbcc7af656de459c157bdc40dbaf45")) { //Ring of Fateful Heroism 
-            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER && !item.getId().equals("c289cd1accbbcc7af656de459c157bdc40dbaf45")).collect(Collectors.toList())); 
+            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER).collect(Collectors.toList()));
+            characterDetails.getItems().add(itemsMap.get("c289cd1accbbcc7af656de459c157bdc40dbaf45"));
             fingerCount = 1;
         } else {
             fingerCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FINGER).count();
             if(fingerCount < 2) {
+                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER).collect(Collectors.toList()));
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FINGER).index(0).slotStatus(SlotStatus.OK).build());
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FINGER).index(1).slotStatus(SlotStatus.OK).build());
                 fingerCount = 2;
@@ -1047,39 +1118,29 @@ public class CharacterServiceImpl implements CharacterService {
         // Check for Earcuff of Orbits
         long iounCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.IOUNSTONE).count();
         if(itemsMap.containsKey("a898af8cb818c2f1e56acd8ddb78f0de9d4901e0")) {
-            if(iounCount == 5) {
+            if (iounCount == 5) {
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(5).slotStatus(SlotStatus.OK).build());
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(6).slotStatus(SlotStatus.OK).build());
+            } else if (iounCount != 7) {
+                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 4)).collect(Collectors.toList()));
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(5).slotStatus(SlotStatus.OK).build());
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(6).slotStatus(SlotStatus.OK).build());
             }
-            if(iounCount == 6) {
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(6).slotStatus(SlotStatus.OK).build());
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(7).slotStatus(SlotStatus.OK).build());
-            }
-        } else {
-            if(iounCount == 8)
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 5)).collect(Collectors.toList()));
-            else if(iounCount == 7)
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 4)).collect(Collectors.toList()));
+        } else if(iounCount > 5) {
+            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 4)).collect(Collectors.toList()));
         }
         
         // Check for Eldritch Runestone
-        iounCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.IOUNSTONE).count();
         //if(itemsMap.containsKey("db0c53293948567ee17fe0715828ba3e380e3d75")) {}
-        if(iounCount == 8)
-            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 6)).collect(Collectors.toList()));
-        else if(iounCount == 6)
-            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 4)).collect(Collectors.toList()));
-        
+;
         // Check for AoW
-       /* long aowCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.AOW).count();
+        long headCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.HEAD).count();
         if(itemsMap.containsKey("69174ff87b87325b034df0adc38d418859a11a09")) {
-            if(aowCount == 0) {
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.AOW).index(0).slotStatus(SlotStatus.OK).build());
-            }
-        } else {
-            if(aowCount > 0)
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.AOW)).collect(Collectors.toList()));
-        }*/
+            if(headCount == 1) 
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.HEAD).index(1).slotStatus(SlotStatus.OK).build());
+        } else if (headCount > 1) {
+            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.HEAD && item.getIndex() > 0)).collect(Collectors.toList()));
+        }
         
         // Check for Charm of Brooching
         long backCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.BACK).count();
@@ -1428,51 +1489,113 @@ public class CharacterServiceImpl implements CharacterService {
         final CharacterStats stats = characterDetails.getStats();
         final List<CharacterItem> conditionalTokens = new ArrayList();
         final Set<ConditionalUse> metCondition = new HashSet();
-        AtomicInteger mainWeaponHit = new AtomicInteger(0);
-        AtomicInteger offWeaponHit = new AtomicInteger(0);
-        AtomicInteger rangeMainWeaponHit = new AtomicInteger(0);
-        AtomicInteger rangeOffWeaponHit = new AtomicInteger(0);
+        final List<Integer> meleeWeaponHit = new ArrayList();
+        final List<Integer> rangeWeaponHit = new ArrayList();
+        AtomicBoolean canHaveRareMelee = new AtomicBoolean(true);
         AtomicInteger sixLevelReward = new AtomicInteger(0);
-        AtomicInteger scrollPro = new AtomicInteger(0);
         AtomicInteger mightyRanged = new AtomicInteger(0);
         AtomicInteger additionalTreasureTokens = new AtomicInteger(0);
-        StringBuilder sheildId = new StringBuilder();
+        AtomicInteger iounStoneCount = new AtomicInteger(0);
+        AtomicReference<String> sheildId = new AtomicReference<>("");
 
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
-            
-            if(td.getId().equals("c307398cc4eb769adccb78978693d79fa266b2f5") || td.getId().equals("c3c6de9b8951c4961976f147d64a0411cc6f730b")) {
-                if(scrollPro.incrementAndGet() > 1)
-                    metCondition.add(ConditionalUse.NOT_WITH_PRO_SCROLL);
-            }
+       
             if(td.getId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
                 metCondition.add(ConditionalUse.NOT_WITH_ROSP);
-            if(td.getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
+            else if(td.getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
                 metCondition.add(ConditionalUse.NOT_WITH_COA);
-            if(td.getId().equals("63cc231ebcbb18e23c9979ba26b38f3ff9f21d92"))
+            else if(td.getId().equals("63cc231ebcbb18e23c9979ba26b38f3ff9f21d92"))
                 metCondition.add(ConditionalUse.NOT_WITH_COS_COA);
-            if(td.getTreasureMin() > 0 && td.getRarity() != Rarity.ARTIFACT && !td.getName().equals("Charm of Treasure Boosting")) {
+            else if(td.getTreasureMin() > 0 && td.getRarity() != Rarity.ARTIFACT && !td.getName().equals("Charm of Treasure Boosting")) {
                 if(additionalTreasureTokens.addAndGet(1) > 1)
                     metCondition.add(ConditionalUse.NO_OTHER_TREASURE);
                 if (td.getRarity().isHigherThanUlraRare() || additionalTreasureTokens.get() > 1)
                     metCondition.add(ConditionalUse.ONE_OTHER_UR_TREASURE);
             }
-
-            if(td.isOneHanded() && !td.isRangedWeapon())
-                metCondition.add(ConditionalUse.WEAPON_1H);
-            if(td.isRangedWeapon()) {
-                metCondition.add(ConditionalUse.WEAPON_RANGED);
-                if(td.getName().toLowerCase().contains("sling"))
-                    metCondition.add(ConditionalUse.SLING);
-                if(td.isTwoHanded())
-                    metCondition.add(ConditionalUse.WEAPON_RANGED_2H);
+            else if (item.getSlot() == Slot.MAINHAND || item.getSlot() == Slot.OFFHAND) {
+                if (td.isOneHanded())
+                    metCondition.add(ConditionalUse.WEAPON_1H);
+                if (td.isTwoHanded())
+                    metCondition.add(ConditionalUse.WEAPON_2H);
+                if (!td.isShield() && canHaveRareMelee.get()) {
+                    if (td.getRarity().isHigherThanUlraRare()) {
+                        canHaveRareMelee.set(false);
+                        metCondition.remove(ConditionalUse.RARE_WEAPON_MELEE);
+                    } else if (td.getRarity() == Rarity.RARE)
+                        metCondition.add(ConditionalUse.RARE_WEAPON_MELEE);
+                } 
+                if(td.getConditionalUse() == ConditionalUse.NONE && isMeleeWeapon(item, td))
+                    meleeWeaponHit.add(td.getMeleeHit());
             }
-            if(td.isTwoHanded() && !td.isRangedWeapon())
-                metCondition.add(ConditionalUse.WEAPON_2H);
-            
-            if(item.getSlot() == Slot.TORSO && item.getRarity().ordinal() > Rarity.UNCOMMON.ordinal())
+            else if (item.getSlot() == Slot.RANGE_MAINHAND || item.getSlot() == Slot.RANGE_OFFHAND) {
+                metCondition.add(ConditionalUse.WEAPON_RANGED);
+                if (item.getSlot() == Slot.RANGE_MAINHAND) 
+                    metCondition.add(ConditionalUse.MISSILE_ATTACK);
+                if (td.getName().toLowerCase().contains("sling"))
+                    metCondition.add(ConditionalUse.SLING);
+                if (td.getName().toLowerCase().contains("crossbow"))
+                    metCondition.add(ConditionalUse.CROSSBOW);
+                if (td.isTwoHanded())
+                    metCondition.add(ConditionalUse.WEAPON_RANGED_2H);
+                if (item.getSlot() == Slot.RANGE_MAINHAND && td.getRarity() == Rarity.RARE) 
+                    metCondition.add(ConditionalUse.RARE_WEAPON_RANGE);
+                if(td.isThrown() || td.getName().toLowerCase().contains("mighty"))
+                    mightyRanged.set(1);
+                if (td.getConditionalUse() == ConditionalUse.NONE && isRangeWeapon(item, td))
+                    rangeWeaponHit.add(td.getRangeHit());
+            }
+            else if(item.getSlot() == Slot.TORSO && item.getRarity().ordinal() > Rarity.UNCOMMON.ordinal())
                 metCondition.add(ConditionalUse.NOT_RARE_PLUS_TORSO);
+            else if (td.isShield())
+                metCondition.add(ConditionalUse.MAY_NOT_USE_SHIELDS);
+            else if (td.getSlot() == Slot.IOUNSTONE) {
+                if(iounStoneCount.addAndGet(1) > 1)
+                    metCondition.add(ConditionalUse.NO_OTHER_IOUN_STONE);
+            }
 
+            if(td.getName().contains("Tooth of Cavadar")) {
+                stats.setPsychicLevel(stats.getPsychicLevel() + 1);
+            }
+            if((td.getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") || td.getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2")) && sixLevelReward.get() == 0) {
+                sixLevelReward.set(1);
+                stats.setTreasureMin(stats.getTreasureMin() + 1);
+                stats.setTreasureMax(stats.getTreasureMax() + 1);
+            }
+           
+            if(td.getConditionalUse() != ConditionalUse.NONE) {
+                conditionalTokens.add(item);
+            } else {
+                // check for same shield
+                if (td.isShield()) {
+                    if (sheildId.get().isEmpty()) {
+                        sheildId.set(td.getId());
+                        updateStats(stats, td, characterDetails.getNotes(), false, true);
+                    }
+                    
+                    if (!sheildId.get().equals(td.getId())) {
+                        item.setSlotStatus(SlotStatus.INVALID);
+                        item.setStatusText("Sheilds used for range and melee must be the same.");
+                    } else {
+                        if (item.getSlot() == Slot.OFFHAND) {
+                            item.setSlotStatus(SlotStatus.OK);
+                            item.setStatusText(null);
+                            stats.setMeleeAC(stats.getMeleeAC()+ td.getMeleeAC());
+                        } else if (item.getSlot() == Slot.RANGE_OFFHAND) {
+                            item.setSlotStatus(SlotStatus.OK);
+                            item.setStatusText(null);
+                            stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
+                            stats.setRangeMissileAC(stats.getRangeMissileAC() + td.getRangeMissileAC());
+                        }
+                    }
+                } else {
+                    item.setSlotStatus(SlotStatus.OK);
+                    item.setStatusText(null);
+                    updateStats(stats, td, characterDetails.getNotes(), false, false);
+                }
+            }
+            
+          /*  
             if(td.getConditionalUse() != ConditionalUse.NONE){
                 conditionalTokens.add(item);
             } else if (item.getSlot() == Slot.OFFHAND && td.isShield()) {
@@ -1534,12 +1657,24 @@ public class CharacterServiceImpl implements CharacterService {
                 sixLevelReward.set(1);
                 stats.setTreasureMin(stats.getTreasureMin() + 1);
                 stats.setTreasureMax(stats.getTreasureMax() + 1);
-            }
+            }*/
         });   
         
         // Check Conditionals 
-        checkConditionals(conditionalTokens, metCondition, stats, characterDetails);
+        checkConditionals(conditionalTokens, metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
         
+        if (!meleeWeaponHit.isEmpty())
+            meleeWeaponHit.remove(Collections.max(meleeWeaponHit));
+        meleeWeaponHit.stream().forEach(hit -> {
+            stats.setMeleeHit(stats.getMeleeHit() - hit);
+        });
+        
+        if (!rangeWeaponHit.isEmpty())
+            rangeWeaponHit.remove(Collections.max(rangeWeaponHit));
+        rangeWeaponHit.stream().forEach(hit -> {
+            stats.setRangeHit(stats.getRangeHit() - hit);
+        });
+      
         stats.setStrBonus((stats.getStr()-10 > 0)?(stats.getStr()-10)/2:(stats.getStr()-11)/2);
         stats.setDexBonus((stats.getDex()-10 > 0)?(stats.getDex()-10)/2:(stats.getDex()-11)/2);
         stats.setConBonus((stats.getCon()-10 > 0)?(stats.getCon()-10)/2:(stats.getCon()-11)/2);
@@ -1577,7 +1712,7 @@ public class CharacterServiceImpl implements CharacterService {
         
     }
     
-    private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails) {
+    private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails, List<Integer> meleeWeaponHit, List<Integer> rangeWeaponHit) {
         List<CharacterNote> notes = characterDetails.getNotes();
         conditionalTokens.stream().forEach((token) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(token.getItemId());
@@ -1589,17 +1724,8 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;
-                default:
-                    break;
-            }
-        });
-        conditionalTokens.stream().forEach((token) -> {
-            TokenFullDetails td = tokenAdminMapper.getTokenDetails(token.getItemId());
-            if(null != td.getConditionalUse()) switch (td.getConditionalUse()) {
                 case WEAPON_2H:
                     if(!metCondition.contains(ConditionalUse.WEAPON_2H)) {
                         token.setSlotStatus(SlotStatus.INVALID);
@@ -1607,9 +1733,7 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;
                 case WEAPON_1H:
                     if(!metCondition.contains(ConditionalUse.WEAPON_1H)) {
@@ -1618,9 +1742,7 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;
                 case WEAPON_RANGED:
                     if(!metCondition.contains(ConditionalUse.WEAPON_RANGED)) {
@@ -1629,9 +1751,7 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;
                 case WEAPON_RANGED_2H:
                     if(!metCondition.contains(ConditionalUse.WEAPON_RANGED_2H)) {
@@ -1640,9 +1760,7 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;    
                 case DEXTERITY_18:
                     if(stats.getDex() < 18) {
@@ -1651,9 +1769,18 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        
+                        if (isMeleeWeapon(token, td)) {
+                            meleeWeaponHit.add(td.getMeleeHit());
+                            stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                            stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                        } else if (isRangeWeapon(token, td)) {
+                            rangeWeaponHit.add(td.getRangeHit());
+                            stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                            stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                        }
+                        
+                        updateStats(stats, td, notes, true, false);
                     }   break;
                 case DEXTERITY_20:
                     if(stats.getDex() < 20) {
@@ -1662,9 +1789,18 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        
+                        if (isMeleeWeapon(token, td)) {
+                            meleeWeaponHit.add(td.getMeleeHit());
+                            stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                            stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                        } else if (isRangeWeapon(token, td)) {
+                            rangeWeaponHit.add(td.getRangeHit());
+                            stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                            stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                        }
+                        
+                        updateStats(stats, td, notes, true, false);
                     }   break;
                 case INTELLECT_20:
                     if(stats.getIntel()< 20) {
@@ -1673,9 +1809,18 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        
+                        if (isMeleeWeapon(token, td)) {
+                            meleeWeaponHit.add(td.getMeleeHit());
+                            stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                            stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                        } else if (isRangeWeapon(token, td)) {
+                            rangeWeaponHit.add(td.getRangeHit());
+                            stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                            stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                        }
+                        
+                        updateStats(stats, td, notes, true, false);
                     }   break;
                 case WISDOM_20:
                     if(stats.getWis()< 20) {
@@ -1684,9 +1829,18 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        
+                        if (isMeleeWeapon(token, td)) {
+                            meleeWeaponHit.add(td.getMeleeHit());
+                            stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                            stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                        } else if (isRangeWeapon(token, td)) {
+                            rangeWeaponHit.add(td.getRangeHit());
+                            stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                            stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                        }
+                        
+                        updateStats(stats, td, notes, true, false);
                     }   break;
                 case STRENGTH_24:
                     if(stats.getStr()< 24) {
@@ -1695,9 +1849,18 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        
+                        if (isMeleeWeapon(token, td)) {
+                            meleeWeaponHit.add(td.getMeleeHit());
+                            stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                            stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                        } else if (isRangeWeapon(token, td)) {
+                            rangeWeaponHit.add(td.getRangeHit());
+                            stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                            stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                        }
+                        
+                        updateStats(stats, td, notes, true, false);
                     }   break;
                 case NOT_WITH_COS_COA:
                     if(metCondition.contains(ConditionalUse.NOT_WITH_COS_COA)) {
@@ -1706,7 +1869,7 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;
                 case NOT_WITH_COA:
                     if(metCondition.contains(ConditionalUse.NOT_WITH_COA)) {
@@ -1715,9 +1878,7 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;
                 case NOT_WITH_PRO_SCROLL:
                     if(metCondition.contains(ConditionalUse.NOT_WITH_PRO_SCROLL)) {
@@ -1726,7 +1887,7 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;    
                 case NO_OTHER_TREASURE:
                     if(metCondition.contains(ConditionalUse.NO_OTHER_TREASURE)) {
@@ -1735,64 +1896,64 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;
                 case SLING:
-                    if(!metCondition.contains(ConditionalUse.SLING)) {
-                        token.setSlotStatus(SlotStatus.INVALID);
-                        token.setStatusText(token.getName() + " requires a Sling to be equipped.");
-                    } else {
-                        token.setSlotStatus(SlotStatus.OK);
-                        token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
-                    }   break;  
-                case CROSSBOW:
-                    if(characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("crossbow")).count()>0) {
+                    if(metCondition.contains(ConditionalUse.SLING)) {
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
                         stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
                         stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
-                    }   break;
+                    }
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;
+                case CROSSBOW:
+                    if(metCondition.contains(ConditionalUse.CROSSBOW)) {
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                    } 
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;
                 case THRALL_WEAPON:
                     long thrallMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("thrall")).count();
                     long thrallRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("thrall")).count();
+                   
                     if(thrallMelee > 0) {
-                        token.setSlotStatus(SlotStatus.OK);
-                        token.setStatusText(null);
                         stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
                         stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
                     }
                     if(thrallRanged > 0) {
-                        token.setSlotStatus(SlotStatus.OK);
-                        token.setStatusText(null);
                         stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
                         stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
                     }
-                    if(thrallMelee == 0 && thrallRanged == 0) {
-                        token.setSlotStatus(SlotStatus.INVALID);
-                        token.setStatusText(token.getName() + " requires a Thrall weapon to be equipped.");
-                    }   break;
+                    
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;
                 case IRON_WEAPON:
                     long ironMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("iron")).count();
                     long ironRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("iron")).count();
+                    
                     if(ironMelee > 0) {
-                        token.setSlotStatus(SlotStatus.OK);
-                        token.setStatusText(null);
                         stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
                         stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
                     }
                     if(ironRanged > 0) {
-                        token.setSlotStatus(SlotStatus.OK);
-                        token.setStatusText(null);
                         stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
                         stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
                     }
-                    if(ironMelee == 0 && ironRanged == 0) {
-                        token.setSlotStatus(SlotStatus.INVALID);
-                        token.setStatusText(token.getName() + " requires a Iron weapon to be equipped.");
-                    }   break;  
+                    
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;  
                 case ONE_OTHER_UR_TREASURE:
                     if(metCondition.contains(ConditionalUse.ONE_OTHER_UR_TREASURE)) {
                         token.setSlotStatus(SlotStatus.INVALID);
@@ -1800,51 +1961,48 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;
                 case DIRK_WEAPON:
                     long dirkMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("dirk")).count();
                     long dirkRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("dirk")).count();
+                    
                     if(dirkMelee > 0) {
-                        token.setSlotStatus(SlotStatus.OK);
-                        token.setStatusText(null);
                         stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
                         stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
                     }
                     if(dirkRanged > 0) {
-                        token.setSlotStatus(SlotStatus.OK);
-                        token.setStatusText(null);
                         stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
                         stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
                     }
-                    if(dirkMelee == 0 && dirkRanged == 0) {
-                        token.setSlotStatus(SlotStatus.INVALID);
-                        token.setStatusText(token.getName() + " requires a Dirk to be equipped.");
-                    }   break;
+                    
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;
                 case RARE_WEAPON:
-                    long rareMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getRarity() == Rarity.RARE).count();
-                    long rareRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getRarity() == Rarity.RARE).count();
-                    if(rareMelee > 0) {
-                        token.setSlotStatus(SlotStatus.OK);
-                        token.setStatusText(null);
+                    if(metCondition.contains(ConditionalUse.RARE_WEAPON_MELEE)) {
                         stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
                         stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
                     }
-                    if(rareRanged > 0) {
-                        token.setSlotStatus(SlotStatus.OK);
-                        token.setStatusText(null);
+                    if(metCondition.contains(ConditionalUse.RARE_WEAPON_RANGE)) {
                         stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
                         stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
                     }
-                    if(rareMelee == 0 && rareRanged == 0) {
-                        token.setSlotStatus(SlotStatus.INVALID);
-                        token.setStatusText(token.getName() + " requires a Rare weapon to be equipped.");
-                    }   break;
+                    
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;
                 case NO_OTHER_IOUN_STONE:
                     if(characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.IOUNSTONE).count() > 1) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be equipped with any other ioun stone.");
-                    }   break;
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes, false, false);
+                    }  break;
                 case MISSILE_ATTACK:
                     if(!metCondition.contains(ConditionalUse.MISSILE_ATTACK)) {
                         token.setSlotStatus(SlotStatus.INVALID);
@@ -1852,9 +2010,7 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break; 
                 case NOT_RARE_PLUS_TORSO:
                     if(metCondition.contains(ConditionalUse.NOT_RARE_PLUS_TORSO)) {
@@ -1863,17 +2019,35 @@ public class CharacterServiceImpl implements CharacterService {
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
-                        stats.setMeleeAC(stats.getMeleeAC() + td.getMeleeAC());
-                        stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
-                        updateStats(stats, td, notes);
+                        updateStats(stats, td, notes, false, false);
                     }   break;
+                case NO_OTHER_SIXTH_LEVEL_REWARD:
+                    if(metCondition.contains(ConditionalUse.NO_OTHER_SIXTH_LEVEL_REWARD)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText("Only one player level reward item can equip at a time.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes, false, false);
+                    } break;
                 default:
                     break;
             }
         });
     }
                 
-    private void updateStats(CharacterStats stats, TokenFullDetails td, List<CharacterNote> notes) {
+    private void updateStats(CharacterStats stats, TokenFullDetails td, List<CharacterNote> notes, boolean ignoreHitAndDamage, boolean ignoreAC) {
+        if(!ignoreHitAndDamage) {
+            stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+            stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+            stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+            stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+        }
+        if(!ignoreAC) {
+            stats.setMeleeAC(stats.getMeleeAC()+ td.getMeleeAC());
+            stats.setRangeAC(stats.getRangeAC() + td.getRangeAC());
+            stats.setRangeMissileAC(stats.getRangeMissileAC() + td.getRangeMissileAC());
+        }
         stats.setStr(stats.getStr() + td.getStr());
         stats.setDex(stats.getDex() + td.getDex());
         stats.setCon(stats.getCon() + td.getCon());
@@ -1882,7 +2056,6 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setCha(stats.getCha() + td.getCha());
         stats.setHealth(stats.getHealth() + td.getHealth());
         stats.setRegen(stats.getRegen() + td.getRegen());
-        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
         stats.setMeleeFire(stats.isMeleeFire() || td.isMeleeFire());
         stats.setMeleeCold(stats.isMeleeCold() || td.isMeleeCold());
         stats.setMeleeShock(stats.isMeleeShock() || td.isMeleeShock());
@@ -1891,8 +2064,6 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setMeleePoison(stats.isMeleePoison() || td.isMeleePoison());
         stats.setMeleeDarkrift(stats.isMeleeDarkrift() || td.isMeleeDarkrift());
         stats.setMeleeSacred(stats.isMeleeSacred() || td.isMeleeSacred());
-        stats.setRangeMissileAC(stats.getRangeMissileAC() + td.getRangeMissileAC());
-        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
         stats.setRangeFire(stats.isRangeFire() || td.isRangeFire());
         stats.setRangeCold(stats.isRangeCold() || td.isRangeCold());
         stats.setRangeShock(stats.isRangeShock() || td.isRangeShock());
@@ -1940,5 +2111,13 @@ public class CharacterServiceImpl implements CharacterService {
     
     private String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1).toLowerCase();
+    }
+    
+    private boolean isMeleeWeapon(CharacterItem token, TokenFullDetails td) {
+        return (token.getSlot() == Slot.MAINHAND || token.getSlot() == Slot.OFFHAND) && (td.isOneHanded() || td.isTwoHanded()) && !td.isShield() && !td.isMug();
+    }
+    
+    private boolean isRangeWeapon(CharacterItem token, TokenFullDetails td) {
+        return (token.getSlot() == Slot.RANGE_MAINHAND || token.getSlot() == Slot.RANGE_OFFHAND) && (td.isRangedWeapon() || td.isOneHanded() || td.isTwoHanded()) && !td.isShield() && !td.isMug();
     }
 }
