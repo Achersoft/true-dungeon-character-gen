@@ -16,8 +16,10 @@
             <item-mobile-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="instrument{{$index}}" model="instrument" label="Instrument"></item-mobile-selector>
         </div>
     </div>
-    <div class="col-xs-12" style="padding:0" ng-if="characterContext.head !== null">
-        <item-mobile-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="head" model="characterContext.head" label="Head"></item-mobile-selector>
+    <div ng-if="characterContext.heads !== null && characterContext.heads.length > 0">
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="head in characterContext.heads track by $index" ng-repeat-end>
+            <item-mobile-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="head{{$index}}" model="head" label="Head"></item-mobile-selector>
+        </div>
     </div>
     <div class="col-xs-12" style="padding:0" ng-if="characterContext.eyes !== null">
         <item-mobile-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="eyes" model="characterContext.eyes" label="Eyes"></item-mobile-selector>

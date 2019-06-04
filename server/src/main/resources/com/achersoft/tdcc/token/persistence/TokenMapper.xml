@@ -23,8 +23,8 @@
                 </if>
                 <if test="characterClass != 'MONK'">
                     AND t.slot= 'OFFHAND'
-                    AND td.shield = 1 
-                    AND td.range_wep = if((select two_hand FROM token_details WHERE id = (SELECT item_id FROM character_items where character_id = #{characterId} AND slot = 'RANGE_MAINHAND')) = 1, 1,0)
+                    AND td.shield = if((select two_hand FROM token_details WHERE id = (SELECT item_id FROM character_items where character_id = #{characterId} AND slot = 'RANGE_MAINHAND')) = 1, 0,1) 
+                    AND td.buckler = if((select two_hand FROM token_details WHERE id = (SELECT item_id FROM character_items where character_id = #{characterId} AND slot = 'RANGE_MAINHAND')) = 1, 1,0)
                 </if>
             </if>
             <if test="slot.name() == 'MAINHAND'">
@@ -34,11 +34,11 @@
             </if>
             <if test="slot.name() == 'OFFHAND'">
                 <if test="characterClass == 'RANGER'">
-                    AND td.ranger_off = 1
+                    AND (td.ranger_off = 1 OR td.mug = 1)
                     AND (t.slot= 'MAINHAND' OR t.slot= 'OFFHAND')
                 </if>
                 <if test="characterClass == 'MONK'">
-                    AND td.monk_offhand = 1
+                    AND (td.monk_offhand = 1 OR td.mug = 1)
                     AND (t.slot= 'MAINHAND' OR t.slot= 'OFFHAND')
                 </if>
                 <if test="characterClass != 'RANGER'">
@@ -46,7 +46,7 @@
                         AND t.slot= 'OFFHAND'
                     </if>
                 </if>
-            AND (td.one_hand = 1 OR td.shield = 1)
+            AND (td.one_hand = 1 OR td.shield = 1 OR td.mug = 1)
             AND td.range_wep = 0
             </if>
             <if test="rarity == 'COMMON'">

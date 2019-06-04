@@ -18,6 +18,7 @@ public class CharacterDetailsDTO {
     public String id;
     public boolean editable;
     public String name;
+    public String username;
     public CharacterClass characterClass;
     public CharacterStats stats;
     public List<CharacterItemDTO> heads;
@@ -57,6 +58,7 @@ public class CharacterDetailsDTO {
                 .id(dao.getId())
                 .editable(dao.isEditable())
                 .name(dao.getName())
+                .username(dao.getUsername())
                 .characterClass(dao.getCharacterClass())
                 .stats(dao.getStats())
                 .instruments(new ArrayList())

@@ -38,6 +38,8 @@ public class TokenFullDetailsDTO {
     public Boolean oneHanded;
     public Boolean twoHanded;
     public Boolean shield;
+    public Boolean buckler;
+    public Boolean mug;
     public Boolean thrown;
     public Boolean rangerOffhand;
     public Boolean instrument;
@@ -83,6 +85,7 @@ public class TokenFullDetailsDTO {
     public Boolean cannotBeSuprised;
     public Boolean freeMovement;
     public Boolean psychic;
+    public Boolean possession;
     public Integer spellDmg;
     public Integer spellHeal;
     public Integer spellResist;
@@ -125,6 +128,8 @@ public class TokenFullDetailsDTO {
                 .oneHanded(tokenFullDetails.isOneHanded())
                 .twoHanded(tokenFullDetails.isTwoHanded())
                 .shield(tokenFullDetails.isShield())
+                .buckler(tokenFullDetails.isBuckler())
+                .mug(tokenFullDetails.isMug())
                 .thrown(tokenFullDetails.isThrown())
                 .rangerOffhand(tokenFullDetails.isRangerOffhand())
                 .instrument(tokenFullDetails.isInstrument())
@@ -170,6 +175,7 @@ public class TokenFullDetailsDTO {
                 .cannotBeSuprised(tokenFullDetails.isCannotBeSuprised())
                 .freeMovement(tokenFullDetails.isFreeMovement())
                 .psychic(tokenFullDetails.isPsychic())
+                .possession(tokenFullDetails.isPossession())
                 .spellDmg(tokenFullDetails.getSpellDmg())
                 .spellHeal(tokenFullDetails.getSpellHeal())
                 .spellResist(tokenFullDetails.getSpellResist())
@@ -251,6 +257,8 @@ public class TokenFullDetailsDTO {
                 .oneHanded(oneHanded)
                 .twoHanded(twoHanded)
                 .shield(shield)
+                .buckler(buckler)
+                .mug(mug)
                 .thrown(thrown)
                 .rangerOffhand(rangerOffhand)
                 .instrument(instrument)
@@ -296,6 +304,7 @@ public class TokenFullDetailsDTO {
                 .cannotBeSuprised(cannotBeSuprised)
                 .freeMovement(freeMovement)
                 .psychic(psychic)
+                .possession(possession)
                 .spellDmg(spellDmg)
                 .spellHeal(spellHeal)
                 .spellResist(spellResist)

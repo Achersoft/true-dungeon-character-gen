@@ -41,8 +41,8 @@ public class TokenFullDetails {
     private boolean oneHanded;
     private boolean twoHanded;
     private boolean shield;
-    private boolean mug;
     private boolean buckler;
+    private boolean mug;
     private boolean thrown;
     private boolean monkOffhand;
     private boolean rangerOffhand;
@@ -88,6 +88,7 @@ public class TokenFullDetails {
     private boolean cannotBeSuprised;
     private boolean freeMovement;
     private boolean psychic;
+    private boolean possession;
     private int spellDmg;
     private int spellHeal;
     private int spellResist;
