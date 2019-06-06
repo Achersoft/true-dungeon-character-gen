@@ -8,6 +8,6 @@ angular.module('main').directive('onOffSwitch',function(){
             switchDisabled: '@',
             ngModel: '='
         },
-        templateUrl:'common/onOffSwitch/onOffSwitchTemplate.html'
+        templateUrl:'common/onOffSwitch/onOffSwitchTemplate-@{TDCC_VERSION}.html'
     };
 });

@@ -1,4 +1,4 @@
-angular.module('main').directive('partyCharacterMobile',['PartySvc', '$uibModal', 'AuthorizationState', 'RESOURCES', function(partySvc, $uibModal, AuthorizationState, RESOURCES){
+angular.module('main').directive('partyCharacterDesktop',['PartySvc', '$uibModal', 'AuthorizationState', 'RESOURCES', function(partySvc, $uibModal, AuthorizationState, RESOURCES){
     return {
         restrict:'E',
         scope:{
@@ -27,9 +27,9 @@ angular.module('main').directive('partyCharacterMobile',['PartySvc', '$uibModal'
                             ariaDescribedBy: 'modal-body',
                             bindToController: true,
                             scope: scope,
-                            windowClass: 'mobile-modal-dialog',
-                            openedClass: 'mobile-modal-content',
-                            templateUrl: 'common/partyCharacter/mobile/partyCharacterMobileModalTemplate.html'
+                            windowClass: 'desktop-item-modal-dialog',
+                            openedClass: 'desktop-modal-content',
+                            templateUrl: 'common/partyCharacter/desktop/partyCharacterDesktopModalTemplate-@{TDCC_VERSION}.html'
                         });
                     });
                 }
@@ -60,6 +60,6 @@ angular.module('main').directive('partyCharacterMobile',['PartySvc', '$uibModal'
                 scope.modalInstance.close();
             };
         },
-        templateUrl:'common/partyCharacter/mobile/partyCharacterMobileTemplate.html'
+        templateUrl:'common/partyCharacter/desktop/partyCharacterDesktopTemplate-@{TDCC_VERSION}.html'
     };
 }]);

@@ -14,7 +14,7 @@ angular.module('main').factory('ErrorDialogSvc',['$uibModal', function($uibModal
             ariaDescribedBy: 'modal-body',
             controller: 'ModalInstanceCtrl',
             controllerAs: '$ctrl',
-            templateUrl: 'common/error/errorModalTemplate.html',
+            templateUrl: 'common/error/errorModalTemplate-@{TDCC_VERSION}.html',
             resolve: {
               text: function () {
                 return obj.message;

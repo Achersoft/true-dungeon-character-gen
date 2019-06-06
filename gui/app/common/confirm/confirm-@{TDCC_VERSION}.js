@@ -7,7 +7,7 @@ angular.module('main').factory('ConfirmDialogSvc',['$uibModal', function($uibMod
             ariaDescribedBy: 'modal-body',
             controller: 'ModalConfirmCtrl',
             controllerAs: '$ctrl',
-            templateUrl: 'common/confirm/confirmModalTemplate.html',
+            templateUrl: 'common/confirm/confirmModalTemplate-@{TDCC_VERSION}.html',
             resolve: {
               text: function () {
                 return text;

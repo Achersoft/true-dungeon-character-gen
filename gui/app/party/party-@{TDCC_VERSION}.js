@@ -3,15 +3,15 @@ angular.module('main')
 .config(['$routeProvider', 'RESOURCES', function($routeProvider, RESOURCES) {
   $routeProvider
     .when('/party/mine', {
-        templateUrl: (RESOURCES.IS_MOBILE)?'party/mobile/myParties.html':'party/mobile/myParties.html',
+        templateUrl: (RESOURCES.IS_MOBILE)?'party/mobile/myParties-@{TDCC_VERSION}.html':'party/mobile/myParties-@{TDCC_VERSION}.html',
         controller: 'MyPartiesCtrl'
     })
     .when('/party/create', {
-        templateUrl: (RESOURCES.IS_MOBILE)?'party/desktop/createParty.html':'party/desktop/createParty.html',
+        templateUrl: (RESOURCES.IS_MOBILE)?'party/desktop/createParty-@{TDCC_VERSION}.html':'party/desktop/createParty-@{TDCC_VERSION}.html',
         controller: 'CreatePartyCtrl'
     })
     .when('/party/edit/:partyId', {
-        templateUrl: (RESOURCES.IS_MOBILE)?'party/mobile/editParty.html':'party/desktop/editParty.html',
+        templateUrl: (RESOURCES.IS_MOBILE)?'party/mobile/editParty-@{TDCC_VERSION}.html':'party/desktop/editParty-@{TDCC_VERSION}.html',
         controller: 'EditPartyCtrl'
     });
 }])

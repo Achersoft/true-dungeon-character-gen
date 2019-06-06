@@ -3,19 +3,19 @@ angular.module('main')
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
   .when('/password/requestreset', {
-        templateUrl: 'admin/user/requestResetPassword.html',
+        templateUrl: 'admin/user/requestResetPassword-@{TDCC_VERSION}.html',
         controller: 'PasswordResetRequestCtrl'
     })
     .when('/password/reset/:resetId', {
-        templateUrl: 'admin/user/resetPassword.html',
+        templateUrl: 'admin/user/resetPassword-@{TDCC_VERSION}.html',
         controller: 'PasswordResetCtrl'
     })
     .when('/users/viewAll', {
-        templateUrl: 'admin/user/userList.html',
+        templateUrl: 'admin/user/userList-@{TDCC_VERSION}.html',
         controller: 'UserListCtrl'
     })
     .when('/users/edit/:id', {
-        templateUrl: 'admin/user/userDetails.html',
+        templateUrl: 'admin/user/userDetails-@{TDCC_VERSION}.html',
         controller: 'UserCtrl'
     });
 }])

@@ -3,12 +3,12 @@ angular.module('main')
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider
         .when('/login/', {
-            templateUrl: 'login/login.html',
+            templateUrl: 'login/login-@{TDCC_VERSION}.html',
             controller: 'LoginCtrl'
         }),
     $routeProvider
         .when('/signup/', {
-            templateUrl: 'login/signup.html',
+            templateUrl: 'login/signup-@{TDCC_VERSION}.html',
             controller: 'SignupCtrl'
         });
 }])

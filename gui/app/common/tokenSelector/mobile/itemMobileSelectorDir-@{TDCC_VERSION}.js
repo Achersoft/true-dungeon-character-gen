@@ -27,7 +27,7 @@ angular.module('main').directive('itemMobileSelector',['CharacterSvc', '$uibModa
                             scope: scope,
                             windowClass: 'mobile-modal-dialog',
                             openedClass: 'mobile-modal-content',
-                            templateUrl: 'common/tokenSelector/mobile/mobileSelectorModalTemplate.html'
+                            templateUrl: 'common/tokenSelector/mobile/mobileSelectorModalTemplate-@{TDCC_VERSION}.html'
                         });
                     });
                 }
@@ -53,6 +53,6 @@ angular.module('main').directive('itemMobileSelector',['CharacterSvc', '$uibModa
                 scope.modalInstance.close();
             };
         },
-        templateUrl:'common/tokenSelector/mobile/itemMobileSelectorTemplate.html'
+        templateUrl:'common/tokenSelector/mobile/itemMobileSelectorTemplate-@{TDCC_VERSION}.html'
     };
 }]);

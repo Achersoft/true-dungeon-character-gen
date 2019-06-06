@@ -35,6 +35,6 @@ angular.module('main').directive('tokenSelector',['CharacterSvc', 'RESOURCES', f
                 scope.unequip()(scope.model.characterId, scope.model.id); 
             };
         },
-        templateUrl:'common/tokenSelector/tokenSelectorTemplate.html'
+        templateUrl:'common/tokenSelector/tokenSelectorTemplate-@{TDCC_VERSION}.html'
     };
 }]);

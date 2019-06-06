@@ -28,7 +28,7 @@ angular.module('main').directive('itemDesktopSelector',['CharacterSvc', '$uibMod
                             scope: scope,
                             windowClass: 'desktop-item-modal-dialog',
                             openedClass: 'desktop-item-modal-content',
-                            templateUrl: 'common/tokenSelector/desktop/itemDesktopSelectorModalTemplate.html'
+                            templateUrl: 'common/tokenSelector/desktop/itemDesktopSelectorModalTemplate-@{TDCC_VERSION}.html'
                         });
                     });
                 }
@@ -54,6 +54,6 @@ angular.module('main').directive('itemDesktopSelector',['CharacterSvc', '$uibMod
                 scope.modalInstance.close();
             };
         },
-        templateUrl:'common/tokenSelector/desktop/itemDesktopSelectorTemplate.html'
+        templateUrl:'common/tokenSelector/desktop/itemDesktopSelectorTemplate-@{TDCC_VERSION}.html'
     };
 }]);

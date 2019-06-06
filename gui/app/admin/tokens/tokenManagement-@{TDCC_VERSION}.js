@@ -3,11 +3,11 @@ angular.module('main')
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
     .when('/admin/tokens/management', {
-        templateUrl: 'admin/tokens/addToken.html',
+        templateUrl: 'admin/tokens/addToken-@{TDCC_VERSION}.html',
         controller: 'TokenManagementCtrl'
     })
     .when('/admin/tokens/edit', {
-        templateUrl: 'admin/tokens/editToken.html',
+        templateUrl: 'admin/tokens/editToken-@{TDCC_VERSION}.html',
         controller: 'TokenEditCtrl'
     });
 }])

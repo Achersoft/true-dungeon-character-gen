@@ -28,7 +28,7 @@ angular.module('main').directive('itemTabletSelector',['CharacterSvc', '$uibModa
                             scope: scope,
                             windowClass: 'mobile-modal-dialog',
                             openedClass: 'mobile-modal-content',
-                            templateUrl: 'common/tokenSelector/tablet/itemTabletSelectorModalTemplate.html'
+                            templateUrl: 'common/tokenSelector/tablet/itemTabletSelectorModalTemplate-@{TDCC_VERSION}.html'
                         });
                     });
                 }
@@ -54,6 +54,6 @@ angular.module('main').directive('itemTabletSelector',['CharacterSvc', '$uibModa
                 scope.modalInstance.close();
             };
         },
-        templateUrl:'common/tokenSelector/tablet/itemTabletSelectorTemplate.html'
+        templateUrl:'common/tokenSelector/tablet/itemTabletSelectorTemplate-@{TDCC_VERSION}.html'
     };
 }]);
