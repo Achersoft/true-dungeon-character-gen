@@ -7,3 +7,5 @@
 /gui/.idea/*.iml
 /gui/.idea
 /server/*.iml
+/name-changer/.idea
+/name-changer/*.iml
