@@ -1,0 +1,34 @@
+<div style="height:calc(100% - 102px);width:100%;position:fixed;overflow-y:scroll;padding-left:0;padding-right:0;margin-left:-15px">
+    <div class="col-xs-12 col-sm-12" style="margin-top:10px" ng-if="characterContext.alwaysInEffect.length > 0">
+        <h4 style="border-bottom:1pt solid black;"><strong>Always In Effect</strong></h4>
+    </div>
+    <ul ng-if="characterContext.alwaysInEffect.length > 0">
+        <li ng-repeat-start="effect in characterContext.alwaysInEffect" ng-repeat-end style="clear:left;padding-right:5px">
+            {{effect}}
+        </li>
+    </ul>
+    <div class="col-xs-12 col-sm-12" style="margin-top:10px" ng-if="characterContext.oncePerRound.length > 0">
+        <h4 style="border-bottom:1pt solid black;"><strong>Once Per Round</strong></h4>
+    </div>
+    <ul ng-if="characterContext.oncePerRound.length > 0">
+        <li ng-repeat-start="effect in characterContext.oncePerRound" ng-repeat-end style="clear:left;padding-right:5px">
+            {{effect}}
+        </li>
+    </ul>
+    <div class="col-xs-12 col-sm-12" style="margin-top:10px" ng-if="characterContext.oncePerRoom.length > 0">
+        <h4 style="border-bottom:1pt solid black;"><strong>Once Per Room</strong></h4>
+    </div>
+    <ul ng-if="characterContext.oncePerRoom.length > 0">
+        <li ng-repeat-start="effect in characterContext.oncePerRoom" ng-repeat-end style="clear:left;padding-right:5px">
+            {{effect}}
+        </li>
+    </ul>
+    <div class="col-xs-12 col-sm-12" style="margin-top:10px" ng-if="characterContext.oncePerGame.length > 0">
+        <h4 style="border-bottom:1pt solid black;"><strong>Once Per Game</strong></h4>
+    </div>
+    <div class="col-xs-12 col-sm-12" style="margin-top:8px;" ng-if="characterContext.oncePerGame.length > 0" ng-repeat-start="effect in characterContext.oncePerGame" ng-repeat-end>
+        <strike-checkbox text="{{effect}}"></strike-checkbox>
+    </div>
+    <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
+</div>
+

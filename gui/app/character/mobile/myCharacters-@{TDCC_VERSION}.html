@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-md-12 hidden-xs">
+        <h2 style="border-bottom:1pt solid black;margin-top:0px">My Characters</h2>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <a ng-href="#/character/create">
+                    <span class="btn btn-primary" style="margin-top:6px">
+                        Create New Character
+                    </span>
+                </a>
+                <a ng-href="#/character/clone">
+                    <span class="btn btn-primary" style="margin-top:6px">
+                        Clone Existing Character
+                    </span>
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive" style="border:none;margin-top:10px">          
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Level</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="myCharacter in myCharacterContext" ng-repeat-end>
+                        <td><a ng-href="#/character/edit/{{myCharacter.id}}">{{myCharacter.name | limitTo : 25}}</a></td>
+                        <td>{{myCharacter.characterClass | characterclassformat}}</td>
+                        <td>{{myCharacter.level}}</td>
+                        <td><a ng-click="deleteCharacter(myCharacter.id, myCharacter.name)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12 visible-xs">
+        <div style="height:100%;width:100%;position:fixed;">
+            <div style="height:calc(100% - 175px);width:100%;position:fixed;overflow-y:scroll;padding-left:0;padding-right:0">
+                <div class="table-responsive" style="border:none;padding-right:15px">          
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Class</th>
+                                <th>Level</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat-start="myCharacter in myCharacterContext" ng-repeat-end>
+                                <td><a ng-href="#/character/edit/{{myCharacter.id}}">{{myCharacter.name | limitTo : 25}}</a></td>
+                                <td>{{myCharacter.characterClass | characterclassformat}}</td>
+                                <td>{{myCharacter.level}}</td>
+                                <td><a ng-click="deleteCharacter(myCharacter.id, myCharacter.name)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="text-center" style="position:absolute;bottom:80px;width:calc(100% - 30px);height:90px">
+                <a ng-href="#/character/create">
+                    <span class="btn btn-primary" style="margin-top:6px;width:100%;padding-right:15px">
+                        Create New Character
+                    </span>
+                </a>
+                <a ng-href="#/character/clone">
+                    <span class="btn btn-primary" style="margin-top:6px;width:100%;padding-right:15px">
+                        Clone Existing Character
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

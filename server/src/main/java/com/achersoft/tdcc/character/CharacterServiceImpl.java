@@ -768,169 +768,148 @@ public class CharacterServiceImpl implements CharacterService {
             characterHtml.append("[b]Instrument:[/b] ").append("[color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]").append("\n");
         });
         
-        Stream<CharacterItem> headItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HEAD);
-        if (headItems.count() > 0) {
-            headItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HEAD).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HEAD).forEach((item) ->{
                 characterHtml.append("[b]Head:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Head:[/b] Empty");
 
-        Stream<CharacterItem> eyeItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.EYES);
-        if (eyeItems.count() > 0) {
-            eyeItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.EYES).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.EYES).forEach((item) ->{
                 characterHtml.append("[b]Eyes:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Eyes:[/b] Empty");
         
-        Stream<CharacterItem> leftEarItems = character.getItems().stream().filter((item) ->item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==0);
-        if (leftEarItems.count() > 0) {
-            leftEarItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) ->item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==0).count() > 0) {
+            character.getItems().stream().filter((item) ->item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==0).forEach((item) ->{
                 characterHtml.append("[b]Left Ear:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Left Ear:[/b] Empty");
 
-        Stream<CharacterItem> rightEarItems = character.getItems().stream().filter((item) ->item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==1);
-        if (rightEarItems.count() > 0) {
-            rightEarItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) ->item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==1).count() > 0) {
+            character.getItems().stream().filter((item) ->item.getItemId()!=null&&item.getSlot()==Slot.EAR&&item.getIndex()==1).forEach((item) ->{
                 characterHtml.append("[b]Right Ear:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Right Ear:[/b] Empty");
        
-        Stream<CharacterItem> neckItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.NECK);
-        if (neckItems.count() > 0) {
-            neckItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.NECK).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.NECK).forEach((item) ->{
                 characterHtml.append("[b]Neck:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Neck:[/b] Empty");
         
-        Stream<CharacterItem> beadItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BEAD);
-        if (beadItems.count() > 0) {
-            beadItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BEAD).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BEAD).forEach((item) ->{
                 characterHtml.append("[b]Bead:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Bead:[/b] Empty");
         
-        Stream<CharacterItem> torsoItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.TORSO);
-        if (torsoItems.count() > 0) {
-            torsoItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.TORSO).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.TORSO).forEach((item) ->{
                 characterHtml.append("[b]Torso:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Torso:[/b] Empty");
         
-        Stream<CharacterItem> wristItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WRIST);
-        if (wristItems.count() > 0) {
-            wristItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WRIST).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WRIST).forEach((item) ->{
                 characterHtml.append("[b]Wrist:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Wrist:[/b] Empty");
         
-        Stream<CharacterItem> handItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HANDS);
-        if (handItems.count() > 0) {
-            handItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HANDS).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.HANDS).forEach((item) ->{
                 characterHtml.append("[b]Hands:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Hands:[/b] Empty");
         
-        Stream<CharacterItem> backItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BACK);
-        if (backItems.count() > 0) {
-            backItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BACK).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.BACK).forEach((item) ->{
                 characterHtml.append("[b]Back:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Back:[/b] Empty");
         
-        Stream<CharacterItem> fingerItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FINGER);
-        if (fingerItems.count() > 0) {
-            fingerItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FINGER).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FINGER).forEach((item) ->{
                 characterHtml.append("[b]Ring:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Ring:[/b] Empty");
         
-        Stream<CharacterItem> waistItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WAIST);
-        if (waistItems.count() > 0) {
-            waistItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WAIST).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.WAIST).forEach((item) ->{
                 characterHtml.append("[b]Waist:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Waist:[/b] Empty");
         
-        Stream<CharacterItem> shirtItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHIRT);
-        if (shirtItems.count() > 0) {
-            shirtItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHIRT).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHIRT).forEach((item) ->{
                 characterHtml.append("[b]Shirt:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Shirt:[/b] Empty");
         
-        Stream<CharacterItem> legItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.LEGS);
-        if (legItems.count() > 0) {
-            legItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.LEGS).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.LEGS).forEach((item) ->{
                 characterHtml.append("[b]Legs:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Legs:[/b] Empty");
         
-        Stream<CharacterItem> shinItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHINS);
-        if (shinItems.count() > 0) {
-            shinItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHINS).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SHINS).forEach((item) ->{
                 characterHtml.append("[b]Shins:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Shins:[/b] Empty");
         
-        Stream<CharacterItem> footItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FEET);
-        if (footItems.count() > 0) {
-            footItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FEET).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FEET).forEach((item) ->{
                 characterHtml.append("[b]Boots:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Boots:[/b] Empty");
         
-        Stream<CharacterItem> figurineItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FIGURINE);
-        if (figurineItems.count() > 0) {
-            figurineItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FIGURINE).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.FIGURINE).forEach((item) ->{
                 characterHtml.append("[b]Figurine:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Figurine:[/b] Empty");
         
-        Stream<CharacterItem> charmItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.CHARM);
-        if (charmItems.count() > 0) {
-            charmItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.CHARM).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.CHARM).forEach((item) ->{
                 characterHtml.append("[b]Charm:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Charm:[/b] Empty");
         
-       Stream<CharacterItem> iounStoneItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.IOUNSTONE);
-        if (iounStoneItems.count() > 0) {
-            iounStoneItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.IOUNSTONE).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.IOUNSTONE).forEach((item) ->{
                 characterHtml.append("[b]Ioun Stone:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Ioun Stone:[/b] Empty");
         
-        Stream<CharacterItem> slotlessItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SLOTLESS);
-        if (slotlessItems.count() > 0) {
-            slotlessItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SLOTLESS).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.SLOTLESS).forEach((item) ->{
                 characterHtml.append("[b]Slotless:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else
             characterHtml.append("[b]Slotless:[/b] Empty");
         
-        Stream<CharacterItem> runestoneItems = character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RUNESTONE);
-        if (runestoneItems.count() > 0) {
-            runestoneItems.forEach((item) ->{
+        if (character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RUNESTONE).count() > 0) {
+            character.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RUNESTONE).forEach((item) ->{
                 characterHtml.append("[b]Runestone:[/b] [color=").append(item.getRarity().htmlColor).append("]").append(item.getName()).append("[/color]\n");
             });
         } else

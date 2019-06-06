@@ -9,3 +9,4 @@
 /server/*.iml
 /name-changer/.idea
 /name-changer/*.iml
+/name-changer/target/

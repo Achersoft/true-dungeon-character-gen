@@ -4,8 +4,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 public class NameChanger {
@@ -24,7 +22,7 @@ public class NameChanger {
 
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isDirectory()) {
-               // renameAllFiles(listOfFiles[i]);
+                renameAllFiles(listOfFiles[i]);
             }
             if (listOfFiles[i].isFile()) {
                 changeFileContent(listOfFiles[i]);

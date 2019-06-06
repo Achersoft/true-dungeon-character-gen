@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-xs-12 text-center" style="margin-top:10px;padding:0px">
+        <strong>{{characterContext.name}}</strong>
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Level {{characterContext.stats.level}} - {{characterContext.characterClass | characterclassformat}}</strong>
+    </div>
+    <center class="hidden-xs">
+        <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'BARBARIAN'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Bard.png" ng-if="characterContext.characterClass === 'BARD'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Cleric.png" ng-if="characterContext.characterClass === 'CLERIC'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Druid.png" ng-if="characterContext.characterClass === 'DRUID'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Dwarf.png" ng-if="characterContext.characterClass === 'DWARF_FIGHTER'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Elf.png" ng-if="characterContext.characterClass === 'ELF_WIZARD'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Fighter.png" ng-if="characterContext.characterClass === 'FIGHTER'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Paladin.png" ng-if="characterContext.characterClass === 'PALADIN'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Monk.png" ng-if="characterContext.characterClass === 'MONK'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Ranger.png" ng-if="characterContext.characterClass === 'RANGER'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Rogue.png" ng-if="characterContext.characterClass === 'ROGUE'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+        <img src="images/Wizard.png" ng-if="characterContext.characterClass === 'WIZARD'" width="30%" alt="" style="margin-top:-30px;padding:0px"/>
+    </center>
+    <div style="height:220px;width:100%;margin-top: 60px">
+        <div class="visible-xs" ng-if="characterContext.characterClass === 'BARD'" style="height:220px;width:220px;padding:0px;position:absolute;margin-left:auto;margin-right:auto;left:25px;right:0;">
+            <img src="images/Bard-offhand.png" ng-if="characterContext.meleeOffhand.itemId !== null" width="200px" alt="" style="z-index:0;position:absolute;padding:0px"/>
+            <img src="images/Bard-back.png" ng-if="characterContext.backs[0].itemId !== null" width="200px" alt="" style="z-index:1;position:absolute;padding:0px"/>
+            <img src="images/Bard-mainhand.png" ng-if="characterContext.meleeMainhand.itemId !== null" width="200px" alt="" style="z-index:2;position:absolute;padding:0px"/>
+            <img src="images/Bard-body.png" width="200px" alt="" style="z-index:3;position:absolute;padding:0px"/>
+            <img src="images/Bard-censored.png" ng-if="characterContext.legs.itemId === null" width="200px" alt="" style="z-index:4;position:absolute;padding:0px"/>
+            <img src="images/Bard-feet.png" ng-if="characterContext.boots.itemId !== null" width="200px" alt="" style="z-index:5;position:absolute;padding:0px"/>
+            <img src="images/Bard-pants.png" ng-if="characterContext.legs.itemId !== null" width="200px" alt="" style="z-index:6;position:absolute;padding:0px"/>
+            <img src="images/Bard-shirt.png" ng-if="characterContext.shirt.itemId !== null" width="200px" alt="" style="z-index:7;position:absolute;padding:0px"/>
+            <img src="images/Bard-torso.png" ng-if="characterContext.torso.itemId !== null" width="200px" alt="" style="z-index:8;position:absolute;padding:0px"/>
+            <img src="images/Bard-waist.png" ng-if="characterContext.waist.itemId !== null" width="200px" alt="" style="z-index:9;position:absolute;padding:0px"/>
+            <img src="images/Bard-ranged.png" ng-if="characterContext.rangedMainhand.itemId !== null" width="200px" alt="" style="z-index:10;position:absolute;padding:0px"/>
+            <img src="images/Bard-instrument.png" ng-if="characterContext.instruments[0].itemId !== null" width="200px" alt="" style="z-index:11;position:absolute;padding:0px"/>
+            <img src="images/Bard-arm.png" width="200px" alt="" style="z-index:12;position:absolute;padding:0px"/>
+            <img src="images/Bard-head.png" width="200px" alt="" style="z-index:13;position:absolute;padding:0px"/>
+            <img src="images/Bard-hat.png" ng-if="characterContext.head.itemId !== null" width="200px" alt="" style="z-index:14;position:absolute;padding:0px"/>
+        </div>
+        <center class="visible-xs">
+            <img src="images/Barbarian.png" ng-if="characterContext.characterClass === 'BARBARIAN'" height="220px" alt="" style="padding:0px"/>
+            <img src="images/Cleric.png" ng-if="characterContext.characterClass === 'CLERIC'" height="220px" alt="" style="padding:0px"/>
+            <img src="images/Druid.png" ng-if="characterContext.characterClass === 'DRUID'" height="220px" alt="" style="padding:0px"/>
+            <img src="images/Dwarf.png" ng-if="characterContext.characterClass === 'DWARF_FIGHTER'" height="220px" alt="" style="padding:0px"/>
+            <img src="images/Elf.png" ng-if="characterContext.characterClass === 'ELF_WIZARD'" height="220px" alt="" style="padding:0px"/>
+            <img src="images/Fighter.png" ng-if="characterContext.characterClass === 'FIGHTER'" height="220px" alt="" style="padding:0px"/>
+            <img src="images/Paladin.png" ng-if="characterContext.characterClass === 'PALADIN'" height="220px" alt="" style="padding:0px"/>
+            <img src="images/Monk.png" ng-if="characterContext.characterClass === 'MONK'" height="220px" alt="" style="padding:0px"/>
+            <img src="images/Ranger.png" ng-if="characterContext.characterClass === 'RANGER'" height="220px" alt="" style="padding:0px"/>
+            <img src="images/Rogue.png" ng-if="characterContext.characterClass === 'ROGUE'" height="220px" alt="" style="padding:0px"/>
+            <img src="images/Wizard.png" ng-if="characterContext.characterClass === 'WIZARD'" height="220px" alt="" style="padding:0px"/>
+        </center>  
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Hit Points: </strong>{{characterContext.stats.health}}
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Melee</strong> Hit: {{characterContext.stats.meleeHit}}  Damage: {{characterContext.stats.meleeDmg}}  AC: {{characterContext.stats.meleeAC}}
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Ranged</strong> Hit: {{characterContext.stats.rangeHit}}  Damage: {{characterContext.stats.rangeDmg}}  AC: {{characterContext.stats.rangeAC}}
+    </div>
+    <div class="col-xs-12 text-center" ng-if="characterContext.characterClass === 'CLERIC' || characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD'|| characterContext.characterClass === 'WIZARD'">
+        <strong>Spell</strong> Damage: {{characterContext.stats.spellDmg}}  Heal: {{characterContext.stats.spellHeal}}  Resist: {{characterContext.stats.spelResist}}
+    </div>
+    <div class="col-xs-12 text-center">
+        <strong>Saves</strong> Fort: {{characterContext.stats.fort}}  Reflex: {{characterContext.stats.reflex}}  Will: {{characterContext.stats.will}}
+    </div>
+    <div class="col-xs-12 text-center" style="margin-top:15px;">
+        <button class="btn btn-primary" ng-click="exportToPDF()">
+            Download Character as PDF 
+        </button>
+    </div>
+</div>
+
