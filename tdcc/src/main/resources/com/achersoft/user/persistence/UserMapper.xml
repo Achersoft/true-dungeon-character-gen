@@ -1,0 +1,126 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.achersoft.user.persistence.UserMapper">
+    <insert id="createUser">
+        INSERT INTO user (id,
+                          user_name,
+                          first_name,
+                          last_name,
+                          email,
+                          locked,
+                          login_attempts,
+                          last_login,
+                          password) 
+                  VALUES (#{id},
+                          #{username},
+                          #{firstName},
+                          #{lastName},
+                          #{email},
+                          #{locked},
+                          #{loginAttempts},
+                          #{lastAccessed},
+                          #{password})    
+    </insert>
+
+    <sql id="userSelection">
+        SELECT u.id 'id', 
+               u.user_name 'username', 
+               u.first_name 'firstName', 
+               u.last_name 'lastName', 
+               u.email 'email', 
+               u.locked 'locked',  
+               u.login_attempts 'loginAttempts',  
+               u.last_login 'lastAccessed'
+          FROM user u
+    </sql>
+    
+    <select id="getUsers" resultType="com.achersoft.user.dao.User"> 
+        <include refid="userSelection"/>
+      ORDER BY u.user_name
+    </select>
+    
+    <select id="getUser" resultType="com.achersoft.user.dao.User"> 
+        <include refid="userSelection"/>
+        WHERE u.id =  #{id}
+    </select>
+    
+    <select id="getUserFromName" resultType="com.achersoft.user.dao.User"> 
+        <include refid="userSelection"/>
+        WHERE u.user_name =  #{userName}
+    </select>
+    
+    <select id="getUserPrivileges" resultType="com.achersoft.security.type.Privilege"> 
+        SELECT privilege 
+          FROM user_privilege
+         WHERE user_id = #{id}
+    </select>
+    
+    <update id="editUser">      
+        UPDATE user SET
+               user_name = #{username},
+               first_name = #{firstName},
+               last_name = #{lastName}, 
+               email = #{email}, 
+               <if test="password != null">
+               password = #{password}, 
+               </if>
+               password_reset_id = #{passwordResetId}, 
+               <if test="lastAccessed != null">
+               last_login = #{lastAccessed}, 
+               </if>
+               <if test="loginAttempts != null">
+               login_attempts = #{loginAttempts}, 
+               </if>
+               locked = #{locked}
+         WHERE id = #{id}
+    </update>  
+    
+    <update id="changePassword">      
+        UPDATE user SET
+               password = #{password}
+         WHERE user_name = #{username}
+    </update> 
+    
+    <update id="resetPassword">      
+        UPDATE user SET
+               password = #{password}
+         WHERE password_reset_id = #{resetId}
+    </update> 
+    
+    <insert id="addUserPrivilege">
+        INSERT INTO user_privilege (user_id, 
+                                    privilege) 
+                            values (#{id},
+                                    #{privilege})
+    </insert>
+    
+    <delete id="removeUserPrivileges">
+        DELETE FROM user_privilege WHERE user_id = #{id}
+    </delete>
+    
+    <delete id="deleteUser">
+        DELETE 
+          FROM user
+         WHERE id = #{id}
+    </delete>
+    
+    <select id="validateCredentials" resultType="boolean"> 
+        SELECT CASE WHEN count(*) > 0 THEN 1 ELSE 0 END 
+          FROM user u 
+         WHERE u.user_name =  #{userName}
+           AND u.password = #{password}
+    </select> 
+    
+    <select id="userExists" resultType="boolean"> 
+        SELECT count(*)
+          FROM user u 
+         WHERE u.user_name =  #{userName}
+    </select> 
+    
+    <select id="emailExists" resultType="boolean"> 
+        SELECT count(*)
+          FROM user u 
+         WHERE u.email =  #{email}
+    </select> 
+</mapper>

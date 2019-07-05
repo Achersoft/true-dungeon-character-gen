@@ -1,0 +1,560 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.achersoft.tdcc.character.persistence.CharacterMapper">
+    
+    <insert id="addCharacter">
+        INSERT INTO character_name (id,
+                                    user_id,
+                                    name,
+                                    character_class,
+                                    created) 
+                            VALUES (#{id},
+                                    #{userId},
+                                    #{name},
+                                    #{characterClass},
+                                    #{createdOn})
+    </insert>
+    
+    <insert id="addCharacterStats">
+       INSERT INTO character_stats (id,
+                                    base_str,
+                                    str,
+                                    str_bonus,
+                                    base_dex,
+                                    dex,
+                                    dex_bonus,
+                                    base_con,    
+                                    con,
+                                    con_bonus,
+                                    base_intel,
+                                    intel,
+                                    intel_bonus,
+                                    base_wis,
+                                    wis,
+                                    wis_bonus,
+                                    base_cha,
+                                    cha,
+                                    cha_bonus,
+                                    health,
+                                    regen,
+                                    meleeHit,
+                                    meleeDmg,
+                                    meleeFire,
+                                    meleeCold,
+                                    meleeShock,
+                                    meleeSonic,
+                                    meleeEldritch,
+                                    meleePoison,
+                                    meleeDarkrift,
+                                    meleeSacred,
+                                    meleeAC,
+                                    rangeHit,
+                                    rangeDmg,
+                                    rangeFire,
+                                    rangeCold,
+                                    rangeShock,
+                                    rangeSonic,
+                                    rangeEldritch,
+                                    rangePoison,
+                                    rangeDarkrift,
+                                    rangeSacred,
+                                    rangeAC,
+                                    rangeMissileAC,
+                                    fort,
+                                    reflex,
+                                    will,
+                                    retDmg,
+                                    retFire,
+                                    retCold,
+                                    retShock,
+                                    retSonic,
+                                    retEldritch,
+                                    retPoison,
+                                    retDarkrift,
+                                    retSacred,
+                                    cannotBeSuprised,
+                                    freeMovement,
+                                    psychic,
+                                    psychic_level,
+                                    possession,
+                                    spellDmg,
+                                    spellHeal,
+                                    spellResist,
+                                    initiative,
+                                    treasureMin,
+                                    treasureMax,
+                                    level,
+                                    drMelee,
+                                    drRange,
+                                    drSpell,
+                                    drFire,
+                                    drCold,
+                                    drShock,
+                                    drSonic,
+                                    drEldritch,
+                                    drPoison,
+                                    drDarkrift,
+                                    drSacred)
+                            VALUES (#{characterId},
+                                    #{baseStr},
+                                    #{str},
+                                    #{strBonus},
+                                    #{baseDex},
+                                    #{dex},
+                                    #{dexBonus},
+                                    #{baseCon},
+                                    #{con},
+                                    #{conBonus},
+                                    #{baseIntel},
+                                    #{intel},
+                                    #{intelBonus},
+                                    #{baseWis},
+                                    #{wis},
+                                    #{wisBonus},
+                                    #{baseCha},
+                                    #{cha},
+                                    #{chaBonus},
+                                    #{health},
+                                    #{regen},
+                                    #{meleeHit},
+                                    #{meleeDmg},
+                                    #{meleeFire},
+                                    #{meleeCold},
+                                    #{meleeShock},
+                                    #{meleeSonic},
+                                    #{meleeEldritch},
+                                    #{meleePoison},
+                                    #{meleeDarkrift},
+                                    #{meleeSacred},
+                                    #{meleeAC},
+                                    #{rangeHit},
+                                    #{rangeDmg},
+                                    #{rangeFire},
+                                    #{rangeCold},
+                                    #{rangeShock},
+                                    #{rangeSonic},
+                                    #{rangeEldritch},
+                                    #{rangePoison},
+                                    #{rangeDarkrift},
+                                    #{rangeSacred},
+                                    #{rangeAC},
+                                    #{rangeMissileAC},
+                                    #{fort},
+                                    #{reflex},
+                                    #{will},
+                                    #{retDmg},
+                                    #{retFire},
+                                    #{retCold},
+                                    #{retShock},
+                                    #{retSonic},
+                                    #{retEldritch},
+                                    #{retPoison},
+                                    #{retDarkrift},
+                                    #{retSacred},
+                                    #{cannotBeSuprised},
+                                    #{freeMovement},
+                                    #{psychic},
+                                    #{psychicLevel},
+                                    #{possession},
+                                    #{spellDmg},
+                                    #{spellHeal},
+                                    #{spellResist},
+                                    #{initiative},
+                                    #{treasureMin},
+                                    #{treasureMax},
+                                    #{level},
+                                    #{drMelee},
+                                    #{drRange},
+                                    #{drSpell},
+                                    #{drFire},
+                                    #{drCold},
+                                    #{drShock},
+                                    #{drSonic},
+                                    #{drEldritch},
+                                    #{drPoison},
+                                    #{drDarkrift},
+                                    #{drSacred})
+    </insert>
+     
+    <insert id="addCharacterItems">
+        INSERT INTO character_items (id,
+                                     item_id,
+                                     character_id,
+                                     slot,
+                                     slot_index,
+                                     slot_status,
+                                     status_text)
+                             VALUES
+        <foreach item="element" index="index" collection="characterItems" separator=",">
+                                    (#{element.id},
+                                     #{element.itemId},
+                                     #{element.characterId},
+                                     #{element.slot},
+                                     #{element.index},
+                                     #{element.slotStatus},
+                                     #{element.statusText})
+        </foreach> 
+    </insert>
+    
+    <insert id="addCharacterNotes">
+        INSERT INTO character_notes (id,
+                                     alwaysInEffect,
+                                     oncePerRound,
+                                     oncePerRoom,
+                                     oncePerGame,
+                                     note)
+                             VALUES
+        <foreach item="element" index="index" collection="notes" separator=",">
+                                    (#{id},
+                                     #{element.alwaysInEffect},
+                                     #{element.oncePerRound},
+                                     #{element.oncePerRoom},
+                                     #{element.oncePerGame},
+                                     #{element.note})
+        </foreach> 
+    </insert>
+    
+    <select id="getCharacterCount" resultType="java.lang.Integer"> 
+        SELECT count(*)
+          FROM character_name cn
+         WHERE cn.user_id = #{userId}
+    </select>  
+    
+    <select id="getCharacter" resultType="com.achersoft.tdcc.character.dao.CharacterDetails"> 
+        SELECT cn.id 'id',
+               cn.user_id 'userId',
+               u.user_name 'username',
+               cn.name 'name',
+               cn.character_class 'characterClass',
+               cn.created 'createdOn'
+          FROM character_name cn,
+               user u
+         WHERE cn.id = #{id}
+           AND u.id = cn.user_id
+    </select>  
+    
+    <select id="getCharacters" resultType="com.achersoft.tdcc.character.dao.CharacterName"> 
+        SELECT cn.id 'id',
+               cn.user_id 'userId',
+               cn.name 'name',
+               cn.character_class 'characterClass',
+               cn.created 'createdOn',
+               cs.level 'level'
+          FROM character_name cn,
+               character_stats cs
+         WHERE cn.user_id = #{userId}
+           AND cn.id = cs.id
+      ORDER BY cn.name
+    </select>  
+    
+    <select id="getCharactersClass" resultType="com.achersoft.tdcc.character.dao.CharacterName"> 
+        SELECT cn.id 'id',
+               cn.user_id 'userId',
+               cn.name 'name',
+               cn.character_class 'characterClass',
+               cn.created 'createdOn',
+               cs.level 'level'
+          FROM character_name cn,
+               character_stats cs
+         WHERE cn.user_id = #{userId}
+           AND cn.id = cs.id
+           AND cn.character_class = #{characterClass}
+      ORDER BY cn.name
+    </select>  
+    
+    <select id="getCharacterStats" resultType="com.achersoft.tdcc.character.dao.CharacterStats"> 
+         SELECT id 'characterId',
+                base_str 'baseStr',
+                str,
+                str_bonus 'strBonus',
+                base_dex 'baseDex',
+                dex,
+                dex_bonus 'dexBonus',
+                base_con 'baseCon',    
+                con,
+                con_bonus 'conBonus',
+                base_intel 'baseIntel',
+                intel,
+                intel_bonus 'intelBonus',
+                base_wis 'baseWis',
+                wis,
+                wis_bonus 'wisBonus',
+                base_cha 'baseCha',
+                cha,
+                cha_bonus 'chaBonus',
+                health,
+                regen,
+                meleeHit,
+                meleeDmg,
+                meleeFire,
+                meleeCold,
+                meleeShock,
+                meleeSonic,
+                meleeEldritch,
+                meleePoison,
+                meleeDarkrift,
+                meleeSacred,
+                meleeAC,
+                rangeHit,
+                rangeDmg,
+                rangeFire,
+                rangeCold,
+                rangeShock,
+                rangeSonic,
+                rangeEldritch,
+                rangePoison,
+                rangeDarkrift,
+                rangeSacred,
+                rangeAC,
+                rangeMissileAC,
+                fort,
+                reflex,
+                will,
+                retDmg,
+                retFire,
+                retCold,
+                retShock,
+                retSonic,
+                retEldritch,
+                retPoison,
+                retDarkrift,
+                retSacred,
+                cannotBeSuprised,
+                freeMovement,
+                psychic,
+                psychic_level 'psychicLevel',
+                possession,
+                spellDmg,
+                spellHeal,
+                spellResist,
+                initiative,
+                treasureMin,
+                treasureMax,
+                level,
+                drMelee,
+                drRange,
+                drSpell,
+                drFire,
+                drCold,
+                drShock,
+                drSonic,
+                drEldritch,
+                drPoison,
+                drDarkrift,
+                drSacred
+           FROM character_stats
+          WHERE id = #{id}
+    </select>   
+    
+    <select id="getCharacterItems" resultType="com.achersoft.tdcc.character.dao.CharacterItem"> 
+             SELECT ci.id 'id',
+                    ci.item_id 'itemId',
+                    ci.character_id 'characterId',
+                    t.name 'name',
+                    t.text 'text',
+                    t.rarity 'rarity',
+                    ci.slot 'slot',
+                    ci.slot_index 'index',
+                    ci.slot_status 'slotStatus',
+                    ci.status_text 'statusText'
+               FROM character_items ci
+    LEFT OUTER JOIN token t ON ci.item_id = t.id 
+              WHERE character_id = #{id}
+           ORDER BY ci.slot, ci.slot_index 
+    </select>
+    
+    <select id="getCharacterNotes" resultType="com.achersoft.tdcc.character.dao.CharacterNote"> 
+         SELECT alwaysInEffect,
+                oncePerRound,
+                oncePerRoom,
+                oncePerGame,
+                note
+           FROM character_notes
+          WHERE id = #{id}
+    </select>
+   
+    <select id="getStartingStats" resultType="com.achersoft.tdcc.character.dao.CharacterStats"> 
+         SELECT base_str 'baseStr',
+                str,
+                str_bonus 'strBonus',
+                base_dex 'baseDex',
+                dex,
+                dex_bonus 'dexBonus',
+                base_con 'baseCon',    
+                con,
+                con_bonus 'conBonus',
+                base_intel 'baseIntel',
+                intel,
+                intel_bonus 'intelBonus',
+                base_wis 'baseWis',
+                wis,
+                wis_bonus 'wisBonus',
+                base_cha 'baseCha',
+                cha,
+                cha_bonus 'chaBonus',
+                health,
+                regen,
+                meleeHit,
+                meleeDmg,
+                meleeFire,
+                meleeCold,
+                meleeShock,
+                meleeSonic,
+                meleeEldritch,
+                meleePoison,
+                meleeDarkrift,
+                meleeSacred,
+                meleeAC,
+                rangeHit,
+                rangeDmg,
+                rangeFire,
+                rangeCold,
+                rangeShock,
+                rangeSonic,
+                rangeEldritch,
+                rangePoison,
+                rangeDarkrift,
+                rangeSacred,
+                rangeAC,
+                rangeMissileAC,
+                fort,
+                reflex,
+                will,
+                retDmg,
+                retFire,
+                retCold,
+                retShock,
+                retSonic,
+                retEldritch,
+                retPoison,
+                retDarkrift,
+                retSacred,
+                cannotBeSuprised,
+                freeMovement,
+                psychic,
+                spellDmg,
+                spellHeal,
+                spellResist,
+                initiative,
+                treasureMin,
+                treasureMax,
+                level,
+                drMelee,
+                drRange,
+                drSpell,
+                drFire,
+                drCold,
+                drShock,
+                drSonic,
+                drEldritch,
+                drPoison,
+                drDarkrift,
+                drSacred
+           FROM base_stats
+        WHERE characterClass = #{characterClass}
+          AND level = #{level}
+    </select>
+    
+    <update id="updateCharacterStats">
+        UPDATE character_stats SET
+            base_str = #{baseStr},
+            str = #{str},
+            str_bonus = #{strBonus},
+            base_dex = #{baseDex},
+            dex = #{dex},
+            dex_bonus = #{dexBonus},
+            base_con = #{baseCon},
+            con = #{con},
+            con_bonus = #{conBonus},
+            base_intel = #{baseIntel},
+            intel = #{intel},
+            intel_bonus = #{intelBonus},
+            base_wis = #{baseWis},
+            wis = #{wis},
+            wis_bonus = #{wisBonus},
+            base_cha = #{baseCha},
+            cha = #{cha},
+            cha_bonus = #{chaBonus},
+            health = #{health},
+            regen = #{regen},
+            meleeHit = #{meleeHit},
+            meleeDmg = #{meleeDmg},
+            meleeFire = #{meleeFire},
+            meleeCold = #{meleeCold},
+            meleeShock = #{meleeShock},
+            meleeSonic = #{meleeSonic},
+            meleeEldritch = #{meleeEldritch},
+            meleePoison = #{meleePoison},
+            meleeDarkrift = #{meleeDarkrift},
+            meleeSacred = #{meleeSacred},
+            meleeAC = #{meleeAC},
+            rangeHit = #{rangeHit},
+            rangeDmg = #{rangeDmg},
+            rangeFire = #{rangeFire},
+            rangeCold = #{rangeCold},
+            rangeShock = #{rangeShock},
+            rangeSonic = #{rangeSonic},
+            rangeEldritch = #{rangeEldritch},
+            rangePoison = #{rangePoison},
+            rangeDarkrift = #{rangeDarkrift},
+            rangeSacred = #{rangeSacred},
+            rangeAC = #{rangeAC},
+            rangeMissileAC = #{rangeMissileAC},
+            fort = #{fort},
+            reflex = #{reflex},
+            will = #{will},
+            retDmg = #{retDmg},
+            retFire = #{retFire},
+            retCold = #{retCold},
+            retShock = #{retShock},
+            retSonic = #{retSonic},
+            retEldritch = #{retEldritch},
+            retPoison = #{retPoison},
+            retDarkrift = #{retDarkrift},
+            retSacred = #{retSacred},
+            cannotBeSuprised = #{cannotBeSuprised},
+            freeMovement = #{freeMovement},
+            psychic = #{psychic},
+            psychic_level = #{psychicLevel},
+            possession = #{possession},
+            spellDmg = #{spellDmg},
+            spellHeal = #{spellHeal},
+            spellResist = #{spellResist},
+            initiative = #{initiative},
+            treasureMin = #{treasureMin},
+            treasureMax = #{treasureMax},
+            level = #{level},
+            drMelee = #{drMelee},
+            drRange = #{drRange},
+            drSpell = #{drSpell},
+            drFire = #{drFire},
+            drCold = #{drCold},
+            drShock = #{drShock},
+            drSonic = #{drSonic},
+            drEldritch = #{drEldritch},
+            drPoison = #{drPoison},
+            drDarkrift = #{drDarkrift},
+            drSacred = #{drSacred}
+      WHERE id = #{characterId};
+    </update>
+    
+    <update id="updateCharacterName">
+        UPDATE character_name SET
+               name = #{name}
+         WHERE id = #{id};
+    </update>
+    
+    <delete id="deleteCharacter">
+        DELETE FROM character_name WHERE id = #{id}
+           AND user_id = #{userId}
+    </delete>
+    
+    <delete id="deleteCharacterItems">
+        DELETE FROM character_items WHERE character_id = #{id}
+    </delete>
+    
+    <delete id="deleteCharacterNotes">
+        DELETE FROM character_notes WHERE id = #{id}
+    </delete>
+</mapper>                          

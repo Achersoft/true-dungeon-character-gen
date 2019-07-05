@@ -1,0 +1,357 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.achersoft.tdcc.token.persistence.TokenMapper">
+    
+    <select id="getWeaponSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
+         SELECT t.id,
+                t.name,
+                t.text,
+                t.rarity,
+                t.slot
+           FROM token t,
+                token_details td
+          WHERE t.id = td.id
+            <if test="slot.name() == 'RANGE_MAINHAND'">
+            AND t.slot= 'MAINHAND'
+            AND (td.range_wep = 1 OR td.thrown = 1)
+            </if>
+            <if test="slot.name() == 'RANGE_OFFHAND'">
+                <if test="characterClass == 'MONK'">
+                    AND td.shuriken = 1
+                    AND td.range_wep = if((select shuriken FROM token_details WHERE id = (SELECT item_id FROM character_items where character_id = #{characterId} AND slot = 'RANGE_MAINHAND')) = 1, 1,0) 
+                </if>
+                <if test="characterClass != 'MONK'">
+                    AND t.slot= 'OFFHAND'
+                    AND td.shield = if((select two_hand FROM token_details WHERE id = (SELECT item_id FROM character_items where character_id = #{characterId} AND slot = 'RANGE_MAINHAND')) = 1, 0,1) 
+                    AND td.buckler = if((select two_hand FROM token_details WHERE id = (SELECT item_id FROM character_items where character_id = #{characterId} AND slot = 'RANGE_MAINHAND')) = 1, 1,0)
+                </if>
+            </if>
+            <if test="slot.name() == 'MAINHAND'">
+            AND t.slot= 'MAINHAND'
+            AND td.range_wep = 0
+            AND (td.one_hand = 1 OR td.two_hand = 1)
+            </if>
+            <if test="slot.name() == 'OFFHAND'">
+                <if test="characterClass == 'RANGER'">
+                    AND (td.ranger_off = 1 OR td.mug = 1)
+                    AND (t.slot= 'MAINHAND' OR t.slot= 'OFFHAND')
+                </if>
+                <if test="characterClass == 'MONK'">
+                    AND (td.monk_offhand = 1 OR td.mug = 1)
+                    AND (t.slot= 'MAINHAND' OR t.slot= 'OFFHAND')
+                </if>
+                <if test="characterClass != 'RANGER'">
+                    <if test="characterClass != 'MONK'">
+                        AND t.slot= 'OFFHAND'
+                    </if>
+                </if>
+            AND (td.one_hand = 1 OR td.shield = 1 OR td.mug = 1)
+            AND td.range_wep = 0
+            </if>
+            <if test="rarity == 'COMMON'">
+            AND t.rarity = 'COMMON'
+            </if>
+            <if test="rarity == 'UNCOMMON'">
+            AND t.rarity = 'UNCOMMON'
+            </if>
+            <if test="rarity == 'RARE'">
+            AND t.rarity = 'RARE'
+            </if>
+            <if test="rarity == 'ULTRARARE'">
+            AND t.rarity = 'ULTRARARE'
+            </if>
+            <if test="rarity == 'RELIC_PLUS'">
+            AND t.rarity IN ('ENHANCED','EXALTED','RELIC','LEGENDARY','ELDRITCH','PREMIUM','ARTIFACT')
+            </if>
+            <if test="characterClass == 'BARBARIAN'">
+            AND t.barbarian = 1
+            </if>
+            <if test="characterClass == 'BARD'">
+            AND t.bard = 1
+            </if>
+            <if test="characterClass == 'CLERIC'">
+            AND t.cleric = 1
+            </if>
+            <if test="characterClass == 'DRUID'">
+            AND t.druid = 1
+            </if>
+            <if test="characterClass == 'DWARF_FIGHTER'">
+            AND t.dwarf_fighter = 1
+            </if>
+            <if test="characterClass == 'ELF_WIZARD'">
+            AND t.elf_wizard = 1
+            </if>
+            <if test="characterClass == 'FIGHTER'">
+            AND t.fighter = 1
+            </if>
+            <if test="characterClass == 'WIZARD'">
+            AND t.wizard = 1
+            </if>
+            <if test="characterClass == 'MONK'">
+            AND t.monk = 1
+            </if>
+            <if test="characterClass == 'PALADIN'">
+            AND t.paladin = 1
+            </if>
+            <if test="characterClass == 'RANGER'">
+            AND t.ranger = 1
+            </if>
+            <if test="characterClass == 'ROGUE'">
+            AND t.rogue = 1
+            </if>
+       ORDER BY t.name
+    </select>
+                       
+    <select id="getNonWeaponSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
+         SELECT t.id,
+                t.name,
+                t.text,
+                t.rarity,
+                t.slot
+           FROM token t
+          WHERE t.slot= #{slot}
+            <if test="rarity == 'COMMON'">
+            AND t.rarity = 'COMMON'
+            </if>
+            <if test="rarity == 'UNCOMMON'">
+            AND t.rarity = 'UNCOMMON'
+            </if>
+            <if test="rarity == 'RARE'">
+            AND t.rarity = 'RARE'
+            </if>
+            <if test="rarity == 'ULTRARARE'">
+            AND t.rarity = 'ULTRARARE'
+            </if>
+            <if test="rarity == 'RELIC_PLUS'">
+            AND t.rarity IN ('ENHANCED','EXALTED','RELIC','LEGENDARY','ELDRITCH','PREMIUM','ARTIFACT')
+            </if>
+            <if test="characterClass == 'BARBARIAN'">
+            AND t.barbarian = 1
+            </if>
+            <if test="characterClass == 'BARD'">
+            AND t.bard = 1
+            </if>
+            <if test="characterClass == 'CLERIC'">
+            AND t.cleric = 1
+            </if>
+            <if test="characterClass == 'DRUID'">
+            AND t.druid = 1
+            </if>
+            <if test="characterClass == 'DWARF_FIGHTER'">
+            AND t.dwarf_fighter = 1
+            </if>
+            <if test="characterClass == 'ELF_WIZARD'">
+            AND t.elf_wizard = 1
+            </if>
+            <if test="characterClass == 'FIGHTER'">
+            AND t.fighter = 1
+            </if>
+            <if test="characterClass == 'WIZARD'">
+            AND t.wizard = 1
+            </if>
+            <if test="characterClass == 'MONK'">
+            AND t.monk = 1
+            </if>
+            <if test="characterClass == 'PALADIN'">
+            AND t.paladin = 1
+            </if>
+            <if test="characterClass == 'RANGER'">
+            AND t.ranger = 1
+            </if>
+            <if test="characterClass == 'ROGUE'">
+            AND t.rogue = 1
+            </if>
+            <if test="slot == 'SLOTLESS'">
+            AND t.id NOT IN
+                (SELECT item_id 
+                 FROM character_items
+                 WHERE character_id = #{characterId}
+                   AND item_id is not null
+                   AND id != #{slotId}    
+                   AND item_id != 'b3079a85fd23a441af7de7dfd794d6ece2760313'
+                   AND slot = #{slot})
+            AND t.id != if((SELECT count(*) FROM character_items WHERE character_id = #{characterId} AND id != #{slotId} AND item_id = 'b3079a85fd23a441af7de7dfd794d6ece2760313') >= 2, 'b3079a85fd23a441af7de7dfd794d6ece2760313','')        
+            </if>
+            <if test="slot != 'SLOTLESS'">
+            AND t.id NOT IN
+                (SELECT item_id 
+                 FROM character_items
+                 WHERE character_id = #{characterId}
+                   AND item_id is not null
+                   AND id != #{slotId}    
+                   AND slot = #{slot})
+            </if>
+       ORDER BY t.name
+    </select>
+    
+    <select id="getRunestoneSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
+         SELECT t.id,
+                t.name,
+                t.text,
+                t.rarity,
+                t.slot
+           FROM token t
+          WHERE t.slot= #{slot}
+            AND t.rarity = 'RARE'
+            <if test="characterClass == 'BARBARIAN'">
+            AND t.barbarian = 1
+            </if>
+            <if test="characterClass == 'BARD'">
+            AND t.bard = 1
+            </if>
+            <if test="characterClass == 'CLERIC'">
+            AND t.cleric = 1
+            </if>
+            <if test="characterClass == 'DRUID'">
+            AND t.druid = 1
+            </if>
+            <if test="characterClass == 'DWARF_FIGHTER'">
+            AND t.dwarf_fighter = 1
+            </if>
+            <if test="characterClass == 'ELF_WIZARD'">
+            AND t.elf_wizard = 1
+            </if>
+            <if test="characterClass == 'FIGHTER'">
+            AND t.fighter = 1
+            </if>
+            <if test="characterClass == 'WIZARD'">
+            AND t.wizard = 1
+            </if>
+            <if test="characterClass == 'MONK'">
+            AND t.monk = 1
+            </if>
+            <if test="characterClass == 'PALADIN'">
+            AND t.paladin = 1
+            </if>
+            <if test="characterClass == 'RANGER'">
+            AND t.ranger = 1
+            </if>
+            <if test="characterClass == 'ROGUE'">
+            AND t.rogue = 1
+            </if>
+       ORDER BY t.name
+    </select>
+    
+    <select id="getAoWSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
+         SELECT t.id,
+                t.name,
+                t.text,
+                t.rarity,
+                t.slot
+           FROM token t
+          WHERE t.slot= "RUNESTONE"
+            <if test="rarity == 'COMMON'">
+            AND t.rarity = 'COMMON'
+            </if>
+            <if test="rarity == 'UNCOMMON'">
+            AND t.rarity = 'UNCOMMON'
+            </if>
+            <if test="rarity == 'RARE'">
+            AND t.rarity = 'RARE'
+            </if>
+            <if test="rarity == 'ULTRARARE'">
+            AND t.rarity = 'ULTRARARE'
+            </if>
+            AND t.rarity NOT IN ('ENHANCED','EXALTED','RELIC','LEGENDARY','ELDRITCH','PREMIUM','ARTIFACT')
+            <if test="characterClass == 'BARBARIAN'">
+            AND t.barbarian = 1
+            </if>
+            <if test="characterClass == 'BARD'">
+            AND t.bard = 1
+            </if>
+            <if test="characterClass == 'CLERIC'">
+            AND t.cleric = 1
+            </if>
+            <if test="characterClass == 'DRUID'">
+            AND t.druid = 1
+            </if>
+            <if test="characterClass == 'DWARF_FIGHTER'">
+            AND t.dwarf_fighter = 1
+            </if>
+            <if test="characterClass == 'ELF_WIZARD'">
+            AND t.elf_wizard = 1
+            </if>
+            <if test="characterClass == 'FIGHTER'">
+            AND t.fighter = 1
+            </if>
+            <if test="characterClass == 'WIZARD'">
+            AND t.wizard = 1
+            </if>
+            <if test="characterClass == 'MONK'">
+            AND t.monk = 1
+            </if>
+            <if test="characterClass == 'PALADIN'">
+            AND t.paladin = 1
+            </if>
+            <if test="characterClass == 'RANGER'">
+            AND t.ranger = 1
+            </if>
+            <if test="characterClass == 'ROGUE'">
+            AND t.rogue = 1
+            </if>
+       ORDER BY t.name
+    </select>
+    
+    <select id="getTokenSlotIndex" resultType="java.lang.Integer">
+        SELECT slot_index 
+          FROM character_items
+         WHERE id = #{soltId}
+    </select>
+    
+    <update id="setTokenSlot">      
+        UPDATE character_items SET
+            item_id = #{tokenId}   
+         WHERE id = #{soltId}
+    </update>  
+    
+    <update id="unequipTokenSlot">      
+        UPDATE character_items SET
+            item_id = null,
+            slot_status = 'OK',
+            status_text = null
+         WHERE id = #{soltId}
+    </update>  
+    
+    <select id="itemUsableByClass" resultType="java.lang.Boolean"> 
+        SELECT CASE WHEN count(*) > 0 THEN 1 ELSE 0 END 
+          FROM token t
+         WHERE t.id = #{tokenId}
+            <if test="characterClass == 'BARBARIAN'">
+            AND t.barbarian = 1
+            </if>
+            <if test="characterClass == 'BARD'">
+            AND t.bard = 1
+            </if>
+            <if test="characterClass == 'CLERIC'">
+            AND t.cleric = 1
+            </if>
+            <if test="characterClass == 'DRUID'">
+            AND t.druid = 1
+            </if>
+            <if test="characterClass == 'DWARF_FIGHTER'">
+            AND t.dwarf_fighter = 1
+            </if>
+            <if test="characterClass == 'ELF_WIZARD'">
+            AND t.elf_wizard = 1
+            </if>
+            <if test="characterClass == 'FIGHTER'">
+            AND t.fighter = 1
+            </if>
+            <if test="characterClass == 'WIZARD'">
+            AND t.wizard = 1
+            </if>
+            <if test="characterClass == 'MONK'">
+            AND t.monk = 1
+            </if>
+            <if test="characterClass == 'PALADIN'">
+            AND t.paladin = 1
+            </if>
+            <if test="characterClass == 'RANGER'">
+            AND t.ranger = 1
+            </if>
+            <if test="characterClass == 'ROGUE'">
+            AND t.rogue = 1
+            </if>
+    </select>
+</mapper>
