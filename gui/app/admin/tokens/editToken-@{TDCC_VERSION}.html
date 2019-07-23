@@ -1,7 +1,7 @@
 <div class="row" style="margin:15px">
     <div class="row">
         <div class="col-md-12">
-            <input type="text" class="form-control" ng-model="selectedToken" uib-typeahead="token for token in searchForToken($viewValue)" typeahead-popup-template-url="admin/tokens/template.html" typeahead-on-select="onSelect($item)" placeholder="Search for token..." >
+            <input type="text" class="form-control" ng-model="selectedToken" uib-typeahead="token for token in searchForToken($viewValue)" typeahead-popup-template-url="admin/tokens/template-@{TDCC_VERSION}.html" typeahead-on-select="onSelect($item)" placeholder="Search for token..." >
         </div> 
     </div>
     <h2 style="border-bottom:1pt solid black;"></h2>
@@ -95,17 +95,25 @@
     </div>
     <hr>
         <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-2">
             <label>Melee Hit:</label>
             <input type="number" class="form-control" ng-model="search.meleeHit"/>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
             <label>Melee Damage:</label>
             <input type="number" class="form-control" ng-model="search.meleeDmg"/>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
             <label>Melee AC:</label>
             <input type="number" class="form-control" ng-model="search.meleeAC"/>
+        </div>
+        <div class="col-md-2">
+            <label>Melee Polymorph Hit:</label>
+            <input type="number" class="form-control" ng-model="search.meleePolyHit"/>
+        </div>
+        <div class="col-md-2">
+            <label>Melee Polymorph Damage:</label>
+            <input type="number" class="form-control" ng-model="search.meleePolyDmg"/>
         </div>
     </div>
     <div class="row">

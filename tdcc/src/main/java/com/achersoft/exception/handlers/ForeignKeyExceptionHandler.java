@@ -14,7 +14,6 @@ public class ForeignKeyExceptionHandler implements ExceptionMapper<DataIntegrity
 
     @Override
     public Response toResponse(DataIntegrityViolationException e) {
-        Logger.getLogger(DataIntegrityViolationException.class.getName()).log(Level.SEVERE, null, e);
         return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.BAD_REQUEST.getStatusCode())

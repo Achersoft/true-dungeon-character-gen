@@ -33,6 +33,8 @@ public class CharacterStats {
     private int regen = 0; 
     private int meleeHit = 0;
     private int meleeDmg = 0;
+    private int meleePolyHit = 0;
+    private int meleePolyDmg = 0;
     private boolean meleeFire = false;
     private boolean meleeCold = false;
     private boolean meleeShock = false;

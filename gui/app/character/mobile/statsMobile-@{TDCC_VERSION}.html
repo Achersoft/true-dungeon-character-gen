@@ -72,14 +72,18 @@
                 <thead>
                     <tr>
                       <th>Hit</th>
+                      <th ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">Poly Hit</th>
                       <th>Damage</th>
+                      <th ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">Poly Damage</th>
                       <th>AC</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                       <td>{{characterContext.stats.meleeHit}}</td>
+                      <td ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">{{characterContext.stats.meleePolyHit}}</td>
                       <td>{{characterContext.stats.meleeDmg}}</td>
+                      <td ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">{{characterContext.stats.meleePolyDmg}}</td>
                       <td>{{characterContext.stats.meleeAC}}</td>
                     </tr>
                 </tbody>
@@ -242,6 +246,9 @@
     </div>
     <div class="col-xs-12">
         Free Movement: {{characterContext.stats.freeMovement}}
+    </div>
+    <div class="col-xs-12">
+        Immune to Possession: {{characterContext.stats.possession}}
     </div>
     <div class="col-xs-12">
         Psychic Powers: {{characterContext.stats.psychic}}

@@ -77,7 +77,9 @@
                     <thead>
                         <tr>
                           <th>Hit</th>
+                          <th ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">Polymorph Hit</th>
                           <th>Damage</th>
+                          <th ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">Polymorph Damage</th>
                           <th>AC</th>
                           <th>Types</th>
                         </tr>
@@ -85,7 +87,9 @@
                     <tbody>
                         <tr>
                           <td>{{characterContext.stats.meleeHit}}</td>
+                          <td ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">{{characterContext.stats.meleePolyHit}}</td>
                           <td>{{characterContext.stats.meleeDmg}}</td>
+                          <td ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">{{characterContext.stats.meleePolyDmg}}</td>
                           <td>{{characterContext.stats.meleeAC}}</td>
                           <td>
                               <span ng-if="characterContext.stats.meleeFire">Fire</span>
@@ -119,14 +123,15 @@
                           <td>{{characterContext.stats.rangeDmg}}</td>
                           <td>{{characterContext.stats.rangeAC}}</td>
                           <td>{{characterContext.stats.rangeMissileAC}}</td>
-                          <td><span ng-if="characterContext.stats.rangeFire">Fire</span>
-            <span ng-if="characterContext.stats.rangeCold">Cold</span>
-            <span ng-if="characterContext.stats.rangeShock">Shock</span>
-            <span ng-if="characterContext.stats.rangeSonic">Sonic</span>
-            <span ng-if="characterContext.stats.rangeEldritch">Eldritch</span>
-            <span ng-if="characterContext.stats.rangePoison">Poison</span>
-            <span ng-if="characterContext.stats.rangeDarkrift">Darkrift</span>
-            <span ng-if="characterContext.stats.rangeSacred">Sacred</span></td>
+                          <td>
+                              <span ng-if="characterContext.stats.rangeFire">Fire</span>
+                              <span ng-if="characterContext.stats.rangeCold">Cold</span>
+                              <span ng-if="characterContext.stats.rangeShock">Shock</span>
+                              <span ng-if="characterContext.stats.rangeSonic">Sonic</span>
+                              <span ng-if="characterContext.stats.rangeEldritch">Eldritch</span>
+                              <span ng-if="characterContext.stats.rangePoison">Poison</span>
+                              <span ng-if="characterContext.stats.rangeDarkrift">Darkrift</span>
+                              <span ng-if="characterContext.stats.rangeSacred">Sacred</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -188,14 +193,15 @@
                     <tbody>
                         <tr>
                           <td>{{characterContext.stats.retDmg}}</td>
-                          <td><span ng-if="characterContext.stats.retFire">Fire</span>
-        <span ng-if="characterContext.stats.retCold">Cold</span>
-        <span ng-if="characterContext.stats.retShock">Shock</span>
-        <span ng-if="characterContext.stats.retSonic">Sonic</span>
-        <span ng-if="characterContext.stats.retEldritch">Eldritch</span>
-        <span ng-if="characterContext.stats.retPoison">Poison</span>
-        <span ng-if="characterContext.stats.retDarkrift">Darkrift</span>
-        <span ng-if="characterContext.stats.retSacred">Sacred</span></td>
+                          <td>
+                              <span ng-if="characterContext.stats.retFire">Fire</span>
+                              <span ng-if="characterContext.stats.retCold">Cold</span>
+                              <span ng-if="characterContext.stats.retShock">Shock</span>
+                              <span ng-if="characterContext.stats.retSonic">Sonic</span>
+                              <span ng-if="characterContext.stats.retEldritch">Eldritch</span>
+                              <span ng-if="characterContext.stats.retPoison">Poison</span>
+                              <span ng-if="characterContext.stats.retDarkrift">Darkrift</span>
+                              <span ng-if="characterContext.stats.retSacred">Sacred</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -249,6 +255,9 @@
             </div>
             <div style="width:50%;">
                 Free Movement: {{characterContext.stats.freeMovement}}
+            </div>
+            <div style="width:50%;">
+                Immune to Possession: {{characterContext.stats.possession}}
             </div>
             <div style="width:50%;">
                 Psychic Powers: {{characterContext.stats.psychic}}

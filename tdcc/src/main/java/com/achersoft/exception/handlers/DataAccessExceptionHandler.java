@@ -14,7 +14,6 @@ public class DataAccessExceptionHandler implements ExceptionMapper<DataAccessExc
     
     @Override
     public Response toResponse(DataAccessException e) {
-        Logger.getLogger(DataAccessExceptionHandler.class.getName()).log(Level.SEVERE, null, e);
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())

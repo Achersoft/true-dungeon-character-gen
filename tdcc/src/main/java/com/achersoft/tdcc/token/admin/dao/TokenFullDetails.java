@@ -51,6 +51,8 @@ public class TokenFullDetails {
     private boolean bracerWeapon;
     private int meleeHit;
     private int meleeDmg;
+    private int meleePolyHit;
+    private int meleePolyDmg;
     private boolean meleeFire;
     private boolean meleeCold;
     private boolean meleeShock;

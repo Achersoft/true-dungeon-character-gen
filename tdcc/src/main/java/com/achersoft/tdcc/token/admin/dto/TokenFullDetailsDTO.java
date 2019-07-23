@@ -48,6 +48,8 @@ public class TokenFullDetailsDTO {
     public Boolean bracerWeapon;
     public Integer meleeHit;
     public Integer meleeDmg;
+    public Integer meleePolyHit;
+    public Integer meleePolyDmg;
     public Boolean meleeFire;
     public Boolean meleeCold;
     public Boolean meleeShock;
@@ -138,6 +140,8 @@ public class TokenFullDetailsDTO {
                 .shuriken(tokenFullDetails.isShuriken())
                 .meleeHit(tokenFullDetails.getMeleeHit())
                 .meleeDmg(tokenFullDetails.getMeleeDmg())
+                .meleePolyHit(tokenFullDetails.getMeleePolyHit())
+                .meleePolyDmg(tokenFullDetails.getMeleePolyDmg())
                 .meleeFire(tokenFullDetails.isMeleeFire())
                 .meleeCold(tokenFullDetails.isMeleeCold())
                 .meleeShock(tokenFullDetails.isMeleeShock())
@@ -267,6 +271,8 @@ public class TokenFullDetailsDTO {
                 .bracerWeapon(bracerWeapon)
                 .meleeHit(meleeHit)
                 .meleeDmg(meleeDmg)
+                .meleePolyHit(meleePolyHit)
+                .meleePolyDmg(meleePolyDmg)
                 .meleeFire(meleeFire)
                 .meleeCold(meleeCold)
                 .meleeShock(meleeShock)

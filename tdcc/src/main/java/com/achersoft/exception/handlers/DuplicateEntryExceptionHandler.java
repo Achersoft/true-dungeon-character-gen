@@ -14,7 +14,6 @@ public class DuplicateEntryExceptionHandler implements ExceptionMapper<Duplicate
     
     @Override
     public Response toResponse(DuplicateKeyException e) {
-        Logger.getLogger(DuplicateKeyException.class.getName()).log(Level.SEVERE, null, e);
         return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.BAD_REQUEST.getStatusCode())

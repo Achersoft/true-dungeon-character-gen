@@ -397,6 +397,8 @@
                 regen,
                 meleeHit,
                 meleeDmg,
+                meleePolyHit,
+                meleePolyDmg,
                 meleeFire,
                 meleeCold,
                 meleeShock,

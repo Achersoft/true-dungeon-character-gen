@@ -12,8 +12,7 @@ import javax.ws.rs.ext.Provider;
 public class UncheckedExceptionHandler implements ExceptionMapper<Throwable> {
 	
     @Override 
-    public Response toResponse(Throwable e) { 
-        Logger.getLogger(UncheckedExceptionHandler.class.getName()).log(Level.SEVERE, null, e);
+    public Response toResponse(Throwable e) {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())

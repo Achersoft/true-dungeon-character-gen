@@ -14,7 +14,6 @@ public class InvalidDataExceptionHandler implements ExceptionMapper<InvalidDataE
 
     @Override
     public Response toResponse(InvalidDataException e) {
-        Logger.getLogger(InvalidDataException.class.getName()).log(Level.SEVERE, null, e);
         return Response.status(Response.Status.BAD_REQUEST.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.BAD_REQUEST.getStatusCode())

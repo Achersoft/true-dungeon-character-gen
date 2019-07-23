@@ -1452,6 +1452,7 @@ public class CharacterServiceImpl implements CharacterService {
     private void calculateStats(CharacterDetails characterDetails) {
         final CharacterStats stats = characterDetails.getStats();
         final List<CharacterItem> conditionalTokens = new ArrayList();
+        final List<CharacterItem> rospTokens = new ArrayList();
         final Set<ConditionalUse> metCondition = new HashSet();
         final List<Integer> meleeWeaponHit = new ArrayList();
         final List<Integer> rangeWeaponHit = new ArrayList();
@@ -1526,9 +1527,12 @@ public class CharacterServiceImpl implements CharacterService {
                 stats.setTreasureMin(stats.getTreasureMin() + 1);
                 stats.setTreasureMax(stats.getTreasureMax() + 1);
             }
-           
+
             if(td.getConditionalUse() != ConditionalUse.NONE) {
-                conditionalTokens.add(item);
+                if (td.getConditionalUse() == ConditionalUse.NOT_WITH_ROSP)
+                    rospTokens.add(item);
+                else
+                    conditionalTokens.add(item);
             } else {
                 // check for same shield
                 if (td.isShield()) {
@@ -1558,9 +1562,10 @@ public class CharacterServiceImpl implements CharacterService {
                     updateStats(stats, td, characterDetails.getNotes(), false, false);
                 }
             }
-        });   
-        
-        // Check Conditionals 
+        });
+
+        // Check Conditionals
+        checkConditionals(rospTokens, metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
         checkConditionals(conditionalTokens, metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
         
         if (!meleeWeaponHit.isEmpty())
@@ -1574,14 +1579,13 @@ public class CharacterServiceImpl implements CharacterService {
         rangeWeaponHit.stream().forEach(hit -> {
             stats.setRangeHit(stats.getRangeHit() - hit);
         });
-      
+
         stats.setStrBonus((stats.getStr()-10 > 0)?(stats.getStr()-10)/2:(stats.getStr()-11)/2);
         stats.setDexBonus((stats.getDex()-10 > 0)?(stats.getDex()-10)/2:(stats.getDex()-11)/2);
         stats.setConBonus((stats.getCon()-10 > 0)?(stats.getCon()-10)/2:(stats.getCon()-11)/2);
         stats.setIntelBonus((stats.getIntel()-10 > 0)?(stats.getIntel()-10)/2:(stats.getIntel()-11)/2);
         stats.setWisBonus((stats.getWis()-10 > 0)?(stats.getWis()-10)/2:(stats.getWis()-11)/2);
         stats.setChaBonus((stats.getCha()-10 > 0)?(stats.getCha()-10)/2:(stats.getCha()-11)/2);
-
         stats.setHealth(stats.getHealth() + stats.getLevel() * (int)((stats.getConBonus() < 0)?stats.getConBonus()+(stats.getBaseCon()-10)/2:stats.getConBonus()-(stats.getBaseCon()-10)/2));
         stats.setMeleeHit(stats.getMeleeHit() + stats.getStrBonus());
         stats.setMeleeDmg(stats.getMeleeDmg() + stats.getStrBonus());
@@ -1591,7 +1595,9 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setFort(stats.getFort() + stats.getConBonus());
         stats.setReflex(stats.getReflex() + stats.getDexBonus());
         stats.setWill(stats.getWill() + stats.getWisBonus());
-        
+        stats.setMeleePolyHit(stats.getMeleePolyHit() + stats.getMeleeHit());
+        stats.setMeleePolyDmg(stats.getMeleePolyDmg() + stats.getMeleeDmg());
+
         if(mightyRanged.get() == 1)
             stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
         
@@ -1604,12 +1610,12 @@ public class CharacterServiceImpl implements CharacterService {
         }
         
         long figurineCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FIGURINE).count();
-        if(stats.getCha() >= 16) {
+        boolean crownOfAllure = characterDetails.getItems().stream().anyMatch((item) -> item.getItemId() != null && item.getItemId().equals("87221762c1e200774912076fc759c12c6612b0a6"));
+        if(stats.getCha() >= 16 || crownOfAllure) {
             if(figurineCount < 2)
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FIGURINE).index(1).slotStatus(SlotStatus.OK).build());
         } else if(figurineCount > 1)       
             characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.FIGURINE && item.getIndex() > 0)).collect(Collectors.toList()));
-        
     }
     
     private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails, List<Integer> meleeWeaponHit, List<Integer> rangeWeaponHit) {
@@ -1956,6 +1962,8 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setCha(stats.getCha() + td.getCha());
         stats.setHealth(stats.getHealth() + td.getHealth());
         stats.setRegen(stats.getRegen() + td.getRegen());
+        stats.setMeleePolyHit(stats.getMeleePolyHit() + td.getMeleePolyHit());
+        stats.setMeleePolyDmg(stats.getMeleePolyDmg() + td.getMeleePolyDmg());
         stats.setMeleeFire(stats.isMeleeFire() || td.isMeleeFire());
         stats.setMeleeCold(stats.isMeleeCold() || td.isMeleeCold());
         stats.setMeleeShock(stats.isMeleeShock() || td.isMeleeShock());
@@ -1987,6 +1995,7 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setCannotBeSuprised(stats.isCannotBeSuprised() || td.isCannotBeSuprised());
         stats.setFreeMovement(stats.isFreeMovement() || td.isFreeMovement());
         stats.setPsychic(stats.isPsychic() || td.isPsychic());
+        stats.setPossession(stats.isPossession() || td.isPossession());
         stats.setSpellDmg(stats.getSpellDmg() + td.getSpellDmg());
         stats.setSpellHeal(stats.getSpellHeal() + td.getSpellHeal());
         stats.setInitiative(stats.getInitiative()+ td.getInitiative());
