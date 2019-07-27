@@ -145,7 +145,11 @@ public class CharacterServiceImpl implements CharacterService {
             throw new InvalidDataException("The requested character is currently in a invalid state and cannot be exported. Please correct any item conflicts and try again."); 
         return (OutputStream out) -> {
             try {
-                Resource pdfFile = new ClassPathResource("character.pdf");
+                Resource pdfFile = null;
+                if (character.getCharacterClass() == CharacterClass.DRUID || character.getCharacterClass() == CharacterClass.ELF_WIZARD || character.getCharacterClass() == CharacterClass.WIZARD)
+                    pdfFile = new ClassPathResource("characterPoly.pdf");
+                else
+                    pdfFile = new ClassPathResource("character.pdf");
                 PdfReader reader = new PdfReader(pdfFile.getURL());
                 PdfStamper stamper = new PdfStamper(reader, out);
                 AcroFields fields = stamper.getAcroFields();
@@ -175,6 +179,8 @@ public class CharacterServiceImpl implements CharacterService {
                 
                 fields.setField("meleeHit", Integer.toString(character.getStats().getMeleeHit()));
                 fields.setField("meleeDmg", Integer.toString(character.getStats().getMeleeDmg()));
+                fields.setField("meleePolyHit", Integer.toString(character.getStats().getMeleePolyHit()));
+                fields.setField("meleePolyDmg", Integer.toString(character.getStats().getMeleePolyDmg()));
                 fields.setField("meleeAC", Integer.toString(character.getStats().getMeleeAC()));
                 String meleeDmgTypes = "";
                 if(character.getStats().isMeleeFire())
@@ -317,6 +323,7 @@ public class CharacterServiceImpl implements CharacterService {
                 fields.setField("isPsychic", Boolean.toString(character.getStats().isPsychic()));
                 fields.setField("psychicLevel", Integer.toString(character.getStats().getPsychicLevel()));
                 fields.setField("initiativeBonus", Integer.toString(character.getStats().getInitiative()));
+                fields.setField("isPossession", Boolean.toString(character.getStats().isPossession()));
                 
                 final StringBuilder itemsList = new StringBuilder();
                 final StringBuilder itemsListCnt = new StringBuilder();
@@ -665,6 +672,18 @@ public class CharacterServiceImpl implements CharacterService {
 
                      over = stamper.getOverContent(4);
                      over.addImage(check);
+                }
+
+                if(character.getStats().isPossession()) {
+                    stream = new PdfImage(check, "", null);
+                    stream.put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
+                    ref = stamper.getWriter().addToBody(stream);
+                    check.setDirectReference(ref.getIndirectReference());
+                    check.setAbsolutePosition(483, 635);
+                    check.scaleToFit(12,12);
+
+                    over = stamper.getOverContent(4);
+                    over.addImage(check);
                 }
                 
                 final StringBuilder collectedItemsList = new StringBuilder();
@@ -1586,6 +1605,7 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setIntelBonus((stats.getIntel()-10 > 0)?(stats.getIntel()-10)/2:(stats.getIntel()-11)/2);
         stats.setWisBonus((stats.getWis()-10 > 0)?(stats.getWis()-10)/2:(stats.getWis()-11)/2);
         stats.setChaBonus((stats.getCha()-10 > 0)?(stats.getCha()-10)/2:(stats.getCha()-11)/2);
+
         stats.setHealth(stats.getHealth() + stats.getLevel() * (int)((stats.getConBonus() < 0)?stats.getConBonus()+(stats.getBaseCon()-10)/2:stats.getConBonus()-(stats.getBaseCon()-10)/2));
         stats.setMeleeHit(stats.getMeleeHit() + stats.getStrBonus());
         stats.setMeleeDmg(stats.getMeleeDmg() + stats.getStrBonus());

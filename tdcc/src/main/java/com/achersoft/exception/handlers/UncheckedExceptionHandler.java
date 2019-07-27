@@ -1,6 +1,8 @@
 package com.achersoft.exception.handlers;
 
 import com.achersoft.exception.SystemError;
+
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.MediaType;
@@ -13,6 +15,8 @@ public class UncheckedExceptionHandler implements ExceptionMapper<Throwable> {
 	
     @Override 
     public Response toResponse(Throwable e) {
+        e.printStackTrace();
+        System.err.println(e.getMessage());
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
                        .entity(SystemError.builder()
                                            .status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())

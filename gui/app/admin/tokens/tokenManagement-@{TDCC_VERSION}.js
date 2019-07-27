@@ -165,6 +165,8 @@ angular.module('main')
                 buckler: false,
                 meleeHit: 0,
                 meleeDmg: 0,
+                meleePolyHit: 0,
+                meleePolyDmg: 0,
                 meleeFire: false,
                 meleeCold: false,
                 meleeShock: false,
