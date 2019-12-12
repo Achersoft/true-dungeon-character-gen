@@ -88,18 +88,26 @@
         </div>
     </div>
     <hr>
-        <div class="row">
-        <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-2">
             <label>Melee Hit:</label>
             <input type="number" class="form-control" ng-model="search.meleeHit"/>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
             <label>Melee Damage:</label>
             <input type="number" class="form-control" ng-model="search.meleeDmg"/>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
             <label>Melee AC:</label>
             <input type="number" class="form-control" ng-model="search.meleeAC"/>
+        </div>
+        <div class="col-md-2">
+            <label>Melee Polymorph Hit:</label>
+            <input type="number" class="form-control" ng-model="search.meleePolyHit"/>
+        </div>
+        <div class="col-md-2">
+            <label>Melee Polymorph Damage:</label>
+            <input type="number" class="form-control" ng-model="search.meleePolyDmg"/>
         </div>
     </div>
     <div class="row">
@@ -209,6 +217,10 @@
             <label class="checkbox-inline"><input type="checkbox" ng-model="search.freeMovement">Free Movement?</label>
             <label class="checkbox-inline"><input type="checkbox" ng-model="search.psychic">Psychic?</label>
             <label class="checkbox-inline"><input type="checkbox" ng-model="search.possession">Immune Possession?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.addLevel">+1 Level?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.wonderEffect">Wonder Effect?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.setRingsThree">Set Rings to Three?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.noRings">No Rings?</label>
         </div>
     </div>
     <hr>
@@ -272,7 +284,26 @@
             <label>DR Sacred:</label>
             <input type="number" class="form-control" ng-model="search.drSacred"/>
         </div>
-    </div>   
+    </div>  
+    <hr>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Head slots:</label>
+            <input type="number" class="form-control" ng-model="search.headSlots"/>
+        </div>
+        <div class="col-md-3">
+            <label>Back Slots:</label>
+            <input type="number" class="form-control" ng-model="search.backSlots"/>
+        </div>
+        <div class="col-md-3">
+            <label>Stone Slots:</label>
+            <input type="number" class="form-control" ng-model="search.stoneSlots"/>
+        </div>
+        <div class="col-md-3">
+            <label>charm Slots:</label>
+            <input type="number" class="form-control" ng-model="search.charmSlots"/>
+        </div>
+    </div>
     <hr>
     <div class="row">
         <div class="col-md-12">

@@ -94,7 +94,7 @@
         </div>
     </div>
     <hr>
-        <div class="row">
+    <div class="row">
         <div class="col-md-2">
             <label>Melee Hit:</label>
             <input type="number" class="form-control" ng-model="search.meleeHit"/>
@@ -223,6 +223,10 @@
             <label class="checkbox-inline"><input type="checkbox" ng-model="search.freeMovement">Free Movement?</label>
             <label class="checkbox-inline"><input type="checkbox" ng-model="search.psychic">Psychic?</label>
             <label class="checkbox-inline"><input type="checkbox" ng-model="search.possession">Immune Possession?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.addLevel">+1 Level?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.wonderEffect">Wonder Effect?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.setRingsThree">Set Rings to Three?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.noRings">No Rings?</label>
         </div>
     </div>
     <hr>
@@ -285,6 +289,29 @@
         <div class="col-md-1">
             <label>DR Sacred:</label>
             <input type="number" class="form-control" ng-model="search.drSacred"/>
+        </div>
+        <div class="col-md-1">
+            <label>DR Force:</label>
+            <input type="number" class="form-control" ng-model="search.drForce"/>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Head slots:</label>
+            <input type="number" class="form-control" ng-model="search.headSlots"/>
+        </div>
+        <div class="col-md-3">
+            <label>Back Slots:</label>
+            <input type="number" class="form-control" ng-model="search.backSlots"/>
+        </div>
+        <div class="col-md-3">
+            <label>Stone Slots:</label>
+            <input type="number" class="form-control" ng-model="search.stoneSlots"/>
+        </div>
+        <div class="col-md-3">
+            <label>charm Slots:</label>
+            <input type="number" class="form-control" ng-model="search.charmSlots"/>
         </div>
     </div>
     <hr>
