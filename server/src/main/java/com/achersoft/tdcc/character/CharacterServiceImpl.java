@@ -952,8 +952,17 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public CharacterDetails getCharacterMaxLevel(String id) {
         CharacterDetails characterDetails = getCharacter(id);
+        final Map<String, CharacterItemSet> itemDetailsMap = new HashMap<>();
 
-        chackWeaponAvailability(characterDetails);
+        // Fill the map
+        characterDetails.getItems().stream().filter((item) -> item.getItemId() != null).forEach((item) -> {
+            if (item.getItemId() != null && !item.getItemId().isEmpty())
+                itemDetailsMap.put(item.getId(), CharacterItemSet.builder().item(item).tokenFullDetails(tokenAdminMapper.getTokenDetails(item.getItemId())).build());
+            else
+                itemDetailsMap.put(item.getId(), CharacterItemSet.builder().item(item).build());
+        });
+
+        chackWeaponAvailability(characterDetails, itemDetailsMap);
         checkSlotModItems(characterDetails);
         addSlotsForFullItems(characterDetails);
         checkSetItems(characterDetails, true);
@@ -998,35 +1007,53 @@ public class CharacterServiceImpl implements CharacterService {
         }
         
         // Check for two handed range weapon
-        itemDetailsMap.values().stream().filter((item) -> item.getItem().getSlot()==Slot.RANGE_MAINHAND).findAny().ifPresent((item) -> {
-            sdf wef wef 
+        itemDetailsMap.values().stream().filter((item) -> item.getItem().getSlot()==Slot.RANGE_MAINHAND).findAny().ifPresent((mainHand) -> {
+            CharacterItem rangeOffhand = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.RANGE_OFFHAND).findFirst().orElse(null);
 
-            if(characterDetails.getItems().stream().filter((i) -> i.getSlot()==Slot.RANGE_OFFHAND).count() == 0)
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RANGE_OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
-                  
-            characterDetails.getItems().stream().filter((i) -> i.getItemId()!=null&&i.getSlot()==Slot.RANGE_OFFHAND).findAny().ifPresent((i) -> {
-                TokenFullDetails mainHandDetails = tokenAdminMapper.getTokenDetails(item.getItemId());
-                TokenFullDetails offHandDetails = tokenAdminMapper.getTokenDetails(i.getItemId());
-       
-                if (mainHandDetails.isTwoHanded() && (!offHandDetails.isBuckler() || mainHandDetails.isThrown())) {
-                    characterDetails.setItems(characterDetails.getItems().stream().filter((it) -> it.getSlot()!=Slot.RANGE_OFFHAND).collect(Collectors.toList()));
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RANGE_OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
-                } else if(mainHandDetails.isOneHanded() && offHandDetails.isBuckler()) {
-                    characterDetails.setItems(characterDetails.getItems().stream().filter((it) -> it.getSlot()!=Slot.RANGE_OFFHAND).collect(Collectors.toList()));
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RANGE_OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
-                } else if (characterDetails.getCharacterClass() == CharacterClass.MONK && mainHandDetails.isShuriken() && !offHandDetails.isShuriken()) {  
-                    characterDetails.setItems(characterDetails.getItems().stream().filter((it) -> it.getSlot()!=Slot.RANGE_OFFHAND).collect(Collectors.toList()));
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RANGE_OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
-                }
+            if(rangeOffhand == null) {
+                rangeOffhand = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RANGE_OFFHAND).index(0).slotStatus(SlotStatus.OK).build();
+                characterDetails.getItems().add(rangeOffhand);
+                itemDetailsMap.put(rangeOffhand.getId(), CharacterItemSet.builder().item(rangeOffhand).build());
+            }
+
+            if (mainHand.getItem().getItemId() == null) {
+                rangeOffhand.setItemId(null);
+                rangeOffhand.setName(null);
+                rangeOffhand.setStatusText(null);
+                rangeOffhand.setText(null);
+                rangeOffhand.setRarity(null);
+                rangeOffhand.setIndex(0);
+                rangeOffhand.setSlotStatus(SlotStatus.OK);
+                itemDetailsMap.get(rangeOffhand.getId()).setTokenFullDetails(null);
+            }
+
+            itemDetailsMap.values().stream().filter((i) -> i.getItem().getItemId()!=null && i.getItem().getSlot()==Slot.RANGE_OFFHAND).findAny().ifPresent((offHand) -> {
+                CharacterItem rangeOffhandFinal = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.RANGE_OFFHAND).findFirst().get();
+
+                if ((mainHand.getTokenFullDetails().isTwoHanded() && (!offHand.getTokenFullDetails().isBuckler() || offHand.getTokenFullDetails().isThrown())) ||
+                        (mainHand.getTokenFullDetails().isOneHanded() && offHand.getTokenFullDetails().isBuckler()) ||
+                        (characterDetails.getCharacterClass() == CharacterClass.MONK && mainHand.getTokenFullDetails().isShuriken() && !offHand.getTokenFullDetails().isShuriken()) ) {
+                    rangeOffhandFinal.setItemId(null);
+                    rangeOffhandFinal.setName(null);
+                    rangeOffhandFinal.setStatusText(null);
+                    rangeOffhandFinal.setText(null);
+                    rangeOffhandFinal.setRarity(null);
+                    rangeOffhandFinal.setIndex(0);
+                    rangeOffhandFinal.setSlotStatus(SlotStatus.OK);
+                    itemDetailsMap.get(rangeOffhandFinal.getId()).setTokenFullDetails(null);
+               }
             });
         });
         
         // Check for bracer weapons
         if(characterDetails.getCharacterClass() == CharacterClass.MONK) {
-            if(characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||item.getSlot()==Slot.OFFHAND)&&tokenAdminMapper.getTokenDetails(item.getItemId()).isBracerWeapon()).findAny().isPresent())
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.WRIST)).collect(Collectors.toList()));
-            else if(characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.WRIST).count() == 0)
+            if (itemDetailsMap.values().stream().anyMatch((item) -> item.getItem().getItemId() != null && (item.getItem().getSlot() == Slot.MAINHAND || item.getItem().getSlot() == Slot.OFFHAND) && item.getTokenFullDetails().isBracerWeapon())) {
+remove
+                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot() == Slot.WRIST)).collect(Collectors.toList()));
+            } else if(characterDetails.getItems().stream().noneMatch((item) -> item.getSlot() == Slot.WRIST)) {
+                add
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.WRIST).index(0).slotStatus(SlotStatus.OK).build());
+            }
         }
     }
     
