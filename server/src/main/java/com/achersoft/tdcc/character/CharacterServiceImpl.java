@@ -2,11 +2,7 @@ package com.achersoft.tdcc.character;
 
 import com.achersoft.exception.InvalidDataException;
 import com.achersoft.security.providers.UserPrincipalProvider;
-import com.achersoft.tdcc.character.dao.CharacterDetails;
-import com.achersoft.tdcc.character.dao.CharacterItem;
-import com.achersoft.tdcc.character.dao.CharacterName;
-import com.achersoft.tdcc.character.dao.CharacterNote;
-import com.achersoft.tdcc.character.dao.CharacterStats;
+import com.achersoft.tdcc.character.dao.*;
 import com.achersoft.tdcc.character.persistence.CharacterMapper;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.enums.ConditionalUse;
@@ -921,9 +917,18 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CharacterDetails validateCharacterItems(String id) {
-        CharacterDetails characterDetails = getCharacter(id);
+        final CharacterDetails characterDetails = getCharacter(id);
+        final Map<String, CharacterItemSet> itemDetailsMap = new HashMap<>();
 
-        chackWeaponAvailability(characterDetails);
+        // Fill the map
+        characterDetails.getItems().stream().filter((item) -> item.getItemId() != null).forEach((item) -> {
+            if (item.getItemId() != null && !item.getItemId().isEmpty())
+                itemDetailsMap.put(item.getId(), CharacterItemSet.builder().item(item).tokenFullDetails(tokenAdminMapper.getTokenDetails(item.getItemId())).build());
+            else
+                itemDetailsMap.put(item.getId(), CharacterItemSet.builder().item(item).build());
+        });
+
+        chackWeaponAvailability(characterDetails, itemDetailsMap);
         checkSlotModItems(characterDetails);
         addSlotsForFullItems(characterDetails);
         checkSetItems(characterDetails, false);
@@ -957,28 +962,45 @@ public class CharacterServiceImpl implements CharacterService {
         return characterDetails;
     }
     
-    private void chackWeaponAvailability(CharacterDetails characterDetails) {
+    private void chackWeaponAvailability(CharacterDetails characterDetails, Map<String, CharacterItemSet> itemDetailsMap) {
         // Check for two handed melee weapon
-        characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.MAINHAND).findAny().ifPresent((item) ->{
-            if(item.getItemId()!=null && tokenAdminMapper.getTokenDetails(item.getItemId()).isTwoHanded())
-                characterDetails.setItems(characterDetails.getItems().stream().filter((i) -> i.getSlot()!=Slot.OFFHAND).collect(Collectors.toList()));
-            else if(characterDetails.getItems().stream().filter((i) -> i.getSlot()==Slot.OFFHAND).count() == 0)
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
+        itemDetailsMap.values().stream().filter((item) -> item.getItem().getSlot()==Slot.MAINHAND).findAny().ifPresent((item) ->{
+            CharacterItem offhandItem = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.OFFHAND).findFirst().orElse(null);
+            if(item.getItem().getItemId()!=null && item.getTokenFullDetails().isTwoHanded()) {
+                if (offhandItem != null) {
+                    characterDetails.getItems().remove(offhandItem);
+                    itemDetailsMap.remove(offhandItem.getId());
+                }
+            } else if(offhandItem == null) {
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.OFFHAND).index(0).slotStatus(SlotStatus.OK).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+            }
         });
         
         // Check to make sure dual is valid
         if (characterDetails.getCharacterClass() != CharacterClass.RANGER && characterDetails.getCharacterClass() != CharacterClass.MONK) {
-            characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.OFFHAND).findAny().ifPresent((item) -> {
-                TokenFullDetails td = tokenAdminMapper.getTokenDetails(item.getItemId());
-                if(item.getItemId()!=null && td.isOneHanded() && !(td.isShield() || td.isMug())) {
-                    characterDetails.setItems(characterDetails.getItems().stream().filter((i) -> i.getSlot()!=Slot.OFFHAND).collect(Collectors.toList()));
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
+            itemDetailsMap.values().stream().filter((item) -> item.getItem().getSlot()==Slot.OFFHAND).findAny().ifPresent((item) -> {
+                if(item.getTokenFullDetails() != null && item.getTokenFullDetails().isOneHanded() && !(item.getTokenFullDetails().isShield() || item.getTokenFullDetails().isMug())) {
+                    CharacterItem offhandItem = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.OFFHAND).findFirst().orElse(null);
+                    if (offhandItem != null) {
+                        offhandItem.setItemId(null);
+                        offhandItem.setName(null);
+                        offhandItem.setStatusText(null);
+                        offhandItem.setText(null);
+                        offhandItem.setRarity(null);
+                        offhandItem.setIndex(0);
+                        offhandItem.setSlotStatus(SlotStatus.OK);
+                        itemDetailsMap.get(offhandItem.getId()).setTokenFullDetails(null);
+                    }
                 }
             });
         }
         
         // Check for two handed range weapon
-        characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND).findAny().ifPresent((item) -> {
+        itemDetailsMap.values().stream().filter((item) -> item.getItem().getSlot()==Slot.RANGE_MAINHAND).findAny().ifPresent((item) -> {
+            sdf wef wef 
+
             if(characterDetails.getItems().stream().filter((i) -> i.getSlot()==Slot.RANGE_OFFHAND).count() == 0)
                 characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RANGE_OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
                   
