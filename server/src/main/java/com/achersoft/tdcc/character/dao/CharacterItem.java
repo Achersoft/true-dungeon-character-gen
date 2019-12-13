@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor 
 @AllArgsConstructor
-@EqualsAndHashCode(exclude={"id", "characterId", "name", "text", "slot", "index", "rarity", "slotStatus", "statusText"})
+@EqualsAndHashCode(exclude={"name", "text", "rarity", "slotStatus", "statusText"})
 public class CharacterItem implements Comparable<CharacterItem>{
     private String id;
     private String itemId;

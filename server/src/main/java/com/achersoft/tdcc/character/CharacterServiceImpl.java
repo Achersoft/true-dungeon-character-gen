@@ -1194,24 +1194,61 @@ public class CharacterServiceImpl implements CharacterService {
         }
 
         // Check Runestone Fitting Base
-    /*    long runeCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RUNESTONE).count();
+        final List<CharacterItem> runes = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.RUNESTONE).collect(Collectors.toList());
+        int runeCount = (int) characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RUNESTONE).count();
         int fittingBaseCount = (int)characterDetails.getItems().stream().filter((item) -> (item.getItemId()!=null&&item.getItemId().equals("b3079a85fd23a441af7de7dfd794d6ece2760313"))).count();
         switch (fittingBaseCount) {
             case 2:
-                if(runeCount == 2)
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(2).slotStatus(SlotStatus.OK).build());
+                int runesToAdd = 3 - runeCount;
+                int runeIndex = 2;
+        
+                while (runesToAdd > 0) {
+                    CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(runeIndex).slotStatus(SlotStatus.OK).build();
+                    characterDetails.getItems().add(characterItem);
+                    itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                    runesToAdd--;
+                    runeIndex--;
+                }
                 break;
             case 1:
-                if(runeCount > 2)
-                    characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.RUNESTONE && item.getIndex() > 1)).collect(Collectors.toList()));
-                else if(runeCount == 1)
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(1).slotStatus(SlotStatus.OK).build());
+                runesToAdd = 2 - runeCount;
+                runeIndex = 1;
+
+                if (runesToAdd < 0) {
+                    runes.stream().filter(characterItem -> characterItem.getIndex() > 1).forEach(characterItem -> {
+                        characterDetails.getItems().remove(characterItem);
+                        itemDetailsMap.remove(characterItem.getId());
+                    });
+                } else {
+                    while (runesToAdd > 0) {
+                        CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(runeIndex).slotStatus(SlotStatus.OK).build();
+                        characterDetails.getItems().add(characterItem);
+                        itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                        runesToAdd--;
+                        runeIndex--;
+                    }
+                }
                 break;
             default:
-                if(runeCount > 1)
-                    characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.RUNESTONE && item.getIndex() > 0)).collect(Collectors.toList()));
+                runesToAdd = 1 - runeCount;
+                runeIndex = 0;
+
+                if (runesToAdd < 0) {
+                    runes.stream().filter(characterItem -> characterItem.getIndex() > 0).forEach(characterItem -> {
+                        characterDetails.getItems().remove(characterItem);
+                        itemDetailsMap.remove(characterItem.getId());
+                    });
+                } else {
+                    while (runesToAdd > 0) {
+                        CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(runeIndex).slotStatus(SlotStatus.OK).build();
+                        characterDetails.getItems().add(characterItem);
+                        itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                        runesToAdd--;
+                        runeIndex--;
+                    }
+                }
                 break;
-        }*/
+        }
 /*
         final Map<String, CharacterItem> itemsMap = new HashMap();
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
@@ -1791,6 +1828,8 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setHealth(stats.getHealth() + stats.getLevel() * (int)((stats.getConBonus() < 0)?stats.getConBonus()+(stats.getBaseCon()-10)/2:stats.getConBonus()-(stats.getBaseCon()-10)/2));
         stats.setMeleeHit(stats.getMeleeHit() + stats.getStrBonus());
         stats.setMeleeDmg(stats.getMeleeDmg() + stats.getStrBonus());
+        stats.setMeleePolyHit(stats.getMeleePolyHit() + stats.getMeleeHit());
+        stats.setMeleePolyDmg(stats.getMeleePolyDmg() + stats.getMeleeDmg());
         stats.setRangeHit(stats.getRangeHit() + stats.getDexBonus());
         stats.setMeleeAC(stats.getMeleeAC() + stats.getDexBonus());
         stats.setRangeAC(stats.getRangeAC() + stats.getDexBonus());
@@ -1805,6 +1844,15 @@ public class CharacterServiceImpl implements CharacterService {
             case BARBARIAN:
                 if(metCondition.contains(ConditionalUse.WEAPON_2H))
                     stats.setMeleeDmg(stats.getMeleeDmg() + 4);
+                break;
+            case DRUID:
+                if (stats.getLevel() > 4)
+                    stats.setMeleePolyDmg(stats.getMeleePolyDmg() + 5);
+                break;
+            case ELF_WIZARD:
+                if (stats.getLevel() > 4)
+                    stats.setMeleePolyHit(stats.getMeleePolyHit() + 3);
+                break;
             default:
                 break;
         }
@@ -2146,6 +2194,8 @@ public class CharacterServiceImpl implements CharacterService {
         if(!ignoreHitAndDamage) {
             stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
             stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+            stats.setMeleePolyHit(stats.getMeleePolyHit() + td.getMeleePolyHit());
+            stats.setMeleePolyDmg(stats.getMeleePolyDmg() + td.getMeleePolyDmg());
             stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
             stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
         }

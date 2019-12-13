@@ -24,7 +24,7 @@ public class NameChanger {
             if (listOfFiles[i].isDirectory()) {
                 renameAllFiles(listOfFiles[i]);
             }
-            if (listOfFiles[i].isFile()) {
+            if (listOfFiles[i].isFile() && !listOfFiles[i].getName().contains("namechanger")) {
                 changeFileContent(listOfFiles[i]);
 
                 if (listOfFiles[i].getName().contains(VERSION_TAG)) {
