@@ -51,6 +51,8 @@ public class TokenFullDetails {
     private boolean bracerWeapon;
     private int meleeHit;
     private int meleeDmg;
+    private int meleePolyHit;
+    private int meleePolyDmg;
     private boolean meleeFire;
     private boolean meleeCold;
     private boolean meleeShock;
@@ -89,6 +91,10 @@ public class TokenFullDetails {
     private boolean freeMovement;
     private boolean psychic;
     private boolean possession;
+    private boolean addLevel;
+    private boolean wonderEffect;
+    private boolean setRingsThree;
+    private boolean noRings;
     private int spellDmg;
     private int spellHeal;
     private int spellResist;
@@ -106,6 +112,11 @@ public class TokenFullDetails {
     private int drPoison;
     private int drDarkrift;
     private int drSacred;
+    private int drForce;
+    private int headSlots;
+    private int backSlots;
+    private int stoneSlots;
+    private int charmSlots;
     private ConditionalUse conditionalUse;
     private boolean alwaysInEffect;
     private boolean oncePerRound;

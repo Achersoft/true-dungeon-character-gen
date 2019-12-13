@@ -1166,7 +1166,9 @@ public class CharacterServiceImpl implements CharacterService {
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
             itemsMap.put(item.getItemId(), item);
         });
-        
+
+        // Check level items
+        boolean levelItem = characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null).map(token -> tokenAdminMapper.getTokenDetails(token.getItemId())).filter(TokenFullDetails::isAddLevel).count() > 0;
         // Rod of Seven Parts
         long eldrichCount = characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && item.getRarity() == Rarity.ELDRITCH).count();
         // Might Set
@@ -1183,7 +1185,7 @@ public class CharacterServiceImpl implements CharacterService {
         
         // First check if we need to boost character level
         // Charm of Heroism, Medallion of Heroism, Ring of Heroism, Eldrich Set, Kubu’s Coin of Coincidence, Smackdown’s Charm of Comraderie
-        if(levelBoost || eldrichCount >= 2 || mightCount >= 3 || charmingCount >= 3 || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
+        if(levelBoost || levelItem || eldrichCount >= 2 || mightCount >= 3 || charmingCount >= 3 || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
                 itemsMap.containsKey("2f1cfd3d3dbdd218f5cd5bd3935851b7acba5a9c") || itemsMap.containsKey("f44d007c35b18b83e85a1ee183cda08180030012") || itemsMap.containsKey("c289cd1accbbcc7af656de459c157bdc40dbaf45")) {
             characterDetails.setStats(mapper.getStartingStats(characterDetails.getCharacterClass(), 5));
             characterDetails.getStats().setCharacterId(characterDetails.getId());

@@ -89,4 +89,5 @@ public class CharacterStats {
     private int drPoison = 0;
     private int drDarkrift = 0;
     private int drSacred = 0;
+    private int drForce = 0;
 }

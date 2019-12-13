@@ -48,6 +48,8 @@ public class TokenFullDetailsDTO {
     public Boolean bracerWeapon;
     public Integer meleeHit;
     public Integer meleeDmg;
+    public Integer meleePolyHit;
+    public Integer meleePolyDmg;
     public Boolean meleeFire;
     public Boolean meleeCold;
     public Boolean meleeShock;
@@ -86,6 +88,10 @@ public class TokenFullDetailsDTO {
     public Boolean freeMovement;
     public Boolean psychic;
     public Boolean possession;
+    public Boolean addLevel;
+    public Boolean wonderEffect;
+    public Boolean setRingsThree;
+    public Boolean noRings;
     public Integer spellDmg;
     public Integer spellHeal;
     public Integer spellResist;
@@ -103,6 +109,11 @@ public class TokenFullDetailsDTO {
     public Integer drPoison;
     public Integer drDarkrift;
     public Integer drSacred;
+    public Integer drForce;
+    public Integer headSlots;
+    public Integer backSlots;
+    public Integer stoneSlots;
+    public Integer charmSlots;
     public ConditionalUse conditionalUse;
     public Boolean alwaysInEffect;
     public Boolean oncePerRound;
@@ -138,6 +149,8 @@ public class TokenFullDetailsDTO {
                 .shuriken(tokenFullDetails.isShuriken())
                 .meleeHit(tokenFullDetails.getMeleeHit())
                 .meleeDmg(tokenFullDetails.getMeleeDmg())
+                .meleePolyHit(tokenFullDetails.getMeleePolyHit())
+                .meleePolyDmg(tokenFullDetails.getMeleePolyDmg())
                 .meleeFire(tokenFullDetails.isMeleeFire())
                 .meleeCold(tokenFullDetails.isMeleeCold())
                 .meleeShock(tokenFullDetails.isMeleeShock())
@@ -176,6 +189,10 @@ public class TokenFullDetailsDTO {
                 .freeMovement(tokenFullDetails.isFreeMovement())
                 .psychic(tokenFullDetails.isPsychic())
                 .possession(tokenFullDetails.isPossession())
+                .addLevel(tokenFullDetails.isAddLevel())
+                .wonderEffect(tokenFullDetails.isWonderEffect())
+                .setRingsThree(tokenFullDetails.isSetRingsThree())
+                .noRings(tokenFullDetails.isNoRings())
                 .spellDmg(tokenFullDetails.getSpellDmg())
                 .spellHeal(tokenFullDetails.getSpellHeal())
                 .spellResist(tokenFullDetails.getSpellResist())
@@ -193,6 +210,11 @@ public class TokenFullDetailsDTO {
                 .drPoison(tokenFullDetails.getDrPoison())
                 .drDarkrift(tokenFullDetails.getDrDarkrift())
                 .drSacred(tokenFullDetails.getDrSacred())
+                .drForce(tokenFullDetails.getDrForce())
+                .headSlots(tokenFullDetails.getHeadSlots())
+                .backSlots(tokenFullDetails.getBackSlots())
+                .charmSlots(tokenFullDetails.getCharmSlots())
+                .stoneSlots(tokenFullDetails.getStoneSlots())
                 .conditionalUse(tokenFullDetails.getConditionalUse())
                 .alwaysInEffect(tokenFullDetails.isAlwaysInEffect())
                 .oncePerRound(tokenFullDetails.isOncePerRound())
@@ -267,6 +289,8 @@ public class TokenFullDetailsDTO {
                 .bracerWeapon(bracerWeapon)
                 .meleeHit(meleeHit)
                 .meleeDmg(meleeDmg)
+                .meleePolyHit(meleePolyHit)
+                .meleePolyDmg(meleePolyDmg)
                 .meleeFire(meleeFire)
                 .meleeCold(meleeCold)
                 .meleeShock(meleeShock)
@@ -305,6 +329,10 @@ public class TokenFullDetailsDTO {
                 .freeMovement(freeMovement)
                 .psychic(psychic)
                 .possession(possession)
+                .addLevel(addLevel)
+                .wonderEffect(wonderEffect)
+                .setRingsThree(setRingsThree)
+                .noRings(noRings)
                 .spellDmg(spellDmg)
                 .spellHeal(spellHeal)
                 .spellResist(spellResist)
@@ -322,6 +350,11 @@ public class TokenFullDetailsDTO {
                 .drPoison(drPoison)
                 .drDarkrift(drDarkrift)
                 .drSacred(drSacred)
+                .drForce(drForce)
+                .headSlots(headSlots)
+                .backSlots(backSlots)
+                .charmSlots(charmSlots)
+                .stoneSlots(stoneSlots)
                 .conditionalUse((conditionalUse != null)?conditionalUse:ConditionalUse.NONE)
                 .alwaysInEffect(alwaysInEffect)
                 .oncePerRound(oncePerRound)
