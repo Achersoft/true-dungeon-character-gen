@@ -1077,14 +1077,10 @@ public class CharacterServiceImpl implements CharacterService {
             noRings.set(noRings.get() || characterItemSet.getTokenFullDetails().isNoRings());
         });
 
-        if (headSlots.get() > 10)
-            headSlots.set(10);
-        if (backSlots.get() > 10)
-            backSlots.set(10);
         if (charmSlots.get() > 10)
             charmSlots.set(10);
-        if (stoneSlots.get() > 10)
-            stoneSlots.set(10);
+        if (stoneSlots.get() > 9)
+            stoneSlots.set(9);
 
         // Ring logic
         final List<CharacterItem> fingers = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.FINGER).collect(Collectors.toList());

@@ -2,6 +2,10 @@ angular.module('main')
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
+    .when('/admin/tokens/set/management', {
+        templateUrl: 'admin/tokens/addSet-@{TDCC_VERSION}.html',
+        controller: 'SetManagementCtrl'
+    })
     .when('/admin/tokens/management', {
         templateUrl: 'admin/tokens/addToken-@{TDCC_VERSION}.html',
         controller: 'TokenManagementCtrl'
@@ -10,6 +14,123 @@ angular.module('main')
         templateUrl: 'admin/tokens/editToken-@{TDCC_VERSION}.html',
         controller: 'TokenEditCtrl'
     });
+}])
+
+.controller('SetManagementCtrl', ['$scope', 'SetAdminState', 'TokenAdminSvc', '$location', '$route', function ($scope, setAdminState, tokenAdminSvc, $location, $route) {
+    $scope.search = setAdminState.reset();
+
+    
+    $scope.toggleSlotSelected =  function(slot){
+        $scope.search.slot = slot;
+    };
+    
+    $scope.raritySelected =  function(rarity){
+        return rarity === $scope.search.rarity;
+    };
+    
+    $scope.toggleRaritySelected =  function(rarity){
+        $scope.search.rarity = rarity;
+    };
+    
+    $scope.conditionalSelected =  function(conditionalUse){
+        return conditionalUse === $scope.search.conditionalUse;
+    };
+    
+    $scope.toggleConditionalSelected =  function(conditionalUse){
+        $scope.search.conditionalUse = conditionalUse;
+    };
+    
+    $scope.addSetBonus = function(){
+        $scope.search.bonus.push({
+                    pieceCount: 0,
+                    str: 0,
+                    dex: 0,
+                    con: 0,
+                    intel: 0,
+                    wis: 0,
+                    cha: 0,
+                    health: 0,
+                    regen: 0,
+                    meleeHit: 0,
+                    meleeDmg: 0,
+                    meleePolyHit: 0,
+                    meleePolyDmg: 0,
+                    meleeFire: false,
+                    meleeCold: false,
+                    meleeShock: false,
+                    meleeSonic: false,
+                    meleeEldritch: false,
+                    meleePoison: false,
+                    meleeDarkrift: false,
+                    meleeSacred: false,
+                    meleeAC: 0,
+                    rangeHit: 0,
+                    rangeDmg: 0,
+                    rangeFire: false,
+                    rangeCold: false,
+                    rangeShock: false,
+                    rangeSonic: false,
+                    rangeEldritch: false,
+                    rangePoison: false,
+                    rangeDarkrift: false,
+                    rangeSacred: false,
+                    rangeAC: 0,
+                    rangeMissileAC: 0,
+                    fort: 0,
+                    reflex: 0,
+                    will: 0,
+                    retDmg: 0,
+                    retFire: false,
+                    retCold: false,
+                    retShock: false,
+                    retSonic: false,
+                    retEldritch: false,
+                    retPoison: false,
+                    retDarkrift: false,
+                    retSacred: false,
+                    cannotBeSuprised: false,
+                    freeMovement: false,
+                    psychic: false,
+                    possession: false,
+                    addLevel: false,
+                    wonderEffect: false,
+                    setRingsThree: false,
+                    noRings: false,
+                    spellDmg: 0,
+                    spellHeal: 0,
+                    spellResist: 0,
+                    initiative: 0,
+                    treasureMin: 0,
+                    treasureMax: 0, 
+                    drMelee: 0,
+                    drRange: 0,
+                    drSpell: 0,
+                    drFire: 0,
+                    drCold: 0,
+                    drShock: 0,
+                    drSonic: 0,
+                    drEldritch: 0,
+                    drPoison: 0,
+                    drDarkrift: 0,
+                    drSacred: 0,
+                    drForce: 0,
+                    headSlots: 0,
+                    backSlots: 0,
+                    stoneSlots: 0,
+                    charmSlots: 0,
+                    alwaysInEffect: false,
+                    oncePerRound: false,
+                    oncePerRoom: false,
+                    oncePerGame: false,
+                    specialText: null
+                });
+    };
+    
+    $scope.addSet = function(){
+        tokenAdminSvc.addToken($scope.search).then(function() {
+            $scope.search = setAdminState.reset();
+        });
+    };
 }])
 
 .controller('TokenManagementCtrl', ['$scope', 'TokenAdminState', 'TokenAdminSvc', '$location', '$route', function ($scope, tokenAdminState, tokenAdminSvc, $location, $route) {
@@ -249,6 +370,211 @@ angular.module('main')
             setContext: setContext,
             reset: reset,
             get: get
+        };
+    }])
+
+.factory('SetAdminState', [
+    function() {                    
+        var setAdminState = {};
+        
+        function setContext(data) {
+            setAdminState = data;
+        }
+        
+        function reset() {
+            setAdminState = {
+                id: null,
+                name: null,
+                bonus: [{
+                    pieceCount: 0,
+                    str: 0,
+                    dex: 0,
+                    con: 0,
+                    intel: 0,
+                    wis: 0,
+                    cha: 0,
+                    health: 0,
+                    regen: 0,
+                    meleeHit: 0,
+                    meleeDmg: 0,
+                    meleePolyHit: 0,
+                    meleePolyDmg: 0,
+                    meleeFire: false,
+                    meleeCold: false,
+                    meleeShock: false,
+                    meleeSonic: false,
+                    meleeEldritch: false,
+                    meleePoison: false,
+                    meleeDarkrift: false,
+                    meleeSacred: false,
+                    meleeAC: 0,
+                    rangeHit: 0,
+                    rangeDmg: 0,
+                    rangeFire: false,
+                    rangeCold: false,
+                    rangeShock: false,
+                    rangeSonic: false,
+                    rangeEldritch: false,
+                    rangePoison: false,
+                    rangeDarkrift: false,
+                    rangeSacred: false,
+                    rangeAC: 0,
+                    rangeMissileAC: 0,
+                    fort: 0,
+                    reflex: 0,
+                    will: 0,
+                    retDmg: 0,
+                    retFire: false,
+                    retCold: false,
+                    retShock: false,
+                    retSonic: false,
+                    retEldritch: false,
+                    retPoison: false,
+                    retDarkrift: false,
+                    retSacred: false,
+                    cannotBeSuprised: false,
+                    freeMovement: false,
+                    psychic: false,
+                    possession: false,
+                    addLevel: false,
+                    wonderEffect: false,
+                    setRingsThree: false,
+                    noRings: false,
+                    spellDmg: 0,
+                    spellHeal: 0,
+                    spellResist: 0,
+                    initiative: 0,
+                    treasureMin: 0,
+                    treasureMax: 0, 
+                    drMelee: 0,
+                    drRange: 0,
+                    drSpell: 0,
+                    drFire: 0,
+                    drCold: 0,
+                    drShock: 0,
+                    drSonic: 0,
+                    drEldritch: 0,
+                    drPoison: 0,
+                    drDarkrift: 0,
+                    drSacred: 0,
+                    drForce: 0,
+                    headSlots: 0,
+                    backSlots: 0,
+                    stoneSlots: 0,
+                    charmSlots: 0,
+                    alwaysInEffect: false,
+                    oncePerRound: false,
+                    oncePerRoom: false,
+                    oncePerGame: false,
+                    specialText: null
+                }]
+            };
+            return setAdminState;   
+        }
+
+        function get() {
+            return setAdminState;
+        }
+
+        function addBonus() {
+            setAdminState.bonus.push({
+                    pieceCount: 0,
+                    str: 0,
+                    dex: 0,
+                    con: 0,
+                    intel: 0,
+                    wis: 0,
+                    cha: 0,
+                    health: 0,
+                    regen: 0,
+                    meleeHit: 0,
+                    meleeDmg: 0,
+                    meleePolyHit: 0,
+                    meleePolyDmg: 0,
+                    meleeFire: false,
+                    meleeCold: false,
+                    meleeShock: false,
+                    meleeSonic: false,
+                    meleeEldritch: false,
+                    meleePoison: false,
+                    meleeDarkrift: false,
+                    meleeSacred: false,
+                    meleeAC: 0,
+                    rangeHit: 0,
+                    rangeDmg: 0,
+                    rangeFire: false,
+                    rangeCold: false,
+                    rangeShock: false,
+                    rangeSonic: false,
+                    rangeEldritch: false,
+                    rangePoison: false,
+                    rangeDarkrift: false,
+                    rangeSacred: false,
+                    rangeAC: 0,
+                    rangeMissileAC: 0,
+                    fort: 0,
+                    reflex: 0,
+                    will: 0,
+                    retDmg: 0,
+                    retFire: false,
+                    retCold: false,
+                    retShock: false,
+                    retSonic: false,
+                    retEldritch: false,
+                    retPoison: false,
+                    retDarkrift: false,
+                    retSacred: false,
+                    cannotBeSuprised: false,
+                    freeMovement: false,
+                    psychic: false,
+                    possession: false,
+                    addLevel: false,
+                    wonderEffect: false,
+                    setRingsThree: false,
+                    noRings: false,
+                    spellDmg: 0,
+                    spellHeal: 0,
+                    spellResist: 0,
+                    initiative: 0,
+                    treasureMin: 0,
+                    treasureMax: 0, 
+                    drMelee: 0,
+                    drRange: 0,
+                    drSpell: 0,
+                    drFire: 0,
+                    drCold: 0,
+                    drShock: 0,
+                    drSonic: 0,
+                    drEldritch: 0,
+                    drPoison: 0,
+                    drDarkrift: 0,
+                    drSacred: 0,
+                    drForce: 0,
+                    headSlots: 0,
+                    backSlots: 0,
+                    stoneSlots: 0,
+                    charmSlots: 0,
+                    alwaysInEffect: false,
+                    oncePerRound: false,
+                    oncePerRoom: false,
+                    oncePerGame: false,
+                    specialText: null
+                });
+            return setAdminState;
+        }
+        
+        function removeBonus() {
+            if (setAdminState.bonus.length > 1)
+                setAdminState.bonus.pop();
+            return setAdminState;
+        }
+        
+        return {
+            setContext: setContext,
+            reset: reset,
+            get: get,
+            addBonus: addBonus,
+            removeBonus: removeBonus
         };
     }])
 

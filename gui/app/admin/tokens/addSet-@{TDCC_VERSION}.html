@@ -1,0 +1,292 @@
+<div class="row" style="margin:15px">
+    <div class="row">
+        <div class="col-md-4">
+            <label>Name:</label>
+            <input class="form-control" type="text" ng-model="search.name"/>
+        </div>
+    </div>
+    <hr>
+    
+    <div ng-repeat-start="bonusSet in search.bonus track by $index" ng-repeat-end>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Required Pieces:</label>
+                <input class="form-control" type="text" ng-model="bonusSet.pieceCount"/>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-2" style="margin-top: 10px">
+                <label>Strength:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.str"/>
+            </div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <label>Dexterity:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.dex"/>
+            </div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <label>Constitution:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.con"/>
+            </div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <label>Intelligence:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.intel"/>
+            </div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <label>Wisdom:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.wis"/>
+            </div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <label>Charisma:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.cha"/>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-2">
+                <label>Melee Hit:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.meleeHit"/>
+            </div>
+            <div class="col-md-2">
+                <label>Melee Damage:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.meleeDmg"/>
+            </div>
+            <div class="col-md-2">
+                <label>Melee AC:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.meleeAC"/>
+            </div>
+            <div class="col-md-2">
+                <label>Melee Polymorph Hit:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.meleePolyHit"/>
+            </div>
+            <div class="col-md-2">
+                <label>Melee Polymorph Damage:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.meleePolyDmg"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 15px">
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.meleeFire">Melee Fire?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.meleeCold">Melee Cold?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.meleeShock">Melee Shock?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.meleeSonic">Melee Sonic?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.meleeEldritch">Melee Eldritch?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.meleePoison">Melee Poison?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.meleeDarkrift">Melee Darkrift?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.meleeSacred">Melee Sacred?</label>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-3">
+                <label>Ranged Hit:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.rangeHit"/>
+            </div>
+            <div class="col-md-3">
+                <label>Ranged Damage:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.rangeDmg"/>
+            </div>
+            <div class="col-md-3">
+                <label>Ranged AC:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.rangeAC"/>
+            </div>
+            <div class="col-md-3">
+                <label>Missile AC:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.rangeMissileAC"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 15px">
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.rangeFire">Ranged Fire?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.rangeCold">Ranged Cold?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.rangeShock">Ranged Shock?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.rangeSonic">Ranged Sonic?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.rangeEldritch">Ranged Eldritch?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.rangePoison">Ranged Poison?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.rangeDarkrift">Ranged Darkrift?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.rangeSacred">Ranged Sacred?</label> 
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-2">
+                <label>Health:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.health"/>
+            </div>
+            <div class="col-md-1">
+                <label>Regen:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.regen"/>
+            </div>
+            <div class="col-md-3">
+                <label>Fortitude:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.fort"/>
+            </div>
+            <div class="col-md-3">
+                <label>Reflex:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.reflex"/>
+            </div>
+            <div class="col-md-3">
+                <label>Will:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.will"/>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Retribution Damage:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.retDmg"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 15px">
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.retFire">Retribution Fire?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.retCold">Retribution Cold?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.retShock">Retribution Shock?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.retSonic">Retribution Sonic?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.retEldritch">Retribution Eldritch?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.retPoison">Retribution Poison?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.retDarkrift">Retribution Darkrift?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.retSacred">Retribution Sacred?</label> 
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Spell Damage:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.spellDmg"/>
+            </div>
+            <div class="col-md-4">
+                <label>Spell Heal:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.spellHeal"/>
+            </div>
+            <div class="col-md-4">
+                <label>Spell Resistance:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.spellResist"/>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 15px">
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.cannotBeSuprised">Cannot Be Suprised?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.freeMovement">Free Movement?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.psychic">Psychic?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.possession">Immune Possession?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.addLevel">+1 Level?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.wonderEffect">Wonder Effect?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.setRingsThree">Set Rings to Three?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.noRings">No Rings?</label>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Treasure Min:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.treasureMin"/>
+            </div>
+            <div class="col-md-4">
+                <label>Treasure Max:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.treasureMax"/>
+            </div>
+            <div class="col-md-4">
+                <label>Initiative:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.initiative"/>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-1">
+                <label>DR Melee:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drMelee"/>
+            </div>
+            <div class="col-md-1">
+                <label>DR Range:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drRange"/>
+            </div>
+            <div class="col-md-1">
+                <label>DR Spell:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drSpell"/>
+            </div>
+            <div class="col-md-1">
+                <label>DR Fire:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drFire"/>
+            </div>
+            <div class="col-md-1">
+                <label>DR Cold:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drCold"/>
+            </div>
+            <div class="col-md-1">
+                <label>DR Shock:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drShock"/>
+            </div>
+            <div class="col-md-1">
+                <label>DR Sonic:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drSonic"/>
+            </div>
+            <div class="col-md-1">
+                <label>DR Eldritch:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drEldritch"/>
+            </div>
+            <div class="col-md-1">
+                <label>DR Posion:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drPoison"/>
+            </div>
+            <div class="col-md-1">
+                <label>DR Darkrift:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drDarkrift"/>
+            </div>
+            <div class="col-md-1">
+                <label>DR Sacred:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.drSacred"/>
+            </div>
+        </div>  
+        <hr>
+        <div class="row">
+            <div class="col-md-3">
+                <label>Head slots:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.headSlots"/>
+            </div>
+            <div class="col-md-3">
+                <label>Back Slots:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.backSlots"/>
+            </div>
+            <div class="col-md-3">
+                <label>Stone Slots:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.stoneSlots"/>
+            </div>
+            <div class="col-md-3">
+                <label>charm Slots:</label>
+                <input type="number" class="form-control" ng-model="bonusSet.charmSlots"/>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <label>Special Text:</label>
+                <input class="form-control" type="text" ng-model="bonusSet.specialText"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 15px">
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.alwaysInEffect">Always In Effect?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.oncePerRound">Once Per Round?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.oncePerRoom">Once Per Room?</label>
+                <label class="checkbox-inline"><input type="checkbox" ng-model="bonusSet.oncePerGame">Once Per Game?</label>
+            </div>
+        </div>
+    </div> 
+    <div class="row text-right" style="margin-top:15px;margin-bottom:15px">
+        <button class="btn btn-primary" ng-click="addSetBonus()">
+            <span class="fa fa-save" ></span> Add Bonus
+        </button>
+    </div>
+    <div class="row text-right" style="margin-top:15px;margin-bottom:15px">
+        <button class="btn btn-primary" ng-click="addSet()">
+            <span class="fa fa-save" ></span> Add Set
+        </button>
+    </div>
+</div>
+
+
+                
+                
+                
