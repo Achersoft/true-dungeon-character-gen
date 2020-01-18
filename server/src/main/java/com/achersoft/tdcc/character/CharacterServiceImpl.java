@@ -1090,7 +1090,7 @@ public class CharacterServiceImpl implements CharacterService {
                 itemDetailsMap.remove(finger.getId());
             });
         } else {
-            int fingersToAdd = threeRings.get() ? 3 : 2 - fingers.size();
+            int fingersToAdd = (threeRings.get() ? 3 : 2) - fingers.size();
             int fingerIndex = threeRings.get() ? 2 : 1;
 
             if (fingersToAdd < 0) {
@@ -1421,6 +1421,11 @@ public class CharacterServiceImpl implements CharacterService {
         // Viper Strike Set  
         long viperCount = characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && (item.getItemId().equals("4b469b628a8c57e294268dfac4b51d302b1e9123") || item.getItemId().equals("9431d39ad2fba9953bf4b526d86f41f37022efeb") || item.getItemId().equals("f2ff2a508dd3075633ca2fd9e58c0e1a76088af8") || item.getItemId().equals("dd565d74807cc9094990b324465612d52b3070bf") || item.getItemId().equals("09ad5527813c4f087f3123cd6a40404b9377a4bc"))).count();
         viperCount += characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && item.getItemId().equals("bd21afd63114346decea5fc899ff697106e99429")).map(CharacterItem::getName).distinct().count();
+        // Lucky Set
+        long luckyCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("lucky")).count();
+        // Arcane Set
+        long arcaneCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && (a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane belt") ||
+                a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane bracelets") || a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane earcuff"))).count();
         
         // First check if we need to boost character level
         // Charm of Heroism, Medallion of Heroism, Ring of Heroism, Eldrich Set, Kubu’s Coin of Coincidence, Smackdown’s Charm of Comraderie
@@ -1436,6 +1441,14 @@ public class CharacterServiceImpl implements CharacterService {
         // Set character notes
         setCharacterNotes(characterDetails);
         
+        // Lucky Set
+        if (luckyCount >= 2)
+            characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 5);
+        
+        // Arcane set
+        if (arcaneCount == 3)
+            characterDetails.getNotes().add(CharacterNote.builder().oncePerGame(true).note("The first 0th, 1st or 2nd level spell you casts is not marked off your character card.").build());
+       
         // Cabal set
         // Gloves
         if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("3dcfd7948a3c9196556ef7e069a36174396297ad"))).count() > 0)
@@ -1696,6 +1709,7 @@ public class CharacterServiceImpl implements CharacterService {
         final Set<ConditionalUse> metCondition = new HashSet();
         final List<Integer> meleeWeaponHit = new ArrayList();
         final List<Integer> rangeWeaponHit = new ArrayList();
+        AtomicBoolean hasSemiLichCharm = new AtomicBoolean(false);
         AtomicBoolean canHaveRareMelee = new AtomicBoolean(true);
         AtomicInteger sixLevelReward = new AtomicInteger(0);
         AtomicInteger mightyRanged = new AtomicInteger(0);
@@ -1704,6 +1718,9 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicReference<String> sheildId = new AtomicReference<>("");
 
         itemDetailsMap.values().stream().filter((item) -> item.getItem().getItemId()!=null).forEach((item) -> {
+            if(item.getTokenFullDetails().getId().equals("5e9d4e09f933a6e2a09ecd875f762683baaa09c8"))
+                hasSemiLichCharm.set(true);
+            
             if(item.getTokenFullDetails().getId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
                 metCondition.add(ConditionalUse.NOT_WITH_ROSP);
             else if(item.getTokenFullDetails().getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
@@ -1739,6 +1756,8 @@ public class CharacterServiceImpl implements CharacterService {
                     metCondition.add(ConditionalUse.SLING);
                 if (item.getTokenFullDetails().getName().toLowerCase().contains("crossbow"))
                     metCondition.add(ConditionalUse.CROSSBOW);
+                else if (item.getTokenFullDetails().getName().toLowerCase().contains("bow"))
+                    metCondition.add(ConditionalUse.BOW);
                 if (item.getTokenFullDetails().isTwoHanded())
                     metCondition.add(ConditionalUse.WEAPON_RANGED_2H);
                 if (item.getItem().getSlot() == Slot.RANGE_MAINHAND && item.getTokenFullDetails().getRarity() == Rarity.RARE)
@@ -1750,6 +1769,8 @@ public class CharacterServiceImpl implements CharacterService {
             }
             else if(item.getItem().getSlot() == Slot.TORSO && item.getItem().getRarity().ordinal() > Rarity.UNCOMMON.ordinal())
                 metCondition.add(ConditionalUse.NOT_RARE_PLUS_TORSO);
+            else if(item.getItem().getSlot() == Slot.FINGER && item.getItem().getRarity().ordinal() > Rarity.RARE.ordinal())
+                metCondition.add(ConditionalUse.NOT_UR_PLUS_RING);
             else if (item.getTokenFullDetails().isShield())
                 metCondition.add(ConditionalUse.MAY_NOT_USE_SHIELDS);
             else if (item.getTokenFullDetails().getSlot() == Slot.IOUNSTONE) {
@@ -1853,6 +1874,9 @@ public class CharacterServiceImpl implements CharacterService {
                 break;
         }
         
+        if (hasSemiLichCharm.get()) 
+            stats.setHealth(stats.getHealth() + stats.getPsychicLevel());
+            
         long figurineCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FIGURINE).count();
         if(stats.getCha() >= 16) {
             if(figurineCount < 2)
@@ -2070,6 +2094,17 @@ public class CharacterServiceImpl implements CharacterService {
                     token.setStatusText(null);
                     updateStats(stats, td, notes, true, false);
                     break;
+                case BOW:
+                    if(metCondition.contains(ConditionalUse.BOW)) {
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                    } 
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;
                 case THRALL_WEAPON:
                     long thrallMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("thrall")).count();
                     long thrallRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("thrall")).count();
@@ -2166,6 +2201,15 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NOT_RARE_PLUS_TORSO)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with a rare or higher torso armor.");
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes, false, false);
+                    }   break;
+                case NOT_UR_PLUS_RING:
+                    if(metCondition.contains(ConditionalUse.NOT_UR_PLUS_RING)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with a ultra rare or higher ring.");
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);

@@ -10,6 +10,7 @@ public enum ConditionalUse {
     WEAPON_1H,
     WEAPON_RANGED,
     WEAPON_RANGED_2H,
+    BOW,
     CROSSBOW,
     MAY_NOT_USE_SHIELDS,
     STRENGTH_24,
@@ -29,5 +30,6 @@ public enum ConditionalUse {
     NO_OTHER_IOUN_STONE,
     MISSILE_ATTACK,
     NOT_RARE_PLUS_TORSO,
+    NOT_UR_PLUS_RING,
     NO_OTHER_SIXTH_LEVEL_REWARD;
 }
