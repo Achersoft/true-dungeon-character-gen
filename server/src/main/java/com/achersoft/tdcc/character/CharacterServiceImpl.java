@@ -25,14 +25,7 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -690,7 +683,8 @@ public class CharacterServiceImpl implements CharacterService {
         if(character.getItems().stream().filter((item) -> item.getSlotStatus() == SlotStatus.INVALID).count() > 0)
             throw new InvalidDataException("The requested character is currently in a invalid state and cannot be exported. Please correct any item conflicts and try again."); 
         
-        characterHtml.append("[url=http://tdcharactercreator.com/#/character/edit/").append(character.getId()).append("]").append(character.getName()).append("[/url]\n\n");
+        characterHtml.append("[url=http://tdcharactercreator.com/#/character/edit/").append(character.getId()).append("]").append(character.getName()).append("[/url]\n");
+        characterHtml.append("[b]Class:[/b] ").append(character.getCharacterClass().getDisplayText()).append("\n\n");
         characterHtml.append("[b]STR:[/b] ").append(character.getStats().getStr()).append("\n");
         characterHtml.append("[b]DEX:[/b] ").append(character.getStats().getDex()).append("\n");
         characterHtml.append("[b]CON:[/b] ").append(character.getStats().getCon()).append("\n");
@@ -1502,7 +1496,7 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Defender Set
         // all 3 free action movement and +1 AC
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("89abc3b184b2b30d1a967aee7a32ccbf107532ed") || item.getItemId().equals("b29ffe03ba83c567fb95ddedeb8cef8c515c003f") || item.getItemId().equals("debb8b6d4a22654fadfa4983b84cac3bd69db814"))).count() == 3) {
+        if(characterDetails.getItems().stream().map(CharacterItem::getItemId).filter(Objects::nonNull).distinct().filter((item) -> item.equals("89abc3b184b2b30d1a967aee7a32ccbf107532ed") || item.equals("b29ffe03ba83c567fb95ddedeb8cef8c515c003f") || item.equals("debb8b6d4a22654fadfa4983b84cac3bd69db814")).count() >= 3) {
             characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 1);
             characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 1);
             characterDetails.getStats().setFreeMovement(true);
