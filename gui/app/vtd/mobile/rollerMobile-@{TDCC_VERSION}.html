@@ -2,10 +2,10 @@
     <div style="height:calc(100% - 141px);position:fixed;overflow-y:scroll;width:100%;padding-left:0;padding-right:0;">   
         <div class="col-md-12 hidden-sm hidden-xs">
            <div ng-if="rollerIndex === 0">
-               <stats-tablet></stats-tablet>
-           </div>
-           <div ng-if="rollerIndex === 1">
-               <stats-tablet></stats-tablet>
+                <attack-mobile></attack-mobile>
+            </div>
+            <div ng-if="rollerIndex === 1">
+                <skill-mobile></skill-mobile>
            </div>
            <div ng-if="rollerIndex === 2">
                <defend-mobile></defend-mobile>
@@ -16,7 +16,7 @@
                 <attack-mobile></attack-mobile>
             </div>
             <div ng-if="rollerIndex === 1">
-                <defend-mobile></defend-mobile>
+                <skill-mobile></skill-mobile>
             </div>
             <div ng-if="rollerIndex === 2">
                 <defend-mobile></defend-mobile>

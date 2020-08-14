@@ -1,0 +1,4 @@
+<div class="col-xs-12" style="padding:0">
+    <input ng-mobile-click="openModal(model.usedNumber > $index)" type="checkbox" style="margin-left:7px" onclick="return false;" onkeydown="return false;" ng-checked="model.usedNumber > $index" ng-repeat-start="x in [].constructor(model.usableNumber) track by $index" ng-repeat-end> 
+    <span ng-class="{strikethrough : (model.usedNumber > 0 && model.usedNumber === model.usableNumber)}" style="padding-left:6px"><strong>{{model.name}}</strong> - {{model.details}}</span>
+</div>

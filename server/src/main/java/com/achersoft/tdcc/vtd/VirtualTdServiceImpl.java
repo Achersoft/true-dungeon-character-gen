@@ -47,32 +47,33 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(characterDetails.getUserId())))
             throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
 
+        final CharacterStats characterStats = mapper.getCharacterStats(id);
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
         if (vtdDetails == null || vtdDetails.getExpires().before(new Date())) {
             vtdMapper.deleteCharacterSkills(id);
             vtdMapper.deleteCharacter(id);
-            List<CharacterSkill> skills = vtdMapper.getSkills(characterDetails.getCharacterClass(), characterDetails.getStats().getLevel());
+            List<CharacterSkill> skills = vtdMapper.getSkills(characterDetails.getCharacterClass(), characterStats.getLevel());
 
             if (skills != null)
                 skills.forEach(skill -> {
                     skill.setId(UUID.randomUUID().toString());
                     skill.setCharacterId(id);
-                    skill.setUsed(false);
+                    skill.setUsedNumber(0);
                     vtdMapper.addCharacterSkill(skill);
                 });
 
             vtdDetails = VtdDetails.builder().characterId(id)
                     .expires(new Date(new Date().getTime() + 86400000))
-                    .currentHealth(characterDetails.getStats().getHealth())
-                    .characterSkills(vtdMapper.getCharacterSkills(id))
+                    .currentHealth(characterStats.getHealth())
                     .build();
 
             vtdMapper.addCharacter(vtdDetails);
         }
 
-        vtdDetails.setStats(mapper.getCharacterStats(id));
+        vtdDetails.setStats(characterStats);
         vtdDetails.setNotes(mapper.getCharacterNotes(id));
+        vtdDetails.setCharacterSkills(vtdMapper.getCharacterSkills(id));
         vtdDetails.setName(characterDetails.getName());
         vtdDetails.setCharacterClass(characterDetails.getCharacterClass());
         vtdDetails.setMeleeDmgRange(Arrays.asList(4,5,6));

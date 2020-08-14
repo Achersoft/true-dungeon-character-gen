@@ -73,20 +73,32 @@ angular.module('main')
     };
     
     $scope.isHpGreen =  function() {
-        if ($scope.characterContext.currentHealth)
-            return $scope.characterContext.currentHealth === 49;
+        if ($scope.characterContext.currentHealth) {
+            var rangePercent = (+$scope.characterContext.currentHealth / +$scope.characterContext.stats.health);
+            if (rangePercent > .75)
+                return true;
+            return false;
+        }
         return true;
     };
     
     $scope.isHpOrange =  function() {
-        if ($scope.characterContext.currentHealth)
-            return $scope.characterContext.currentHealth !== 49;
+        if ($scope.characterContext.currentHealth) {
+            var rangePercent = (+$scope.characterContext.currentHealth / +$scope.characterContext.stats.health);
+            if (rangePercent > .3 && rangePercent <= .75)
+                return true;
+        }
         return false;
     };
     
     $scope.isHpRed =  function() {
-        if ($scope.characterContext.currentHealth)
-            return $scope.characterContext.currentHealth !== 49;
+        if ($scope.characterContext.currentHealth === 0)
+            return true;
+        if ($scope.characterContext.currentHealth) {
+            var rangePercent = (+$scope.characterContext.currentHealth / +$scope.characterContext.stats.health);
+            if ($scope.characterContext.currentHealth === 0 || rangePercent <= .3)
+                return true;
+        }
         return false;
     };
     
@@ -178,10 +190,10 @@ angular.module('main')
     $scope.healDamage =  function(heal) {
         this.healAmount = 0;
 
-        if ($scope.characterContext.currentHealth > 0 && heal > 0) {
-            $scope.characterContext.currentHealth += heal;
-            
-            if ($scope.characterContext.currentHealth > $scope.characterContext.stats.health)
+        if (+$scope.characterContext.currentHealth > 0 && +heal > 0) {
+            $scope.characterContext.currentHealth = +$scope.characterContext.currentHealth + +heal;
+
+            if (+$scope.characterContext.currentHealth > +$scope.characterContext.stats.health)
                 $scope.characterContext.currentHealth = $scope.characterContext.stats.health;
         }
     };

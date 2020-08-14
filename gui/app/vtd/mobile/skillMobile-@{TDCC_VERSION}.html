@@ -1,0 +1,46 @@
+<div style="height:calc(100% - 157px);width:100%;position:fixed;overflow-y:scroll;padding-left:0;padding-right:0;margin-left:-15px">
+    <div class="col-md-12" ng-if="characterContext.characterSkills !== null && characterContext.characterSkills.length > 0">
+        <div class="col-xs-12 col-sm-12" style="margin-top:5px;"></div>
+        <h2 style="border-bottom:1pt solid black;margin-top:0px">Character Skills</h2>
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="skill in characterContext.characterSkills track by $index" ng-repeat-end>
+            <skill-user-mobile heal="healDamage" element-id="charSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+        </div>
+    </div>
+    <div class="col-md-12" ng-if="characterContext.zeroSkills !== null && characterContext.zeroSkills.length > 0">
+        <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
+        <h2 style="border-bottom:1pt solid black;margin-top:0px">Zeroth level Spells</h2>
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="skill in characterContext.zeroSkills track by $index" ng-repeat-end>
+            <skill-user-mobile heal="healDamage" element-id="zeroSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+        </div>
+    </div>
+    <div class="col-md-12" ng-if="characterContext.oneSkills !== null && characterContext.oneSkills.length > 0">
+        <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
+        <h2 style="border-bottom:1pt solid black;margin-top:0px">First level Spells</h2>
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="skill in characterContext.oneSkills track by $index" ng-repeat-end>
+            <skill-user-mobile heal="healDamage" element-id="oneSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+        </div>
+    </div>
+    <div class="col-md-12" ng-if="characterContext.twoSkills !== null && characterContext.twoSkills.length > 0">
+        <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
+        <h2 style="border-bottom:1pt solid black;margin-top:0px">First level Spells</h2>
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="skill in characterContext.twoSkills track by $index" ng-repeat-end>
+            <skill-user-mobile heal="healDamage" element-id="oneSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+        </div>
+    </div>
+    <div class="col-md-12" ng-if="characterContext.threeSkills !== null && characterContext.threeSkills.length > 0">
+        <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
+        <h2 style="border-bottom:1pt solid black;margin-top:0px">First level Spells</h2>
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="skill in characterContext.threeSkills track by $index" ng-repeat-end>
+            <skill-user-mobile heal="healDamage" element-id="oneSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+        </div>
+    </div>
+    <div class="col-md-12" ng-if="characterContext.fourSkills !== null && characterContext.fourSkills.length > 0">
+        <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
+        <h2 style="border-bottom:1pt solid black;margin-top:0px">First level Spells</h2>
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="skill in characterContext.fourSkills track by $index" ng-repeat-end>
+            <skill-user-mobile heal="healDamage" element-id="oneSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
+</div>
+

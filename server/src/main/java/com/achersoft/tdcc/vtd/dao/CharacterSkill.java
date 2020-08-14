@@ -1,8 +1,6 @@
 package com.achersoft.tdcc.vtd.dao;
 
-import com.achersoft.tdcc.enums.CharacterClass;
-import com.achersoft.tdcc.enums.SkillLevel;
-import com.achersoft.tdcc.enums.SkillType;
+import com.achersoft.tdcc.enums.*;
 import lombok.*;
 
 @Builder
@@ -19,8 +17,10 @@ public class CharacterSkill {
     private String details;
     private SkillLevel skillLevel;
     private SkillType skillType;
-    private boolean expendable;
-    private boolean used;
+    private SkillTarget skillTarget;
+    private SkillStatEffect skillStatEffect;
+    private int usedNumber;
+    private int usableNumber;
     private int minEffect;
     private int maxEffect;
 }

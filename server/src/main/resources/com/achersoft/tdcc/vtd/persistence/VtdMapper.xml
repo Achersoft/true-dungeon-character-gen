@@ -14,31 +14,35 @@
     
     <insert id="addCharacterSkill">
        INSERT INTO vtd_skills (id,
-                                     character_id,
-                                     name,
-                                     details,
-                                     skill_level,
-                                     skill_type,
-                                     expendable,
-                                     used,
-                                     min_effect,
-                                     max_effect)
-                            VALUES (#{id},
-                                    #{characterId},
-                                    #{name},
-                                    #{details},
-                                    #{skillLevel},
-                                    #{skillType},
-                                    #{expendable},
-                                    #{used},
-                                    #{minEffect},
-                                    #{maxEffect})
+                                 character_id,
+                                 name,
+                                 details,
+                                 skill_level,
+                                 skill_type,
+                                skill_target,
+                                skill_stat_effect,
+                                used_number,
+                                usable_number,
+                                 min_effect,
+                                 max_effect)
+                        VALUES (#{id},
+                                #{characterId},
+                                #{name},
+                                #{details},
+                                #{skillLevel},
+                                #{skillType},
+                                #{skillTarget},
+                                #{skillStatEffect},
+                                #{usedNumber},
+                                #{usableNumber},
+                                #{minEffect},
+                                #{maxEffect})
     </insert>
     
     <select id="getCharacter" resultType="com.achersoft.tdcc.vtd.dao.VtdDetails">
         SELECT id 'characterId',
                expires,
-               health
+               health 'currentHealth'
           FROM vtd_character
          WHERE id = #{id}
     </select>
@@ -48,27 +52,33 @@
                details,
                skill_level 'skillLevel',
                skill_type 'skillType',
-               expendable,
+               skill_target 'skillTarget',
+               skill_stat_effect 'skillStatEffect',
+               used_number 'usedNumber',
+               usable_number 'usableNumber',
                min_effect 'minEffect',
                max_effect 'maxEffect'
          FROM character_skills
         WHERE character_class = #{characterClass}
-          AND character_level <= #{characterLevel}
+          AND character_level = #{characterLevel}
     </select>
 
     <select id="getCharacterSkills" resultType="com.achersoft.tdcc.vtd.dao.CharacterSkill">
         SELECT id,
                character_id 'characterId',
-               name,
-               details,
-               skill_level 'skillLevel',
-               skill_type 'skillType',
-               expendable,
-               used,
-               min_effect 'minEffect',
-               max_effect 'maxEffect'
+                name,
+                details,
+                skill_level 'skillLevel',
+                skill_type 'skillType',
+                skill_target 'skillTarget',
+                skill_stat_effect 'skillStatEffect',
+                used_number 'usedNumber',
+                usable_number 'usableNumber',
+                min_effect 'minEffect',
+                max_effect 'maxEffect'
           FROM vtd_skills
          WHERE character_id = #{characterId}
+        ORDER BY name
     </select>  
 
     <update id="useCharacterSkill">

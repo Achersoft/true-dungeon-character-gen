@@ -2,6 +2,7 @@ package com.achersoft.tdcc.vtd.dto;
 
 import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.enums.CharacterClass;
+import com.achersoft.tdcc.enums.SkillLevel;
 import com.achersoft.tdcc.vtd.dao.CharacterSkill;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,11 @@ public class VtdDetailsDTO {
     public List<String> oncePerRoom;
     public List<String> oncePerGame;
     public List<CharacterSkill> characterSkills;
+    public List<CharacterSkill> zeroSkills;
+    public List<CharacterSkill> oneSkills;
+    public List<CharacterSkill> twoSkills;
+    public List<CharacterSkill> threeSkills;
+    public List<CharacterSkill> fourSkills;
     public List<Integer> meleeDmgRange;
     public List<Integer> meleeOffhandDmgRange;
     public List<Integer> meleePolyDmgRange;
@@ -36,6 +42,8 @@ public class VtdDetailsDTO {
     public Integer meleePolyCritMin;
     public Integer rangeCritMin;
     public Integer currentHealth;
+    public Boolean splitHeal;
+    public Boolean madEvoker;
     
     public static VtdDetailsDTO fromDAO(VtdDetails dao) {
         VtdDetailsDTO build = VtdDetailsDTO.builder()
@@ -47,7 +55,12 @@ public class VtdDetailsDTO {
                 .oncePerRound(new ArrayList<>())
                 .oncePerRoom(new ArrayList<>())
                 .oncePerGame(new ArrayList<>())
-                .characterSkills(dao.getCharacterSkills())
+                .characterSkills(new ArrayList<>())
+                .zeroSkills(new ArrayList<>())
+                .oneSkills(new ArrayList<>())
+                .twoSkills(new ArrayList<>())
+                .threeSkills(new ArrayList<>())
+                .fourSkills(new ArrayList<>())
                 .meleeCritMin(dao.getMeleeCritMin())
                 .meleePolyCritMin(dao.getMeleePolyCritMin())
                 .rangeCritMin(dao.getRangeCritMin())
@@ -55,7 +68,34 @@ public class VtdDetailsDTO {
                 .meleeDmgRange(dao.getMeleeDmgRange())
                 .meleePolyDmgRange(dao.getMeleePolyDmgRange())
                 .rangeDmgRange(dao.getRangeDmgRange())
+                .splitHeal(true)
+                .madEvoker(true)
                 .build();
+
+        if (dao.getCharacterSkills() != null) {
+            final List<CharacterSkill> usedable = new ArrayList<>();
+
+            dao.getCharacterSkills().forEach(skill -> {
+                if (skill.getSkillLevel() == SkillLevel.NA) {
+                    if (skill.getUsableNumber() > 0)
+                        usedable.add(skill);
+                    else
+                        build.getCharacterSkills().add(skill);
+                } else if (skill.getSkillLevel() == SkillLevel.ZERO) {
+                    build.getZeroSkills().add(skill);
+                } else if (skill.getSkillLevel() == SkillLevel.ONE) {
+                    build.getOneSkills().add(skill);
+                } else if (skill.getSkillLevel() == SkillLevel.TWO) {
+                    build.getTwoSkills().add(skill);
+                } else if (skill.getSkillLevel() == SkillLevel.THREE) {
+                    build.getThreeSkills().add(skill);
+                } else if (skill.getSkillLevel() == SkillLevel.FOUR) {
+                    build.getFourSkills().add(skill);
+                }
+            });
+
+            build.getCharacterSkills().addAll(usedable);
+        }
         
         if(dao.getNotes() != null) {
             dao.getNotes().forEach((note) -> {
