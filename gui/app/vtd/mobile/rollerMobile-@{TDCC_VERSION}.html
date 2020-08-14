@@ -1,0 +1,31 @@
+<div class="row">
+    <div style="height:calc(100% - 141px);position:fixed;overflow-y:scroll;width:100%;padding-left:0;padding-right:0;">   
+        <div class="col-md-12 hidden-sm hidden-xs">
+           <div ng-if="rollerIndex === 0">
+               <stats-tablet></stats-tablet>
+           </div>
+           <div ng-if="rollerIndex === 1">
+               <stats-tablet></stats-tablet>
+           </div>
+           <div ng-if="rollerIndex === 2">
+               <defend-mobile></defend-mobile>
+           </div>
+        </div>
+        <div class="col-xs-12 visible-sm visible-xs">
+            <div ng-if="rollerIndex === 0">
+                <attack-mobile></attack-mobile>
+            </div>
+            <div ng-if="rollerIndex === 1">
+                <defend-mobile></defend-mobile>
+            </div>
+            <div ng-if="rollerIndex === 2">
+                <defend-mobile></defend-mobile>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-12 text-center" style="position:fixed;bottom:0;width:100%;height:30px;padding:0px">
+        <span class="col-xs-4 col-md-4 btn" ng-class="rollerIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setRollerIndex(0)">Attack </span> 
+        <span class="col-xs-4 col-md-4 btn" ng-class="rollerIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setRollerIndex(1)">Spells / Abilities </span> 
+        <span class="col-xs-4 col-md-4 btn" ng-class="rollerIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setRollerIndex(2)">Defense / Saves </span> 
+    </div>
+</div>

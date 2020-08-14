@@ -21,6 +21,10 @@ import com.achersoft.tdcc.token.admin.TokenAdminService;
 import com.achersoft.tdcc.token.admin.TokenAdminServiceImpl;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
+import com.achersoft.tdcc.vtd.VirtualTdService;
+import com.achersoft.tdcc.vtd.VirtualTdServiceImpl;
+import com.achersoft.tdcc.vtd.dao.VtdDetails;
+import com.achersoft.tdcc.vtd.persistence.VtdMapper;
 import com.achersoft.user.UserService;
 import com.achersoft.user.UserServiceImpl;
 import com.achersoft.user.persistence.UserMapper;
@@ -54,7 +58,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                                    TokenAdminMapper.class,
                                    TokenMapper.class,
                                    CharacterMapper.class,
-                                   PartyMapper.class
+                                   PartyMapper.class,
+                                   VtdMapper.class
                                  })
 public class SpringConfig {
     
@@ -103,6 +108,11 @@ public class SpringConfig {
     @Bean
     public EmailClient emailClient() {
         return new EmailClient();
+    }
+
+    @Bean
+    public VirtualTdService virtualTdService() {
+        return new VirtualTdServiceImpl();
     }
     // </editor-fold>
     

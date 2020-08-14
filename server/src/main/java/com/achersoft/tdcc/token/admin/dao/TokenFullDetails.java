@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @NoArgsConstructor 
@@ -18,6 +20,7 @@ public class TokenFullDetails {
     private String text;
     private Rarity rarity;
     private Slot slot;
+    private String damageRange;
     private boolean usableByBarbarian;
     private boolean usableByBard;
     private boolean usableByCleric;

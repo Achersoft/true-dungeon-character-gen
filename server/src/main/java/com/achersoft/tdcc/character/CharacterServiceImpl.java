@@ -1856,14 +1856,6 @@ public class CharacterServiceImpl implements CharacterService {
                 if(metCondition.contains(ConditionalUse.WEAPON_2H))
                     stats.setMeleeDmg(stats.getMeleeDmg() + 4);
                 break;
-            case DRUID:
-                if (stats.getLevel() > 4)
-                    stats.setMeleePolyDmg(stats.getMeleePolyDmg() + 5);
-                break;
-            case ELF_WIZARD:
-                if (stats.getLevel() > 4)
-                    stats.setMeleePolyHit(stats.getMeleePolyHit() + 3);
-                break;
             default:
                 break;
         }

@@ -1,0 +1,281 @@
+<div style="height:calc(100% - 127px);width:100%;position:fixed;overflow-y:scroll;padding-left:0;padding-right:0;margin-left:-15px">
+    <div style="display:flex">
+        <div style="width:50%;margin-left:10px;margin-right:15px">
+            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Base Stats</strong></h4>
+            <div class="table-responsive" style="border:none;">          
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Base</th>
+                            <th>Score</th>
+                            <th>Bonus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>STR</strong></td>
+                            <td>{{characterContext.stats.baseStr}}</td>
+                            <td>{{characterContext.stats.str}}</td>
+                            <td>{{characterContext.stats.strBonus}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DEX</strong></td>
+                            <td>{{characterContext.stats.baseDex}}</td>
+                            <td>{{characterContext.stats.dex}}</td>
+                            <td>{{characterContext.stats.dexBonus}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CON</strong></td>
+                            <td>{{characterContext.stats.baseCon}}</td>
+                            <td>{{characterContext.stats.con}}</td>
+                            <td>{{characterContext.stats.conBonus}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>INT</strong></td>
+                            <td>{{characterContext.stats.baseIntel}}</td>
+                            <td>{{characterContext.stats.intel}}</td>
+                            <td>{{characterContext.stats.intelBonus}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>WIS</strong></td>
+                            <td>{{characterContext.stats.baseWis}}</td>
+                            <td>{{characterContext.stats.wis}}</td>
+                            <td>{{characterContext.stats.wisBonus}}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CHA</strong></td>
+                            <td>{{characterContext.stats.baseCha}}</td>
+                            <td>{{characterContext.stats.cha}}</td>
+                            <td>{{characterContext.stats.chaBonus}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Health</strong></h4>
+            <div class="table-responsive" style="border:none;">          
+                <table class="table">
+                    <thead>
+                        <tr>
+                          <th>Hit Points</th>
+                          <th>Regeneration Per Room</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>{{characterContext.stats.health}}</td>
+                          <td>{{characterContext.stats.regen}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="width:50%;margin-left:10px;margin-right:15px">
+            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Melee</strong></h4>
+            <div class="table-responsive" style="border: none;margin-bottom:0px">          
+                <table class="table">
+                    <thead>
+                        <tr>
+                          <th>Hit</th>
+                          <th ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">Poly Hit</th>
+                          <th>Damage</th>
+                          <th ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">Poly Damage</th>
+                          <th>AC</th>
+                          <th>Types</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>{{characterContext.stats.meleeHit}}</td>
+                          <td ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">{{characterContext.stats.meleePolyHit}}</td>
+                          <td>{{characterContext.stats.meleeDmg}}</td>
+                          <td ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">{{characterContext.stats.meleePolyDmg}}</td>
+                          <td>{{characterContext.stats.meleeAC}}</td>
+                          <td>
+                              <span ng-if="characterContext.stats.meleeFire">Fire</span>
+                              <span ng-if="characterContext.stats.meleeCold">Cold</span>
+                              <span ng-if="characterContext.stats.meleeShock">Shock</span>
+                              <span ng-if="characterContext.stats.meleeSonic">Sonic</span>
+                              <span ng-if="characterContext.stats.meleeEldritch">Eldritch</span>
+                              <span ng-if="characterContext.stats.meleePoison">Poison</span>
+                              <span ng-if="characterContext.stats.meleeDarkrift">Darkrift</span>
+                              <span ng-if="characterContext.stats.meleeSacred">Sacred</span>
+                          </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top:29px;border-bottom:1pt solid black;"><strong>Range</strong></h4>
+            <div class="table-responsive" style="border:none;margin-bottom:0px">          
+                <table class="table">
+                    <thead>
+                        <tr>
+                          <th>Hit</th>
+                          <th>Damage</th>
+                          <th>AC</th>
+                          <th>Missile AC</th>
+                          <th>Types</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>{{characterContext.stats.rangeHit}}</td>
+                          <td>{{characterContext.stats.rangeDmg}}</td>
+                          <td>{{characterContext.stats.rangeAC}}</td>
+                          <td>{{characterContext.stats.rangeMissileAC}}</td>
+                          <td><span ng-if="characterContext.stats.rangeFire">Fire</span>
+            <span ng-if="characterContext.stats.rangeCold">Cold</span>
+            <span ng-if="characterContext.stats.rangeShock">Shock</span>
+            <span ng-if="characterContext.stats.rangeSonic">Sonic</span>
+            <span ng-if="characterContext.stats.rangeEldritch">Eldritch</span>
+            <span ng-if="characterContext.stats.rangePoison">Poison</span>
+            <span ng-if="characterContext.stats.rangeDarkrift">Darkrift</span>
+            <span ng-if="characterContext.stats.rangeSacred">Sacred</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h4 style="margin-top:29px;border-bottom:1pt solid black;"><strong>Spell</strong></h4>
+            <div class="table-responsive" style="border:none;">          
+                <table class="table">
+                    <thead>
+                        <tr>
+                          <th>Damage</th>
+                          <th>Heal</th>
+                          <th>Resistance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>{{characterContext.stats.spellDmg}}</td>
+                          <td>{{characterContext.stats.spellHeal}}</td>
+                          <td>{{characterContext.stats.spellResist}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:flex">
+        <div style="width:50%;margin-left:10px;margin-right:15px">
+            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Saves</strong></h4>
+            <div class="table-responsive" style="border:none;">          
+                <table class="table">
+                    <thead>
+                        <tr>
+                          <th>Fortitude</th>
+                          <th>Reflex</th>
+                          <th>Will</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>{{characterContext.stats.fort}}</td>
+                          <td>{{characterContext.stats.reflex}}</td>
+                          <td>{{characterContext.stats.will}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="width:50%;margin-left:10px;margin-right:15px">
+            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Retribution Damage</strong></h4>
+            <div class="table-responsive" style="border:none;">          
+                <table class="table">
+                    <thead>
+                        <tr>
+                          <th>Damage</th>
+                          <th>Types</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>{{characterContext.stats.retDmg}}</td>
+                          <td><span ng-if="characterContext.stats.retFire">Fire</span>
+        <span ng-if="characterContext.stats.retCold">Cold</span>
+        <span ng-if="characterContext.stats.retShock">Shock</span>
+        <span ng-if="characterContext.stats.retSonic">Sonic</span>
+        <span ng-if="characterContext.stats.retEldritch">Eldritch</span>
+        <span ng-if="characterContext.stats.retPoison">Poison</span>
+        <span ng-if="characterContext.stats.retDarkrift">Darkrift</span>
+        <span ng-if="characterContext.stats.retSacred">Sacred</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div style="width:100%;margin-left:10px;margin-right:15px">
+        <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Damage Reduction</strong></h4>
+        <div class="table-responsive" style="border:none;">          
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th>Melee:</th>
+                      <th>Range:</th>
+                      <th>Spell:</th>
+                      <th>Fire:</th>
+                      <th>Cold:</th>
+                      <th>Shock:</th>
+                      <th>Sonic:</th>
+                      <th>Eldritch:</th>
+                      <th>Poison:</th>
+                      <th>Darkrift:</th>
+                      <th>Sacred:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <td>{{characterContext.stats.drMelee}}</td>
+                      <td>{{characterContext.stats.drRange}}</td>
+                      <td>{{characterContext.stats.drSpell}}</td>
+                      <td>{{characterContext.stats.drFire}}</td>
+                      <td>{{characterContext.stats.drCold}}</td>
+                      <td>{{characterContext.stats.drShock}}</td>
+                      <td>{{characterContext.stats.drSonic}}</td>
+                      <td>{{characterContext.stats.drEldritch}}</td>
+                      <td>{{characterContext.stats.drPoison}}</td>
+                      <td>{{characterContext.stats.drDarkrift}}</td>
+                      <td>{{characterContext.stats.drSacred}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div style="display:flex;margin-bottom: 15px">
+        <div style="width:50%;margin-left:10px;margin-right:15px">
+            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Character Bonuses</strong></h4>
+            <div style="width:50%;">
+                Cannot Be Surprised: {{characterContext.stats.cannotBeSuprised}}
+            </div>
+            <div style="width:50%;">
+                Free Movement: {{characterContext.stats.freeMovement}}
+            </div>
+            <div style="width:50%;">
+                Immune to Possession: {{characterContext.stats.possession}}
+            </div>
+            <div style="width:50%;">
+                Psychic Powers: {{characterContext.stats.psychic}}
+            </div>
+            <div style="width:50%;">
+                Psychic Level: {{characterContext.stats.psychicLEvel}}
+            </div>
+            <div style="width:50%;">
+                Initiative Bonus: {{characterContext.stats.initiative}}
+            </div>
+        </div>
+        <div style="width:50%;margin-left:10px;margin-right:15px">
+            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Treasure Enhancements</strong></h4>
+            <div style="width:50%;">
+                Treasure Minimum: {{characterContext.stats.treasureMin}}
+            </div>
+            <div style="width:50%;">
+                Treasure Maximum: {{characterContext.stats.treasureMax}}
+            </div>
+        </div>
+    </div>
+</div>
+

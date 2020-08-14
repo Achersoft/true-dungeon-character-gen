@@ -5,7 +5,7 @@ module.exports = function (grunt) {
             build:{
                 cwd:'app',
                 src:['**'],
-                dest:'/Program Files (x86)/Apache Software Foundation/Apache Tomcat/webapps/tdcc/',
+                dest:'/Program Files/Apache Software Foundation/Tomcat 8.5/webapps/tdcc/',
                 expand:true
             }
         },

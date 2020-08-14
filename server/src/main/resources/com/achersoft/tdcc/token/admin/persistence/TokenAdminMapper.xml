@@ -42,6 +42,7 @@
     
     <insert id="addTokenDetails">
         INSERT INTO token_details ( id,
+                                    damage,
                                     str,
                                     dex,
                                     con,
@@ -136,6 +137,7 @@
                                     once_game,
                                     special_text)
                            VALUES ( #{id},
+                                    #{damage},
                                     #{str},
                                     #{dex},
                                     #{con},
@@ -254,6 +256,7 @@
     
     <update id="editTokenDetails">      
         UPDATE token_details SET
+            damage = #{damage},
             str = #{str},
             dex = #{dex},
             con = #{con},
@@ -348,10 +351,11 @@
             once_game = #{oncePerGame},
             special_text = #{specialText}
          WHERE id = #{id}
-    </update>  
-                       
+    </update>
+
     <select id="search" resultType="com.achersoft.tdcc.token.admin.dao.TokenFullDetails"> 
          SELECT t.id 'id',
+                td.damage 'damage',
                 t.name 'name',
                 t.text 'text',
                 t.rarity 'rarity',
@@ -471,6 +475,7 @@
     
     <select id="getTokenDetails" resultType="com.achersoft.tdcc.token.admin.dao.TokenFullDetails"> 
          SELECT t.id 'id',
+                td.damage 'damage',
                 t.name 'name',
                 t.text 'text',
                 t.rarity 'rarity',

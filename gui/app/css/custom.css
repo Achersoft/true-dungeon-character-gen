@@ -173,3 +173,15 @@
     min-width: 200px;
     border-color: lightgray;
 }
+
+.green-helath {
+    background-color:limegreen;
+}
+
+.orange-helath {
+    background-color:orange;
+}
+
+.red-helath {
+    background-color:red;
+}

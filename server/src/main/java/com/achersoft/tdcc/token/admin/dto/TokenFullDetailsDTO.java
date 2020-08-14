@@ -27,6 +27,7 @@ public class TokenFullDetailsDTO {
     public @NotNull Rarity rarity;
     public @NotNull Slot slot;
     public @NotNull List<CharacterClass> usableBy;
+    public String damageRange;
     public Integer str;
     public Integer dex;
     public Integer con;
@@ -128,6 +129,7 @@ public class TokenFullDetailsDTO {
                 .text(tokenFullDetails.getText())
                 .rarity(tokenFullDetails.getRarity())
                 .slot(tokenFullDetails.getSlot())
+                .damageRange(tokenFullDetails.getDamageRange())
                 .str(tokenFullDetails.getStr())
                 .dex(tokenFullDetails.getDex())
                 .con(tokenFullDetails.getCon())
@@ -268,6 +270,7 @@ public class TokenFullDetailsDTO {
                 .text(text)
                 .rarity(rarity)
                 .slot(slot)
+                .damageRange(damageRange)
                 .str(str)
                 .dex(dex)
                 .con(con)

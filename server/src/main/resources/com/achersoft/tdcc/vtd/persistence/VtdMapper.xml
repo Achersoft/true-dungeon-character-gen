@@ -1,0 +1,88 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.achersoft.tdcc.vtd.persistence.VtdMapper">
+    
+    <insert id="addCharacter">
+        INSERT INTO vtd_character (id,
+                                   expires,
+                                   health)
+                           VALUES (#{characterId},
+                                   #{expires},
+                                   #{currentHealth})
+    </insert>
+    
+    <insert id="addCharacterSkill">
+       INSERT INTO vtd_skills (id,
+                                     character_id,
+                                     name,
+                                     details,
+                                     skill_level,
+                                     skill_type,
+                                     expendable,
+                                     used,
+                                     min_effect,
+                                     max_effect)
+                            VALUES (#{id},
+                                    #{characterId},
+                                    #{name},
+                                    #{details},
+                                    #{skillLevel},
+                                    #{skillType},
+                                    #{expendable},
+                                    #{used},
+                                    #{minEffect},
+                                    #{maxEffect})
+    </insert>
+    
+    <select id="getCharacter" resultType="com.achersoft.tdcc.vtd.dao.VtdDetails">
+        SELECT id 'characterId',
+               expires,
+               health
+          FROM vtd_character
+         WHERE id = #{id}
+    </select>
+
+    <select id="getSkills" resultType="com.achersoft.tdcc.vtd.dao.CharacterSkill">
+        SELECT name,
+               details,
+               skill_level 'skillLevel',
+               skill_type 'skillType',
+               expendable,
+               min_effect 'minEffect',
+               max_effect 'maxEffect'
+         FROM character_skills
+        WHERE character_class = #{characterClass}
+          AND character_level <= #{characterLevel}
+    </select>
+
+    <select id="getCharacterSkills" resultType="com.achersoft.tdcc.vtd.dao.CharacterSkill">
+        SELECT id,
+               character_id 'characterId',
+               name,
+               details,
+               skill_level 'skillLevel',
+               skill_type 'skillType',
+               expendable,
+               used,
+               min_effect 'minEffect',
+               max_effect 'maxEffect'
+          FROM vtd_skills
+         WHERE character_id = #{characterId}
+    </select>  
+
+    <update id="useCharacterSkill">
+        UPDATE vtd_skills SET
+               used = true
+         WHERE id = #{id};
+    </update>
+    
+    <delete id="deleteCharacter">
+        DELETE FROM vtd_character WHERE id = #{id}
+    </delete>
+    
+    <delete id="deleteCharacterSkills">
+        DELETE FROM vtd_skills WHERE character_id = #{id}
+    </delete>
+
+</mapper>                          

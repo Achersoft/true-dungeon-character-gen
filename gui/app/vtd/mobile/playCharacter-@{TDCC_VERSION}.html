@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="col-xs-12 col-md-12 text-center" ng-class="{'green-helath' : isHpGreen(), 'orange-helath' : isHpOrange(), 'red-helath' : isHpRed()}" style="height: 25px;margin:0px;padding:0px">
+        <div class="col-xs-6 text-left" style="padding-left:5px">
+            <strong>{{characterContext.name}}</strong>
+        </div>
+        <div class="col-xs-6 text-right" style="padding-right:5px">
+            <strong>HP: {{characterContext.currentHealth}}/{{characterContext.stats.health}}</strong>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-12 text-center" style="margin:0px;padding:0px">
+        <span class="col-xs-3 col-md-3 btn" ng-class="tabIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 0">Roller </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="tabIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 1">Statistics </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="tabIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 2">In Game </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="tabIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 3">Settings </span> 
+    </div>
+    <div class="col-md-12 hidden-sm hidden-xs">
+        <div ng-if="tabIndex === 0">
+            <roller-mobile></roller-mobile>
+        </div>
+        <div ng-if="tabIndex === 1">
+            <play-stats-tablet></play-stats-tablet>
+        </div>
+        <div ng-if="tabIndex === 2">
+            <play-notes-mobile></play-notes-mobile>
+        </div>
+        <div ng-if="tabIndex === 3">
+            <play-notes-mobile></play-notes-mobile>
+        </div>
+    </div>
+    <div class="col-xs-12 visible-sm visible-xs">
+        <div ng-if="tabIndex === 0">
+            <roller-mobile></roller-mobile>
+        </div>
+        <div ng-if="tabIndex === 1">
+            <play-stats-mobile></play-stats-mobile>
+        </div>
+        <div ng-if="tabIndex === 2">
+            <play-notes-mobile></play-notes-mobile>
+        </div>
+        <div ng-if="tabIndex === 3">
+            <play-notes-mobile></play-notes-mobile>
+        </div>
+    </div>
+</div>
+
