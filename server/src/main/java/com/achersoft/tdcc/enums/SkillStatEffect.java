@@ -8,6 +8,8 @@ public enum SkillStatEffect {
     MELEE_DAMAGE("Melee Damage"),
     RANGE_DAMAGE("Range Damage"),
     AC("AC"),
+    SAVE("Save"),
+    SAVE_AC("Save AC"),
     STR("STR"),
     DEX("DEX");
 

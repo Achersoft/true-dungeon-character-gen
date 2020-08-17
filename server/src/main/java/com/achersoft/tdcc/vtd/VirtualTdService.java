@@ -1,14 +1,15 @@
 package com.achersoft.tdcc.vtd;
 
-import com.achersoft.tdcc.character.dao.CharacterDetails;
-import com.achersoft.tdcc.character.dao.CharacterName;
-import com.achersoft.tdcc.party.dao.SelectableCharacters;
+import com.achersoft.tdcc.enums.Buff;
+import com.achersoft.tdcc.vtd.dao.VtdBuff;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
-
-import javax.ws.rs.core.StreamingOutput;
-import java.util.List;
 
 public interface VirtualTdService {
     VtdDetails getVtdCharacter(String id);
-    
+    VtdDetails useSkill(String id, String skillId, boolean selfTarget);
+    VtdDetails unuseSkill(String id, String skillId);
+    VtdDetails addBuff(String id, Buff buff);
+    VtdDetails removeBuff(String id, Buff buff);
+    VtdDetails nextRoom(String id);
+    void resetCharacter(String id);
 }

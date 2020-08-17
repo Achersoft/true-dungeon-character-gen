@@ -10,6 +10,9 @@
            <div ng-if="rollerIndex === 2">
                <defend-mobile></defend-mobile>
            </div>
+           <div ng-if="rollerIndex === 3">
+                <buff-mobile></buff-mobile>
+           </div>
         </div>
         <div class="col-xs-12 visible-sm visible-xs">
             <div ng-if="rollerIndex === 0">
@@ -21,11 +24,15 @@
             <div ng-if="rollerIndex === 2">
                 <defend-mobile></defend-mobile>
             </div>
+            <div ng-if="rollerIndex === 3">
+                <buff-mobile></buff-mobile>
+            </div>
         </div>
     </div>
     <div class="col-xs-12 col-md-12 text-center" style="position:fixed;bottom:0;width:100%;height:30px;padding:0px">
-        <span class="col-xs-4 col-md-4 btn" ng-class="rollerIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setRollerIndex(0)">Attack </span> 
-        <span class="col-xs-4 col-md-4 btn" ng-class="rollerIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setRollerIndex(1)">Spells / Abilities </span> 
-        <span class="col-xs-4 col-md-4 btn" ng-class="rollerIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setRollerIndex(2)">Defense / Saves </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="rollerIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setRollerIndex(0)">Attack </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="rollerIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setRollerIndex(1)">Spells </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="rollerIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setRollerIndex(2)">Defense </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="rollerIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setRollerIndex(3)">Buffs </span> 
     </div>
 </div>

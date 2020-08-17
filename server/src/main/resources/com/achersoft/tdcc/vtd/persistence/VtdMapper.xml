@@ -5,11 +5,67 @@
     
     <insert id="addCharacter">
         INSERT INTO vtd_character (id,
+                                   user_id,
                                    expires,
-                                   health)
+                                   name,
+                                   character_class,
+                                   health,
+                                   roller_difficulty,
+                                   init_bonus,
+                                   room_number,
+                                   melee_dmg_range,
+                                   melee_offhand_dmg_range,
+                                   melee_poly_dmg_range,
+                                   range_dmg_range,
+                                   range_offhand_dmg_range,
+                                   melee_weapon_explode_range,
+                                   range_weapon_explode_range,
+                                   melee_weapon_explode_effect,
+                                   range_weapon_explode_effect,
+                                   melee_weapon_explode_text,
+                                   range_weapon_explode_text,
+                                   melee_crit_min,
+                                   melee_offhand_crit_min,
+                                   melee_poly_crit_min,
+                                   range_crit_min,
+                                   melee_sneak_crit_min,
+                                   range_sneak_crit_min,
+                                   is_sneak_can_crit,
+                                   is_sneak_at_range,
+                                   split_heal,
+                                   mad_evoker,
+                                   mighty_weapon)
                            VALUES (#{characterId},
+                                   #{userId},
                                    #{expires},
-                                   #{currentHealth})
+                                    #{name},
+                                    #{characterClass},
+                                    #{currentHealth},
+                                    #{rollerDifficulty},
+                                    #{initBonus},
+                                    #{roomNumber},
+                                    #{meleeDmgRange},
+                                    #{meleeOffhandDmgRange},
+                                    #{meleePolyDmgRange},
+                                    #{rangeDmgRange},
+                                    #{rangeOffhandDmgRange},
+                                    #{meleeWeaponExplodeRange},
+                                    #{rangeWeaponExplodeRange},
+                                    #{meleeWeaponExplodeEffect},
+                                    #{rangeWeaponExplodeEffect},
+                                    #{meleeWeaponExplodeText},
+                                    #{rangeWeaponExplodeText},
+                                    #{meleeCritMin},
+                                    #{meleeOffhandCritMin},
+                                    #{meleePolyCritMin},
+                                    #{rangeCritMin},
+                                    #{meleeSneakCritMin},
+                                    #{rangeSneakCritMin},
+                                    #{isSneakCanCrit},
+                                    #{isSneakAtRange},
+                                    #{splitHeal},
+                                    #{madEvoker},
+                                    #{mightyWeapon})
     </insert>
     
     <insert id="addCharacterSkill">
@@ -38,11 +94,213 @@
                                 #{minEffect},
                                 #{maxEffect})
     </insert>
+
+    <insert id="addCharacterStats">
+        INSERT INTO vtd_stats (id,
+        base_str,
+        str,
+        str_bonus,
+        base_dex,
+        dex,
+        dex_bonus,
+        base_con,
+        con,
+        con_bonus,
+        base_intel,
+        intel,
+        intel_bonus,
+        base_wis,
+        wis,
+        wis_bonus,
+        base_cha,
+        cha,
+        cha_bonus,
+        health,
+        regen,
+        meleeHit,
+        meleePolyHit,
+        meleeDmg,
+        meleePolyDmg,
+        meleeFire,
+        meleeCold,
+        meleeShock,
+        meleeSonic,
+        meleeEldritch,
+        meleePoison,
+        meleeDarkrift,
+        meleeSacred,
+        meleeAC,
+        rangeHit,
+        rangeDmg,
+        rangeFire,
+        rangeCold,
+        rangeShock,
+        rangeSonic,
+        rangeEldritch,
+        rangePoison,
+        rangeDarkrift,
+        rangeSacred,
+        rangeAC,
+        rangeMissileAC,
+        fort,
+        reflex,
+        will,
+        retDmg,
+        retFire,
+        retCold,
+        retShock,
+        retSonic,
+        retEldritch,
+        retPoison,
+        retDarkrift,
+        retSacred,
+        cannotBeSuprised,
+        freeMovement,
+        psychic,
+        psychic_level,
+        possession,
+        spellDmg,
+        spellHeal,
+        spellResist,
+        initiative,
+        treasureMin,
+        treasureMax,
+        level,
+        drMelee,
+        drRange,
+        drSpell,
+        drFire,
+        drCold,
+        drShock,
+        drSonic,
+        drEldritch,
+        drPoison,
+        drDarkrift,
+        drSacred)
+        VALUES (#{characterId},
+        #{baseStr},
+        #{str},
+        #{strBonus},
+        #{baseDex},
+        #{dex},
+        #{dexBonus},
+        #{baseCon},
+        #{con},
+        #{conBonus},
+        #{baseIntel},
+        #{intel},
+        #{intelBonus},
+        #{baseWis},
+        #{wis},
+        #{wisBonus},
+        #{baseCha},
+        #{cha},
+        #{chaBonus},
+        #{health},
+        #{regen},
+        #{meleeHit},
+        #{meleePolyHit},
+        #{meleeDmg},
+        #{meleePolyDmg},
+        #{meleeFire},
+        #{meleeCold},
+        #{meleeShock},
+        #{meleeSonic},
+        #{meleeEldritch},
+        #{meleePoison},
+        #{meleeDarkrift},
+        #{meleeSacred},
+        #{meleeAC},
+        #{rangeHit},
+        #{rangeDmg},
+        #{rangeFire},
+        #{rangeCold},
+        #{rangeShock},
+        #{rangeSonic},
+        #{rangeEldritch},
+        #{rangePoison},
+        #{rangeDarkrift},
+        #{rangeSacred},
+        #{rangeAC},
+        #{rangeMissileAC},
+        #{fort},
+        #{reflex},
+        #{will},
+        #{retDmg},
+        #{retFire},
+        #{retCold},
+        #{retShock},
+        #{retSonic},
+        #{retEldritch},
+        #{retPoison},
+        #{retDarkrift},
+        #{retSacred},
+        #{cannotBeSuprised},
+        #{freeMovement},
+        #{psychic},
+        #{psychicLevel},
+        #{possession},
+        #{spellDmg},
+        #{spellHeal},
+        #{spellResist},
+        #{initiative},
+        #{treasureMin},
+        #{treasureMax},
+        #{level},
+        #{drMelee},
+        #{drRange},
+        #{drSpell},
+        #{drFire},
+        #{drCold},
+        #{drShock},
+        #{drSonic},
+        #{drEldritch},
+        #{drPoison},
+        #{drDarkrift},
+        #{drSacred})
+    </insert>
+
+    <insert id="addCharacterBuff">
+        INSERT INTO vtd_buffs (character_id,
+                               is_bardsong,
+                               buff)
+                       VALUES (#{characterId},
+                               #{bardsong},
+                               #{buff})
+    </insert>
     
     <select id="getCharacter" resultType="com.achersoft.tdcc.vtd.dao.VtdDetails">
-        SELECT id 'characterId',
-               expires,
-               health 'currentHealth'
+         SELECT id 'characterId',
+                user_id 'userId',
+                expires,
+                name,
+                character_class 'characterClass',
+                health 'currentHealth',
+                roller_difficulty 'rollerDifficulty',
+                init_bonus 'initBonus',
+                room_number 'roomNumber',
+                melee_dmg_range 'meleeDmgRange',
+                melee_offhand_dmg_range 'meleeOffhandDmgRange',
+                melee_poly_dmg_range 'meleePolyDmgRange',
+                range_dmg_range 'rangeDmgRange',
+                range_offhand_dmg_range 'rangeOffhandDmgRange',
+                melee_weapon_explode_range 'meleeWeaponExplodeRange',
+                range_weapon_explode_range 'rangeWeaponExplodeRange',
+                melee_weapon_explode_effect 'meleeWeaponExplodeEffect',
+                range_weapon_explode_effect 'rangeWeaponExplodeEffect',
+                melee_weapon_explode_text 'meleeWeaponExplodeText',
+                range_weapon_explode_text 'rangeWeaponExplodeText',
+                melee_crit_min 'meleeCritMin',
+                melee_offhand_crit_min 'meleeOffhandCritMin',
+                melee_poly_crit_min 'meleePolyCritMin',
+                range_crit_min 'rangeCritMin',
+                melee_sneak_crit_min 'meleeSneakCritMin',
+                range_sneak_crit_min 'rangeSneakCritMin',
+                is_sneak_can_crit 'isSneakCanCrit',
+                is_sneak_at_range 'isSneakAtRange',
+                split_heal 'splitHeal',
+                mad_evoker 'madEvoker',
+                mighty_weapon 'mightyWeapon'
           FROM vtd_character
          WHERE id = #{id}
     </select>
@@ -63,6 +321,24 @@
           AND character_level = #{characterLevel}
     </select>
 
+    <select id="getCharacterSkill" resultType="com.achersoft.tdcc.vtd.dao.CharacterSkill">
+        SELECT id,
+        character_id 'characterId',
+        name,
+        details,
+        skill_level 'skillLevel',
+        skill_type 'skillType',
+        skill_target 'skillTarget',
+        skill_stat_effect 'skillStatEffect',
+        used_number 'usedNumber',
+        usable_number 'usableNumber',
+        min_effect 'minEffect',
+        max_effect 'maxEffect'
+        FROM vtd_skill
+        WHERE character_id = #{characterId}
+          AND id = #{id}
+    </select>
+
     <select id="getCharacterSkills" resultType="com.achersoft.tdcc.vtd.dao.CharacterSkill">
         SELECT id,
                character_id 'characterId',
@@ -79,13 +355,125 @@
           FROM vtd_skills
          WHERE character_id = #{characterId}
         ORDER BY name
-    </select>  
+    </select>
 
-    <update id="useCharacterSkill">
+    <select id="getCharacterStats" resultType="com.achersoft.tdcc.character.dao.CharacterStats">
+        SELECT id 'characterId',
+        base_str 'baseStr',
+        str,
+        str_bonus 'strBonus',
+        base_dex 'baseDex',
+        dex,
+        dex_bonus 'dexBonus',
+        base_con 'baseCon',
+        con,
+        con_bonus 'conBonus',
+        base_intel 'baseIntel',
+        intel,
+        intel_bonus 'intelBonus',
+        base_wis 'baseWis',
+        wis,
+        wis_bonus 'wisBonus',
+        base_cha 'baseCha',
+        cha,
+        cha_bonus 'chaBonus',
+        health,
+        regen,
+        meleeHit,
+        meleePolyHit,
+        meleeDmg,
+        meleePolyDmg,
+        meleeFire,
+        meleeCold,
+        meleeShock,
+        meleeSonic,
+        meleeEldritch,
+        meleePoison,
+        meleeDarkrift,
+        meleeSacred,
+        meleeAC,
+        rangeHit,
+        rangeDmg,
+        rangeFire,
+        rangeCold,
+        rangeShock,
+        rangeSonic,
+        rangeEldritch,
+        rangePoison,
+        rangeDarkrift,
+        rangeSacred,
+        rangeAC,
+        rangeMissileAC,
+        fort,
+        reflex,
+        will,
+        retDmg,
+        retFire,
+        retCold,
+        retShock,
+        retSonic,
+        retEldritch,
+        retPoison,
+        retDarkrift,
+        retSacred,
+        cannotBeSuprised,
+        freeMovement,
+        psychic,
+        psychic_level 'psychicLevel',
+        possession,
+        spellDmg,
+        spellHeal,
+        spellResist,
+        initiative,
+        treasureMin,
+        treasureMax,
+        level,
+        drMelee,
+        drRange,
+        drSpell,
+        drFire,
+        drCold,
+        drShock,
+        drSonic,
+        drEldritch,
+        drPoison,
+        drDarkrift,
+        drSacred
+        FROM vtd_stats
+        WHERE id = #{id}
+    </select>
+
+    <select id="getCharacterBuffs" resultType="com.achersoft.tdcc.vtd.dao.VtdBuff">
+        SELECT character_id 'characterId',
+               is_bardsong 'bardsong',
+               buff
+          FROM vtd_buffs
+         WHERE character_id = #{characterId}
+    </select>
+
+    <select id="buffExists" resultType="boolean">
+        SELECT count(*)
+        FROM vtd_buffs
+        WHERE character_id = #{characterId} AND buff = #{buff}
+    </select>
+
+    <update id="updateCharacterSkill">
         UPDATE vtd_skills SET
-               used = true
-         WHERE id = #{id};
+            used_number = #{usedNumber},
+            usable_number = #{usableNumber},
+            min_effect = #{minEffect},
+            max_effect = #{maxEffect}
+        WHERE id = #{id}
     </update>
+
+    <insert id="updateCharacter">
+        UPDATE vtd_character SET
+            health = #{currentHealth},
+            roller_difficulty = #{rollerDifficulty},
+            init_bonus #{initBonus},
+            room_number #{roomNumber}
+        WHERE id = #{characterId}
+    </insert>
     
     <delete id="deleteCharacter">
         DELETE FROM vtd_character WHERE id = #{id}
@@ -95,4 +483,19 @@
         DELETE FROM vtd_skills WHERE character_id = #{id}
     </delete>
 
+    <delete id="deleteCharacterStats">
+        DELETE FROM vtd_stats WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteCharacterBuffs">
+        DELETE FROM vtd_buffs WHERE character_id = #{id}
+    </delete>
+
+    <delete id="resetCharacterBuffs">
+        DELETE FROM vtd_buffs WHERE character_id = #{id} AND is_bardsong = false
+    </delete>
+
+    <delete id="deleteCharacterBuff">
+        DELETE FROM vtd_buffs WHERE character_id = #{id} AND buff = #{buff}
+    </delete>
 </mapper>                          

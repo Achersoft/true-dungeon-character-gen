@@ -1,13 +1,13 @@
 <div style="height:calc(100% - 157px);width:100%;position:fixed;overflow-y:scroll;padding-left:0;padding-right:0;margin-left:-15px">
-    <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
+    <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:15px;"></div>
     <div ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'" class="col-xs-12 col-md-12 text-center" style="margin:0px;padding:15px">
-        <span class="col-xs-4 col-md-3 btn" ng-class="attackIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(0)">Melee </span> 
-        <span class="col-xs-4 col-md-3 btn" ng-class="attackIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(1)">Range </span> 
-        <span class="col-xs-4 col-md-3 btn" ng-class="attackIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(2)">Polymorph </span> 
+        <span class="col-xs-4 col-sm-4 col-md-4 btn" ng-class="attackIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(0)">Melee </span> 
+        <span class="col-xs-4 col-sm-4 col-md-4 btn" ng-class="attackIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(1)">Range </span> 
+        <span class="col-xs-4 col-sm-4 col-md-4 btn" ng-class="attackIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(2)">Polymorph </span> 
     </div>
-    <div ng-if="!(characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD')" class="col-xs-12 col-md-12 text-center" style="margin:0px;padding:15px">
-        <span class="col-xs-6 col-md-3 btn" ng-class="attackIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(0)">Melee </span> 
-        <span class="col-xs-6 col-md-3 btn" ng-class="attackIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(1)">Range </span> 
+    <div ng-if="!(characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD')" class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:15px">
+        <span class="col-xs-6 col-sm-6 col-md-6 btn" ng-class="attackIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(0)">Melee </span> 
+        <span class="col-xs-6 col-sm-6 col-md-6 btn" ng-class="attackIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(1)">Range </span> 
     </div>
     <div class="col-xs-12 col-sm-12" style="margin-top:10px;"></div>
     <div class="col-xs-12 text-center" ng-show="attackIndex === 0">    

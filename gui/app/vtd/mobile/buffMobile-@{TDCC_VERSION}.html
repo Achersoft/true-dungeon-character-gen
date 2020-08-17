@@ -1,0 +1,83 @@
+<div style="height:calc(100% - 157px);width:100%;position:fixed;overflow-y:scroll;padding-left:0;padding-right:0;margin-left:-15px">
+    <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:15px;"></div>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:15px">
+        <span class="col-xs-6 col-sm-6 col-md-6 btn" ng-class="attackIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(0)">Available </span> 
+        <span class="col-xs-6 col-sm-6 col-md-6 btn" ng-class="attackIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(1)">Active </span> 
+    </div>
+    <div class="col-xs-12 col-sm-12" style="margin-top:10px;"></div>
+    <div class="col-xs-12 text-left" ng-show="attackIndex === 0">
+        <div ng-if="characterContext.availableBardsong !== null && characterContext.availableBardsong.length > 0">
+            <h2 style="border-bottom:1pt solid black;margin-top:0px">Bardsong</h2>
+            <div class="table-responsive" style="border:none">          
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat-start="buff in characterContext.availableBardsong" ng-repeat-end>
+                            <td>
+                                <button class="btn btn-primary" ng-click="activateBuff(buff)" style="width:50%">
+                                    Activate
+                                </button>
+                            </td>
+                            <td>{{buff.name}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h2 style="border-bottom:1pt solid black;margin-top:0px">Buffs</h2>
+        <div class="table-responsive" style="border:none">          
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="buff in characterContext.availableBuffs" ng-repeat-end>
+                        <td>
+                            <button class="btn btn-primary" ng-click="activateBuff(buff)" style="width:100%">
+                                Activate
+                            </button>
+                        </td>
+                        <td>{{buff.name}}</td>
+                        <td>{{buff.displayText}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12 text-center" ng-show="attackIndex === 1">
+        <div class="table-responsive" style="border:none">          
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="buff in characterContext.buffs" ng-repeat-end>
+                        <td>
+                            <button class="btn btn-primary" ng-click="removeBuff(buff)" style="width:100%">
+                                Remove
+                            </button>
+                        </td>
+                        <td>{{buff.name}}</td>
+                        <td>{{buff.displayText}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
+</div>
+

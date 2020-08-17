@@ -20,13 +20,14 @@ angular.module('main')
     });
 }])
 
-.controller('VtdPlayCtrl', ['$scope', 'VtdSvc', 'VtdState', 'RESOURCES', '$routeParams', 'clipboard', function ($scope, vtdSvc, vtdState, RESOURCES, $routeParams, clipboard) {
+.controller('VtdPlayCtrl', ['$scope', 'VtdSvc', 'VtdState', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', function ($scope, vtdSvc, vtdState, RESOURCES, $routeParams, $route, confirmDialogSvc) {
     $scope.tabIndex = 0;
     $scope.rollerIndex = 0;
     $scope.attackIndex = 0;
     $scope.defendIndex = 0;
     $scope.saveIndex = 0;
     $scope.damageIndex = 0;
+    $scope.difficultyIndex = 0;
     $scope.damageModifierIndex = 0;
     $scope.rollHit = 0;
     $scope.rollDmg = 0;
@@ -62,6 +63,10 @@ angular.module('main')
     $scope.setSaveIndex =  function(index) {
         $scope.saveIndex = index;
         $scope.rollSave = 0;
+    };
+    
+    $scope.setDifficultyIndex =  function(index) {
+        $scope.difficultyIndex = index;
     };
     
     $scope.setDamageIndex =  function(index) {
@@ -198,10 +203,31 @@ angular.module('main')
         }
     };
     
+    $scope.resetCharacter = function(id) {
+        confirmDialogSvc.confirm("Are you sure you wish to reset your character?", function(){
+            vtdSvc.resetCharacter(id).then(function() {
+                $route.reload();
+            });
+        });
+    }; 
+    
     $scope.getRandomInt =  function(max) {
         return Math.floor(Math.random() * Math.floor(max));
     };
     
+    $scope.activateBuff =  function(buff) {
+        vtdSvc.addBuff($scope.characterContext.id, buff.id).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
+    $scope.removeBuff =  function(buff) {
+        vtdSvc.removeBuff($scope.characterContext.id, buff.id).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
 }])
 
 .factory('VtdState', [
@@ -233,6 +259,28 @@ angular.module('main')
             });
     };
     
+    tokenAdminSvc.getBuffs = function() {
+        return $http.get(RESOURCES.REST_BASE_URL + '/vtd/buffs')
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    tokenAdminSvc.addBuff = function(id, buff) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/buff/?buff=' + buff).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.removeBuff = function(id, buff) {
+        return $http.delete(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/buff/?buff=' + buff).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
     tokenAdminSvc.getCharacter = function(id) {
         return $http.get(RESOURCES.REST_BASE_URL + '/vtd/' + id)
             .catch(function(response) {
@@ -243,6 +291,14 @@ angular.module('main')
     
     tokenAdminSvc.getCharacters = function() {
         return $http.get(RESOURCES.REST_BASE_URL + '/character/all');
+    };
+    
+    tokenAdminSvc.resetCharacter = function(id) {
+        return $http.delete(RESOURCES.REST_BASE_URL + '/vtd/' + id)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
     };
     
     return tokenAdminSvc;

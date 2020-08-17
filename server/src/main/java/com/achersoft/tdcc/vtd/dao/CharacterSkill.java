@@ -11,6 +11,7 @@ import lombok.*;
 public class CharacterSkill {
     private String id;
     private String characterId;
+    private String userId;
     private CharacterClass characterClass;
     private int characterLevel;
     private String name;

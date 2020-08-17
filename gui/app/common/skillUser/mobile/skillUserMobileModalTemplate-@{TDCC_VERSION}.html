@@ -9,8 +9,8 @@
                 Skill Check:
             </div>
             <div class="col-xs-12 col-md-12 text-center">
-                <span class="col-xs-6 col-md-3 btn" ng-class="skillCheckIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillCheckIndex(0)">Pass </span> 
-                <span class="col-xs-6 col-md-3 btn" ng-class="skillCheckIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillCheckIndex(1)">Failed </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="skillCheckIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillCheckIndex(0)">Pass </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="skillCheckIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillCheckIndex(1)">Failed </span> 
             </div> 
         </div>
         <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.madEvoker && characterContext.currentHealth > 10 && model.skillType === 'DAMAGE'">
@@ -18,8 +18,8 @@
                 Use Mad Evoker's Charm?:
             </div>
             <div class="col-xs-12 col-md-12 text-center">
-                <span class="col-xs-6 col-md-3 btn" ng-class="madEvokerIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setMadEvokerIndex(0)">No </span> 
-                <span class="col-xs-6 col-md-3 btn" ng-class="madEvokerIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setMadEvokerIndex(1)">Yes </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="madEvokerIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setMadEvokerIndex(0)">No </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="madEvokerIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setMadEvokerIndex(1)">Yes </span> 
             </div> 
         </div>
         <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="model.skillTarget === 'ANY'">
@@ -27,8 +27,8 @@
                 Spell Target:
             </div>
             <div class="col-xs-12 col-md-12 text-center">
-                <span class="col-xs-6 col-md-3 btn" ng-class="targetIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setTargetIndex(0)">Other </span> 
-                <span class="col-xs-6 col-md-3 btn" ng-class="targetIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setTargetIndex(1)">Self </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="targetIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setTargetIndex(0)">Other </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="targetIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setTargetIndex(1)">Self </span> 
             </div> 
         </div>
         <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.splitHeal && model.skillType === 'HEAL'">
@@ -36,9 +36,9 @@
                 Use Lenses of Divine Sight on Secondary Target?
             </div>
             <div class="col-xs-12 col-md-12 text-center">
-                <span class="col-xs-4 col-md-3 btn" ng-class="secondaryTargetIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSecondaryTargetIndex(0)">None </span> 
-                <span class="col-xs-4 col-md-3 btn" ng-class="secondaryTargetIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSecondaryTargetIndex(1)">Other </span> 
-                <span class="col-xs-4 col-md-3 btn" ng-class="secondaryTargetIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSecondaryTargetIndex(2)">Self </span> 
+                <span class="col-xs-4 col-md-4 btn" ng-class="secondaryTargetIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSecondaryTargetIndex(0)">None </span> 
+                <span class="col-xs-4 col-md-4 btn" ng-class="secondaryTargetIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSecondaryTargetIndex(1)">Other </span> 
+                <span class="col-xs-4 col-md-4 btn" ng-class="secondaryTargetIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSecondaryTargetIndex(2)">Self </span> 
             </div> 
         </div>
         <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="secondaryTargetIndex !== 0">
@@ -64,8 +64,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-md-12 text-center" style="margin-top:30px">
-            <button class="btn btn-primary" ng-click="useSkill(primaryHealAmount, seconaryHealAmount)" style="width:75%">
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:30px;padding:15px">
+            <button class="btn btn-primary" ng-click="useSkill(primaryHealAmount, seconaryHealAmount)" style="width:90%">
                 Cast Spell
             </button>
         </div>
