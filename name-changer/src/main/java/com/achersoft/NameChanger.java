@@ -22,6 +22,7 @@ public class NameChanger {
 
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isDirectory()) {
+                if (!listOfFiles[i].getName().equalsIgnoreCase("components") && !listOfFiles[i].getName().equalsIgnoreCase("images"))
                 renameAllFiles(listOfFiles[i]);
             }
             if (listOfFiles[i].isFile() && !listOfFiles[i].getName().contains("namechanger")) {

@@ -3,11 +3,11 @@ angular.module('main')
 .config(['$routeProvider', 'RESOURCES', function($routeProvider, RESOURCES) {
   $routeProvider
     .when('/vtd/mine', {
-        templateUrl: (RESOURCES.IS_MOBILE)?'vtd/mobile/myCharacters-@{TDCC_VERSION}.html':'vtd/desktop/myCharacters-@{TDCC_VERSION}.html',
+        templateUrl: (RESOURCES.IS_MOBILE)?'vtd/mobile/myCharacters-@{TDCC_VERSION}.html':'vtd/mobile/myCharacters-@{TDCC_VERSION}.html',
         controller: 'VtdMyCharactersCtrl'
     })
     .when('/vtd/play/:characterId', {
-        templateUrl: (RESOURCES.IS_MOBILE)?'vtd/mobile/playCharacter-@{TDCC_VERSION}.html':'vtd/desktop/playCharacter-@{TDCC_VERSION}.html',
+        templateUrl: (RESOURCES.IS_MOBILE)?'vtd/mobile/playCharacter-@{TDCC_VERSION}.html':'vtd/mobile/playCharacter-@{TDCC_VERSION}.html',
         controller: 'VtdPlayCtrl'
     });
 }])
@@ -108,7 +108,7 @@ angular.module('main')
     };
     
     $scope.rollToHit =  function() {
-        $scope.rollHit = $scope.getRandomInt(20);
+        $scope.rollHit = $scope.getRandomInt(20) + 1;
         $scope.rollDmg = 0;
         $scope.isCrit = false;
         
@@ -184,11 +184,10 @@ angular.module('main')
             damage -= $scope.characterContext.stats.drAcid;
         
         if (damage > 0) {
-            $scope.characterContext.currentHealth -= damage;
-        }
-        
-        if ($scope.characterContext.currentHealth < 1) {
-            $scope.characterContext.currentHealth = 0;
+            vtdSvc.modifyHealth($scope.characterContext.id, -1*damage).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
         }
     };
     
@@ -196,10 +195,10 @@ angular.module('main')
         this.healAmount = 0;
 
         if (+$scope.characterContext.currentHealth > 0 && +heal > 0) {
-            $scope.characterContext.currentHealth = +$scope.characterContext.currentHealth + +heal;
-
-            if (+$scope.characterContext.currentHealth > +$scope.characterContext.stats.health)
-                $scope.characterContext.currentHealth = $scope.characterContext.stats.health;
+            vtdSvc.modifyHealth($scope.characterContext.id, heal).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
         }
     };
     
@@ -213,6 +212,20 @@ angular.module('main')
     
     $scope.getRandomInt =  function(max) {
         return Math.floor(Math.random() * Math.floor(max));
+    };
+    
+    $scope.useSkill =  function(skillId, selfTarget, selfHeal, madEvoker) {
+        vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
+    $scope.unuseSkill =  function(skilId) {
+        vtdSvc.unuseSkill($scope.characterContext.id, skilId).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
     };
     
     $scope.activateBuff =  function(buff) {
@@ -267,6 +280,34 @@ angular.module('main')
             });
     };
     
+    tokenAdminSvc.modifyDifficulty = function(id, difficulty) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/difficulty/?difficulty=' + difficulty).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.modifyHealth = function(id, health) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/health/?health=' + health).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.useSkill = function(id, skillId, selfTarget, selfHeal, madEvoker) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/' + skillId + '/use/?selfTarget=' + selfTarget + '&selfHeal=' + selfHeal + '&madEvoker=' + madEvoker).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.unuseSkill = function(id, skillId) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/' + skillId + '/unuse/').catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
     tokenAdminSvc.addBuff = function(id, buff) {
         return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/buff/?buff=' + buff).catch(function(response) {
             errorDialogSvc.showError(response);
@@ -276,6 +317,13 @@ angular.module('main')
     
     tokenAdminSvc.removeBuff = function(id, buff) {
         return $http.delete(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/buff/?buff=' + buff).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.nextRoom = function(id, buff) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/next').catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });

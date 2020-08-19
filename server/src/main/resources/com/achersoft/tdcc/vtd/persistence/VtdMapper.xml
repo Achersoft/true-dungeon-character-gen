@@ -334,7 +334,7 @@
         usable_number 'usableNumber',
         min_effect 'minEffect',
         max_effect 'maxEffect'
-        FROM vtd_skill
+        FROM vtd_skills
         WHERE character_id = #{characterId}
           AND id = #{id}
     </select>
@@ -470,8 +470,8 @@
         UPDATE vtd_character SET
             health = #{currentHealth},
             roller_difficulty = #{rollerDifficulty},
-            init_bonus #{initBonus},
-            room_number #{roomNumber}
+            init_bonus = #{initBonus},
+            room_number = #{roomNumber}
         WHERE id = #{characterId}
     </insert>
     

@@ -5,7 +5,8 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             model:'=',
             characterContext:'=',
             elementId: '@',
-            heal: '&?'
+            useAbility: '&?',
+            unuseAbility: '&?'
         },
         link: function(scope) {
             scope.itemSelection = {};
@@ -71,48 +72,53 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                         if ((+scope.primaryHealAmount + +scope.seconaryHealAmount) !== totalHeal) {
                             scope.healError = true;
                         } else {
+                            var selfHeal = 0;
                             if (scope.targetIndex === 1) {
-                                scope.heal()(scope.primaryHealAmount);
+                                selfHeal = scope.primaryHealAmount;
                             }
                             if (scope.secondaryTargetIndex === 2) {
-                                scope.heal()(scope.seconaryHealAmount);
+                                selfHeal = scope.seconaryHealAmount;
                             }
-                            scope.spellCastSucess();
+                            scope.spellCastSucess(selfHeal > 0, selfHeal, false);
                         }
                     } else {
                         scope.primaryHealAmount = totalHeal;
                         scope.seconaryHealAmount = 0;
+                        var selfHeal = 0;
                         
                         if (scope.targetIndex === 1) {
-                            scope.heal()(scope.primaryHealAmount);
+                            selfHeal = scope.primaryHealAmount;
                         }
-                        scope.spellCastSucess();
+                        scope.spellCastSucess(selfHeal > 0, selfHeal, false);
                     }
                 } else if (scope.model.skillType === 'DAMAGE') {
                     var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
                     var totalDamage = scope.characterContext.stats.spellDmg + ((scope.madEvokerIndex === 1) ? 2*dmg : dmg);
+                    var madEvoker = false;
                     
                     if (scope.madEvokerIndex === 1) {
-                        scope.characterContext.currentHealth -= 10;
+                        madEvoker = true;
                     }
                     
                     scope.damage = totalDamage;
-                    scope.spellCastSucess();
+                    scope.spellCastSucess(false, 0, madEvoker);
                 } else {
-                    scope.spellCastSucess();
+                    if (scope.targetIndex === 1) {
+                        scope.spellCastSucess(true, 0, false);
+                    } else {
+                        scope.spellCastSucess(false, 0, false);
+                    }
                     scope.closeModal();
                 }
             }; 
             
-            scope.spellCastSucess = function() {
+            scope.spellCastSucess = function(selfTarget, healAmount, madEvoker) {
+                scope.useAbility()(scope.model.id, selfTarget, healAmount, madEvoker);
                 scope.spellCast = true;
-                scope.model.usedNumber++;
             };
             
             scope.unuseSkill = function() {
-                scope.model.usedNumber--;
-                if (scope.model.usedNumber < 0)
-                    scope.model.usedNumber = 0;
+                scope.unuseAbility()(scope.model.id);
                 scope.closeModal();
             };  
             

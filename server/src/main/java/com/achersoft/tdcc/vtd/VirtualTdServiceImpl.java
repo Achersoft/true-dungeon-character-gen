@@ -41,10 +41,10 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     private @Inject UserPrincipalProvider userPrincipalProvider;
 
     @Override
-    public VtdDetails getVtdCharacter(String id) {
+    public VtdDetails getVtdCharacter(String id, boolean reset) {
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
-        if (vtdDetails == null || vtdDetails.getExpires().before(new Date())) {
+        if (reset || vtdDetails == null || vtdDetails.getExpires().before(new Date())) {
             final CharacterDetails characterDetails = characterService.getCharacter(id);
 
             if (!characterDetails.isEditable())
@@ -54,9 +54,6 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             vtdMapper.deleteCharacterSkills(id);
             vtdMapper.deleteCharacterStats(id);
             vtdMapper.deleteCharacter(id);
-
-            boolean hasBarbRelic = (characterDetails.getCharacterClass() == CharacterClass.BARBARIAN) && characterDetails.getItems().stream().filter(characterItem -> characterItem.getId().equals("92c1ce81e876bc168949f61cdc1a9a33e7e52409")).count() > 0;
-            boolean hasBarbLegendary = (characterDetails.getCharacterClass() == CharacterClass.BARBARIAN) && characterDetails.getItems().stream().filter(characterItem -> characterItem.getId().equals("0076ceef0f905dda175de13222ce34029a5873f2")).count() > 0;
 
             final List<CharacterSkill> skills = vtdMapper.getSkills(characterDetails.getCharacterClass(), characterDetails.getStats().getLevel());
             if (skills != null) {
@@ -71,6 +68,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final List<CharacterSkill> characterSkills = Optional.ofNullable(vtdMapper.getCharacterSkills(id)).orElse(new ArrayList<>());
 
             if (characterDetails.getCharacterClass() == CharacterClass.BARBARIAN) {
+                boolean hasBarbRelic = (characterDetails.getCharacterClass() == CharacterClass.BARBARIAN) && characterDetails.getItems().stream().filter(characterItem -> characterItem.getItemId() != null && characterItem.getItemId().equals("92c1ce81e876bc168949f61cdc1a9a33e7e52409")).count() > 0;
+                boolean hasBarbLegendary = (characterDetails.getCharacterClass() == CharacterClass.BARBARIAN) && characterDetails.getItems().stream().filter(characterItem -> characterItem.getItemId() != null && characterItem.getItemId().equals("0076ceef0f905dda175de13222ce34029a5873f2")).count() > 0;
+
                 if (hasBarbRelic || hasBarbLegendary) {
                     characterSkills.stream().filter(characterSkill -> characterSkill.getName().contains("Rage")).forEach(skill -> {
                         skill.setUsableNumber(2);
@@ -157,27 +157,77 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
-    public VtdDetails useSkill(String id, String skillId, boolean selfTarget) {
-        final CharacterSkill skill = vtdMapper.getCharacterSkill(id, skillId);
+    public VtdDetails modifyDifficulty(String id, int difficulty) {
+        final VtdDetails vtdDetails = calculateStats(id);
 
-        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(skill.getUserId())))
+        vtdDetails.setRollerDifficulty(difficulty);
+        vtdMapper.updateCharacter(vtdDetails);
+
+        return vtdDetails;
+    }
+
+    @Override
+    public VtdDetails modifyHealth(String id, int health) {
+        final VtdDetails vtdDetails = calculateStats(id);
+
+        vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + health);
+        if (vtdDetails.getCurrentHealth() > vtdDetails.getStats().getHealth())
+            vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth());
+        else if (vtdDetails.getCurrentHealth() < 0)
+            vtdDetails.setCurrentHealth(0);
+
+        vtdMapper.updateCharacter(vtdDetails);
+
+        return vtdDetails;
+    }
+
+    @Override
+    public VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker) {
+        final CharacterSkill skill = vtdMapper.getCharacterSkill(skillId, id);
+        final VtdDetails character = vtdMapper.getCharacter(id);
+
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(character.getUserId())))
             throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
 
         skill.setUsedNumber(skill.getUsedNumber() + 1);
         vtdMapper.updateCharacterSkill(skill);
 
-        if (skill.getSkillType() == SkillType.BUFF && (skill.getSkillTarget() == SkillTarget.SELF || skill.getSkillTarget() == SkillTarget.ANY || skill.getSkillTarget() == SkillTarget.PARTY) && selfTarget) {
+        if (skill.getSkillType() == SkillType.BUFF && (skill.getSkillTarget() == SkillTarget.SELF || skill.getSkillTarget() == SkillTarget.PARTY || (skill.getSkillTarget() == SkillTarget.ANY && selfTarget))) {
             return addBuff(id, Buff.getBuff(skill.getName()));
+        } else if (skill.getSkillType() == SkillType.HEAL && selfTarget && selfHeal > 0) {
+            final VtdDetails vtdDetails = calculateStats(id);
+
+            vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + selfHeal);
+            if (vtdDetails.getCurrentHealth() > vtdDetails.getStats().getHealth())
+                vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth());
+
+            vtdMapper.updateCharacter(vtdDetails);
+
+            return vtdDetails;
+        } else if ((skill.getSkillType() == SkillType.DAMAGE || skill.getSkillType() == SkillType.DAMAGE_RANGE_AC_15) && madEvoker) {
+            final VtdDetails vtdDetails = calculateStats(id);
+
+            if (vtdDetails.getCharacterClass() == CharacterClass.ELF_WIZARD || vtdDetails.getCharacterClass() == CharacterClass.WIZARD) {
+                vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() - 10);
+                if (vtdDetails.getCurrentHealth() < 0)
+                    vtdDetails.setCurrentHealth(0);
+
+                vtdMapper.updateCharacter(vtdDetails);
+            }
+
+            return vtdDetails;
         }
+
 
         return calculateStats(id);
     }
 
     @Override
     public VtdDetails unuseSkill(String id, String skillId) {
-        final CharacterSkill skill = vtdMapper.getCharacterSkill(id, skillId);
+        final CharacterSkill skill = vtdMapper.getCharacterSkill(skillId, id);
+        final VtdDetails character = vtdMapper.getCharacter(id);
 
-        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(skill.getUserId())))
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(character.getUserId())))
             throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
 
         if (skill.getUsedNumber() > 0) {
@@ -215,7 +265,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
         if (vtdDetails == null)
-            vtdDetails = getVtdCharacter(id);
+            vtdDetails = getVtdCharacter(id, false);
         if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
             throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
 
@@ -236,24 +286,14 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
     @Override
     public void resetCharacter(String id) {
-        VtdDetails vtdDetails = vtdMapper.getCharacter(id);
-
-        if(vtdDetails != null && !(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
-            throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
-
-        if (vtdDetails != null) {
-            vtdMapper.deleteCharacterBuffs(id);
-            vtdMapper.deleteCharacterSkills(id);
-            vtdMapper.deleteCharacterStats(id);
-            vtdMapper.deleteCharacter(id);
-        }
+        getVtdCharacter(id, true);
     }
 
     private VtdDetails calculateStats(String id) {
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
         if (vtdDetails == null)
-            vtdDetails = getVtdCharacter(id);
+            vtdDetails = getVtdCharacter(id, false);
 
         vtdDetails.setBuffs(vtdMapper.getCharacterBuffs(vtdDetails.getCharacterId()));
         vtdDetails.setCharacterSkills(vtdMapper.getCharacterSkills(vtdDetails.getCharacterId()));

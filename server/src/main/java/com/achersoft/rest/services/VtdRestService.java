@@ -46,7 +46,27 @@ public class VtdRestService {
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})	
     public VtdDetailsDTO getVtdCharacter(@PathParam("id") String id) throws Exception {
-        return VtdDetailsDTO.fromDAO(virtualTdService.getVtdCharacter(id));
+        return VtdDetailsDTO.fromDAO(virtualTdService.getVtdCharacter(id, false));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
+    @Path("/{id}/difficulty")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO modifyDifficulty(@PathParam("id") String id,
+                                          @QueryParam("difficulty") int difficulty) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.modifyDifficulty(id, difficulty));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
+    @Path("/{id}/health")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO modifyHealth(@PathParam("id") String id,
+                                      @QueryParam("health") int health) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.modifyHealth(id, health));
     }
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
@@ -56,8 +76,10 @@ public class VtdRestService {
     @Consumes({MediaType.APPLICATION_JSON})
     public VtdDetailsDTO useSkill(@PathParam("id") String id,
                                   @PathParam("skillId") String skillId,
-                                  @QueryParam("selfTarget") @NotNull @NotEmpty boolean selfTarget) throws Exception {
-        return VtdDetailsDTO.fromDAO(virtualTdService.useSkill(id, skillId, selfTarget));
+                                  @QueryParam("selfTarget") boolean selfTarget,
+                                  @QueryParam("selfHeal") int selfHeal,
+                                  @QueryParam("madEvoker") boolean madEvoker) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.useSkill(id, skillId, selfTarget, selfHeal, madEvoker));
     }
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
