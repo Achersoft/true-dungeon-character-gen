@@ -42,7 +42,11 @@
     
     <insert id="addTokenDetails">
         INSERT INTO token_details ( id,
-                                    damage,
+                                    damage_range,
+                                    damage_explode_range,
+                                    explode _condition,
+                                    explode_text,
+                                    crit_min,
                                     str,
                                     dex,
                                     con,
@@ -137,7 +141,11 @@
                                     once_game,
                                     special_text)
                            VALUES ( #{id},
-                                    #{damage},
+                                    #{damageRange},
+                                    #{damageExplodeRange},
+                                    #{weaponExplodeCondition},
+                                    #{weaponExplodeText},
+                                    #{critMin},
                                     #{str},
                                     #{dex},
                                     #{con},
@@ -256,7 +264,11 @@
     
     <update id="editTokenDetails">      
         UPDATE token_details SET
-            damage = #{damage},
+            damage_range = #{damageRange},
+            damage_explode_range = #{damageExplodeRange},
+            explode_condition = #{weaponExplodeCondition},
+            explode_text = #{weaponExplodeText},
+            crit_min = #{critMin},
             str = #{str},
             dex = #{dex},
             con = #{con},
@@ -355,7 +367,11 @@
 
     <select id="search" resultType="com.achersoft.tdcc.token.admin.dao.TokenFullDetails"> 
          SELECT t.id 'id',
-                td.damage 'damage',
+                td.damage_range 'damageRange',
+                td.damage_explode_range 'damageExplodeRange',
+                td.explode_condition 'weaponExplodeCondition',
+                td.explode_text 'weaponExplodeText',
+                td.crit_min 'critMin',
                 t.name 'name',
                 t.text 'text',
                 t.rarity 'rarity',
@@ -475,7 +491,11 @@
     
     <select id="getTokenDetails" resultType="com.achersoft.tdcc.token.admin.dao.TokenFullDetails"> 
          SELECT t.id 'id',
-                td.damage 'damage',
+                td.damage_range 'damageRange',
+                td.damage_explode_range 'damageExplodeRange',
+                td.explode_condition 'weaponExplodeCondition',
+                td.explode_text 'weaponExplodeText',
+                td.crit_min 'critMin',
                 t.name 'name',
                 t.text 'text',
                 t.rarity 'rarity',

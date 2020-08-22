@@ -61,6 +61,26 @@ public class VtdRestService {
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @POST
+    @Path("/{id}/bonus/init")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO setBonusInit(@PathParam("id") String id,
+                                      @QueryParam("init") int init) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.setBonusInit(id, init));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
+    @Path("/{id}/bonus/health")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO setBonusHealth(@PathParam("id") String id,
+                                        @QueryParam("health") int health) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.setBonusHealth(id, health));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
     @Path("/{id}/health")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})

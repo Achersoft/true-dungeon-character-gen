@@ -4,40 +4,26 @@ import com.achersoft.exception.InvalidDataException;
 import com.achersoft.security.providers.UserPrincipalProvider;
 import com.achersoft.tdcc.character.CharacterService;
 import com.achersoft.tdcc.character.dao.*;
-import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.character.persistence.CharacterMapper;
 import com.achersoft.tdcc.enums.*;
-import com.achersoft.tdcc.party.dao.SelectableCharacters;
-import com.achersoft.tdcc.party.persistence.PartyMapper;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
-import com.achersoft.tdcc.token.persistence.TokenMapper;
 import com.achersoft.tdcc.vtd.dao.CharacterSkill;
 import com.achersoft.tdcc.vtd.dao.VtdBuff;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
 import com.achersoft.tdcc.vtd.persistence.VtdMapper;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.pdf.*;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.StreamingOutput;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 public class VirtualTdServiceImpl implements VirtualTdService {
     
     private @Inject CharacterMapper mapper;
     private @Inject CharacterService characterService;
     private @Inject VtdMapper vtdMapper;
+    private @Inject TokenAdminMapper tokenAdminMapper;
     private @Inject UserPrincipalProvider userPrincipalProvider;
 
     @Override
@@ -66,12 +52,33 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             }
 
             final List<CharacterSkill> characterSkills = Optional.ofNullable(vtdMapper.getCharacterSkills(id)).orElse(new ArrayList<>());
+            final AtomicReference<TokenFullDetails> mainHand = new AtomicReference<>();
+            final AtomicReference<TokenFullDetails> offHand = new AtomicReference<>();
+            final AtomicReference<TokenFullDetails> rangeMainHand = new AtomicReference<>();
+            final AtomicReference<TokenFullDetails> rangeOffHand = new AtomicReference<>();
+            final AtomicBoolean hasBarbRelic = new AtomicBoolean(false);
+            final AtomicBoolean hasBarbLegendary = new AtomicBoolean(false);
+
+            for (CharacterItem characterItem : characterDetails.getItems()) {
+                if (characterItem != null && characterItem.getItemId() != null) {
+                    if (characterItem.getSlot() == Slot.MAINHAND)
+                        mainHand.set(tokenAdminMapper.getTokenDetails(characterItem.getItemId()));
+                    else if (characterItem.getSlot() == Slot.OFFHAND)
+                        offHand.set(tokenAdminMapper.getTokenDetails(characterItem.getItemId()));
+                    else if (characterItem.getSlot() == Slot.RANGE_MAINHAND)
+                        rangeMainHand.set(tokenAdminMapper.getTokenDetails(characterItem.getItemId()));
+                    else if (characterItem.getSlot() == Slot.RANGE_OFFHAND)
+                        rangeOffHand.set(tokenAdminMapper.getTokenDetails(characterItem.getItemId()));
+
+                    if (characterItem.getItemId().equals("92c1ce81e876bc168949f61cdc1a9a33e7e52409"))
+                        hasBarbRelic.set(true);
+                    else if (characterItem.getItemId().equals("0076ceef0f905dda175de13222ce34029a5873f2"))
+                        hasBarbLegendary.set(true);
+                }
+            }
 
             if (characterDetails.getCharacterClass() == CharacterClass.BARBARIAN) {
-                boolean hasBarbRelic = (characterDetails.getCharacterClass() == CharacterClass.BARBARIAN) && characterDetails.getItems().stream().filter(characterItem -> characterItem.getItemId() != null && characterItem.getItemId().equals("92c1ce81e876bc168949f61cdc1a9a33e7e52409")).count() > 0;
-                boolean hasBarbLegendary = (characterDetails.getCharacterClass() == CharacterClass.BARBARIAN) && characterDetails.getItems().stream().filter(characterItem -> characterItem.getItemId() != null && characterItem.getItemId().equals("0076ceef0f905dda175de13222ce34029a5873f2")).count() > 0;
-
-                if (hasBarbRelic || hasBarbLegendary) {
+                if (hasBarbRelic.get() || hasBarbLegendary.get()) {
                     characterSkills.stream().filter(characterSkill -> characterSkill.getName().contains("Rage")).forEach(skill -> {
                         skill.setUsableNumber(2);
                         vtdMapper.updateCharacterSkill(skill);
@@ -96,7 +103,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             .usedNumber(0)
                             .build();
 
-                    if (hasBarbRelic) {
+                    if (hasBarbRelic.get()) {
                         fury.setUsableNumber(1);
                         vtdMapper.addCharacterSkill(fury);
                     } else {
@@ -120,21 +127,24 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .notes(characterDetails.getNotes())
                     .characterSkills(characterSkills)
                     .buffs(new ArrayList<>())
-                    .meleeDmgRange("1,2")
-                    .meleeOffhandDmgRange("1,2")
-                    .meleePolyDmgRange("1,2")
-                    .rangeDmgRange("1,2")
-                    .rangeOffhandDmgRange("1,2")
-                    .meleeWeaponExplodeRange("2")
-                    .rangeWeaponExplodeRange("2")
-                    .meleeWeaponExplodeEffect(WeaponExplodeEffect.NONE)
-                    .rangeWeaponExplodeEffect(WeaponExplodeEffect.NONE)
-                    .meleeWeaponExplodeText("test")
-                    .rangeWeaponExplodeText("test")
-                    .meleeCritMin(20)
-                    .meleeOffhandCritMin(20)
+                    .meleeDmgRange((mainHand.get() != null) ? mainHand.get().getDamageRange() : null)
+                    .meleeOffhandDmgRange((offHand.get() != null) ? offHand.get().getDamageRange() : null)
+                   // .meleePolyDmgRange((mainHand.get() != null) ? mainHand.get().getDamageRange() : null)
+                    .rangeDmgRange((rangeMainHand.get() != null) ? rangeMainHand.get().getDamageRange() : null)
+                    .rangeOffhandDmgRange((rangeOffHand.get() != null) ? rangeOffHand.get().getDamageRange() : null)
+                    .meleeWeaponExplodeRange((mainHand.get() != null) ? mainHand.get().getDamageExplodeRange() : null)
+                    .meleeOffhandWeaponExplodeRange((offHand.get() != null) ? offHand.get().getDamageExplodeRange() : null)
+                    .rangeWeaponExplodeRange((rangeMainHand.get() != null) ? rangeMainHand.get().getDamageExplodeRange() : null)
+                    .meleeWeaponExplodeEffect((mainHand.get() != null) ? mainHand.get().getWeaponExplodeCondition() : null)
+                    .meleeOffhandWeaponExplodeEffect((offHand.get() != null) ? offHand.get().getWeaponExplodeCondition() : null)
+                    .rangeWeaponExplodeEffect((rangeMainHand.get() != null) ? rangeMainHand.get().getWeaponExplodeCondition() : null)
+                    .meleeWeaponExplodeText((mainHand.get() != null) ? mainHand.get().getWeaponExplodeText() : null)
+                    .meleeOffhandWeaponExplodeText((offHand.get() != null) ? offHand.get().getWeaponExplodeText() : null)
+                    .rangeWeaponExplodeText((rangeMainHand.get() != null) ? rangeMainHand.get().getWeaponExplodeText() : null)
+                    .meleeCritMin((mainHand.get() != null) ? mainHand.get().getCritMin() : 20)
+                    .meleeOffhandCritMin((offHand.get() != null) ? offHand.get().getCritMin() : 20)
                     .meleePolyCritMin(20)
-                    .rangeCritMin(20)
+                    .rangeCritMin((rangeMainHand.get() != null) ? rangeMainHand.get().getCritMin() : 20)
                     .meleeSneakCritMin(20)
                     .rangeSneakCritMin(20)
                     .isSneakCanCrit(true)
@@ -161,6 +171,26 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         final VtdDetails vtdDetails = calculateStats(id);
 
         vtdDetails.setRollerDifficulty(difficulty);
+        vtdMapper.updateCharacter(vtdDetails);
+
+        return vtdDetails;
+    }
+
+    @Override
+    public VtdDetails setBonusInit(String id, int init) {
+        final VtdDetails vtdDetails = calculateStats(id);
+
+        vtdDetails.setInitBonus(init);
+        vtdMapper.updateCharacter(vtdDetails);
+
+        return vtdDetails;
+    }
+
+    @Override
+    public VtdDetails setBonusHealth(String id, int health) {
+        final VtdDetails vtdDetails = calculateStats(id);
+
+        vtdDetails.setHealthBonus(health);
         vtdMapper.updateCharacter(vtdDetails);
 
         return vtdDetails;

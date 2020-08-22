@@ -1,14 +1,14 @@
 package com.achersoft.tdcc.enums;
 
-public enum WeaponExplodeEffect {
+public enum WeaponExplodeCondition {
     NONE("None"),
-    INSTANT_KILL("Self"),
-    DAMAGE("Party"),
-    HEAL("Monster");
+    TRIPPLE_FIRST_20("Natural 20"),
+    NATURAL_20("Natural 20"),
+    CRIT("Crit");
 
     private  final String displayText;
 
-    WeaponExplodeEffect(String displayText) {
+    WeaponExplodeCondition(String displayText) {
         this.displayText = displayText;
     }
 

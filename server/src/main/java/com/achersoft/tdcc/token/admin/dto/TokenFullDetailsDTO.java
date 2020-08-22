@@ -1,9 +1,6 @@
 package com.achersoft.tdcc.token.admin.dto;
 
-import com.achersoft.tdcc.enums.ConditionalUse;
-import com.achersoft.tdcc.enums.Rarity;
-import com.achersoft.tdcc.enums.Slot;
-import com.achersoft.tdcc.enums.CharacterClass;
+import com.achersoft.tdcc.enums.*;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
@@ -28,6 +25,10 @@ public class TokenFullDetailsDTO {
     public @NotNull Slot slot;
     public @NotNull List<CharacterClass> usableBy;
     public String damageRange;
+    public String damageExplodeRange;
+    public WeaponExplodeCondition weaponExplodeCondition;
+    public String weaponExplodeText;
+    public Integer critMin;
     public Integer str;
     public Integer dex;
     public Integer con;
@@ -130,6 +131,10 @@ public class TokenFullDetailsDTO {
                 .rarity(tokenFullDetails.getRarity())
                 .slot(tokenFullDetails.getSlot())
                 .damageRange(tokenFullDetails.getDamageRange())
+                .damageExplodeRange(tokenFullDetails.getDamageExplodeRange())
+                .weaponExplodeCondition(tokenFullDetails.getWeaponExplodeCondition())
+                .weaponExplodeText(tokenFullDetails.getWeaponExplodeText())
+                .critMin(tokenFullDetails.getCritMin())
                 .str(tokenFullDetails.getStr())
                 .dex(tokenFullDetails.getDex())
                 .con(tokenFullDetails.getCon())
@@ -271,6 +276,10 @@ public class TokenFullDetailsDTO {
                 .rarity(rarity)
                 .slot(slot)
                 .damageRange(damageRange)
+                .damageExplodeRange(damageExplodeRange)
+                .weaponExplodeCondition(weaponExplodeCondition)
+                .weaponExplodeText(weaponExplodeText)
+                .critMin(critMin)
                 .str(str)
                 .dex(dex)
                 .con(con)

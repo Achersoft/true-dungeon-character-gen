@@ -2,8 +2,8 @@
     <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
     <div class="col-xs-12 col-md-12 text-center" style="margin:0px;padding:15px">
         <span class="col-xs-4 col-md-4 btn" ng-class="defendIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDefendIndex(0)">Defend </span> 
-        <span class="col-xs-4 col-md-4 btn" ng-class="defendIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDefendIndex(1)">Save </span> 
         <span class="col-xs-4 col-md-4 btn" ng-class="defendIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDefendIndex(2)">Heal </span> 
+        <span class="col-xs-4 col-md-4 btn" ng-class="defendIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDefendIndex(1)">Save </span> 
     </div>
     <div class="col-xs-12 text-center" ng-show="defendIndex === 0">  
         <div class="col-xs-12 col-md-12 text-left" style="margin-top:3px;margin-bottom:2px">
@@ -54,9 +54,19 @@
             <span class="col-xs-4 col-md-4 btn" ng-class="saveIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSaveIndex(2)">Will </span> 
         </div>
         <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
+        <div class="col-xs-12 col-sm-12 text-center" style="font-size:24px" ng-show="saveIndex === 0">
+            <strong>Fortitude Save Bonus: </strong> {{characterContext.stats.fort}}
+        </div>
+        <div class="col-xs-12 col-sm-12 text-center" style="font-size:24px" ng-show="saveIndex === 1">
+            <strong>Reflex Save Bonus: </strong> {{characterContext.stats.reflex}}
+        </div>
+        <div class="col-xs-12 col-sm-12 text-center" style="font-size:24px" ng-show="saveIndex === 2">
+            <strong>Will Save Bonus: </strong> {{characterContext.stats.will}}
+        </div>
+        <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
         <center>
             <span ng-click="rollToSave()">  
-                <img src="images/d20.png" alt="" style="padding:0px;height:150px"/>
+                <img src="images/d20.png" alt="" style="padding:0px;height:100px"/>
             </span>
         </center> 
         <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
@@ -64,7 +74,7 @@
             <strong>FAILED</strong> 
         </div>
         <div class="col-xs-12 text-center" ng-show="rollSave > 1" style="font-size: 24px">
-            <strong>Save:</strong> {{rollSave}}
+            <strong>Save:</strong> {{rollSave}}({{rollSaveNatural}})
         </div>
     </div>
     <div class="col-xs-12 text-center" ng-show="defendIndex === 2">

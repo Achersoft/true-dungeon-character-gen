@@ -4,9 +4,8 @@ import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.enums.Buff;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.enums.SkillLevel;
-import com.achersoft.tdcc.enums.WeaponExplodeEffect;
+import com.achersoft.tdcc.enums.WeaponExplodeCondition;
 import com.achersoft.tdcc.vtd.dao.CharacterSkill;
-import com.achersoft.tdcc.vtd.dao.VtdBuff;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +28,7 @@ public class VtdDetailsDTO {
     public Integer currentHealth;
     public int rollerDifficulty;
     public int initBonus;
+    public int healthBonus;
     public int roomNumber;
     public List<String> alwaysInEffect;
     public List<String> oncePerRound;
@@ -49,10 +49,13 @@ public class VtdDetailsDTO {
     public List<Integer> rangeDmgRange;
     public List<Integer> rangeOffhandDmgRange;
     public List<Integer> meleeWeaponExplodeRange;
+    public List<Integer> meleeOffhandWeaponExplodeRange;
     public List<Integer> rangeWeaponExplodeRange;
-    public WeaponExplodeEffect meleeWeaponExplodeEffect;
-    public WeaponExplodeEffect rangeWeaponExplodeEffect;
+    public WeaponExplodeCondition meleeWeaponExplodeEffect;
+    public WeaponExplodeCondition meleeOffhandWeaponExplodeEffect;
+    public WeaponExplodeCondition rangeWeaponExplodeEffect;
     public String meleeWeaponExplodeText;
+    public String meleeOffhandWeaponExplodeText;
     public String rangeWeaponExplodeText;
     public Integer meleeCritMin;
     public Integer meleeOffhandCritMin;
@@ -75,6 +78,7 @@ public class VtdDetailsDTO {
                 .stats(dao.getStats())
                 .rollerDifficulty(dao.getRollerDifficulty())
                 .initBonus(dao.getInitBonus())
+                .healthBonus(dao.getHealthBonus())
                 .roomNumber(dao.getRoomNumber())
                 .alwaysInEffect(new ArrayList<>())
                 .oncePerRound(new ArrayList<>())
@@ -93,10 +97,13 @@ public class VtdDetailsDTO {
                 .rangeDmgRange(new ArrayList<>())
                 .rangeOffhandDmgRange(new ArrayList<>())
                 .meleeWeaponExplodeRange(new ArrayList<>())
+                .meleeOffhandDmgRange(new ArrayList<>())
                 .rangeWeaponExplodeRange(new ArrayList<>())
                 .meleeWeaponExplodeEffect(dao.getMeleeWeaponExplodeEffect())
+                .meleeOffhandWeaponExplodeEffect(dao.getMeleeOffhandWeaponExplodeEffect())
                 .rangeWeaponExplodeEffect(dao.getRangeWeaponExplodeEffect())
                 .meleeWeaponExplodeText(dao.getMeleeWeaponExplodeText())
+                .meleeOffhandWeaponExplodeText(dao.getMeleeOffhandWeaponExplodeText())
                 .rangeWeaponExplodeText(dao.getRangeWeaponExplodeText())
                 .meleeCritMin(dao.getMeleeCritMin())
                 .meleeOffhandCritMin(dao.getMeleeOffhandCritMin())
@@ -177,6 +184,9 @@ public class VtdDetailsDTO {
 
         if (dao.getMeleeWeaponExplodeRange() != null && !dao.getMeleeWeaponExplodeRange().isEmpty())
             build.setMeleeWeaponExplodeRange(Arrays.stream(dao.getMeleeWeaponExplodeRange().split(",")).map(Integer::valueOf).collect(Collectors.toList()));
+
+        if (dao.getMeleeOffhandWeaponExplodeRange() != null && !dao.getMeleeOffhandWeaponExplodeRange().isEmpty())
+            build.setMeleeOffhandDmgRange(Arrays.stream(dao.getMeleeOffhandWeaponExplodeRange().split(",")).map(Integer::valueOf).collect(Collectors.toList()));
 
         if (dao.getRangeWeaponExplodeRange() != null && !dao.getRangeWeaponExplodeRange().isEmpty())
             build.setRangeWeaponExplodeRange(Arrays.stream(dao.getRangeWeaponExplodeRange().split(",")).map(Integer::valueOf).collect(Collectors.toList()));

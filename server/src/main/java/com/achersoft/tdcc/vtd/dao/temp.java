@@ -1,16 +1,14 @@
 package com.achersoft.tdcc.vtd.dao;
 
-import com.achersoft.tdcc.character.dao.CharacterNote;
 import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.enums.CharacterClass;
-import com.achersoft.tdcc.enums.WeaponExplodeEffect;
+import com.achersoft.tdcc.enums.WeaponExplodeCondition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Builder
 @Data
@@ -34,8 +32,8 @@ public class temp {
     String rangeOffhandDmgRange;
     String meleeWeaponExplodeRange;
     String rangeWeaponExplodeRange;
-    WeaponExplodeEffect meleeWeaponExplodeEffect;
-    WeaponExplodeEffect rangeWeaponExplodeEffect;
+    WeaponExplodeCondition meleeWeaponExplodeEffect;
+    WeaponExplodeCondition rangeWeaponExplodeEffect;
     String meleeWeaponExplodeText;
     String rangeWeaponExplodeText;
     int meleeCritMin;

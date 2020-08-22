@@ -471,6 +471,7 @@
             health = #{currentHealth},
             roller_difficulty = #{rollerDifficulty},
             init_bonus = #{initBonus},
+            health_bonus = #{healthBonus},
             room_number = #{roomNumber}
         WHERE id = #{characterId}
     </insert>

@@ -37,25 +37,29 @@
     <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
     <center>
         <span ng-click="rollToHit()">  
-            <img src="images/d20.png" alt="" style="padding:0px;height:150px"/>
+            <img src="images/d20.png" alt="" style="padding:0px;height:100px"/>
         </span>
     </center> 
     <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
-    <div class="col-xs-12 col-sm-12 text-center text-success" style="margin-bottom:15px;font-size:30px" ng-show="isCrit === true">
+    <div class="col-xs-12 col-sm-12 text-center text-success" style="margin-bottom:15px;font-size:30px" ng-show="critDmg > 0">
         <strong>Critical!!!</strong> 
     </div>
     <div class="col-xs-12 col-sm-12 text-center text-danger" style="margin-bottom:15px;font-size:30px" ng-show="rollHit === 1">
         <strong>Miss</strong> 
     </div>
-    <div class="col-xs-12 text-center" ng-show="rollHit > 0" style="font-size: 24px">
-        <div class="col-xs-1 text-center"></div>
-        <div class="col-xs-5 text-center">
-            <strong>Hit:</strong> {{rollHit}}
+    <div class="col-xs-12 col-sm-12 text-center" ng-show="rollHit > 1" style="font-size: 24px">
+        <div class="col-xs-6 col-sm-6 text-center">
+            <strong>Hit:</strong> {{rollHit}}({{rollHitNatural}})
         </div>
-        <div class="col-xs-5 text-center">
-            <strong>Damage:</strong> {{rollDmg}} 
+        <div class="col-xs-6 col-sm-6 text-center">
+            <strong>Damage:</strong> {{rollDmg}}({{rollDmgNatural}}) 
         </div>
-        <div class="col-xs-1 text-center"></div>
+        <div class="col-xs-12 col-sm-12 text-center" ng-show="critDmg > 0">
+            <strong>Critical Damage:</strong> {{critDmg}}
+        </div>
+        <div class="col-xs-12 col-sm-12 text-center" ng-show="rollDmgExplosionText !== null">
+            <strong>Weapon Effect:</strong> {{rollDmgExplosionText}}
+        </div>
     </div>
     <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
 </div>

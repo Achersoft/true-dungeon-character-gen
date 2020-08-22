@@ -3,6 +3,7 @@ package com.achersoft.tdcc.token.admin.dao;
 import com.achersoft.tdcc.enums.ConditionalUse;
 import com.achersoft.tdcc.enums.Rarity;
 import com.achersoft.tdcc.enums.Slot;
+import com.achersoft.tdcc.enums.WeaponExplodeCondition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,10 @@ public class TokenFullDetails {
     private Rarity rarity;
     private Slot slot;
     private String damageRange;
+    private String damageExplodeRange;
+    private WeaponExplodeCondition weaponExplodeCondition;
+    private String weaponExplodeText;
+    private int critMin;
     private boolean usableByBarbarian;
     private boolean usableByBard;
     private boolean usableByCleric;

@@ -2,10 +2,25 @@
     <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px">
         <h4 style="border-bottom:1pt solid black;"><strong>Roller Difficulty</strong></h4>
         <div  class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:15px">
-            <span class="col-xs-6 col-md-3 btn" ng-class="difficultyIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDifficultyIndex(0)">Default </span> 
-            <span class="col-xs-6 col-md-3 btn" ng-class="difficultyIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDifficultyIndex(1)">Hard </span> 
-            <span class="col-xs-6 col-md-3 btn" ng-class="difficultyIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDifficultyIndex(2)">Harder </span> 
-            <span class="col-xs-6 col-md-3 btn" ng-class="difficultyIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDifficultyIndex(3)">Certain Death </span> 
+            <span class="col-xs-6 col-md-3 btn" ng-class="characterContext.rollerDifficulty === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDifficultyIndex(0)">Default </span> 
+            <span class="col-xs-6 col-md-3 btn" ng-class="characterContext.rollerDifficulty === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDifficultyIndex(1)">Hard </span> 
+            <span class="col-xs-6 col-md-3 btn" ng-class="characterContext.rollerDifficulty === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDifficultyIndex(2)">Harder </span> 
+            <span class="col-xs-6 col-md-3 btn" ng-class="characterContext.rollerDifficulty === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDifficultyIndex(3)">Certain Death </span> 
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px">
+        <h4 style="border-bottom:1pt solid black;"><strong>Party Bonuses</strong></h4>
+        <div class="col-xs-12 col-md-12 text-left" style="margin-bottom: 2px">
+            Party Initiative Bonus:
+        </div>
+        <div class="col-xs-12 col-md-12">
+            <input class="form-control" type="number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" ng-model="characterContext.initBonus" ng-change="setInitBonus(characterContext.initBonus)"/>
+        </div>
+        <div class="col-xs-12 col-md-12 text-left" style="margin-top:10px;margin-bottom: 2px">
+            Party Health Bonus:
+        </div>
+        <div class="col-xs-12 col-md-12">
+            <input class="form-control" type="number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" ng-model="characterContext.healthBonus" ng-change="setHealthBonus(characterContext.healthBonus)"/>
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px">

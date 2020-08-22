@@ -21,6 +21,10 @@ angular.module('main')
 }])
 
 .controller('VtdPlayCtrl', ['$scope', 'VtdSvc', 'VtdState', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', function ($scope, vtdSvc, vtdState, RESOURCES, $routeParams, $route, confirmDialogSvc) {
+    $scope.defaultRoller = [11,12,13,14,15,16,17,18,19,20];
+    $scope.hardRoller = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,11,12,13,14,15,16,17,18,19,20];
+    $scope.harderRoller = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+    $scope.deathRoller = [1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
     $scope.tabIndex = 0;
     $scope.rollerIndex = 0;
     $scope.attackIndex = 0;
@@ -31,8 +35,12 @@ angular.module('main')
     $scope.damageModifierIndex = 0;
     $scope.rollHit = 0;
     $scope.rollDmg = 0;
+    $scope.rollHitNatural = 0;
+    $scope.rollDmgNatural = 0;
+    $scope.rollDmgExplosionText = null;
     $scope.rollSave = 0;
-    $scope.isCrit = false;
+    $scope.rollSaveNatural = 0;
+    $scope.critDmg = 0;
     $scope.damageTaken = -1;
     $scope.damageAmount = 0;
     $scope.healAmount = 0;
@@ -52,21 +60,29 @@ angular.module('main')
         $scope.attackIndex = index;
         $scope.rollHit = 0;
         $scope.rollDmg = 0;
-        $scope.isCrit = false;
+        $scope.critDmg = 0;
+        $scope.rollHitNatural = 0;
+        $scope.rollDmgNatural = 0;
+        $scope.rollDmgExplosionText = null;
     };
     
     $scope.setDefendIndex =  function(index) {
         $scope.defendIndex = index;
         $scope.rollSave = 0;
+        $scope.rollSaveNatural = 0;
     };
     
     $scope.setSaveIndex =  function(index) {
         $scope.saveIndex = index;
         $scope.rollSave = 0;
+        $scope.rollSaveNatural = 0;
     };
     
     $scope.setDifficultyIndex =  function(index) {
-        $scope.difficultyIndex = index;
+        vtdSvc.modifyDifficulty($scope.characterContext.id, index).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });  
     };
     
     $scope.setDamageIndex =  function(index) {
@@ -108,41 +124,69 @@ angular.module('main')
     };
     
     $scope.rollToHit =  function() {
-        $scope.rollHit = $scope.getRandomInt(20) + 1;
+        $scope.rollHit = 0;
         $scope.rollDmg = 0;
-        $scope.isCrit = false;
+        $scope.critDmg = 0;
+        $scope.rollHitNatural = 0;
+        $scope.rollDmgNatural = 0;
+        $scope.rollDmgExplosionText = null;
+        $scope.rollHitNatural = $scope.getRoll();
+        $scope.rollHit = $scope.rollHitNatural;
         
         if ($scope.rollHit !== 1) {
             if ($scope.attackIndex === 2) {
-                if ($scope.rollHit > $scope.characterContext.meleePolyCritMin)
-                    $scope.isCrit = true;
                 $scope.rollHit += $scope.characterContext.stats.meleePolyHit;
                 $scope.rollDmg = $scope.characterContext.stats.meleePolyDmg;
                 if ($scope.characterContext.meleePolyDmgRange) {
                     
                 }
+                if ($scope.rollHitNatural >= $scope.characterContext.meleePolyCritMin) {
+                    if ($scope.characterContext.characterClass === 'DWARF_FIGHTER' && $scope.characterContext.stats.level === 5) {
+                        $scope.critDmg = $scope.rollDmg*3;
+                    } else
+                        $scope.critDmg = $scope.rollDmg*2;
+                }
             } else if ($scope.attackIndex === 1) {
-                if ($scope.rollHit > $scope.characterContext.rangeCritMin)
-                    $scope.isCrit = true;
                 $scope.rollHit += $scope.characterContext.stats.rangeHit;
                 $scope.rollDmg = $scope.characterContext.stats.rangeDmg;
-                if ($scope.characterContext.rangeDmgRange) {
+                if ($scope.characterContext.rangeDmgRange && $scope.characterContext.rangeDmgRange.length > 0) {
+                    $scope.rollDmgNatural = $scope.characterContext.rangeDmgRange[$scope.getRandomInt($scope.characterContext.rangeDmgRange.length)];
+                    $scope.rollDmg += $scope.rollDmgNatural;
                     
+                    if ($scope.characterContext.rangeWeaponExplodeRange && $scope.characterContext.rangeWeaponExplodeRange.includes($scope.rollDmgNatural)) {
+                        $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+                    }
+                }
+                if ($scope.rollHitNatural >= $scope.characterContext.rangeCritMin) {
+                    if ($scope.characterContext.characterClass === 'DWARF_FIGHTER' && $scope.characterContext.stats.level === 5) {
+                        $scope.critDmg = $scope.rollDmg*3;
+                    } else
+                        $scope.critDmg = $scope.rollDmg*2;
                 }
             } else {
-                if ($scope.rollHit > $scope.characterContext.meleeCritMin)
-                    $scope.isCrit = true;
                 $scope.rollHit += $scope.characterContext.stats.meleeHit;
                 $scope.rollDmg = $scope.characterContext.stats.meleeDmg;
-                if ($scope.characterContext.meleeDmgRange) {
+                if ($scope.characterContext.meleeDmgRange && $scope.characterContext.meleeDmgRange.length > 0) {
+                    $scope.rollDmgNatural = $scope.characterContext.meleeDmgRange[$scope.getRandomInt($scope.characterContext.meleeDmgRange.length)];
+                    $scope.rollDmg += $scope.rollDmgNatural;
                     
+                    if ($scope.characterContext.meleeWeaponExplodeRange && $scope.characterContext.meleeWeaponExplodeRange.includes($scope.rollDmgNatural)) {
+                        $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                    }
+                }
+                if ($scope.rollHitNatural >= $scope.characterContext.meleeCritMin) {
+                    if ($scope.characterContext.characterClass === 'DWARF_FIGHTER' && $scope.characterContext.stats.level === 5) {
+                        $scope.critDmg = $scope.rollDmg*3;
+                    } else
+                        $scope.critDmg = $scope.rollDmg*2;
                 }
             }
         }
     };
     
     $scope.rollToSave =  function() {
-        $scope.rollSave = $scope.getRandomInt(20) + 1;
+        $scope.rollSaveNatural = $scope.getRoll();
+        $scope.rollSave = $scope.rollSaveNatural;
         
         if ($scope.rollSave !== 1) {
             if ($scope.saveIndex === 0)
@@ -152,6 +196,26 @@ angular.module('main')
             if ($scope.saveIndex === 2)
                 $scope.rollSave += $scope.characterContext.stats.will;
         }                         
+    };
+    
+    $scope.getRoll =  function() {
+        if ($scope.characterContext.rollerDifficulty === 0) {
+            var roll = $scope.defaultRoller[$scope.getRandomInt($scope.defaultRoller.length)];
+            if (roll === 11)
+                roll = 1;
+            return roll;
+        } else if ($scope.characterContext.rollerDifficulty === 1) {
+            return $scope.hardRoller[$scope.getRandomInt($scope.hardRoller.length)];
+        } else if ($scope.characterContext.rollerDifficulty === 2) {
+            return $scope.harderRoller[$scope.getRandomInt($scope.harderRoller.length)];
+        } else if ($scope.characterContext.rollerDifficulty === 3) {
+            return $scope.deathRoller[$scope.getRandomInt($scope.deathRoller.length)];
+        } else {
+            var roll = $scope.defaultRoller[$scope.getRandomInt($scope.defaultRoller.length)];
+            if (roll === 11)
+                roll = 1;
+            return roll;
+        }        
     };
     
     $scope.takeDamage =  function(damage) {
@@ -201,6 +265,22 @@ angular.module('main')
             });
         }
     };
+    
+    $scope.setInitBonus =  function(bonus) {
+        vtdSvc.setInitBonus($scope.characterContext.id, bonus).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
+    
+    $scope.setHealthBonus =  function(bonus) {
+        vtdSvc.setHealthBonus($scope.characterContext.id, bonus).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
     
     $scope.resetCharacter = function(id) {
         confirmDialogSvc.confirm("Are you sure you wish to reset your character?", function(){
@@ -289,6 +369,20 @@ angular.module('main')
     
     tokenAdminSvc.modifyHealth = function(id, health) {
         return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/health/?health=' + health).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+        
+    tokenAdminSvc.setInitBonus = function(id, bonus) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/bonus/init/?init=' + bonus).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.setHealthBonus = function(id, health) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/bonus/health/?health=' + health).catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });
