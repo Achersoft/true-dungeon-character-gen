@@ -243,6 +243,15 @@ angular.module('main')
     };
     
     $scope.editToken = function(){
+        if ($scope.search.damageRange !== null && $scope.search.damageRange === '')
+            $scope.search.damageRange = null;
+        if ($scope.search.damageExplodeRange !== null && $scope.search.damageExplodeRange === '')
+            $scope.search.damageExplodeRange = null;
+        if ($scope.search.weaponExplodeCondition !== null && $scope.search.weaponExplodeCondition === '')
+            $scope.search.weaponExplodeCondition = null;
+        if ($scope.search.weaponExplodeText !== null && $scope.search.weaponExplodeText === '')
+            $scope.search.weaponExplodeText = null;
+
         tokenAdminSvc.editToken($scope.search).then(function() {
             $scope.search = tokenAdminState.reset();
         });
@@ -264,6 +273,11 @@ angular.module('main')
                 text: null,
                 rarity: null,
                 slot: null,
+                damageRange: null,
+                damageExplodeRange: null,
+                weaponExplodeCondition: null,
+                weaponExplodeText: null,
+                critMin: 20,
                 usableBy: [],
                 str: 0,
                 dex: 0,

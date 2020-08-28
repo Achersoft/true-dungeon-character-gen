@@ -1,10 +1,7 @@
 package com.achersoft.tdcc.vtd.dto;
 
 import com.achersoft.tdcc.character.dao.CharacterStats;
-import com.achersoft.tdcc.enums.Buff;
-import com.achersoft.tdcc.enums.CharacterClass;
-import com.achersoft.tdcc.enums.SkillLevel;
-import com.achersoft.tdcc.enums.WeaponExplodeCondition;
+import com.achersoft.tdcc.enums.*;
 import com.achersoft.tdcc.vtd.dao.CharacterSkill;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
 import lombok.AllArgsConstructor;
@@ -51,12 +48,20 @@ public class VtdDetailsDTO {
     public List<Integer> meleeWeaponExplodeRange;
     public List<Integer> meleeOffhandWeaponExplodeRange;
     public List<Integer> rangeWeaponExplodeRange;
+    public List<Integer> rangeOffhandWeaponExplodeRange;
     public WeaponExplodeCondition meleeWeaponExplodeEffect;
     public WeaponExplodeCondition meleeOffhandWeaponExplodeEffect;
     public WeaponExplodeCondition rangeWeaponExplodeEffect;
+    public WeaponExplodeCondition rangeOffhandWeaponExplodeEffect;
     public String meleeWeaponExplodeText;
     public String meleeOffhandWeaponExplodeText;
     public String rangeWeaponExplodeText;
+    public String rangeOffhandWeaponExplodeText;
+    public List<DamageModEffect> meleeDmgEffects;
+    public List<DamageModEffect> meleeOffhandDmgEffects;
+    public List<DamageModEffect> meleePolyDmgEffects;
+    public List<DamageModEffect> rangeDmgEffects;
+    public List<DamageModEffect> rangeOffhandDmgEffects;
     public Integer meleeCritMin;
     public Integer meleeOffhandCritMin;
     public Integer meleePolyCritMin;
@@ -99,12 +104,20 @@ public class VtdDetailsDTO {
                 .meleeWeaponExplodeRange(new ArrayList<>())
                 .meleeOffhandDmgRange(new ArrayList<>())
                 .rangeWeaponExplodeRange(new ArrayList<>())
+                .rangeOffhandWeaponExplodeRange(new ArrayList<>())
                 .meleeWeaponExplodeEffect(dao.getMeleeWeaponExplodeEffect())
                 .meleeOffhandWeaponExplodeEffect(dao.getMeleeOffhandWeaponExplodeEffect())
                 .rangeWeaponExplodeEffect(dao.getRangeWeaponExplodeEffect())
+                .rangeOffhandWeaponExplodeEffect(dao.getRangeOffhandWeaponExplodeEffect())
                 .meleeWeaponExplodeText(dao.getMeleeWeaponExplodeText())
                 .meleeOffhandWeaponExplodeText(dao.getMeleeOffhandWeaponExplodeText())
                 .rangeWeaponExplodeText(dao.getRangeWeaponExplodeText())
+                .rangeOffhandWeaponExplodeText(dao.getRangeOffhandWeaponExplodeText())
+                .meleeDmgEffects(new ArrayList<>())
+                .meleeOffhandDmgEffects(new ArrayList<>())
+                .meleePolyDmgEffects(new ArrayList<>())
+                .rangeDmgEffects(new ArrayList<>())
+                .rangeOffhandDmgEffects(new ArrayList<>())
                 .meleeCritMin(dao.getMeleeCritMin())
                 .meleeOffhandCritMin(dao.getMeleeOffhandCritMin())
                 .meleePolyCritMin(dao.getMeleePolyCritMin())
@@ -190,6 +203,21 @@ public class VtdDetailsDTO {
 
         if (dao.getRangeWeaponExplodeRange() != null && !dao.getRangeWeaponExplodeRange().isEmpty())
             build.setRangeWeaponExplodeRange(Arrays.stream(dao.getRangeWeaponExplodeRange().split(",")).map(Integer::valueOf).collect(Collectors.toList()));
+
+        if (dao.getMeleeDmgEffects() != null && !dao.getMeleeDmgEffects().isEmpty())
+            build.setMeleeDmgEffects(Arrays.stream(dao.getMeleeDmgEffects().split(",")).map(DamageModEffect::valueOf).collect(Collectors.toList()));
+
+        if (dao.getMeleeOffhandDmgEffects() != null && !dao.getMeleeOffhandDmgEffects().isEmpty())
+            build.setMeleeOffhandDmgEffects(Arrays.stream(dao.getMeleeOffhandDmgEffects().split(",")).map(DamageModEffect::valueOf).collect(Collectors.toList()));
+
+        if (dao.getMeleePolyDmgEffects() != null && !dao.getMeleePolyDmgEffects().isEmpty())
+            build.setMeleePolyDmgEffects(Arrays.stream(dao.getMeleePolyDmgEffects().split(",")).map(DamageModEffect::valueOf).collect(Collectors.toList()));
+
+        if (dao.getRangeDmgEffects() != null && !dao.getRangeDmgEffects().isEmpty())
+            build.setRangeDmgEffects(Arrays.stream(dao.getRangeDmgEffects().split(",")).map(DamageModEffect::valueOf).collect(Collectors.toList()));
+
+        if (dao.getRangeOffhandDmgEffects() != null && !dao.getRangeOffhandDmgEffects().isEmpty())
+            build.setRangeOffhandDmgEffects(Arrays.stream(dao.getRangeOffhandDmgEffects().split(",")).map(DamageModEffect::valueOf).collect(Collectors.toList()));
 
         return build;
     }

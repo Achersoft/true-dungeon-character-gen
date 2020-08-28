@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class VirtualTdServiceImpl implements VirtualTdService {
     
@@ -52,6 +53,11 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             }
 
             final List<CharacterSkill> characterSkills = Optional.ofNullable(vtdMapper.getCharacterSkills(id)).orElse(new ArrayList<>());
+            final List<DamageModEffect> meleeDmgEffects = new ArrayList<>();
+            final List<DamageModEffect> meleeOffhandDmgEffects = new ArrayList<>();
+            final List<DamageModEffect> meleePolyDmgEffects = new ArrayList<>();
+            final List<DamageModEffect> rangeDmgEffects = new ArrayList<>();
+            final List<DamageModEffect> rangeOffhandDmgEffects = new ArrayList<>();
             final AtomicReference<TokenFullDetails> mainHand = new AtomicReference<>();
             final AtomicReference<TokenFullDetails> offHand = new AtomicReference<>();
             final AtomicReference<TokenFullDetails> rangeMainHand = new AtomicReference<>();
@@ -77,40 +83,93 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                 }
             }
 
-            if (characterDetails.getCharacterClass() == CharacterClass.BARBARIAN) {
-                if (hasBarbRelic.get() || hasBarbLegendary.get()) {
-                    characterSkills.stream().filter(characterSkill -> characterSkill.getName().contains("Rage")).forEach(skill -> {
-                        skill.setUsableNumber(2);
-                        vtdMapper.updateCharacterSkill(skill);
-                    });
+            switch (characterDetails.getCharacterClass()) {
+                case ALL:
+                    break;
+                case BARBARIAN:
+                    if (hasBarbRelic.get() || hasBarbLegendary.get()) {
+                        characterSkills.stream().filter(characterSkill -> characterSkill.getName().contains("Rage")).forEach(skill -> {
+                            skill.setUsableNumber(2);
+                            vtdMapper.updateCharacterSkill(skill);
+                        });
 
-                    final CharacterSkill fury = CharacterSkill.builder()
-                            .id(UUID.randomUUID().toString())
-                            .characterClass(CharacterClass.BARBARIAN)
-                            .characterId(id)
-                            .characterLevel(characterDetails.getStats().getLevel())
-                            .name("Fury")
-                            .details("Whether raging or not, as an Instant Action a barbarian can announce that they are " +
-                                    "going to fury before making their attack slide. If they hit, the damage done with that " +
-                                    "one slide is treated as a standard 2× critical hit. It does not count as a natural 20, " +
-                                    "it’s “just” a crit.")
-                            .skillLevel(SkillLevel.NA)
-                            .skillTarget(SkillTarget.SELF)
-                            .skillType(SkillType.BUFF)
-                            .skillStatEffect(SkillStatEffect.NONE)
-                            .minEffect(0)
-                            .maxEffect(0)
-                            .usedNumber(0)
-                            .build();
+                        final CharacterSkill fury = CharacterSkill.builder()
+                                .id(UUID.randomUUID().toString())
+                                .characterClass(CharacterClass.BARBARIAN)
+                                .characterId(id)
+                                .characterLevel(characterDetails.getStats().getLevel())
+                                .name("Fury")
+                                .details("Whether raging or not, as an Instant Action a barbarian can announce that they are " +
+                                        "going to fury before making their attack slide. If they hit, the damage done with that " +
+                                        "one slide is treated as a standard 2× critical hit. It does not count as a natural 20, " +
+                                        "it’s “just” a crit.")
+                                .skillLevel(SkillLevel.NA)
+                                .skillTarget(SkillTarget.SELF)
+                                .skillType(SkillType.BUFF)
+                                .skillStatEffect(SkillStatEffect.NONE)
+                                .minEffect(0)
+                                .maxEffect(0)
+                                .usedNumber(0)
+                                .build();
 
-                    if (hasBarbRelic.get()) {
-                        fury.setUsableNumber(1);
-                        vtdMapper.addCharacterSkill(fury);
-                    } else {
-                        fury.setUsableNumber(2);
-                        vtdMapper.addCharacterSkill(fury);
+                        if (hasBarbRelic.get()) {
+                            fury.setUsableNumber(1);
+                            vtdMapper.addCharacterSkill(fury);
+                        } else {
+                            fury.setUsableNumber(2);
+                            vtdMapper.addCharacterSkill(fury);
+                        }
                     }
-                }
+                    break;
+                case BARD:
+                    break;
+                case CLERIC:
+                    break;
+                case DRUID:
+                    break;
+                case FIGHTER:
+                    break;
+                case DWARF_FIGHTER:
+                    if (characterDetails.getStats().getLevel() == 5) {
+                        meleeDmgEffects.add(DamageModEffect.TRIPPLE_CRIT_ON_20);
+                        meleeOffhandDmgEffects.add(DamageModEffect.TRIPPLE_CRIT_ON_20);
+                        rangeDmgEffects.add(DamageModEffect.TRIPPLE_CRIT_ON_20);
+                        rangeOffhandDmgEffects.add(DamageModEffect.TRIPPLE_CRIT_ON_20);
+                    }
+                    break;
+                case ELF_WIZARD:
+                    break;
+                case WIZARD:
+                    break;
+                case MONK:
+                    break;
+                case PALADIN:
+                    break;
+                case RANGER:
+                    break;
+                case ROGUE:
+                    break;
+            }
+
+            if (mainHand.get() != null && mainHand.get().getWeaponExplodeCondition() != null) {
+                final DamageModEffect damageModEffect = mainHand.get().getWeaponExplodeCondition().getDamageModEffect(characterDetails.getCharacterClass());
+                if (damageModEffect != null)
+                    meleeDmgEffects.add(damageModEffect);
+            }
+            if (offHand.get() != null && offHand.get().getWeaponExplodeCondition() != null) {
+                final DamageModEffect damageModEffect = offHand.get().getWeaponExplodeCondition().getDamageModEffect(characterDetails.getCharacterClass());
+                if (damageModEffect != null)
+                    meleeOffhandDmgEffects.add(damageModEffect);
+            }
+            if (rangeMainHand.get() != null && rangeMainHand.get().getWeaponExplodeCondition() != null) {
+                final DamageModEffect damageModEffect = rangeMainHand.get().getWeaponExplodeCondition().getDamageModEffect(characterDetails.getCharacterClass());
+                if (damageModEffect != null)
+                    rangeDmgEffects.add(damageModEffect);
+            }
+            if (rangeOffHand.get() != null && rangeOffHand.get().getWeaponExplodeCondition() != null) {
+                final DamageModEffect damageModEffect = rangeOffHand.get().getWeaponExplodeCondition().getDamageModEffect(characterDetails.getCharacterClass());
+                if (damageModEffect != null)
+                    rangeOffhandDmgEffects.add(damageModEffect);
             }
 
             vtdDetails = VtdDetails.builder()
@@ -141,6 +200,11 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .meleeWeaponExplodeText((mainHand.get() != null) ? mainHand.get().getWeaponExplodeText() : null)
                     .meleeOffhandWeaponExplodeText((offHand.get() != null) ? offHand.get().getWeaponExplodeText() : null)
                     .rangeWeaponExplodeText((rangeMainHand.get() != null) ? rangeMainHand.get().getWeaponExplodeText() : null)
+                    .meleeDmgEffects(String.join(",", meleeDmgEffects.stream().map(Enum::name).collect(Collectors.toList())))
+                    .meleeOffhandDmgEffects(String.join(",", meleeOffhandDmgEffects.stream().map(Enum::name).collect(Collectors.toList())))
+                    .meleePolyDmgEffects(String.join(",", meleePolyDmgEffects.stream().map(Enum::name).collect(Collectors.toList())))
+                    .rangeDmgEffects(String.join(",", rangeDmgEffects.stream().map(Enum::name).collect(Collectors.toList())))
+                    .rangeOffhandDmgEffects(String.join(",", rangeOffhandDmgEffects.stream().map(Enum::name).collect(Collectors.toList())))
                     .meleeCritMin((mainHand.get() != null) ? mainHand.get().getCritMin() : 20)
                     .meleeOffhandCritMin((offHand.get() != null) ? offHand.get().getCritMin() : 20)
                     .meleePolyCritMin(20)

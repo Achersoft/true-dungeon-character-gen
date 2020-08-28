@@ -1739,7 +1739,7 @@ public class CharacterServiceImpl implements CharacterService {
                     } else
                         metCondition.add(ConditionalUse.RARE_WEAPON_MELEE);
                 } 
-                if(item.getTokenFullDetails().getConditionalUse() == ConditionalUse.NONE && isMeleeWeapon(item.getItem(), item.getTokenFullDetails(), characterDetails.getCharacterClass()))
+                if(item.getTokenFullDetails().getConditionalUse() == ConditionalUse.NONE && !item.getTokenFullDetails().isMug() && isMeleeWeapon(item.getItem(), item.getTokenFullDetails(), characterDetails.getCharacterClass()))
                     meleeWeaponHit.add(item.getTokenFullDetails().getMeleeHit());
             }
             else if (item.getItem().getSlot() == Slot.RANGE_MAINHAND || item.getItem().getSlot() == Slot.RANGE_OFFHAND) {
