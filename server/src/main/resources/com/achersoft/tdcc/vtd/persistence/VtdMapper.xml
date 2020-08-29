@@ -40,8 +40,13 @@
                                     melee_offhand_crit_min,
                                     melee_poly_crit_min,
                                     range_crit_min,
+                                    melee_sneak_hit,
+                                    melee_sneak_damage,
                                     melee_sneak_crit_min,
+                                    range_sneak_hit,
+                                    range_sneak_damage,
                                     range_sneak_crit_min,
+                                    unmodifiable_sneak_damage,
                                     is_sneak_can_crit,
                                     is_sneak_at_range,
                                     split_heal,
@@ -83,8 +88,13 @@
                                     #{meleeOffhandCritMin},
                                     #{meleePolyCritMin},
                                     #{rangeCritMin},
+                                    #{meleeSneakHit},
+                                    #{meleeSneakDamage},
                                     #{meleeSneakCritMin},
+                                    #{rangeSneakHit},
+                                    #{rangeSneakDamage},
                                     #{rangeSneakCritMin},
+                                    #{unmodifiableSneakDamage},
                                     #{isSneakCanCrit},
                                     #{isSneakAtRange},
                                     #{splitHeal},
@@ -292,6 +302,32 @@
                                #{bardsong},
                                #{buff})
     </insert>
+
+    <insert id="addPolys">
+          INSERT INTO vtd_poly (id,
+                                character_id,
+                                name,
+                                active,
+                                dmg_range,
+                                explode_range,
+                                explode_effect,
+                                explode_text,
+                                dmg_effect,
+                                crit)
+        VALUES
+        <foreach item="element" index="index" collection="polyList" separator=",">
+            (#{element.id},
+             #{element.characterId},
+             #{element.name},
+             #{element.active},
+             #{element.dmgRange},
+             #{element.explodeRange},
+             #{element.explodeEffect},
+             #{element.explodeText},
+             #{element.dmgEffects},
+             #{element.critMin})
+        </foreach>
+    </insert>
     
     <select id="getCharacter" resultType="com.achersoft.tdcc.vtd.dao.VtdDetails">
          SELECT id 'characterId',
@@ -330,8 +366,13 @@
                 melee_offhand_crit_min 'meleeOffhandCritMin',
                 melee_poly_crit_min 'meleePolyCritMin',
                 range_crit_min 'rangeCritMin',
+                melee_sneak_hit 'meleeSneakHit',
+                melee_sneak_damage 'meleeSneakDamage',
                 melee_sneak_crit_min 'meleeSneakCritMin',
+                range_sneak_hit 'rangeSneakHit',
+                range_sneak_damage 'rangeSneakDamage',
                 range_sneak_crit_min 'rangeSneakCritMin',
+                unmodifiable_sneak_damage 'unmodifiableSneakDamage',
                 is_sneak_can_crit 'isSneakCanCrit',
                 is_sneak_at_range 'isSneakAtRange',
                 split_heal 'splitHeal',
@@ -487,11 +528,35 @@
          WHERE character_id = #{characterId}
     </select>
 
+    <select id="getCharacterPolys" resultType="com.achersoft.tdcc.vtd.dao.VtdPoly">
+        SELECT id,
+               character_id 'characterId',
+               name,
+               active,
+               dmg_range 'dmgRange',
+               explode_range 'explodeRange',
+               explode_effect 'explodeEffect',
+               explode_text 'explodeText',
+               dmg_effect 'dmgEffects',
+               crit 'critMin'
+        FROM vtd_poly
+        WHERE character_id = #{characterId}
+    </select>
+
     <select id="buffExists" resultType="boolean">
         SELECT count(*)
         FROM vtd_buffs
         WHERE character_id = #{characterId} AND buff = #{buff}
     </select>
+
+    <update id="updateCharacterDr">
+        UPDATE vtd_stats SET
+            drFire = #{drFire},
+            drCold = #{drCold},
+            drShock = #{drShock},
+            drSonic = #{drSonic}
+        WHERE id = #{characterId}
+    </update>
 
     <update id="updateCharacterSkill">
         UPDATE vtd_skills SET
@@ -502,13 +567,22 @@
         WHERE id = #{id}
     </update>
 
+    <update id="updateCharacterPoly">
+        UPDATE vtd_poly SET
+        active = #{active}
+        WHERE id = #{id}
+    </update>
+
     <insert id="updateCharacter">
         UPDATE vtd_character SET
             health = #{currentHealth},
             roller_difficulty = #{rollerDifficulty},
             init_bonus = #{initBonus},
             health_bonus = #{healthBonus},
-            room_number = #{roomNumber}
+            room_number = #{roomNumber},
+            melee_poly_dmg_range = #{meleePolyDmgRange},
+            melee_poly_damage_effect = #{meleePolyDmgEffects},
+            melee_poly_crit_min = #{meleePolyCritMin}
         WHERE id = #{characterId}
     </insert>
     
@@ -526,6 +600,10 @@
 
     <delete id="deleteCharacterBuffs">
         DELETE FROM vtd_buffs WHERE character_id = #{id}
+    </delete>
+
+    <delete id="deleteCharacterPolys">
+        DELETE FROM vtd_poly WHERE character_id = #{id}
     </delete>
 
     <delete id="resetCharacterBuffs">

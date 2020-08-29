@@ -32,6 +32,7 @@ public class VtdDetails {
     private List<CharacterNote> notes;
     private List<CharacterSkill> characterSkills;
     private List<VtdBuff> buffs;
+    private List<VtdPoly> polys;
     private String meleeDmgRange;
     private String meleeOffhandDmgRange;
     private String meleePolyDmgRange;
@@ -58,8 +59,13 @@ public class VtdDetails {
     private int meleeOffhandCritMin;
     private int meleePolyCritMin;
     private int rangeCritMin;
+    private int meleeSneakHit;
+    private int meleeSneakDamage;
     private int meleeSneakCritMin;
+    private int rangeSneakHit;
+    private int rangeSneakDamage;
     private int rangeSneakCritMin;
+    private int unmodifiableSneakDamage;
     private boolean isSneakCanCrit;
     private boolean isSneakAtRange;
     private boolean splitHeal;

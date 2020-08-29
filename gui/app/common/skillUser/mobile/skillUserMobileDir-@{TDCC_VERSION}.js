@@ -15,6 +15,7 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             scope.secondaryTargetIndex = 0;
             scope.skillCheckIndex = 0;
             scope.damage = 0;
+            scope.damagePool = 0;
             scope.primaryHealAmount = 0;
             scope.seconaryHealAmount = 0;
             scope.spellCast = false;
@@ -93,11 +94,15 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                     }
                 } else if (scope.model.skillType === 'DAMAGE') {
                     var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
-                    var totalDamage = scope.characterContext.stats.spellDmg + ((scope.madEvokerIndex === 1) ? 2*dmg : dmg);
+                    var totalDamage = scope.characterContext.stats.spellDmg + dmg;
                     var madEvoker = false;
                     
                     if (scope.madEvokerIndex === 1) {
                         madEvoker = true;
+                        if (scope.model.name === 'Fireball' || scope.model.name === 'Lightning Storm' || scope.model.name === 'Burning Hands')
+                            scope.damagePool = dmg;
+                        else 
+                            totalDamage += dmg;
                     }
                     
                     scope.damage = totalDamage;
@@ -127,6 +132,7 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                 scope.targetIndex = 0;
                 scope.madEvokerIndex = 0;
                 scope.damage = 0;
+                scope.damagePool = 0;
                 scope.secondaryTargetIndex = 0;
                 scope.skillCheckIndex = 0;
                 scope.primaryHealAmount = 0;

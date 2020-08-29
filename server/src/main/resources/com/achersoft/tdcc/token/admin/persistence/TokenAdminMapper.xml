@@ -44,7 +44,7 @@
         INSERT INTO token_details ( id,
                                     damage_range,
                                     damage_explode_range,
-                                    explode _condition,
+                                    explode_condition,
                                     explode_text,
                                     crit_min,
                                     str,

@@ -91,6 +91,16 @@ public class VtdRestService {
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @POST
+    @Path("/{id}/poly/{polyId}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO setPoly(@PathParam("id") String id,
+                                 @PathParam("polyId") String polyId) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.setPoly(id, polyId));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
     @Path("/{id}/{skillId}/use")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})

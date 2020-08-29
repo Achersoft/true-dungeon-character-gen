@@ -1,0 +1,14 @@
+<div class="modal-header" style="border-bottom-width: 2px; border-color: royalblue">
+    <button type="button" class="close" ng-click="closeModal()" style="font-size:30px;color: rgb(255, 255, 255)">&times;</button>
+    <h4 class="modal-title">Select Active Polymorph</h4>
+</div>
+<div class="modal-body" style="padding:0px">
+    <div ng-class-odd="'esi-row-alt'" ng-repeat-start="item in characterContext.availablePoly track by $index" ng-repeat-end ng-click="selectPoly(item)" data-dismiss="modal">
+        <div class="col-xs-12 nowrap-truncate" style="margin-top:12px;margin-bottom:12px;font-weight:bold;color:white">
+            {{item.name}}
+        </div>
+        <div class="col-xs-12">
+            <hr style="margin:0px;"/>
+        </div>
+    </div>
+</div>

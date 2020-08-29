@@ -26,7 +26,8 @@ public enum Slot {
     IOUNSTONE("Ioun Stone"),
     FIGURINE("Figurine"),
     SLOTLESS("Slotless"),
-    RUNESTONE("Runestone");
+    RUNESTONE("Runestone"),
+    POLYMORPH("Polymorph");
     
     public final String text; 
     Slot(String text) {

@@ -15,5 +15,6 @@ public interface VirtualTdService {
     VtdDetails addBuff(String id, Buff buff);
     VtdDetails removeBuff(String id, Buff buff);
     VtdDetails nextRoom(String id);
+    VtdDetails setPoly(String id, String polyId);
     void resetCharacter(String id);
 }

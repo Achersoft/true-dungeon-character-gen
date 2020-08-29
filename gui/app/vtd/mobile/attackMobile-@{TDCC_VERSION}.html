@@ -5,9 +5,14 @@
         <span class="col-xs-4 col-sm-4 col-md-4 btn" ng-class="attackIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(1)">Range </span> 
         <span class="col-xs-4 col-sm-4 col-md-4 btn" ng-class="attackIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(2)">Polymorph </span> 
     </div>
-    <div ng-if="!(characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD')" class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding-left:15px;padding-right:15px">
+    <div ng-if="!(characterContext.characterClass === 'ROGUE' || characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD')" class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding-left:15px;padding-right:15px">
         <span class="col-xs-6 col-sm-6 col-md-6 btn" ng-class="attackIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(0)">Melee </span> 
         <span class="col-xs-6 col-sm-6 col-md-6 btn" ng-class="attackIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(1)">Range </span> 
+    </div>
+    <div ng-if="characterContext.characterClass === 'ROGUE'" class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding-left:15px;padding-right:15px">
+        <span class="col-xs-4 col-sm-4 col-md-4 btn" ng-class="attackIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(0)">Melee </span> 
+        <span class="col-xs-4 col-sm-4 col-md-4 btn" ng-class="attackIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(1)">Range </span> 
+        <span class="col-xs-4 col-sm-4 col-md-4 btn" ng-class="attackIndex === 9 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setAttackIndex(9)">Sneak Attack </span>
     </div>
     <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
     <div class="col-xs-12 text-center" style="padding:0px" ng-show="attackIndex === 0">    
@@ -32,6 +37,31 @@
         </div>
         <div class="col-xs-6 text-center" style="padding:0px">
             <strong>Damage Modifier:</strong> {{characterContext.stats.meleePolyDmg}} 
+        </div>
+        <div class="col-xs-12 text-center" style="margin-top:10px;padding:0px">
+            <poly-selector-mobile set-poly ="setPoly" element-id="activePoly" character-context="characterContext"></poly-selector-mobile>
+        </div>
+    </div>
+    <div class="col-xs-12 text-center" style="padding:0px" ng-show="attackIndex === 9">
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding-left:15px;padding-right:15px" ng-show="characterContext.sneakAtRange">
+            <span class="col-xs-6 col-sm-6 col-md-6 btn" ng-class="sneakIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSneakIndex(0)">Melee </span> 
+            <span class="col-xs-6 col-sm-6 col-md-6 btn" ng-class="sneakIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSneakIndex(1)">Range </span> 
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin-top: 10px" ng-show="sneakIndex === 0">
+            <div class="col-xs-6 text-center" style="padding:0px">
+                <strong>Hit Modifier:</strong> {{characterContext.stats.meleeHit + characterContext.meleeSneakHit}}
+            </div>
+            <div class="col-xs-6 text-center" style="padding:0px">
+                <strong>Damage Modifier:</strong> {{characterContext.stats.meleeDmg + characterContext.meleeSneakDamage}} 
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin-top: 10px" ng-show="sneakIndex === 1">
+            <div class="col-xs-6 text-center" style="padding:0px">
+                <strong>Hit Modifier:</strong> {{characterContext.stats.rangeHit + characterContext.rangeSneakHit}}
+            </div>
+            <div class="col-xs-6 text-center" style="padding:0px">
+                <strong>Damage Modifier:</strong> {{characterContext.stats.rangeDmg + characterContext.rangeSneakDamage}} 
+            </div>
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:15px;padding:0px">
@@ -119,6 +149,12 @@
         </div> 
         <div class="col-xs-12 col-sm-12 text-center" ng-show="critDmg > 0 || critDmgOff > 0">
             <strong>Total Crit Damage:</strong> {{totalCritDmg}}
+        </div> 
+        <div class="col-xs-12 col-sm-12 text-center" ng-show="critDmg > 0">
+            <strong>Crit Damage(M):</strong> {{critDmg}}
+        </div> 
+        <div class="col-xs-12 col-sm-12 text-center" ng-show="critDmgOff > 0">
+            <strong>Crit Damage(O):</strong> {{critDmgOff}}
         </div> 
         <div class="col-xs-12 col-sm-12 text-center" ng-show="rollDmgExplosionText !== null">
             <strong>Weapon Effect:</strong> {{rollDmgExplosionText}}

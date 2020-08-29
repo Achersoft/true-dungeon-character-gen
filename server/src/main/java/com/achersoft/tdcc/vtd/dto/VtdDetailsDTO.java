@@ -4,6 +4,7 @@ import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.enums.*;
 import com.achersoft.tdcc.vtd.dao.CharacterSkill;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
+import com.achersoft.tdcc.vtd.dao.VtdPoly;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,6 +41,8 @@ public class VtdDetailsDTO {
     public List<BuffDTO> buffs;
     public List<BuffDTO> availableBuffs;
     public List<BuffDTO> availableBardsong;
+    public List<VtdPoly> availablePoly;
+    public VtdPoly poly;
     public List<Integer> meleeDmgRange;
     public List<Integer> meleeOffhandDmgRange;
     public List<Integer> meleePolyDmgRange;
@@ -66,10 +69,15 @@ public class VtdDetailsDTO {
     public Integer meleeOffhandCritMin;
     public Integer meleePolyCritMin;
     public Integer rangeCritMin;
-    public Integer meleeSneakCritMin;
-    public Integer rangeSneakCritMin;
-    public boolean isSneakCanCrit;
-    public boolean isSneakAtRange;
+    private Integer meleeSneakHit;
+    private Integer meleeSneakDamage;
+    private Integer meleeSneakCritMin;
+    private Integer rangeSneakHit;
+    private Integer rangeSneakDamage;
+    private Integer rangeSneakCritMin;
+    private Integer unmodifiableSneakDamage;
+    private boolean sneakCanCrit;
+    private boolean sneakAtRange;
     public boolean splitHeal;
     public boolean madEvoker;
     public boolean mightyWeapon;
@@ -96,6 +104,7 @@ public class VtdDetailsDTO {
                 .threeSkills(new ArrayList<>())
                 .fourSkills(new ArrayList<>())
                 .buffs(new ArrayList<>())
+                .availablePoly(new ArrayList<>())
                 .meleeDmgRange(new ArrayList<>())
                 .meleeOffhandDmgRange(new ArrayList<>())
                 .meleePolyDmgRange(new ArrayList<>())
@@ -122,13 +131,17 @@ public class VtdDetailsDTO {
                 .meleeOffhandCritMin(dao.getMeleeOffhandCritMin())
                 .meleePolyCritMin(dao.getMeleePolyCritMin())
                 .rangeCritMin(dao.getRangeCritMin())
+                .meleeSneakHit(dao.getMeleeSneakHit())
+                .meleeSneakDamage(dao.getMeleeSneakDamage())
                 .meleeSneakCritMin(dao.getMeleeSneakCritMin())
+                .rangeSneakHit(dao.getRangeSneakHit())
+                .rangeSneakDamage(dao.getRangeSneakDamage())
                 .rangeSneakCritMin(dao.getRangeSneakCritMin())
-                .isSneakCanCrit(dao.isSneakCanCrit())
-                .isSneakAtRange(dao.isSneakAtRange())
+                .unmodifiableSneakDamage(dao.getUnmodifiableSneakDamage())
+                .sneakCanCrit(dao.isSneakCanCrit())
+                .sneakAtRange(dao.isSneakAtRange())
                 .splitHeal(dao.isSplitHeal())
                 .madEvoker(dao.isMadEvoker())
-                .mightyWeapon(dao.isMightyWeapon())
                 .build();
 
         if (dao.getCharacterSkills() != null) {
@@ -178,6 +191,15 @@ public class VtdDetailsDTO {
 
             if (build.getBuffs().stream().filter(BuffDTO::isBardsong).count() > 0)
                 build.setAvailableBardsong(new ArrayList<>());
+        }
+
+        if (dao.getPolys() != null) {
+            for (VtdPoly poly : dao.getPolys()) {
+                if (poly.isActive())
+                    build.setPoly(poly);
+                else
+                    build.getAvailablePoly().add(poly);
+            }
         }
 
         if (dao.getMeleeDmgRange() != null && !dao.getMeleeDmgRange().isEmpty())
