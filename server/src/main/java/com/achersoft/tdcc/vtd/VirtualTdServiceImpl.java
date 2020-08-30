@@ -420,47 +420,56 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
     @Override
     public VtdDetails modifyDifficulty(String id, int difficulty) {
-        final VtdDetails vtdDetails = calculateStats(id);
+        final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
         vtdDetails.setRollerDifficulty(difficulty);
         vtdMapper.updateCharacter(vtdDetails);
 
-        return vtdDetails;
+        return calculateStats(id);
     }
 
     @Override
     public VtdDetails setBonusInit(String id, int init) {
-        final VtdDetails vtdDetails = calculateStats(id);
+        final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
         vtdDetails.setInitBonus(init);
         vtdMapper.updateCharacter(vtdDetails);
 
-        return vtdDetails;
+        return calculateStats(id);
     }
 
     @Override
     public VtdDetails setBonusHealth(String id, int health) {
-        final VtdDetails vtdDetails = calculateStats(id);
+        final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+        final CharacterStats characterStats = vtdMapper.getCharacterStats(vtdDetails.getCharacterId());
 
         vtdDetails.setHealthBonus(health);
+
+        if (vtdDetails.getCurrentHealth() >= characterStats.getHealth())
+            vtdDetails.setCurrentHealth(characterStats.getHealth() + vtdDetails.getHealthBonus());
+        if (vtdDetails.getCurrentHealth() > (characterStats.getHealth() + vtdDetails.getHealthBonus()))
+            vtdDetails.setCurrentHealth(characterStats.getHealth() + vtdDetails.getHealthBonus());
+
         vtdMapper.updateCharacter(vtdDetails);
 
-        return vtdDetails;
+        return calculateStats(id);
     }
 
     @Override
     public VtdDetails modifyHealth(String id, int health) {
-        final VtdDetails vtdDetails = calculateStats(id);
+        final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+        final CharacterStats characterStats = vtdMapper.getCharacterStats(vtdDetails.getCharacterId());
 
         vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + health);
-        if (vtdDetails.getCurrentHealth() > vtdDetails.getStats().getHealth())
-            vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth());
+
+        if (vtdDetails.getCurrentHealth() > (characterStats.getHealth() + vtdDetails.getHealthBonus()))
+            vtdDetails.setCurrentHealth(characterStats.getHealth() + vtdDetails.getHealthBonus());
         else if (vtdDetails.getCurrentHealth() < 0)
             vtdDetails.setCurrentHealth(0);
 
         vtdMapper.updateCharacter(vtdDetails);
 
-        return vtdDetails;
+        return calculateStats(id);
     }
 
     @Override
@@ -492,12 +501,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final VtdDetails vtdDetails = calculateStats(id);
 
             vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + selfHeal);
-            if (vtdDetails.getCurrentHealth() > vtdDetails.getStats().getHealth())
-                vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth());
+            if (vtdDetails.getCurrentHealth() > (vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus()))
+                vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus());
 
             vtdMapper.updateCharacter(vtdDetails);
 
-            return vtdDetails;
+            return calculateStats(id);
         } else if ((skill.getSkillType() == SkillType.DAMAGE || skill.getSkillType() == SkillType.DAMAGE_RANGE_AC_15) && madEvoker) {
             final VtdDetails vtdDetails = calculateStats(id);
 
@@ -509,7 +518,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                 vtdMapper.updateCharacter(vtdDetails);
             }
 
-            return vtdDetails;
+            return calculateStats(id);
         }
 
         return calculateStats(id);
@@ -577,8 +586,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             vtdDetails.setRoomNumber(vtdDetails.getRoomNumber() + 1);
 
         vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + vtdDetails.getStats().getRegen());
-        if (vtdDetails.getCurrentHealth() > vtdDetails.getStats().getHealth())
-            vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth());
+        if (vtdDetails.getCurrentHealth() > (vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus()))
+            vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus());
 
         vtdMapper.updateCharacter(vtdDetails);
         vtdMapper.resetCharacterBuffs(id);
@@ -721,6 +730,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         vtdDetails.setPolys(vtdMapper.getCharacterPolys(vtdDetails.getCharacterId()));
 
         applyBuffsToStats(vtdDetails.getBuffs(), vtdDetails.getStats(), vtdDetails.isMightyWeapon());
+
+        vtdDetails.getStats().setHealth(vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus());
 
         return vtdDetails;
     }
