@@ -2,15 +2,14 @@ package com.achersoft.tdcc.character.dao;
 
 import com.achersoft.tdcc.enums.CharacterClass;
 import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 @Builder
 @Data
 @NoArgsConstructor 
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class CharacterName {
     private String id;
     private String userId;

@@ -34,6 +34,22 @@ public class VtdRestService {
 
     private @Inject VirtualTdService virtualTdService;
 
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @GET
+    @Path("/selectablecharacters")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<CharacterName> getSelectableCharacters() throws Exception {
+        return virtualTdService.getSelectableCharacters();
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @GET
+    @Path("/pregenerated")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<CharacterName> getPregeneratedCharacters() throws Exception {
+        return virtualTdService.getPregeneratedCharacters();
+    }
+
     @GET
     @Path("/buffs")
     @Produces({MediaType.APPLICATION_JSON})
@@ -157,7 +173,7 @@ public class VtdRestService {
     @DELETE
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public void resetCharacter(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
-        virtualTdService.resetCharacter(id);
+    public VtdDetailsDTO resetCharacter(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.resetCharacter(id));
     }
 }

@@ -13,7 +13,7 @@
                 <span class="col-xs-6 col-md-6 btn" ng-class="skillCheckIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillCheckIndex(1)">Failed </span> 
             </div> 
         </div>
-        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.madEvoker && model.skillType === 'DAMAGE'">
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.madEvoker && (model.skillType === 'DAMAGE' || model.skillType === 'DAMAGE_RANGE_AC_15')">
             <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
                 Use Mad Evoker's Charm?:
             </div>
@@ -106,6 +106,29 @@
                 </div>
                 <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color: #e3a345" >
                     {{damagePool}}
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px" ng-show="model.skillType === 'DAMAGE_RANGE_AC_15'">
+            <div ng-show="hitRollNatural > 1">
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                    {{model.name}} cast damage for:
+                </div>
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color: #e3a345">
+                    {{damage}}
+                </div>
+                <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px">
+                    <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                        If hit on:
+                    </div>
+                    <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color: #26b3f7" >
+                        {{hitRoll}}({{hitRollNatural}})
+                    </div>
+                </div>
+            </div>
+            <div ng-show="hitRollNatural === 1">
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color: red">
+                    Miss
                 </div>
             </div>
         </div>

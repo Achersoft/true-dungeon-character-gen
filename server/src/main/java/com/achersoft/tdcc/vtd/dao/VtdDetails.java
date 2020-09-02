@@ -19,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class VtdDetails {
     private String characterId;
+    private String characterOrigId;
     private String userId;
     private Date expires;
     private String name;

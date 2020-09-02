@@ -6,6 +6,7 @@ import com.achersoft.tdcc.character.CharacterService;
 import com.achersoft.tdcc.character.dao.*;
 import com.achersoft.tdcc.character.persistence.CharacterMapper;
 import com.achersoft.tdcc.enums.*;
+import com.achersoft.tdcc.party.dao.SelectableCharacters;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.dao.Token;
@@ -15,6 +16,7 @@ import com.achersoft.tdcc.vtd.dao.VtdBuff;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
 import com.achersoft.tdcc.vtd.dao.VtdPoly;
 import com.achersoft.tdcc.vtd.persistence.VtdMapper;
+import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -32,14 +34,101 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     private @Inject UserPrincipalProvider userPrincipalProvider;
 
     @Override
+    public List<CharacterName> getSelectableCharacters() {
+        final String userid = userPrincipalProvider.getUserPrincipal().getSub();
+        final Set<CharacterName> characterNameSet = new HashSet<>();
+        final List<CharacterName> characters = mapper.getCharacters(userid);
+        final List<VtdDetails> vtdDetails = vtdMapper.getCharacters(userid);
+
+        if (characters != null)
+            characterNameSet.addAll(characters);
+
+        if (vtdDetails != null)
+            characterNameSet.addAll(vtdDetails.stream().filter(vtdDetail -> !vtdDetail.getExpires().before(new Date())).map(vtdDetail -> {
+                final CharacterStats characterStats = vtdMapper.getCharacterStats(vtdDetail.getCharacterId());
+                if (characterStats != null)
+                    return CharacterName.builder()
+                            .id(vtdDetail.getCharacterId())
+                            .name(vtdDetail.getName())
+                            .userId(userid)
+                            .characterClass(vtdDetail.getCharacterClass())
+                            .level(characterStats.getLevel())
+                            .build();
+                return null;
+            }).filter(Objects::nonNull).collect(Collectors.toSet()));
+
+        final ArrayList<CharacterName> characterNames = new ArrayList<>(characterNameSet);
+        characterNames.sort(Comparator.comparing(CharacterName::getName));
+
+        return characterNames;
+    }
+
+    @Override
+    public List<CharacterName> getPregeneratedCharacters() {
+        final List<CharacterName> characterNames = mapper.getCharacters("pregen");
+
+        if (characterNames != null)
+            characterNames.sort(Comparator.comparing(CharacterName::getName));
+
+        return characterNames;
+    }
+
+    @Override
     public VtdDetails getVtdCharacter(String id, boolean reset) {
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
         if (reset || vtdDetails == null || vtdDetails.getExpires().before(new Date())) {
-            final CharacterDetails characterDetails = characterService.getCharacter(id);
+            String origId = id;
+            CharacterDetails characterDetails = null;
 
-            if (!characterDetails.isEditable())
+            if (vtdDetails != null && vtdDetails.getName().contains("-VTD-Pregen")) {
+                final String pregenClass = vtdDetails.getName().replace("-VTD-Pregen", "");
+                List<CharacterName> pregenCharacters = mapper.getCharacters("pregen");
+                if (pregenCharacters != null) {
+                    final CharacterName pregenCharacterName = pregenCharacters.stream().filter(characterName -> characterName.getName().equalsIgnoreCase(pregenClass)).findFirst().orElse(null);
+                    if (pregenCharacterName != null) {
+                        characterDetails = characterService.getCharacter(pregenCharacterName.getId());
+                        origId = pregenCharacterName.getId();
+                    }
+                }
+            } else
+                characterDetails = characterService.getCharacter(id);
+
+            if (characterDetails == null) {
+                vtdMapper.deleteCharacterPolys(id);
+                vtdMapper.deleteCharacterBuffs(id);
+                vtdMapper.deleteCharacterSkills(id);
+                vtdMapper.deleteCharacterStats(id);
+                vtdMapper.deleteCharacter(id);
+
+                throw new InvalidDataException("Character has expired or no longer exists.");
+            } else if (characterDetails.getUserId().equals("pregen")) {
+                final VtdDetails characterByName = vtdMapper.getCharacterByName(userPrincipalProvider.getUserPrincipal().getSub(), characterDetails.getName() + "-VTD-Pregen");
+                if (characterByName == null) {
+                    characterDetails.setId(UUID.randomUUID().toString());
+                    characterDetails.setUserId(userPrincipalProvider.getUserPrincipal().getSub());
+                    characterDetails.setName(characterDetails.getName() + "-VTD-Pregen");
+                    characterDetails.getStats().setCharacterId(characterDetails.getId());
+                } else if(reset || characterByName.getExpires().before(new Date())) {
+                    vtdMapper.deleteCharacterPolys(characterByName.getCharacterId());
+                    vtdMapper.deleteCharacterBuffs(characterByName.getCharacterId());
+                    vtdMapper.deleteCharacterSkills(characterByName.getCharacterId());
+                    vtdMapper.deleteCharacterStats(characterByName.getCharacterId());
+                    vtdMapper.deleteCharacter(characterByName.getCharacterId());
+
+                    characterDetails.setId(UUID.randomUUID().toString());
+                    characterDetails.setUserId(userPrincipalProvider.getUserPrincipal().getSub());
+                    characterDetails.setName(characterDetails.getName() + "-VTD-Pregen");
+                    characterDetails.getStats().setCharacterId(characterDetails.getId());
+                } else {
+                    characterByName.setExpires(new Date(new Date().getTime() + 86400000));
+                    vtdMapper.updateCharacter(characterByName);
+
+                    return calculateStats(characterByName.getCharacterId());
+                }
+            } else if (!characterDetails.isEditable()) {
                 throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
+            }
 
             vtdMapper.deleteCharacterPolys(id);
             vtdMapper.deleteCharacterBuffs(id);
@@ -49,16 +138,17 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
             final List<CharacterSkill> skills = vtdMapper.getSkills(characterDetails.getCharacterClass(), characterDetails.getStats().getLevel());
             if (skills != null) {
+                final String charId = characterDetails.getId();
                 skills.forEach(skill -> {
                     skill.setId(UUID.randomUUID().toString());
-                    skill.setCharacterId(id);
+                    skill.setCharacterId(charId);
                     skill.setUsedNumber(0);
                     vtdMapper.addCharacterSkill(skill);
                 });
             }
 
             final VtdDetails.VtdDetailsBuilder builder = VtdDetails.builder();
-            final List<CharacterSkill> characterSkills = Optional.ofNullable(vtdMapper.getCharacterSkills(id)).orElse(new ArrayList<>());
+            final List<CharacterSkill> characterSkills = Optional.ofNullable(vtdMapper.getCharacterSkills(characterDetails.getId())).orElse(new ArrayList<>());
             final List<DamageModEffect> meleeDmgEffects = new ArrayList<>();
             final List<DamageModEffect> meleeOffhandDmgEffects = new ArrayList<>();
             final List<DamageModEffect> rangeDmgEffects = new ArrayList<>();
@@ -117,7 +207,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         final CharacterSkill fury = CharacterSkill.builder()
                                 .id(UUID.randomUUID().toString())
                                 .characterClass(CharacterClass.BARBARIAN)
-                                .characterId(id)
+                                .characterId(characterDetails.getId())
                                 .characterLevel(characterDetails.getStats().getLevel())
                                 .name("Fury")
                                 .details("Whether raging or not, as an Instant Action a barbarian can announce that they are " +
@@ -370,7 +460,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             }
 
             vtdDetails = builder
-                    .characterId(id)
+                    .characterId(characterDetails.getId())
+                    .characterOrigId(origId)
                     .userId(characterDetails.getUserId())
                     .expires(new Date(new Date().getTime() + 86400000))
                     .name(characterDetails.getName())
@@ -411,6 +502,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         } else {
             if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
                 throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
+
+            vtdDetails.setExpires(new Date(new Date().getTime() + 86400000));
+            vtdMapper.updateCharacter(vtdDetails);
 
             vtdDetails = calculateStats(id);
         }
@@ -713,8 +807,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
-    public void resetCharacter(String id) {
-        getVtdCharacter(id, true);
+    public VtdDetails resetCharacter(String id) {
+        return getVtdCharacter(id, true);
     }
 
     private VtdDetails calculateStats(String id) {
@@ -726,7 +820,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         vtdDetails.setBuffs(vtdMapper.getCharacterBuffs(vtdDetails.getCharacterId()));
         vtdDetails.setCharacterSkills(vtdMapper.getCharacterSkills(vtdDetails.getCharacterId()));
         vtdDetails.setStats(vtdMapper.getCharacterStats(vtdDetails.getCharacterId()));
-        vtdDetails.setNotes(mapper.getCharacterNotes(vtdDetails.getCharacterId()));
+        vtdDetails.setNotes(mapper.getCharacterNotes(vtdDetails.getCharacterOrigId()));
         vtdDetails.setPolys(vtdMapper.getCharacterPolys(vtdDetails.getCharacterId()));
 
         applyBuffsToStats(vtdDetails.getBuffs(), vtdDetails.getStats(), vtdDetails.isMightyWeapon());

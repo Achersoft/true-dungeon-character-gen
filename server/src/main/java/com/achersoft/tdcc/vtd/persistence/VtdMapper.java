@@ -1,6 +1,5 @@
 package com.achersoft.tdcc.vtd.persistence;
 
-import com.achersoft.tdcc.character.dao.CharacterItem;
 import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.enums.Buff;
 import com.achersoft.tdcc.enums.CharacterClass;
@@ -19,6 +18,8 @@ public interface VtdMapper {
     public void addCharacterBuff(VtdBuff vtdBuff);
     public void addPolys(@Param("polyList") List<VtdPoly> polyList);
     public VtdDetails getCharacter(@Param("id") String id);
+    public VtdDetails getCharacterByName(@Param("userId") String userId, @Param("name") String name);
+    public List<VtdDetails> getCharacters(@Param("userId") String userId);
     public List<CharacterSkill> getSkills(@Param("characterClass") CharacterClass characterClass, @Param("characterLevel") int characterLevel);
     public CharacterSkill getCharacterSkill(@Param("id") String id, @Param("characterId") String characterId);
     public List<CharacterSkill> getCharacterSkills(@Param("characterId") String characterId);

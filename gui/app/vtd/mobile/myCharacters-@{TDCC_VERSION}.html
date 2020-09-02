@@ -1,6 +1,10 @@
 <div class="row">
     <div class="col-md-12 col-xs-12">
         <h2 style="border-bottom:1pt solid black;margin-top:0px">VTD Characters</h2>
+        <center>
+            <toggle-switch style="width: 300px" ng-model="pregenerated" knob-label="Pregenerated" ng-click="toggleCharacters(pregenerated)"></toggle-switch>
+        </center>
+
         <div class="table-responsive" style="border:none;margin-top:10px">          
             <table class="table table-striped">
                 <thead>

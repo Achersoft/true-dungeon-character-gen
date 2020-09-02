@@ -14,10 +14,23 @@ angular.module('main')
 
 .controller('VtdMyCharactersCtrl', ['$scope', 'VtdSvc', 'ConfirmDialogSvc', function ($scope, vtdSvc, confirmDialogSvc) {
     $scope.myCharacterContext = {};
+    $scope.pregenerated = false;
     
-    vtdSvc.getCharacters().then(function(result) {
+    vtdSvc.getSelectableCharacters().then(function(result) {
         $scope.myCharacterContext = result.data;
     });
+    
+    $scope.toggleCharacters =  function(isPregen) {
+        if (isPregen) {
+            vtdSvc.getPregeneratedCharacters().then(function(result) {
+                $scope.myCharacterContext = result.data;
+            });
+        } else {
+            vtdSvc.getSelectableCharacters().then(function(result) {
+                $scope.myCharacterContext = result.data;
+            });
+        }
+    };
 }])
 
 .controller('VtdPlayCtrl', ['$scope', 'VtdSvc', 'VtdState', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', function ($scope, vtdSvc, vtdState, RESOURCES, $routeParams, $route, confirmDialogSvc) {
@@ -618,7 +631,10 @@ angular.module('main')
     
     $scope.resetCharacter = function(id) {
         confirmDialogSvc.confirm("Are you sure you wish to reset your character?", function(){
-            vtdSvc.resetCharacter(id).then(function() {
+            vtdSvc.resetCharacter(id).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+                $route.updateParams({ characterId: $scope.characterContext.id });
                 $route.reload();
             });
         });
@@ -685,8 +701,16 @@ angular.module('main')
 .factory('VtdSvc',['$http', 'RESOURCES', 'ErrorDialogSvc', '$q', function($http, RESOURCES, errorDialogSvc, $q) {    
     var tokenAdminSvc={};
 
-    tokenAdminSvc.getSelectableCharacters = function(userid) {
-        return $http.get(RESOURCES.REST_BASE_URL + '/character/selectablecharacters?userid=' + userid)
+    tokenAdminSvc.getSelectableCharacters = function() {
+        return $http.get(RESOURCES.REST_BASE_URL + '/vtd/selectablecharacters')
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    tokenAdminSvc.getPregeneratedCharacters = function() {
+        return $http.get(RESOURCES.REST_BASE_URL + '/vtd/pregenerated')
             .catch(function(response) {
                 errorDialogSvc.showError(response);
                 return($q.reject(response));

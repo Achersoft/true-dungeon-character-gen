@@ -6,7 +6,8 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             characterContext:'=',
             elementId: '@',
             useAbility: '&?',
-            unuseAbility: '&?'
+            unuseAbility: '&?',
+            roll: '&?'
         },
         link: function(scope) {
             scope.itemSelection = {};
@@ -14,6 +15,8 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             scope.madEvokerIndex = 0;
             scope.secondaryTargetIndex = 0;
             scope.skillCheckIndex = 0;
+            scope.hitRoll = 0;
+            scope.hitRollNatural = 0;
             scope.damage = 0;
             scope.damagePool = 0;
             scope.primaryHealAmount = 0;
@@ -107,6 +110,21 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                     
                     scope.damage = totalDamage;
                     scope.spellCastSucess(false, 0, madEvoker);
+                } else if (scope.model.skillType === 'DAMAGE_RANGE_AC_15') {
+                    var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
+                    var totalDamage = scope.characterContext.stats.spellDmg + dmg;
+                    var madEvoker = false;
+
+                    scope.hitRollNatural = scope.roll()();
+                    scope.hitRoll = scope.hitRollNatural + scope.characterContext.stats.rangeHit;
+                    
+                    if (scope.madEvokerIndex === 1) {
+                        madEvoker = true;
+                        totalDamage += dmg;
+                    }
+                    
+                    scope.damage = totalDamage;
+                    scope.spellCastSucess(false, 0, madEvoker);
                 } else {
                     if (scope.targetIndex === 1) {
                         scope.spellCastSucess(true, 0, false);
@@ -131,6 +149,8 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                 scope.modalInstance.close();
                 scope.targetIndex = 0;
                 scope.madEvokerIndex = 0;
+                scope.hitRoll = 0;
+                scope.hitRollNatural = 0;
                 scope.damage = 0;
                 scope.damagePool = 0;
                 scope.secondaryTargetIndex = 0;

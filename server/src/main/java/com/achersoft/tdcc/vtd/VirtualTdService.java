@@ -1,10 +1,16 @@
 package com.achersoft.tdcc.vtd;
 
+import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.enums.Buff;
+import com.achersoft.tdcc.party.dao.SelectableCharacters;
 import com.achersoft.tdcc.vtd.dao.VtdBuff;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
 
+import java.util.List;
+
 public interface VirtualTdService {
+    List<CharacterName> getSelectableCharacters();
+    List<CharacterName> getPregeneratedCharacters();
     VtdDetails getVtdCharacter(String id, boolean reset);
     VtdDetails modifyDifficulty(String id, int difficulty);
     VtdDetails setBonusInit(String id, int init);
@@ -16,5 +22,5 @@ public interface VirtualTdService {
     VtdDetails removeBuff(String id, Buff buff);
     VtdDetails nextRoom(String id);
     VtdDetails setPoly(String id, String polyId);
-    void resetCharacter(String id);
+    VtdDetails resetCharacter(String id);
 }

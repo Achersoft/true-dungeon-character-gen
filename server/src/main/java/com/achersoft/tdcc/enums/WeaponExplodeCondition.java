@@ -5,6 +5,7 @@ public enum WeaponExplodeCondition {
     MISFIRE("Misfire", CharacterClass.ALL, DamageModEffect.MISFIRE),
     NO_DAMAGE_MOD("", CharacterClass.ALL, DamageModEffect.NO_DAMAGE_MOD),
     TRIPPLE_CRIT("Tripple Crit", CharacterClass.ALL, DamageModEffect.TRIPPLE_CRIT),
+    TRIPPLE_CRIT_ROGUE("Tripple Crit", CharacterClass.ROGUE, DamageModEffect.TRIPPLE_CRIT),
     TRIPPLE_CRIT_ON_20("", CharacterClass.ALL, DamageModEffect.TRIPPLE_CRIT_ON_20),
     TRIPPLE_CRIT_ON_FIRST_20("Natural 20", CharacterClass.ALL, DamageModEffect.TRIPPLE_CRIT_ON_FIRST_20),
     TRIPPLE_CRIT_ON_FIRST_20_BARB("Natural 20", CharacterClass.BARBARIAN, DamageModEffect.TRIPPLE_CRIT_ON_FIRST_20),
