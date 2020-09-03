@@ -28,6 +28,7 @@ public class VtdDetailsDTO {
     public int initBonus;
     public int healthBonus;
     public int roomNumber;
+    public List<InGameEffect> effects;
     public List<String> alwaysInEffect;
     public List<String> oncePerRound;
     public List<String> oncePerRoom;
@@ -93,6 +94,7 @@ public class VtdDetailsDTO {
                 .initBonus(dao.getInitBonus())
                 .healthBonus(dao.getHealthBonus())
                 .roomNumber(dao.getRoomNumber())
+                .effects(new ArrayList<>())
                 .alwaysInEffect(new ArrayList<>())
                 .oncePerRound(new ArrayList<>())
                 .oncePerRoom(new ArrayList<>())
@@ -181,6 +183,9 @@ public class VtdDetailsDTO {
                     build.oncePerGame.add(note.getNote());
             });
         }
+
+        if (dao.getAvailableEffects() != null && !dao.getAvailableEffects().isEmpty())
+            build.setEffects(Arrays.stream(dao.getAvailableEffects().split(",")).map(InGameEffect::valueOf).collect(Collectors.toList()));
 
         build.setAvailableBuffs(Buff.getSelectableBuffs().stream().map(BuffDTO::fromDAO).collect(Collectors.toList()));
         build.setAvailableBardsong(Buff.getBardsongBuff().stream().map(BuffDTO::fromDAO).collect(Collectors.toList()));

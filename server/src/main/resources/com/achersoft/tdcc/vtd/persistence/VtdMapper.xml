@@ -15,6 +15,7 @@
                                     init_bonus,
                                     health_bonus,
                                     room_number,
+                                    effects,
                                     melee_dmg_range,
                                     melee_offhand_dmg_range,
                                     melee_poly_dmg_range,
@@ -64,6 +65,7 @@
                                     #{initBonus},
                                     #{healthBonus},
                                     #{roomNumber},
+                                    #{availableEffects},
                                     #{meleeDmgRange},
                                     #{meleeOffhandDmgRange},
                                     #{meleePolyDmgRange},
@@ -343,6 +345,7 @@
                 init_bonus 'initBonus',
                 health_bonus 'healthBonus',
                 room_number 'roomNumber',
+                effects 'availableEffects',
                 melee_dmg_range 'meleeDmgRange',
                 melee_offhand_dmg_range 'meleeOffhandDmgRange',
                 melee_poly_dmg_range 'meleePolyDmgRange',
@@ -397,6 +400,7 @@
                 init_bonus 'initBonus',
                 health_bonus 'healthBonus',
                 room_number 'roomNumber',
+                effects 'availableEffects',
                 melee_dmg_range 'meleeDmgRange',
                 melee_offhand_dmg_range 'meleeOffhandDmgRange',
                 melee_poly_dmg_range 'meleePolyDmgRange',
@@ -452,6 +456,7 @@
                 init_bonus 'initBonus',
                 health_bonus 'healthBonus',
                 room_number 'roomNumber',
+                effects 'availableEffects',
                 melee_dmg_range 'meleeDmgRange',
                 melee_offhand_dmg_range 'meleeOffhandDmgRange',
                 melee_poly_dmg_range 'meleePolyDmgRange',
@@ -687,6 +692,7 @@
 
     <insert id="updateCharacter">
         UPDATE vtd_character SET
+            effects = #{availableEffects},
             expires = #{expires},
             health = #{currentHealth},
             roller_difficulty = #{rollerDifficulty},

@@ -153,6 +153,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final List<DamageModEffect> meleeOffhandDmgEffects = new ArrayList<>();
             final List<DamageModEffect> rangeDmgEffects = new ArrayList<>();
             final List<DamageModEffect> rangeOffhandDmgEffects = new ArrayList<>();
+            final List<InGameEffect> inGameEffects = new ArrayList<>();
             final AtomicReference<TokenFullDetails> mainHand = new AtomicReference<>();
             final AtomicReference<TokenFullDetails> offHand = new AtomicReference<>();
             final AtomicReference<TokenFullDetails> rangeMainHand = new AtomicReference<>();
@@ -164,6 +165,10 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean charmShadowShot = new AtomicBoolean(false);
             final AtomicBoolean madEvoker = new AtomicBoolean(false);
             final AtomicBoolean divineSight = new AtomicBoolean(false);
+            final AtomicBoolean hasPaladinRelic = new AtomicBoolean(false);
+            final AtomicBoolean hasPaladinLegendary = new AtomicBoolean(false);
+            final AtomicBoolean hasMonkRelic = new AtomicBoolean(false);
+            final AtomicBoolean hasMonkLegendary = new AtomicBoolean(false);
 
             for (CharacterItem characterItem : characterDetails.getItems()) {
                 if (characterItem != null && characterItem.getItemId() != null) {
@@ -190,7 +195,14 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasDruidRelic.set(true);
                     else if (characterItem.getItemId().equals("c9182371165f18e7fdbce5da41a69af3934d6ee7"))
                         hasDruidLegendary.set(true);
-
+                    else if (characterItem.getItemId().equals("3004090e3dde392b1af2b11930b84ec949612c36"))
+                        hasPaladinRelic.set(true);
+                    else if (characterItem.getItemId().equals("c399f93f1b0a647f6a15e11d8215553fc7c2043f"))
+                        hasPaladinLegendary.set(true);
+                    else if (characterItem.getItemId().equals("0cf23986f7f79a143b3161564df80c055c409e90"))
+                        hasMonkRelic.set(true);
+                    else if (characterItem.getItemId().equals("1ee980321b7b26f523b7b5e10b6a2856400d1a67"))
+                        hasMonkLegendary.set(true);
                 }
             }
 
@@ -358,8 +370,51 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     if (offHand.get() == null && mainHand.get().isMonkOffhand()) {
                         offHand.set(TokenFullDetails.builder().name("Fist").monkOffhand(true).damageRange("1,2,3,4,5,6").critMin(20).build());
                     }
+
+                    if (hasMonkRelic.get()) {
+                        if (mainHand.get().getCritMin() > 19)
+                            mainHand.get().setCritMin(19);
+                        if (offHand.get().getCritMin() > 19)
+                            offHand.get().setCritMin(19);
+
+                        if (characterDetails.getStats().getLevel() == 4) {
+                            meleeDmgEffects.add(DamageModEffect.DAZE_19);
+                            meleeOffhandDmgEffects.add(DamageModEffect.DAZE_19);
+                        } else {
+                            meleeDmgEffects.add(DamageModEffect.STUN_19);
+                            meleeOffhandDmgEffects.add(DamageModEffect.STUN_19);
+                        }
+                    } else if (hasMonkLegendary.get()) {
+                        if (mainHand.get().getCritMin() > 19)
+                            mainHand.get().setCritMin(19);
+                        if (offHand.get().getCritMin() > 19)
+                            offHand.get().setCritMin(19);
+
+                        if (characterDetails.getStats().getLevel() == 4) {
+                            meleeDmgEffects.add(DamageModEffect.DAZE_19);
+                            meleeOffhandDmgEffects.add(DamageModEffect.DAZE_19);
+                        } else {
+                            meleeDmgEffects.add(DamageModEffect.STUN_19);
+                            meleeOffhandDmgEffects.add(DamageModEffect.STUN_19);
+                        }
+
+                        if (mainHand.get().isMonkOffhand() && offHand.get().isMonkOffhand())
+                            meleeDmgEffects.add(DamageModEffect.FURRY_THROW);
+                    } else {
+                        if (characterDetails.getStats().getLevel() == 4) {
+                            meleeDmgEffects.add(DamageModEffect.DAZE_20);
+                            meleeOffhandDmgEffects.add(DamageModEffect.DAZE_20);
+                        } else {
+                            meleeDmgEffects.add(DamageModEffect.STUN_20);
+                            meleeOffhandDmgEffects.add(DamageModEffect.STUN_20);
+                        }
+                    }
                     break;
                 case PALADIN:
+                    if (hasPaladinRelic.get())
+                        inGameEffects.add(InGameEffect.PLUS_10_LOH);
+                    else if (hasPaladinLegendary.get())
+                        inGameEffects.add(InGameEffect.PLUS_15_LOH);
                     break;
                 case RANGER:
                     if (charmShadowShot.get()) {
@@ -471,6 +526,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .rollerDifficulty(0)
                     .initBonus(0)
                     .roomNumber(1)
+                    .availableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())))
                     .notes(characterDetails.getNotes())
                     .characterSkills(characterSkills)
                     .buffs(new ArrayList<>())
@@ -516,6 +572,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     public VtdDetails modifyDifficulty(String id, int difficulty) {
         final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
+            throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
+
         vtdDetails.setRollerDifficulty(difficulty);
         vtdMapper.updateCharacter(vtdDetails);
 
@@ -525,6 +584,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     @Override
     public VtdDetails setBonusInit(String id, int init) {
         final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
+            throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
 
         vtdDetails.setInitBonus(init);
         vtdMapper.updateCharacter(vtdDetails);
@@ -536,6 +598,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     public VtdDetails setBonusHealth(String id, int health) {
         final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
         final CharacterStats characterStats = vtdMapper.getCharacterStats(vtdDetails.getCharacterId());
+
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
+            throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
 
         vtdDetails.setHealthBonus(health);
 
@@ -554,6 +619,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
         final CharacterStats characterStats = vtdMapper.getCharacterStats(vtdDetails.getCharacterId());
 
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
+            throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
+
         vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + health);
 
         if (vtdDetails.getCurrentHealth() > (characterStats.getHealth() + vtdDetails.getHealthBonus()))
@@ -567,7 +635,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
-    public VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker) {
+    public VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect) {
         final CharacterSkill skill = vtdMapper.getCharacterSkill(skillId, id);
         final VtdDetails character = vtdMapper.getCharacter(id);
 
@@ -577,7 +645,14 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         if (skill.getUsedNumber() >= skill.getUsableNumber())
             return calculateStats(id);
 
-        skill.setUsedNumber(skill.getUsedNumber() + 1);
+        if (skill.getName().equalsIgnoreCase("Lay on Hands")) {
+            if (lohNumber < 1)
+                lohNumber = 1;
+            else if (lohNumber > (skill.getUsableNumber() - skill.getUsedNumber()))
+                lohNumber = skill.getUsableNumber() - skill.getUsedNumber();
+            skill.setUsedNumber(skill.getUsedNumber() + lohNumber);
+        } else
+            skill.setUsedNumber(skill.getUsedNumber() + 1);
         vtdMapper.updateCharacterSkill(skill);
 
         if (character.getCharacterClass() == CharacterClass.BARD) {
@@ -586,6 +661,18 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     characterSkill.setUsedNumber(skill.getUsedNumber());
                     vtdMapper.updateCharacterSkill(characterSkill);
                 }
+            }
+        }
+
+        if (inGameEffect != null && inGameEffect != InGameEffect.NONE) {
+            VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+
+            if (vtdDetails != null && vtdDetails.getAvailableEffects() != null && !vtdDetails.getAvailableEffects().isEmpty()) {
+                final List<InGameEffect> inGameEffects = Arrays.stream(vtdDetails.getAvailableEffects().split(",")).map(InGameEffect::valueOf).collect(Collectors.toList());
+                inGameEffects.remove(inGameEffect);
+                vtdDetails.setAvailableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())));
+
+                vtdMapper.updateCharacter(vtdDetails);
             }
         }
 
@@ -599,8 +686,6 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                 vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus());
 
             vtdMapper.updateCharacter(vtdDetails);
-
-            return calculateStats(id);
         } else if ((skill.getSkillType() == SkillType.DAMAGE || skill.getSkillType() == SkillType.DAMAGE_RANGE_AC_15) && madEvoker) {
             final VtdDetails vtdDetails = calculateStats(id);
 
@@ -611,8 +696,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
                 vtdMapper.updateCharacter(vtdDetails);
             }
-
-            return calculateStats(id);
+        } else if (character.getCharacterClass() == CharacterClass.PALADIN && skill.getName().equalsIgnoreCase("Sacrifice")) {
+            character.setCurrentHealth(5);
+            vtdMapper.updateCharacter(character);
         }
 
         return calculateStats(id);
@@ -650,7 +736,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     @Override
     public VtdDetails addBuff(String id, Buff buff) {
         if (buff != null && !vtdMapper.buffExists(id, buff)) {
-            vtdMapper.addCharacterBuff(VtdBuff.builder().characterId(id).buff(buff).build());
+            vtdMapper.addCharacterBuff(VtdBuff.builder().characterId(id).bardsong(buff.isBardsong()).buff(buff).build());
         }
 
         return calculateStats(id);
@@ -660,6 +746,21 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     public VtdDetails removeBuff(String id, Buff buff) {
         if (buff != null) {
             vtdMapper.deleteCharacterBuff(id, buff);
+        }
+
+        return calculateStats(id);
+    }
+
+    @Override
+    public VtdDetails removeEffect(String id, InGameEffect inGameEffect) {
+        VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+
+        if (vtdDetails != null && vtdDetails.getAvailableEffects() != null && !vtdDetails.getAvailableEffects().isEmpty()) {
+            final List<InGameEffect> inGameEffects = Arrays.stream(vtdDetails.getAvailableEffects().split(",")).map(InGameEffect::valueOf).collect(Collectors.toList());
+            inGameEffects.remove(inGameEffect);
+            vtdDetails.setAvailableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())));
+
+            vtdMapper.updateCharacter(vtdDetails);
         }
 
         return calculateStats(id);
@@ -679,9 +780,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         if (vtdDetails.getRoomNumber() < 7)
             vtdDetails.setRoomNumber(vtdDetails.getRoomNumber() + 1);
 
-        vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + vtdDetails.getStats().getRegen());
-        if (vtdDetails.getCurrentHealth() > (vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus()))
-            vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus());
+        if (vtdDetails.getCurrentHealth() > 0) {
+            vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + vtdDetails.getStats().getRegen());
+
+            if (vtdDetails.getCurrentHealth() > (vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus()))
+                vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus());
+        }
 
         vtdMapper.updateCharacter(vtdDetails);
         vtdMapper.resetCharacterBuffs(id);

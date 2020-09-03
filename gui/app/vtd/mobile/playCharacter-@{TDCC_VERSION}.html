@@ -1,9 +1,12 @@
 <div class="row">
-    <div class="col-xs-12 col-md-12 text-center" ng-class="{'green-helath' : isHpGreen(), 'orange-helath' : isHpOrange(), 'red-helath' : isHpRed()}" style="height: 25px;margin:0px;padding:0px">
-        <div class="col-xs-6 text-left" style="padding-left:5px">
+    <div class="col-xs-12 col-md-12 text-center" ng-class="{'green-helath' : isHpGreen(), 'orange-helath' : isHpOrange(), 'red-helath' : isHpRed()}" style="height:30px;margin:0px;padding:0px;">
+        <div class="col-xs-4 text-left nowrap-truncate" style="padding-left:5px;padding-right:5px;margin-top:3px">
             <strong>{{characterContext.name}}</strong>
         </div>
-        <div class="col-xs-6 text-right" style="padding-right:5px">
+        <div class="col-xs-4 text-center" style="padding-left:5px;padding-right:5px;margin-top:3px" ng-click="nextRoom(characterContext.id)">
+            <strong>Room: {{characterContext.roomNumber}}/7 <span class="fa fa-arrow-circle-right"></span></strong>
+        </div>
+        <div class="col-xs-4 text-right" style="padding-right:5px;margin-top:3px">
             <strong>HP: {{characterContext.currentHealth}}/{{characterContext.stats.health}}</strong>
         </div>
     </div>

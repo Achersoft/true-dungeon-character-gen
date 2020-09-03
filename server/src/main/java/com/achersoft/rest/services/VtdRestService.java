@@ -7,6 +7,7 @@ import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.enums.Buff;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.enums.Difficulty;
+import com.achersoft.tdcc.enums.InGameEffect;
 import com.achersoft.tdcc.party.PartyService;
 import com.achersoft.tdcc.party.dao.Party;
 import com.achersoft.tdcc.party.dao.PartyDetails;
@@ -124,8 +125,10 @@ public class VtdRestService {
                                   @PathParam("skillId") String skillId,
                                   @QueryParam("selfTarget") boolean selfTarget,
                                   @QueryParam("selfHeal") int selfHeal,
-                                  @QueryParam("madEvoker") boolean madEvoker) throws Exception {
-        return VtdDetailsDTO.fromDAO(virtualTdService.useSkill(id, skillId, selfTarget, selfHeal, madEvoker));
+                                  @QueryParam("madEvoker") boolean madEvoker,
+                                  @QueryParam("lohNumber") int lohNumber,
+                                  @QueryParam("inGameEffect") InGameEffect inGameEffect) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.useSkill(id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect));
     }
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
@@ -158,6 +161,16 @@ public class VtdRestService {
     public VtdDetailsDTO removeBuff(@PathParam("id") String id,
                                     @QueryParam("buff") Buff buff) throws Exception {
         return VtdDetailsDTO.fromDAO(virtualTdService.removeBuff(id, buff));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @DELETE
+    @Path("/{id}/effect")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO removeInGameEffect(@PathParam("id") String id,
+                                    @QueryParam("inGameEffect") InGameEffect inGameEffect) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.removeEffect(id, inGameEffect));
     }
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})

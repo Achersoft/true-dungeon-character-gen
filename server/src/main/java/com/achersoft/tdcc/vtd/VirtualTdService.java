@@ -2,6 +2,7 @@ package com.achersoft.tdcc.vtd;
 
 import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.enums.Buff;
+import com.achersoft.tdcc.enums.InGameEffect;
 import com.achersoft.tdcc.party.dao.SelectableCharacters;
 import com.achersoft.tdcc.vtd.dao.VtdBuff;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
@@ -16,10 +17,11 @@ public interface VirtualTdService {
     VtdDetails setBonusInit(String id, int init);
     VtdDetails setBonusHealth(String id, int health);
     VtdDetails modifyHealth(String id, int health);
-    VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker);
+    VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect);
     VtdDetails unuseSkill(String id, String skillId);
     VtdDetails addBuff(String id, Buff buff);
     VtdDetails removeBuff(String id, Buff buff);
+    VtdDetails removeEffect(String id, InGameEffect inGameEffect);
     VtdDetails nextRoom(String id);
     VtdDetails setPoly(String id, String polyId);
     VtdDetails resetCharacter(String id);

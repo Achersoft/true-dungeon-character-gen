@@ -66,6 +66,7 @@ angular.module('main')
     $scope.damageTaken = -1;
     $scope.damageAmount = 0;
     $scope.healAmount = 0;
+    $scope.isFurryThrow = false;
     $scope.characterContext = vtdState.get();
 
     vtdSvc.getCharacter($routeParams.characterId).then(function(result) {
@@ -98,6 +99,7 @@ angular.module('main')
         $scope.totalCritDmg = 0;
         $scope.rollDmgExplosionText = null;
         $scope.rollDmgExplosionTextOff = null;
+        $scope.isFurryThrow = false;
     };
     
     $scope.setDefendIndex =  function(index) {
@@ -125,6 +127,10 @@ angular.module('main')
     
     $scope.setDamageModifierIndex =  function(index) {
         $scope.damageModifierIndex = index;
+    };
+    
+    $scope.toggleFurryThrow =  function(isThrow) {
+        $scope.isFurryThrow = isThrow;
     };
     
     $scope.isHpGreen =  function() {
@@ -155,6 +161,15 @@ angular.module('main')
                 return true;
         }
         return false;
+    };
+    
+    $scope.nextRoom = function(id) {
+        confirmDialogSvc.confirm("Are you sure you wish to move to the next room?  This will reset all room effects and buffs except bardsong", function(){
+            vtdSvc.nextRoom(id).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
+        });
     };
     
     $scope.rollToHit =  function() {
@@ -189,40 +204,68 @@ angular.module('main')
 
             if ($scope.rollHit > 1) {
                 if ($scope.attackIndex === 0) {
-                    $scope.rollHit += $scope.characterContext.stats.meleeHit;
-                    if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
-                        $scope.rollDmg = $scope.characterContext.stats.meleeDmg;
-                    if ($scope.characterContext.meleeDmgRange && $scope.characterContext.meleeDmgRange.length > 0) {
-                        $scope.rollDmgNatural = $scope.characterContext.meleeDmgRange[$scope.getRandomInt($scope.characterContext.meleeDmgRange.length)];
-                        $scope.rollDmg += $scope.rollDmgNatural;
+                    if ($scope.isFurryThrow) {
+                        $scope.rollHit += $scope.characterContext.stats.rangeHit;
+                        if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
+                            $scope.rollDmg = $scope.characterContext.stats.rangeDmg + 7;
+                        if ($scope.characterContext.meleeDmgRange && $scope.characterContext.meleeDmgRange.length > 0) {
+                            $scope.rollDmgNatural = $scope.characterContext.meleeDmgRange[$scope.getRandomInt($scope.characterContext.meleeDmgRange.length)];
+                            $scope.rollDmg += $scope.rollDmgNatural;
 
-                        if ($scope.characterContext.meleeWeaponExplodeRange && $scope.characterContext.meleeWeaponExplodeRange.includes($scope.rollDmgNatural)) {
-                            $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
-                        }
-
-                        if ($scope.rollHitNatural >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD")) {
-                            if ($scope.rollHitNatural === 20) {
-                                if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
-                                    $scope.critDmg = $scope.rollDmg*3;
-                                else 
-                                    $scope.critDmg = $scope.rollDmg*2;
-                            } else {
-                                if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
-                                    $scope.critDmg = $scope.rollDmg*3;
-                                else
-                                    $scope.critDmg = $scope.rollDmg*2;
+                            if ($scope.characterContext.meleeWeaponExplodeRange && $scope.characterContext.meleeWeaponExplodeRange.includes($scope.rollDmgNatural)) {
+                                $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
                             }
-                            var buff = $scope.hasBuff("Fury");
-                            if (buff !== null) 
-                                $scope.removeBuff(buff);
-                        } else if ($scope.hasBuff("Fury")) {
-                            var buff = $scope.hasBuff("Fury");
-                            if (buff !== null) {
-                                if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
-                                    $scope.critDmg = $scope.rollDmg*3;
-                                else
-                                    $scope.critDmg = $scope.rollDmg*2;
-                                $scope.removeBuff(buff);
+
+                            if ($scope.rollHitNatural >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD")) {
+                                if ($scope.rollHitNatural === 20) {
+                                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
+                                        $scope.critDmg = $scope.rollDmg*3;
+                                    else 
+                                        $scope.critDmg = $scope.rollDmg*2;
+                                } else {
+                                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
+                                        $scope.critDmg = $scope.rollDmg*3;
+                                    else
+                                        $scope.critDmg = $scope.rollDmg*2;
+                                }
+                            }
+                        }
+                    } else {
+                        $scope.rollHit += $scope.characterContext.stats.meleeHit;
+                        if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
+                            $scope.rollDmg = $scope.characterContext.stats.meleeDmg;
+                        if ($scope.characterContext.meleeDmgRange && $scope.characterContext.meleeDmgRange.length > 0) {
+                            $scope.rollDmgNatural = $scope.characterContext.meleeDmgRange[$scope.getRandomInt($scope.characterContext.meleeDmgRange.length)];
+                            $scope.rollDmg += $scope.rollDmgNatural;
+
+                            if ($scope.characterContext.meleeWeaponExplodeRange && $scope.characterContext.meleeWeaponExplodeRange.includes($scope.rollDmgNatural)) {
+                                $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                            }
+
+                            if ($scope.rollHitNatural >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD")) {
+                                if ($scope.rollHitNatural === 20) {
+                                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
+                                        $scope.critDmg = $scope.rollDmg*3;
+                                    else 
+                                        $scope.critDmg = $scope.rollDmg*2;
+                                } else {
+                                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
+                                        $scope.critDmg = $scope.rollDmg*3;
+                                    else
+                                        $scope.critDmg = $scope.rollDmg*2;
+                                }
+                                var buff = $scope.hasBuff("Fury");
+                                if (buff !== null) 
+                                    $scope.removeBuff(buff);
+                            } else if ($scope.hasBuff("Fury")) {
+                                var buff = $scope.hasBuff("Fury");
+                                if (buff !== null) {
+                                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
+                                        $scope.critDmg = $scope.rollDmg*3;
+                                    else
+                                        $scope.critDmg = $scope.rollDmg*2;
+                                    $scope.removeBuff(buff);
+                                }
                             }
                         }
                     }
@@ -426,40 +469,68 @@ angular.module('main')
         
         if ($scope.rollHitOff > 1) {
             if ($scope.attackIndex === 0) {
-                $scope.rollHitOff += $scope.characterContext.stats.meleeHit;
-                if (!$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD"))
-                    $scope.rollDmgOff = $scope.characterContext.stats.meleeDmg;
-                if ($scope.characterContext.meleeOffhandDmgRange && $scope.characterContext.meleeOffhandDmgRange.length > 0) {
-                    $scope.rollDmgNaturalOff = $scope.characterContext.meleeOffhandDmgRange[$scope.getRandomInt($scope.characterContext.meleeOffhandDmgRange.length)];
-                    $scope.rollDmgOff += $scope.rollDmgNaturalOff;
-                    
-                    if ($scope.characterContext.meleeOffhandWeaponExplodeEffect && $scope.characterContext.meleeOffhandWeaponExplodeEffect.includes($scope.rollDmgNaturalOff)) {
-                        $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
-                    }
-                    
-                    if ($scope.rollHitNaturalOff >= $scope.characterContext.meleeOffhandCritMin && !$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD")) {
-                        if ($scope.rollHitNaturalOff === 20) {
-                            if ($scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
-                                $scope.critDmgOff = $scope.rollDmgOff*3;
-                            else 
-                                $scope.critDmgOff = $scope.rollDmgOff*2;
-                        } else {
-                            if ($scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT"))
-                                $scope.critDmgOff = $scope.rollDmgOff*3;
-                            else
-                                $scope.critDmgOff = $scope.rollDmgOff*2;
+                if ($scope.isFurryThrow) {
+                    $scope.rollHitOff += $scope.characterContext.stats.rangeHit;
+                    if (!$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD"))
+                        $scope.rollDmgOff = $scope.characterContext.stats.rangeDmg + 7;
+                    if ($scope.characterContext.meleeOffhandDmgRange && $scope.characterContext.meleeOffhandDmgRange.length > 0) {
+                        $scope.rollDmgNaturalOff = $scope.characterContext.meleeOffhandDmgRange[$scope.getRandomInt($scope.characterContext.meleeOffhandDmgRange.length)];
+                        $scope.rollDmgOff += $scope.rollDmgNaturalOff;
+
+                        if ($scope.characterContext.meleeOffhandWeaponExplodeEffect && $scope.characterContext.meleeOffhandWeaponExplodeEffect.includes($scope.rollDmgNaturalOff)) {
+                            $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
                         }
-                        var buff = $scope.hasBuff("Fury");
-                        if (buff !== null) 
-                            $scope.removeBuff(buff);
-                    } else if ($scope.hasBuff("Fury")) {
-                        var buff = $scope.hasBuff("Fury");
-                        if (buff !== null) {
-                            if ($scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT"))
-                                $scope.critDmgOff = $scope.rollDmgOff*3;
-                            else
-                                $scope.critDmgOff = $scope.rollDmgOff*2;
-                            $scope.removeBuff(buff);
+
+                        if ($scope.rollHitNaturalOff >= $scope.characterContext.meleeOffhandCritMin && !$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD")) {
+                            if ($scope.rollHitNaturalOff === 20) {
+                                if ($scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
+                                    $scope.critDmgOff = $scope.rollDmgOff*3;
+                                else 
+                                    $scope.critDmgOff = $scope.rollDmgOff*2;
+                            } else {
+                                if ($scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT"))
+                                    $scope.critDmgOff = $scope.rollDmgOff*3;
+                                else
+                                    $scope.critDmgOff = $scope.rollDmgOff*2;
+                            }
+                        }
+                    }
+                } else {
+                    $scope.rollHitOff += $scope.characterContext.stats.meleeHit;
+                    if (!$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD"))
+                        $scope.rollDmgOff = $scope.characterContext.stats.meleeDmg;
+                    if ($scope.characterContext.meleeOffhandDmgRange && $scope.characterContext.meleeOffhandDmgRange.length > 0) {
+                        $scope.rollDmgNaturalOff = $scope.characterContext.meleeOffhandDmgRange[$scope.getRandomInt($scope.characterContext.meleeOffhandDmgRange.length)];
+                        $scope.rollDmgOff += $scope.rollDmgNaturalOff;
+
+                        if ($scope.characterContext.meleeOffhandWeaponExplodeEffect && $scope.characterContext.meleeOffhandWeaponExplodeEffect.includes($scope.rollDmgNaturalOff)) {
+                            $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+                        }
+
+                        if ($scope.rollHitNaturalOff >= $scope.characterContext.meleeOffhandCritMin && !$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD")) {
+                            if ($scope.rollHitNaturalOff === 20) {
+                                if ($scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
+                                    $scope.critDmgOff = $scope.rollDmgOff*3;
+                                else 
+                                    $scope.critDmgOff = $scope.rollDmgOff*2;
+                            } else {
+                                if ($scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT"))
+                                    $scope.critDmgOff = $scope.rollDmgOff*3;
+                                else
+                                    $scope.critDmgOff = $scope.rollDmgOff*2;
+                            }
+                            var buff = $scope.hasBuff("Fury");
+                            if (buff !== null) 
+                                $scope.removeBuff(buff);
+                        } else if ($scope.hasBuff("Fury")) {
+                            var buff = $scope.hasBuff("Fury");
+                            if (buff !== null) {
+                                if ($scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "TRIPPLE_CRIT"))
+                                    $scope.critDmgOff = $scope.rollDmgOff*3;
+                                else
+                                    $scope.critDmgOff = $scope.rollDmgOff*2;
+                                $scope.removeBuff(buff);
+                            }
                         }
                     }
                 }
@@ -651,8 +722,8 @@ angular.module('main')
         });
     };
     
-    $scope.useSkill =  function(skillId, selfTarget, selfHeal, madEvoker) {
-        vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker).then(function(result) {
+    $scope.useSkill =  function(skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect) {
+        vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect).then(function(result) {
             vtdState.setContext(result.data);
             $scope.characterContext = vtdState.get();
         });
@@ -760,8 +831,10 @@ angular.module('main')
         });
     };
     
-    tokenAdminSvc.useSkill = function(id, skillId, selfTarget, selfHeal, madEvoker) {
-        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/' + skillId + '/use/?selfTarget=' + selfTarget + '&selfHeal=' + selfHeal + '&madEvoker=' + madEvoker).catch(function(response) {
+    tokenAdminSvc.useSkill = function(id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect) {
+        if (inGameEffect === null)
+            inGameEffect = 'NONE';
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/' + skillId + '/use/?selfTarget=' + selfTarget + '&selfHeal=' + selfHeal + '&madEvoker=' + madEvoker + '&lohNumber=' + lohNumber + '&inGameEffect=' + inGameEffect).catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });
