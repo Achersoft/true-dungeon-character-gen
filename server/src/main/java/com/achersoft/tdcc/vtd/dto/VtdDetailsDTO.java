@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -199,12 +200,21 @@ public class VtdDetailsDTO {
         }
 
         if (dao.getPolys() != null) {
+            VtdPoly nonePoly = null;
             for (VtdPoly poly : dao.getPolys()) {
-                if (poly.isActive())
-                    build.setPoly(poly);
-                else
-                    build.getAvailablePoly().add(poly);
+                if (nonePoly == null && poly.getName().equalsIgnoreCase("None")) {
+                    nonePoly = poly;
+                    if (poly.isActive())
+                        build.setPoly(poly);
+                } else {
+                    if (poly.isActive())
+                        build.setPoly(poly);
+                    else
+                        build.getAvailablePoly().add(poly);
+                }
             }
+            build.getAvailablePoly().sort(Comparator.comparing(vtdPoly -> vtdPoly.getName().toLowerCase()));
+            build.getAvailablePoly().add(0, nonePoly);
         }
 
         if (dao.getMeleeDmgRange() != null && !dao.getMeleeDmgRange().isEmpty())

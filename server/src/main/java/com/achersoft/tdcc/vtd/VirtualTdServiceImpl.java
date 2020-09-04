@@ -58,7 +58,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             }).filter(Objects::nonNull).collect(Collectors.toSet()));
 
         final ArrayList<CharacterName> characterNames = new ArrayList<>(characterNameSet);
-        characterNames.sort(Comparator.comparing(CharacterName::getName));
+        characterNames.sort(Comparator.comparing(characterName -> characterName.getName().toLowerCase()));
 
         return characterNames;
     }
@@ -169,6 +169,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasPaladinLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasMonkRelic = new AtomicBoolean(false);
             final AtomicBoolean hasMonkLegendary = new AtomicBoolean(false);
+            final AtomicBoolean hasShamansBelt = new AtomicBoolean(false);
 
             for (CharacterItem characterItem : characterDetails.getItems()) {
                 if (characterItem != null && characterItem.getItemId() != null) {
@@ -203,6 +204,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasMonkRelic.set(true);
                     else if (characterItem.getItemId().equals("1ee980321b7b26f523b7b5e10b6a2856400d1a67"))
                         hasMonkLegendary.set(true);
+                    else if (characterItem.getItemId().equals("e604ae878baea5348138a4b22180b74a34c6ecce"))
+                        hasShamansBelt.set(true);
                 }
             }
 
@@ -267,6 +270,13 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                                         tokenDetails));
                             }
                         }
+                    }
+
+                    if (hasShamansBelt.get()) {
+                        final TokenFullDetails belt = tokenAdminMapper.getTokenDetails("e604ae878baea5348138a4b22180b74a34c6ecce");
+                        polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
+                                belt));
                     }
 
                     if (hasDruidRelic.get()) {
@@ -338,6 +348,13 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         }
                     }
 
+                    if (hasShamansBelt.get()) {
+                        final TokenFullDetails belt = tokenAdminMapper.getTokenDetails("e604ae878baea5348138a4b22180b74a34c6ecce");
+                        elfPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
+                                belt));
+                    }
+
                     vtdMapper.addPolys(elfPolyList);
                     builder.polys(elfPolyList);
                     break;
@@ -358,6 +375,13 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                                         tokenDetails));
                             }
                         }
+                    }
+
+                    if (hasShamansBelt.get()) {
+                        final TokenFullDetails belt = tokenAdminMapper.getTokenDetails("e604ae878baea5348138a4b22180b74a34c6ecce");
+                        wizardPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
+                                belt));
                     }
 
                     vtdMapper.addPolys(wizardPolyList);

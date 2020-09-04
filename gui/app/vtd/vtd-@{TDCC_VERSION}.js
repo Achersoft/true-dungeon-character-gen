@@ -189,7 +189,7 @@ angular.module('main')
         $scope.rollDmgExplosionTextOff = null;
         
         if ($scope.attackIndex === 3) {
-            $scope.rollHitNatural = $scope.getRoll();
+            $scope.rollHitNatural = $scope.harderRoller[$scope.getRandomInt($scope.harderRoller.length)];
             $scope.rollHit = $scope.rollHitNatural + $scope.characterContext.stats.initiative + $scope.characterContext.initBonus;
         } else {
             if (($scope.attackIndex === 0 && $scope.characterContext.meleeDmgRange.length > 0) || ($scope.attackIndex === 1 && $scope.characterContext.rangeDmgRange.length > 0) || ($scope.attackIndex === 2 && $scope.characterContext.meleePolyDmgRange.length > 0) || ($scope.attackIndex === 9 && $scope.characterContext.meleeDmgRange.length > 0)) {
@@ -576,7 +576,7 @@ angular.module('main')
     };
     
     $scope.rollToSave =  function() {
-        $scope.rollSaveNatural = $scope.getRoll();
+        $scope.rollSaveNatural = $scope.harderRoller[$scope.getRandomInt($scope.harderRoller.length)];
         $scope.rollSave = $scope.rollSaveNatural;
         
         if ($scope.rollSave !== 1) {
