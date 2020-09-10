@@ -3,11 +3,11 @@ angular.module('main')
 .config(['$routeProvider', 'RESOURCES', function($routeProvider, RESOURCES) {
   $routeProvider
     .when('/vtd/mine', {
-        templateUrl: (RESOURCES.IS_MOBILE)?'vtd/mobile/myCharacters-@{TDCC_VERSION}.html':'vtd/mobile/myCharacters-@{TDCC_VERSION}.html',
+        templateUrl: (RESOURCES.IS_MOBILE)?'vtd/mobile/myCharacters-@{TDCC_VERSION}.html':'vtd/desktop/myCharacters-@{TDCC_VERSION}.html',
         controller: 'VtdMyCharactersCtrl'
     })
     .when('/vtd/play/:characterId', {
-        templateUrl: (RESOURCES.IS_MOBILE)?'vtd/mobile/playCharacter-@{TDCC_VERSION}.html':'vtd/mobile/playCharacter-@{TDCC_VERSION}.html',
+        templateUrl: (RESOURCES.IS_MOBILE)?'vtd/mobile/playCharacter-@{TDCC_VERSION}.html':'vtd/desktop/playCharacter-@{TDCC_VERSION}.html',
         controller: 'VtdPlayCtrl'
     });
 }])

@@ -185,3 +185,16 @@
 .red-helath {
     background-color:red;
 }
+
+.vtd-background {
+    background-image: url("../images/backdrop.png");
+    background-color: #cccccc;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+html {
+    height: 100%
+}

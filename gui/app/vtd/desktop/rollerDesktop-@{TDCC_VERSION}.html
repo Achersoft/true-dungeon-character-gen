@@ -1,38 +1,4 @@
 <div>
-    <div style="width:50%;margin-left:10px;margin-right:15px">
-            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Melee</strong></h4>
-            <div class="table-responsive" style="border: none;margin-bottom:0px">          
-                <table class="table">
-                    <thead>
-                        <tr>
-                          <th>Hit</th>
-                          <th ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">Polymorph Hit</th>
-                          <th>Damage</th>
-                          <th ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">Polymorph Damage</th>
-                          <th>AC</th>
-                          <th>Types</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                          <td>{{characterContext.stats.meleeHit}}</td>
-                          <td ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">{{characterContext.stats.meleePolyHit}}</td>
-                          <td>{{characterContext.stats.meleeDmg}}</td>
-                          <td ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">{{characterContext.stats.meleePolyDmg}}</td>
-                          <td>{{characterContext.stats.meleeAC}}</td>
-                          <td>
-                              <span ng-if="characterContext.stats.meleeFire">Fire</span>
-                              <span ng-if="characterContext.stats.meleeCold">Cold</span>
-                              <span ng-if="characterContext.stats.meleeShock">Shock</span>
-                              <span ng-if="characterContext.stats.meleeSonic">Sonic</span>
-                              <span ng-if="characterContext.stats.meleeEldritch">Eldritch</span>
-                              <span ng-if="characterContext.stats.meleePoison">Poison</span>
-                              <span ng-if="characterContext.stats.meleeDarkrift">Darkrift</span>
-                              <span ng-if="characterContext.stats.meleeSacred">Sacred</span>
-                          </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+ 
 </div>
 
