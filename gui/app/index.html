@@ -16,14 +16,14 @@
   <link rel="stylesheet" href="components/angular-material/angular-material.css">
   <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
   <link data-require="bootstrap-css@*" data-semver="3.0.0" href="css/titan.css" rel="stylesheet" type="text/css"/>
-  <link rel="stylesheet" href="css/custom3.css">
+  <link rel="stylesheet" href="css/custom-@{TDCC_VERSION}.css">
   <link href="components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <script src="components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
-<body style="height:100%">
-    <div ng-style="!RESOURCES.IS_MOBILE && {'min-width':'1280px'}" style="height: 100%">
+<body>
+    <div ng-style="!RESOURCES.IS_MOBILE && {'min-width':'1280px','height':'100%'}">
         <nav-bar style="margin-bottom:0px;"></nav-bar>
-        <div ng-view class="col-xs-12" style="padding:0"></div>
+        <div ng-view class="col-xs-12" style="padding:0;height:calc(100% - 75px)"></div>
     </div>
     
   <script src="components/jquery/dist/jquery.js"></script>
@@ -90,6 +90,7 @@
   <script src="vtd/mobile/skillMobileDir-@{TDCC_VERSION}.js"></script>
   <script src="vtd/desktop/statsDesktopDir-@{TDCC_VERSION}.js"></script>
   <script src="vtd/desktop/notesDesktopDir-@{TDCC_VERSION}.js"></script>
+  <script src="vtd/desktop/resultDesktopDir-@{TDCC_VERSION}.js"></script>
   
 </body>
 </html>

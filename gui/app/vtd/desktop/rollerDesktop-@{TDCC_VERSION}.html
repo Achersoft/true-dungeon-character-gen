@@ -1,4 +1,252 @@
-<div>
- 
+<div>    
+    <div style="display:flex;flex-direction:row;min-width:1100px;width:calc(100% - 60px);margin-left:60px;margin-top:15px">
+        <div style="display:flex;flex-direction:column;min-width:375px;width:25%;margin-left:auto;margin-right:auto">
+            <div style="width:100%;margin-left:auto;margin-right:auto">
+                <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <div class="text-center nowrap-truncate" style="margin-left:10px;margin-right:10px">
+                        <h2 style="border-bottom:1pt solid black;margin-bottom:0px;margin-top:0px">{{characterContext.name | limitTo : 25}}</h2>
+                        <h4 style="margin-top:0px">{{characterContext.characterClass | characterclassformat}} - Level {{characterContext.stats.level}}</h4>
+                    </div>
+                </div>
+            </div>
+            <div style="width:100%;margin-left:auto;margin-right:auto;margin-top:15px">
+                <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <div style="display:flex;flex-direction:row;width:100%;">
+                        <div style="width:70%;margin-left:15px;margin-right:10px">
+                            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Attack Melee</strong></h4>
+                            <div style="display:flex;flex-direction:row;width:100%;">
+                                <div style="width:50%">
+                                    <strong>Hit:</strong>&nbsp;{{characterContext.stats.meleeHit}}
+                                </div>
+                                <div style="width:50%">
+                                    <strong>Damage:</strong>&nbsp;{{characterContext.stats.meleeDmg}}
+                                </div>
+                            </div>
+                            <div style="margin-top:5px">
+                                <strong>Type:</strong>&nbsp;
+                                <span ng-if="characterContext.stats.meleeFire">Fire</span>
+                                <span ng-if="characterContext.stats.meleeCold">Cold</span>
+                                <span ng-if="characterContext.stats.meleeShock">Shock</span>
+                                <span ng-if="characterContext.stats.meleeSonic">Sonic</span>
+                                <span ng-if="characterContext.stats.meleeEldritch">Eldritch</span>
+                                <span ng-if="characterContext.stats.meleePoison">Poison</span>
+                                <span ng-if="characterContext.stats.meleeDarkrift">Darkrift</span>
+                                <span ng-if="characterContext.stats.meleeSacred">Sacred</span>
+                            </div>
+                        </div>
+                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
+                            <img  src="images/d20.png" style="width:100%">
+                        </div>
+                    </div>          
+                </div>
+            </div>
+            <div style="width:100%;margin-left:auto;margin-right:auto;margin-top:15px">
+                <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <div style="display:flex;flex-direction:row;width:100%;">
+                        <div style="width:70%;margin-left:15px;margin-right:10px">
+                            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Attack Range</strong></h4>
+                            <div style="display:flex;flex-direction:row;width:100%;">
+                                <div style="width:50%">
+                                    <strong>Hit:</strong>&nbsp;{{characterContext.stats.rangeHit}}
+                                </div>
+                                <div style="width:50%">
+                                    <strong>Damage:</strong>&nbsp;{{characterContext.stats.rangeDmg}}
+                                </div>
+                            </div>
+                            <div style="margin-top:5px">
+                                <strong>Type:</strong>&nbsp;
+                                <span ng-if="characterContext.stats.rangeFire">Fire</span>
+                                <span ng-if="characterContext.stats.rangeCold">Cold</span>
+                                <span ng-if="characterContext.stats.rangeShock">Shock</span>
+                                <span ng-if="characterContext.stats.rangeSonic">Sonic</span>
+                                <span ng-if="characterContext.stats.rangeEldritch">Eldritch</span>
+                                <span ng-if="characterContext.stats.rangePoison">Poison</span>
+                                <span ng-if="characterContext.stats.rangeDarkrift">Darkrift</span>
+                                <span ng-if="characterContext.stats.rangeSacred">Sacred</span>
+                            </div>
+                        </div>
+                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
+                            <img  src="images/d20.png" style="width:100%">
+                        </div>
+                    </div>          
+                </div>
+            </div>
+            <div style="width:100%;margin-left:auto;margin-right:auto;margin-top:15px" ng-if="characterContext.characterClass === 'DRUID' || characterContext.characterClass === 'ELF_WIZARD' || characterContext.characterClass === 'WIZARD'">
+                <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <div style="display:flex;flex-direction:row;width:100%;">
+                        <div style="width:70%;margin-left:15px;margin-right:10px">
+                            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Attack Polymorph</strong></h4>
+                            <div style="display:flex;flex-direction:row;width:100%;">
+                                <div style="width:50%">
+                                    <strong>Hit:</strong>&nbsp;{{characterContext.stats.meleePolyHit}}
+                                </div>
+                                <div style="width:50%">
+                                    <strong>Damage:</strong>&nbsp;{{characterContext.stats.meleePolyDmg}}
+                                </div>
+                            </div>
+                            <div style="margin-top:5px">
+                                <strong>Type:</strong>&nbsp;
+                                <span ng-if="characterContext.stats.meleeFire">Fire</span>
+                                <span ng-if="characterContext.stats.meleeCold">Cold</span>
+                                <span ng-if="characterContext.stats.meleeShock">Shock</span>
+                                <span ng-if="characterContext.stats.meleeSonic">Sonic</span>
+                                <span ng-if="characterContext.stats.meleeEldritch">Eldritch</span>
+                                <span ng-if="characterContext.stats.meleePoison">Poison</span>
+                                <span ng-if="characterContext.stats.meleeDarkrift">Darkrift</span>
+                                <span ng-if="characterContext.stats.meleeSacred">Sacred</span>
+                            </div>
+                        </div>
+                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
+                            <img  src="images/d20.png" style="width:100%">
+                        </div>
+                    </div>          
+                </div>
+            </div>
+            <div style="width:100%;margin-left:auto;margin-right:auto;margin-top:15px" ng-if="characterContext.characterClass === 'ROGUE'">
+                <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <div style="display:flex;flex-direction:row;width:100%;">
+                        <div style="width:70%;margin-left:15px;margin-right:10px">
+                            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Sneak Attack Melee</strong></h4>
+                            <div style="display:flex;flex-direction:row;width:100%;">
+                                <div style="width:50%">
+                                    <strong>Hit:</strong>&nbsp;{{characterContext.stats.meleeHit + characterContext.meleeSneakHit}}
+                                </div>
+                                <div style="width:50%">
+                                    <strong>Damage:</strong>&nbsp;{{characterContext.stats.meleeDmg + characterContext.meleeSneakDamage}} 
+                                </div>
+                            </div>
+                            <div style="margin-top:5px">
+                                <strong>Type:</strong>&nbsp;
+                                <span ng-if="characterContext.stats.meleeFire">Fire</span>
+                                <span ng-if="characterContext.stats.meleeCold">Cold</span>
+                                <span ng-if="characterContext.stats.meleeShock">Shock</span>
+                                <span ng-if="characterContext.stats.meleeSonic">Sonic</span>
+                                <span ng-if="characterContext.stats.meleeEldritch">Eldritch</span>
+                                <span ng-if="characterContext.stats.meleePoison">Poison</span>
+                                <span ng-if="characterContext.stats.meleeDarkrift">Darkrift</span>
+                                <span ng-if="characterContext.stats.meleeSacred">Sacred</span>
+                            </div>
+                        </div>
+                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
+                            <img  src="images/d20.png" style="width:100%">
+                        </div>
+                    </div>          
+                </div>
+            </div>
+            <div style="width:100%;margin-left:auto;margin-right:auto;margin-top:15px" ng-if="characterContext.characterClass === 'ROGUE'">
+                <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <div style="display:flex;flex-direction:row;width:100%;">
+                        <div style="width:70%;margin-left:15px;margin-right:10px">
+                            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Sneak Attack Range</strong></h4>
+                            <div style="display:flex;flex-direction:row;width:100%;">
+                                <div style="width:50%">
+                                    <strong>Hit:</strong>&nbsp;{{characterContext.stats.rangeHit + characterContext.rangeSneakHit}}
+                                </div>
+                                <div style="width:50%">
+                                    <strong>Damage:</strong>&nbsp;{{characterContext.stats.rangeDmg + characterContext.rangeSneakDamage}} 
+                                </div>
+                            </div>
+                            <div style="margin-top:5px">
+                                <strong>Type:</strong>&nbsp;
+                                <span ng-if="characterContext.stats.rangeFire">Fire</span>
+                                <span ng-if="characterContext.stats.rangeCold">Cold</span>
+                                <span ng-if="characterContext.stats.rangeShock">Shock</span>
+                                <span ng-if="characterContext.stats.rangeSonic">Sonic</span>
+                                <span ng-if="characterContext.stats.rangeEldritch">Eldritch</span>
+                                <span ng-if="characterContext.stats.rangePoison">Poison</span>
+                                <span ng-if="characterContext.stats.rangeDarkrift">Darkrift</span>
+                                <span ng-if="characterContext.stats.rangeSacred">Sacred</span>
+                            </div>
+                        </div>
+                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
+                            <img  src="images/d20.png" style="width:100%">
+                        </div>
+                    </div>          
+                </div>
+            </div>       
+        </div>
+        <div style="display:flex;flex-direction:column;min-width:375px;width:33%;margin-left:auto;margin-right:auto;">
+            <div style="width:100%;margin-left:auto;margin-right:auto">
+                <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <div class="text-center" style="margin-left:10px;margin-right:10px">
+                        <h2 style="border-bottom:1pt solid black;margin-bottom:0px;margin-top:0px">Thornbarb Pass</h2>
+                        <h4 style="margin-top:0px"><strong>Room: {{characterContext.roomNumber}}/7 <span class="fa fa-arrow-circle-right"></span></strong></h4>
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:row;width:100%;margin-left:auto;margin-right:auto;margin-top:15px">   
+                <div style="margin-left:auto;margin-right:auto">
+                    <div style="background-image:url('images/init.png');width:125px;height:90px">
+                        <div class="text-center" style="margin-left:30px;margin-right:30px;padding-top:9px">
+                            <span style="width:100%">Initiative</span>
+                            <div style="margin-top:5px;background-color: white; border: 2px solid grey">
+                               {{characterContext.stats.initiative + characterContext.initBonus}}
+                            </div>
+                            <img class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
+                        </div> 
+                    </div>
+                </div>
+                <div style="width:90px;margin-left:auto;margin-right:auto">
+                    <div style="background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                        <div class="text-center" style="margin-left:10px;margin-right:10px;margin-top:8px">
+                            <span style="width:100%">Fortitude</span>
+                            <div style="margin-top:5px;background-color: white; border: 2px solid grey">
+                               {{characterContext.stats.fort}} 
+                            </div>
+                            <img class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
+                        </div>
+                    </div>
+                </div>
+                <div style="width:90px;margin-left:auto;margin-right:auto">
+                    <div style="background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                        <div class="text-center" style="margin-left:10px;margin-right:10px;margin-top:8px">
+                            <span style="width:100%">Reflex</span>
+                            <div style="margin-top:5px;background-color: white; border: 2px solid grey">
+                               {{characterContext.stats.reflex}} 
+                            </div>
+                            <img class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
+                        </div>
+                    </div>
+                </div>
+                <div style="width:90px;margin-left:auto;margin-right:auto">
+                    <div style="background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                        <div class="text-center" style="margin-left:10px;margin-right:10px;margin-top:8px">
+                            <span style="width:100%">Will</span>
+                            <div style="margin-top:5px;background-color: white; border: 2px solid grey">
+                               {{characterContext.stats.will}} 
+                            </div>
+                            <img class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            <div style="width:100%;margin-left:auto;margin-right:auto;margin-top:25px">
+                <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <result-desktop></result-desktop>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;min-width:375px;width:25%;margin-left:auto;margin-right:auto">
+            <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <div style="display:flex;flex-direction:row;width:100%;">
+                        <div style="width:50%">
+                            <button class="btn btn-danger" style="width:100%;border-top-left-radius:25px" ng-click="exportToPDF()">
+                                <span class="fa fa-bolt"></span> Take Damage 
+                            </button>
+                            <md-input-container md-no-float class="md-block hide-validation-error" style="margin:0px">
+                                <input type="number" ng-model="user.address2" placeholder="Heal Amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </md-input-container>
+                            <button class="btn btn-success" style="width:100%;border-bottom-left-radius:25px" ng-click="">
+                                <span class="fa fa-medkit"></span> Heal 
+                            </button>
+                        </div>
+                        <div style="width:50%" class="text-center">
+                            <strong>Hit Points</strong>
+                            <br>
+                            <strong style="font-size:55px">{{characterContext.currentHealth}}/{{characterContext.stats.health}}</strong>
+                        </div>
+                    </div>
+                </div>
+        </div>
 </div>
 

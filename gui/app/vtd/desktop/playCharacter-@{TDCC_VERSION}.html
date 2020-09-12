@@ -1,4 +1,5 @@
-<div class="col-xs-12 vtd-background" style="height:100%;width:100%;">
+<div class="col-xs-12 parent" style="min-height:100%;width:100%;padding:0px">
+    <div class="vtd-background"></div>
     
     <md-button class="md-fab md-mini md-fab-bottom-left" ng-click="setAttackIndex(3)" ng-class="attackIndex === 3 ? 'md-primary' : 'md-secondary'" aria-label="Settings" style="bottom:170px;left:10px;position:fixed">
         <md-icon  md-svg-src="images/settings.svg"></md-icon>
@@ -16,7 +17,11 @@
         <md-icon  md-svg-src="images/gavel.svg"></md-icon>
     </md-button>
     
-    <play-stats-desktop ng-show="attackIndex === 1"></play-stats-desktop>
+    <div class="foreground col-xs-12">
+        <play-notes-desktop ng-show="attackIndex === 2"></play-notes-desktop>
+        <play-stats-desktop ng-show="attackIndex === 1"></play-stats-desktop>
+        <roller-desktop ng-show="attackIndex === 0"></roller-desktop>
+    </div>
     
 </div>
 

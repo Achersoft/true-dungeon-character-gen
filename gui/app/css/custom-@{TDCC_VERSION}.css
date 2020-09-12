@@ -1,0 +1,266 @@
+.navbar-toggle {
+    height: 75px;
+    padding: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.navbar {
+    margin-bottom: 0px;
+}
+
+.navbar-nav > li > a {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    line-height: 75px;
+}
+
+@media (max-width: 767px) {
+    .navbar-nav > li > a {
+    line-height: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;}
+}
+
+.navbar-brand {
+    padding: 0px;
+}
+
+.nowrap-truncate {
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+.rotate90 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.modal-header {
+  background-color: rgb(51, 51, 51);
+  color: rgb(255, 255, 255);
+}
+
+.modal-title {
+  font-weight: bold;
+}
+
+.desktop-item-modal-dialog .modal-dialog{
+  width: 60%;
+  height: 90%;
+  margin-left: 20%;
+}
+
+.desktop-item-modal-content .modal-content{
+  height: auto;
+  min-height: 100%;
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+  background-color: rgb(51, 51, 51);
+  color:white;
+}
+
+.desktop-modal-content .modal-content{
+  height: auto;
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+  background-color: rgb(51, 51, 51);
+  color:white;
+}
+
+.mobile-modal-dialog .modal-dialog{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.mobile-modal-content .modal-content{
+  height: auto;
+  min-height: 100%;
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+  background-color: rgb(51, 51, 51);
+  -webkit-border-radius: 0px !important;
+  -moz-border-radius: 0px !important;
+  border-radius: 0px !important; 
+  border:0;
+}
+
+.strikethrough {
+    text-decoration: Line-Through
+}
+
+.popover {
+    max-width: 400px;
+    width: 400px;
+    height: 532px;
+}
+
+.popover-title {
+    font-weight: bold;
+}
+
+.popover-content {
+    padding:0;
+}
+
+.error-text {
+    color: red;
+}
+
+.no-token {
+    background-color:transparent;
+}
+
+.common-token {
+    background-color:darkgoldenrod;
+}
+
+.uncommon-token {
+    background-color:#41A317;
+}
+
+.rare-token {
+    background-color:crimson;
+}
+
+.ultrarare-token {
+    background-color:purple;
+}
+
+.enhanced-token {
+    background-color:royalblue;
+}
+
+.exalted-token {
+    background-color:royalblue;
+}
+
+.relic-token {
+    background-color:darkblue;
+}
+
+.legendary-token {
+    background-color:orange;
+}
+
+.eldritch-token {
+    background-color:#165417;
+}
+
+.premium-token {
+    background-color:#3E7C3F;
+}
+
+.artifact-token {
+    background-color:blueviolet;
+}
+
+.reward-token {
+    background-color:#c4c4c4;
+}
+
+.toggle-switch {
+    min-width: 200px;
+    border-color: lightgray;
+}
+
+.green-helath {
+    background-color:limegreen;
+}
+
+.orange-helath {
+    background-color:orange;
+}
+
+.red-helath {
+    background-color:red;
+}
+
+.vtd-background {
+    background-image: url("../images/tbp.jpg");
+    background-color: #cccccc;
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: absolute;
+}
+
+.parent{
+  position:relative;
+}
+
+.foreground{
+  position:relative;
+}
+
+.diamond {
+   width: 80px; 
+   height: 80px; 
+   background: white;
+   margin: 3px 0 0 30px;
+   border: 2px solid #73AD21;
+   /* Rotate */
+   -webkit-transform: rotate(-45deg);
+   -moz-transform: rotate(-45deg);
+   -ms-transform: rotate(-45deg);
+   -o-transform: rotate(-45deg);
+   transform: rotate(-45deg);
+   /* Rotate Origin */
+   -webkit-transform-origin: 0 100%;
+   -moz-transform-origin: 0 100%;
+   -ms-transform-origin: 0 100%;
+   -o-transform-origin: 0 100%;
+   transform-origin: 0 100%;
+}
+
+.twelve-point-star {
+   height: 75px;
+   width: 75px;
+   background: white;
+   border: 2px solid #73AD21;
+}
+.twelve-point-star:before {
+   height: 75px;
+   width: 75px;
+   background: white;
+   content:"";
+   position: absolute;
+   border: 2px solid #73AD21;
+   /* Rotate */
+   -moz-transform: rotate(30deg);
+   -webkit-transform: rotate(30deg);
+   -ms-transform: rotate(30deg);
+   -o-transform: rotate(30deg);
+   transform: rotate(30deg);
+}
+.twelve-point-star:after {
+   height: 75px;
+   width: 75px;
+   background: white;
+   position: absolute;
+   border: 2px solid #73AD21;
+   content:"";
+   /* Rotate */
+   -moz-transform: rotate(-30deg);
+   -webkit-transform: rotate(-30deg);
+   -ms-transform: rotate(-30deg);
+   -o-transform: rotate(-30deg);
+   transform: rotate(-30deg);
+}
+
+.hide-validation-error .md-errors-spacer { display: none; }
