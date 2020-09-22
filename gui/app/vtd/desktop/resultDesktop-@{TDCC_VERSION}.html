@@ -1,34 +1,12 @@
-<div style="overflow-y:scroll;max-height:400px">
-    <div class="col-xs-12" style="margin-top:10px" ng-if="characterContext.alwaysInEffect.length > 0">
-        <h4 style="border-bottom:1pt solid black;"><strong>Always In Effect</strong></h4>
+<div style="height:410px">
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:0px">
+        <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="resultIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-left-radius:25px" ng-click="setResultIndex(0)">Result </span> 
+        <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="resultIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setResultIndex(1)">Buffs </span> 
+        <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="resultIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setResultIndex(2)">Bard Song </span>
+        <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="resultIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-right-radius:25px" ng-click="setResultIndex(3)">History </span>
     </div>
-    <ul ng-if="characterContext.alwaysInEffect.length > 0">
-        <li ng-repeat-start="effect in characterContext.alwaysInEffect" ng-repeat-end style="clear:left;">
-            {{effect}}
-        </li>
-    </ul>
-    <div class="col-xs-12" style="margin-top:10px" ng-if="characterContext.oncePerRound.length > 0">
-        <h4 style="border-bottom:1pt solid black;"><strong>Once Per Round</strong></h4>
+    <div class="col-xs-12 col-sm-12 col-md-12" style="overflow-y:auto;height:360px;padding:0px">
+        {{last.type}} {{last}}{{history}}
+        <div class="col-xs-12" style="margin-top:15px;"></div>
     </div>
-    <ul ng-if="characterContext.oncePerRound.length > 0">
-        <li ng-repeat-start="effect in characterContext.oncePerRound" ng-repeat-end style="clear:left;">
-            {{effect}}
-        </li>
-    </ul>
-    <div class="col-xs-12" style="margin-top:10px" ng-if="characterContext.oncePerRoom.length > 0">
-        <h4 style="border-bottom:1pt solid black;"><strong>Once Per Room</strong></h4>
-    </div>
-    <ul ng-if="characterContext.oncePerRoom.length > 0">
-        <li ng-repeat-start="effect in characterContext.oncePerRoom" ng-repeat-end style="clear:left;">
-            {{effect}}
-        </li>
-    </ul>
-    <div class="col-xs-12" style="margin-top:10px" ng-if="characterContext.oncePerGame.length > 0">
-        <h4 style="border-bottom:1pt solid black;"><strong>Once Per Game</strong></h4>
-    </div>
-    <div class="col-xs-12" style="margin-top:8px;" ng-if="characterContext.oncePerGame.length > 0" ng-repeat-start="effect in characterContext.oncePerGame" ng-repeat-end>
-        <strike-checkbox text="{{effect}}"></strike-checkbox>
-    </div>
-    <div class="col-xs-12" style="margin-top:15px;"></div>
 </div>
-<div class="col-xs-12" style="margin-top:15px;"></div>

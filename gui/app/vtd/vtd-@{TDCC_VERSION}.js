@@ -8,7 +8,7 @@ angular.module('main')
     })
     .when('/vtd/play/:characterId', {
         templateUrl: (RESOURCES.IS_MOBILE)?'vtd/mobile/playCharacter-@{TDCC_VERSION}.html':'vtd/desktop/playCharacter-@{TDCC_VERSION}.html',
-        controller: 'VtdPlayCtrl'
+        controller: (RESOURCES.IS_MOBILE)?'VtdPlayCtrl':'VtdPlayDesktopCtrl'
     });
 }])
 
@@ -31,6 +31,37 @@ angular.module('main')
             });
         }
     };
+}])
+
+.controller('VtdPlayDesktopCtrl', ['$scope', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', function ($scope, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, confirmDialogSvc) {
+    $scope.attackIndex = 0;
+    $scope.skillIndex = 0;
+    $scope.resultIndex = 0;
+    $scope.characterContext = vtdState.get();
+    $scope.history = vtdHistory.get();
+    $scope.last = vtdHistory.last();
+
+    vtdSvc.getCharacter($routeParams.characterId).then(function(result) {
+        vtdState.setContext(result.data);
+        $scope.characterContext = vtdState.get();
+    });
+    
+    $scope.setSkillIndex =  function(index) {
+        $scope.skillIndex = index;
+    };
+    
+    $scope.setResultIndex =  function(index) {
+        $scope.resultIndex = index;
+        
+        vtdHistory.add({"type":"ATTACK","sub":"MELEE","mHit":23,"oHit":14,"mDmg":55,"oDmg":44});
+        $scope.history = vtdHistory.get();
+        $scope.last = vtdHistory.last();
+    };
+    
+    $scope.setAttackIndex =  function(index) {
+        $scope.attackIndex = index;
+    };
+    
 }])
 
 .controller('VtdPlayCtrl', ['$scope', 'VtdSvc', 'VtdState', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', function ($scope, vtdSvc, vtdState, RESOURCES, $routeParams, $route, confirmDialogSvc) {
@@ -766,6 +797,31 @@ angular.module('main')
         return {
             setContext: setContext,
             get: get
+        };
+    }])
+
+.factory('VtdHistory', [
+    function() {                    
+        var vtdHistory = [];
+        var vtdLast = {};
+        
+        function add(data) {
+            last = data;
+            vtdHistory.push(data);
+        }
+        
+        function get() {
+            return vtdHistory;
+        }
+        
+        function last() {
+            return vtdLast;
+        }
+
+        return {
+            add: add,
+            get: get,
+            last: last
         };
     }])
 

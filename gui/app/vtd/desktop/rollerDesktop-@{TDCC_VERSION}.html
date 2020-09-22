@@ -228,25 +228,30 @@
         </div>
         <div style="display:flex;flex-direction:column;min-width:375px;width:25%;margin-left:auto;margin-right:auto">
             <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
-                    <div style="display:flex;flex-direction:row;width:100%;">
-                        <div style="width:50%">
-                            <button class="btn btn-danger" style="width:100%;border-top-left-radius:25px" ng-click="exportToPDF()">
-                                <span class="fa fa-bolt"></span> Take Damage 
-                            </button>
-                            <md-input-container md-no-float class="md-block hide-validation-error" style="margin:0px">
-                                <input type="number" ng-model="user.address2" placeholder="Heal Amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                            </md-input-container>
-                            <button class="btn btn-success" style="width:100%;border-bottom-left-radius:25px" ng-click="">
-                                <span class="fa fa-medkit"></span> Heal 
-                            </button>
-                        </div>
-                        <div style="width:50%" class="text-center">
-                            <strong>Hit Points</strong>
-                            <br>
-                            <strong style="font-size:55px">{{characterContext.currentHealth}}/{{characterContext.stats.health}}</strong>
-                        </div>
+                <div style="display:flex;flex-direction:row;width:100%;">
+                    <div style="width:50%">
+                        <button class="btn btn-danger" style="width:100%;border-top-left-radius:25px" ng-click="exportToPDF()">
+                            <span class="fa fa-bolt"></span> Take Damage 
+                        </button>
+                        <md-input-container md-no-float class="md-block hide-validation-error" style="margin:0px">
+                            <input type="number" ng-model="user.address2" placeholder="Heal Amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        </md-input-container>
+                        <button class="btn btn-success" style="width:100%;border-bottom-left-radius:25px" ng-click="">
+                            <span class="fa fa-medkit"></span> Heal 
+                        </button>
+                    </div>
+                    <div style="width:50%" class="text-center">
+                        <strong>Hit Points</strong>
+                        <br>
+                        <strong style="font-size:55px">{{characterContext.currentHealth}}/{{characterContext.stats.health}}</strong>
                     </div>
                 </div>
+            </div>
+            <div style="width:100%;margin-left:auto;margin-right:auto;margin-top:25px">
+                <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <skill-desktop></skill-desktop>
+                </div>
+            </div>
         </div>
 </div>
 
