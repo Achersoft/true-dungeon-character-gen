@@ -1,0 +1,174 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.achersoft.tdcc.vtd.admin.persistence.VtdAdminMapper">
+
+    <insert id="addAdventure">
+       INSERT INTO vtd_adventure (id,
+                                  lastModified,
+                                  name,
+                                  passcode)
+                          VALUES (#{id},
+                                  #{lastModified},
+                                  #{name},
+                                  #{passcode})
+    </insert>
+    
+    <insert id="addRoom">
+          INSERT INTO vtd_room (id,
+                                vtdId,
+                                room,
+                                critType,
+                                name,
+                                one,
+                                two,
+                                three,
+                                four,
+                                five,
+                                six,
+                                seven,
+                                eight,
+                                nine,
+                                ten,
+                                eleven,
+                                twelve,
+                                thirteen,
+                                fourteen,
+                                fifteen,
+                                sixteen,
+                                seventeen,
+                                eighteen,
+                                nineteen,
+                                twenty,
+                                cold,
+                                fire,
+                                shock,
+                                sonic,
+                                poison,
+                                sacred,
+                                darkrift,
+                                acid)
+                        VALUES (#{id},
+                                #{vtdId},
+                                #{room},
+                                #{critType},
+                                #{name},
+                                #{one},
+                                #{two},
+                                #{three},
+                                #{four},
+                                #{five},
+                                #{six},
+                                #{seven},
+                                #{eight},
+                                #{nine},
+                                #{ten},
+                                #{eleven},
+                                #{twelve},
+                                #{thirteen},
+                                #{fourteen},
+                                #{fifteen},
+                                #{sixteen},
+                                #{seventeen},
+                                #{eighteen},
+                                #{nineteen},
+                                #{twenty},
+                                #{cold},
+                                #{fire},
+                                #{shock},
+                                #{sonic},
+                                #{poison},
+                                #{sacred},
+                                #{darkrift},
+                                #{acid})
+    </insert>
+
+    <select id="getAdventure" resultType="com.achersoft.tdcc.vtd.admin.dao.VtdSetting">
+         SELECT id,
+                lastModified,
+                name,
+                passcode
+           FROM vtd_adventure
+          WHERE id = #{id}
+    </select>
+
+    <select id="getRooms" resultType="com.achersoft.tdcc.vtd.admin.dao.VtdRoom">
+         SELECT id,
+                vtdId,
+                room,
+                critType,
+                name,
+                one,
+                two,
+                three,
+                four,
+                five,
+                six,
+                seven,
+                eight,
+                nine,
+                ten,
+                eleven,
+                twelve,
+                thirteen,
+                fourteen,
+                fifteen,
+                sixteen,
+                seventeen,
+                eighteen,
+                nineteen,
+                twenty,
+                cold,
+                fire,
+                shock,
+                sonic,
+                poison,
+                sacred,
+                darkrift,
+                acid
+           FROM vtd_room
+          WHERE vtdId = #{vtdId}
+    </select>
+
+    <select id="getRoom" resultType="com.achersoft.tdcc.vtd.admin.dao.VtdRoom">
+         SELECT id,
+                vtdId,
+                room,
+                critType,
+                name,
+                one,
+                two,
+                three,
+                four,
+                five,
+                six,
+                seven,
+                eight,
+                nine,
+                ten,
+                eleven,
+                twelve,
+                thirteen,
+                fourteen,
+                fifteen,
+                sixteen,
+                seventeen,
+                eighteen,
+                nineteen,
+                twenty,
+                cold,
+                fire,
+                shock,
+                sonic,
+                poison,
+                sacred,
+                darkrift,
+                acid
+           FROM vtd_room
+          WHERE id = #{id}
+    </select>
+
+    <delete id="deleteAdventure">
+        DELETE FROM vtd_adventure WHERE id = #{id}
+    </delete>
+</mapper>                          

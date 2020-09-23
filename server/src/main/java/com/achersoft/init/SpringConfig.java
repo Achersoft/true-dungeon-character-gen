@@ -23,6 +23,7 @@ import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
 import com.achersoft.tdcc.vtd.VirtualTdService;
 import com.achersoft.tdcc.vtd.VirtualTdServiceImpl;
+import com.achersoft.tdcc.vtd.admin.persistence.VtdAdminMapper;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
 import com.achersoft.tdcc.vtd.persistence.VtdMapper;
 import com.achersoft.user.UserService;
@@ -59,7 +60,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                                    TokenMapper.class,
                                    CharacterMapper.class,
                                    PartyMapper.class,
-                                   VtdMapper.class
+                                   VtdMapper.class,
+                                   VtdAdminMapper.class
                                  })
 public class SpringConfig {
     

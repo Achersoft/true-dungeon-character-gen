@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="table-responsive" style="border:none;">          
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Last Access</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody> 
+                <tr ng-repeat-start="user in users track by $index" ng-repeat-end>
+                    <td><a ng-href="#/users/edit/{{user.id}}">{{user.username}}</a></td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.lastAccessed | date: 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                    <td><a ng-click="deleteUser(user.id, user.username)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
