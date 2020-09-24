@@ -3,6 +3,9 @@ package com.achersoft.rest.services;
 import com.achersoft.security.UserAuthenticationService;
 import com.achersoft.security.annotations.RequiresPrivilege;
 import com.achersoft.security.type.Privilege;
+import com.achersoft.tdcc.vtd.admin.VirtualTdAdminService;
+import com.achersoft.tdcc.vtd.admin.dao.VtdSetting;
+import com.achersoft.tdcc.vtd.dao.VtdDetails;
 import com.achersoft.user.UserService;
 import com.achersoft.user.dao.ChangePassword;
 import com.achersoft.user.dao.ResetPassword;
@@ -21,62 +24,45 @@ import java.util.stream.Collectors;
 @Path("/settings/vtd")
 public class VtdSettingsRestService {
 
-    private @Inject UserService userProvider; 
-    private @Inject UserAuthenticationService userAuthenticationProvider; 
+    private @Inject VirtualTdAdminService virtualTdAdminService;
+    private @Inject UserAuthenticationService userAuthenticationProvider;
+
+    @PUT
+    @Path("/")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdSetting addAdventure(@Valid @NotNull VtdSetting vtdSetting) throws Exception {
+        return virtualTdAdminService.createAdventure(vtdSetting);
+    }
 
     @RequiresPrivilege({Privilege.ADMIN})
     @GET 
     @Path("/")
     @Produces({MediaType.APPLICATION_JSON})	
-    public List<UserDTO> getUsers() throws Exception {
-        return userProvider.getUsers().stream().map((user) -> {
-            return UserDTO.fromDAO(user);
-        }).collect(Collectors.toList());	
+    public List<VtdSetting> getAdventures() throws Exception {
+        return virtualTdAdminService.getAdventures();
     }
-    
+
     @RequiresPrivilege({Privilege.ADMIN})
     @GET 
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})	
-    public UserDTO getUser(@PathParam("id") String id) throws Exception {
-        return UserDTO.fromDAO(userProvider.getUser(id));	
+    public VtdSetting getAdventure(@PathParam("id") String id) throws Exception {
+        return virtualTdAdminService.getAdventure(id);
     }
 
     @POST 
-    @Path("/create")
+    @Path("/{id}/update")
     @Produces({MediaType.APPLICATION_JSON})	
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createUser(@Valid @NotNull UserDTO user) throws Exception {
-        User createUser = userProvider.createUser(user.toDAO());
-        userAuthenticationProvider.login(createUser);	
-        return Response.status(Response.Status.OK.getStatusCode()).build();
+    public VtdSetting updateAdventure(@PathParam("id") String id, @Valid @NotNull VtdSetting vtdSetting) throws Exception {
+        return virtualTdAdminService.updateAdventure(id, vtdSetting);
     }
-    
-    @RequiresPrivilege({Privilege.ADMIN})
-    @PUT 
-    @Path("/{id}")
-    @Produces({MediaType.APPLICATION_JSON})	
-    @Consumes({MediaType.APPLICATION_JSON})
-    public UserDTO editUser(@PathParam("id")String id, @Valid @NotNull UserDTO user) throws Exception {
-        return UserDTO.fromDAO(userProvider.editUser(user.toDAO()));
-    }
-    
-    @POST 
-    @Path("/resetpassword")
-    public void resetPassword(@Valid @NotNull ResetPassword resetPassword) throws Exception {
-        userProvider.resetPassword(resetPassword);	
-    }
-    
-    @POST 
-    @Path("/reset/changepassword")
-    public void resetPassword(@Valid @NotNull ChangePassword resetPassword) throws Exception {
-        userProvider.resetChangePassword(resetPassword);	
-    }
-    
+
     @RequiresPrivilege({Privilege.ADMIN})
     @DELETE 
     @Path("/{id}")
-    public void deleteUser(@PathParam("id") String id) throws Exception {
-        userProvider.deleteUser(id);	
+    public void deleteAdventure(@PathParam("id") String id) throws Exception {
+        virtualTdAdminService.deleteAdventure(id);
     }
 }

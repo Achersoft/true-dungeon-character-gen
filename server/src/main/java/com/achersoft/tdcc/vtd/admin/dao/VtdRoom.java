@@ -6,15 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Builder
 @Data
 @NoArgsConstructor 
 @AllArgsConstructor
 public class VtdRoom {
-    private String id;
+    private @Builder.Default String id = UUID.randomUUID().toString();
     private String vtdId;
     private int room;
-    private CritType critType;
+    private @Builder.Default CritType critType = CritType.ANY;
     private String name;
     private @Builder.Default int one = 5;
     private @Builder.Default int two = 5;

@@ -6,8 +6,9 @@ import com.achersoft.tdcc.vtd.dao.VtdDetails;
 import java.util.List;
 
 public interface VirtualTdAdminService {
+    VtdSetting createAdventure(VtdSetting vtdSetting);
     List<VtdSetting> getAdventures();
     VtdSetting getAdventure(String id);
     VtdSetting updateAdventure(String id, VtdSetting vtdSetting);
-    VtdDetails deleteAdventure(String id);
+    void deleteAdventure(String id);
 }

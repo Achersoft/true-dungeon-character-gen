@@ -23,6 +23,8 @@ import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
 import com.achersoft.tdcc.vtd.VirtualTdService;
 import com.achersoft.tdcc.vtd.VirtualTdServiceImpl;
+import com.achersoft.tdcc.vtd.admin.VirtualTdAdminService;
+import com.achersoft.tdcc.vtd.admin.VirtualTdAdminServiceImpl;
 import com.achersoft.tdcc.vtd.admin.persistence.VtdAdminMapper;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
 import com.achersoft.tdcc.vtd.persistence.VtdMapper;
@@ -101,7 +103,12 @@ public class SpringConfig {
     public UserAuthenticationService userAuthenticationService() {
         return new UserAuthenticationServiceImpl();
     }
-    
+
+    @Bean
+    public VirtualTdAdminService virtualTdAdminService() {
+        return new VirtualTdAdminServiceImpl();
+    }
+
     @Bean
     public UserService userService() {
         return new UserServiceImpl();

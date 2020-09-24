@@ -83,6 +83,14 @@
                                 #{acid})
     </insert>
 
+    <select id="getAdventures" resultType="com.achersoft.tdcc.vtd.admin.dao.VtdSetting">
+         SELECT id,
+                lastModified,
+                name,
+                passcode
+           FROM vtd_adventure
+    </select>
+
     <select id="getAdventure" resultType="com.achersoft.tdcc.vtd.admin.dao.VtdSetting">
          SELECT id,
                 lastModified,
@@ -167,7 +175,51 @@
            FROM vtd_room
           WHERE id = #{id}
     </select>
-
+    
+    <update id="updateAdventure">
+        UPDATE vtd_adventure SET
+            lastModified = #{lastModified},
+            name = #{name},
+            passcode = #{passcode}
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateRoom">
+        UPDATE vtd_room SET
+            room = #{room},
+            critType = #{critType},
+            name = #{name},
+            one = #{one},
+            two = #{two},
+            three = #{three},
+            four = #{four},
+            five = #{five},
+            six = #{six},
+            seven = #{seven},
+            eight = #{eight},
+            nine = #{nine},
+            ten = #{ten},
+            eleven = #{eleven},
+            twelve = #{twelve},
+            thirteen = #{thirteen},
+            fourteen = #{fourteen},
+            fifteen = #{fifteen},
+            sixteen = #{sixteen},
+            seventeen = #{seventeen},
+            eighteen = #{eighteen},
+            nineteen = #{nineteen},
+            twenty = #{twenty},
+            cold = #{cold},
+            fire = #{fire},
+            shock = #{shock},
+            sonic = #{sonic},
+            poison = #{poison},
+            sacred = #{sacred},
+            darkrift = #{darkrift},
+            acid = #{acid}
+        WHERE id = #{id}
+    </update>
+    
     <delete id="deleteAdventure">
         DELETE FROM vtd_adventure WHERE id = #{id}
     </delete>
