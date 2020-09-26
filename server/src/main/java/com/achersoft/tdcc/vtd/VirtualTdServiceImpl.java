@@ -11,10 +11,10 @@ import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.dao.Token;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
-import com.achersoft.tdcc.vtd.dao.CharacterSkill;
-import com.achersoft.tdcc.vtd.dao.VtdBuff;
-import com.achersoft.tdcc.vtd.dao.VtdDetails;
-import com.achersoft.tdcc.vtd.dao.VtdPoly;
+import com.achersoft.tdcc.vtd.admin.dao.VtdRoom;
+import com.achersoft.tdcc.vtd.admin.dao.VtdSetting;
+import com.achersoft.tdcc.vtd.admin.persistence.VtdAdminMapper;
+import com.achersoft.tdcc.vtd.dao.*;
 import com.achersoft.tdcc.vtd.persistence.VtdMapper;
 import org.springframework.util.StringUtils;
 
@@ -29,6 +29,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     private @Inject CharacterMapper mapper;
     private @Inject CharacterService characterService;
     private @Inject VtdMapper vtdMapper;
+    private @Inject VtdAdminMapper vtdAdminMapper;
     private @Inject TokenMapper tokenMapper;
     private @Inject TokenAdminMapper tokenAdminMapper;
     private @Inject UserPrincipalProvider userPrincipalProvider;
@@ -538,18 +539,24 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     rangeOffhandDmgEffects.add(damageModEffect);
             }
 
+            final VtdSetting aDefault = vtdAdminMapper.getAdventure("default");
+            final List<VtdRoom> roomsByNumber = vtdAdminMapper.getRoomsByNumber(aDefault.getId(), 1);
+
             vtdDetails = builder
                     .characterId(characterDetails.getId())
                     .characterOrigId(origId)
                     .userId(characterDetails.getUserId())
                     .expires(new Date(new Date().getTime() + 86400000))
                     .name(characterDetails.getName())
+                    .adventureId(aDefault.getId())
+                    .adventureName(aDefault.getName())
                     .characterClass(characterDetails.getCharacterClass())
                     .stats(characterDetails.getStats())
                     .currentHealth(characterDetails.getStats().getHealth())
                     .rollerDifficulty(0)
                     .initBonus(0)
                     .roomNumber(1)
+                    .monsters(VtdMonster.fromRoom(roomsByNumber))
                     .availableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())))
                     .notes(characterDetails.getNotes())
                     .characterSkills(characterSkills)
@@ -791,6 +798,26 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
+    public VtdDetails previousRoom(String id) {
+        VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+
+        if (vtdDetails == null)
+            vtdDetails = getVtdCharacter(id, false);
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
+            throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
+
+        vtdDetails.setStats(vtdMapper.getCharacterStats(vtdDetails.getCharacterId()));
+
+        if (vtdDetails.getRoomNumber() > 1)
+            vtdDetails.setRoomNumber(vtdDetails.getRoomNumber() - 1);
+
+        vtdMapper.updateCharacter(vtdDetails);
+        vtdMapper.resetCharacterBuffs(id);
+
+        return calculateStats(id);
+    }
+
+    @Override
     public VtdDetails nextRoom(String id) {
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
@@ -935,6 +962,22 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
+    public VtdDetails setAdventure(String id, String passcode) {
+        final VtdDetails vtdDetails = calculateStats(id);
+
+        final VtdSetting adventureByCode = vtdAdminMapper.getAdventureByCode(passcode);
+        if (adventureByCode != null) {
+            vtdDetails.setAdventureId(adventureByCode.getId());
+            vtdDetails.setAdventureName(adventureByCode.getName());
+            vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber())));
+
+            vtdMapper.updateCharacter(vtdDetails);
+        }
+
+        return vtdDetails;
+    }
+
+    @Override
     public VtdDetails resetCharacter(String id) {
         return getVtdCharacter(id, true);
     }
@@ -950,6 +993,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         vtdDetails.setStats(vtdMapper.getCharacterStats(vtdDetails.getCharacterId()));
         vtdDetails.setNotes(mapper.getCharacterNotes(vtdDetails.getCharacterOrigId()));
         vtdDetails.setPolys(vtdMapper.getCharacterPolys(vtdDetails.getCharacterId()));
+        vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber())));
 
         applyBuffsToStats(vtdDetails.getBuffs(), vtdDetails.getStats(), vtdDetails.isMightyWeapon());
 

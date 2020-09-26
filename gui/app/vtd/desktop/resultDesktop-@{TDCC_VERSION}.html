@@ -6,7 +6,29 @@
         <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="resultIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-right-radius:25px" ng-click="setResultIndex(3)">History </span>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12" style="overflow-y:auto;height:360px;padding:0px">
-        {{last.type}} {{last}}{{history}}
+         <div ng-show="resultIndex === 0">
+            <div class="text-center" ng-show="lastEvent.type === 'INIT'">
+                <h1><strong>Initiative Roll</strong></h1>
+                <span style="font-size:72px">{{lastEvent.result}}({{lastEvent.roll}})</span>
+            </div>
+            <div class="text-center" ng-show="lastEvent.type === 'SAVE'">
+                <div class="text-center" ng-show="lastEvent.sub === 'FORT'">
+                    <h1><strong>Fortitude Save</strong></h1>
+                    <span style="font-size:72px">{{lastEvent.save}}({{lastEvent.roll}})</span>
+                </div>
+                <div class="text-center" ng-show="lastEvent.sub === 'REFLEX'">
+                    <h1><strong>Reflex Save</strong></h1>
+                    <span style="font-size:72px">{{lastEvent.save}}({{lastEvent.roll}})</span>
+                </div>
+                <div class="text-center" ng-show="lastEvent.sub === 'WILL'">
+                    <h1><strong>Will Save</strong></h1>
+                    <span style="font-size:72px">{{lastEvent.save}}({{lastEvent.roll}})</span>
+                </div>
+            </div>
+    
+             {{lastEvent}}
+         </div>
+        
         <div class="col-xs-12" style="margin-top:15px;"></div>
     </div>
 </div>

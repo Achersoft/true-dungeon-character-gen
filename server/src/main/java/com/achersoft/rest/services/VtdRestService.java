@@ -118,6 +118,16 @@ public class VtdRestService {
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @POST
+    @Path("/{id}/adventure")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO setAdventure(@PathParam("id") String id,
+                                      @QueryParam("passcode") String passcode) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.setAdventure(id, passcode));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
     @Path("/{id}/{skillId}/use")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -171,6 +181,15 @@ public class VtdRestService {
     public VtdDetailsDTO removeInGameEffect(@PathParam("id") String id,
                                     @QueryParam("inGameEffect") InGameEffect inGameEffect) throws Exception {
         return VtdDetailsDTO.fromDAO(virtualTdService.removeEffect(id, inGameEffect));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
+    @Path("/{id}/previous")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO previousRoom(@PathParam("id") String id) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.previousRoom(id));
     }
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})

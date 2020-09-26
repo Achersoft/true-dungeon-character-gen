@@ -2,8 +2,10 @@ package com.achersoft.tdcc.vtd.dto;
 
 import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.enums.*;
+import com.achersoft.tdcc.vtd.admin.dao.VtdRoom;
 import com.achersoft.tdcc.vtd.dao.CharacterSkill;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
+import com.achersoft.tdcc.vtd.dao.VtdMonster;
 import com.achersoft.tdcc.vtd.dao.VtdPoly;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class VtdDetailsDTO {
     public String id;
     public String name;
+    public String adventureName;
     public CharacterClass characterClass;
     public CharacterStats stats;
     public Integer currentHealth;
@@ -29,6 +32,7 @@ public class VtdDetailsDTO {
     public int initBonus;
     public int healthBonus;
     public int roomNumber;
+    public List<VtdMonster> monsters;
     public List<InGameEffect> effects;
     public List<String> alwaysInEffect;
     public List<String> oncePerRound;
@@ -88,6 +92,7 @@ public class VtdDetailsDTO {
         VtdDetailsDTO build = VtdDetailsDTO.builder()
                 .id(dao.getCharacterId())
                 .name(dao.getName())
+                .adventureName(dao.getAdventureName())
                 .currentHealth(dao.getCurrentHealth())
                 .characterClass(dao.getCharacterClass())
                 .stats(dao.getStats())
@@ -95,6 +100,7 @@ public class VtdDetailsDTO {
                 .initBonus(dao.getInitBonus())
                 .healthBonus(dao.getHealthBonus())
                 .roomNumber(dao.getRoomNumber())
+                .monsters(dao.getMonsters())
                 .effects(new ArrayList<>())
                 .alwaysInEffect(new ArrayList<>())
                 .oncePerRound(new ArrayList<>())

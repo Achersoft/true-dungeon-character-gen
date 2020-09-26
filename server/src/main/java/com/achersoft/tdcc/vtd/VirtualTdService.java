@@ -22,7 +22,9 @@ public interface VirtualTdService {
     VtdDetails addBuff(String id, Buff buff);
     VtdDetails removeBuff(String id, Buff buff);
     VtdDetails removeEffect(String id, InGameEffect inGameEffect);
+    VtdDetails previousRoom(String id);
     VtdDetails nextRoom(String id);
     VtdDetails setPoly(String id, String polyId);
+    VtdDetails setAdventure(String id, String passcode);
     VtdDetails resetCharacter(String id);
 }

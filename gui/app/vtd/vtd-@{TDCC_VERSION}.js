@@ -37,9 +37,10 @@ angular.module('main')
     $scope.attackIndex = 0;
     $scope.skillIndex = 0;
     $scope.resultIndex = 0;
+    $scope.healAmount = null;
     $scope.characterContext = vtdState.get();
     $scope.history = vtdHistory.get();
-    $scope.last = vtdHistory.last();
+    $scope.lastEvent = vtdHistory.getLast();
 
     vtdSvc.getCharacter($routeParams.characterId).then(function(result) {
         vtdState.setContext(result.data);
@@ -55,13 +56,300 @@ angular.module('main')
         
         vtdHistory.add({"type":"ATTACK","sub":"MELEE","mHit":23,"oHit":14,"mDmg":55,"oDmg":44});
         $scope.history = vtdHistory.get();
-        $scope.last = vtdHistory.last();
+        $scope.lastEvent = vtdHistory.getLast();
+        console.log(vtdHistory.getLast());
     };
     
     $scope.setAttackIndex =  function(index) {
         $scope.attackIndex = index;
     };
     
+    $scope.getRandomInt =  function(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    };
+    
+    $scope.setPoly =  function(polyId) {
+        vtdSvc.setPoly($scope.characterContext.id, polyId).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
+    $scope.previousRoom = function(id) {
+        confirmDialogSvc.confirm("Are you sure you wish to move to the previous room?  This will reset all room effects and buffs except bardsong", function(){
+            vtdSvc.previousRoom(id).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
+        }, "Move to the previous room?");
+    };
+    
+    $scope.nextRoom = function(id) {
+        confirmDialogSvc.confirm("Are you sure you wish to move to the next room?  This will reset all room effects and buffs except bardsong", function(){
+            vtdSvc.nextRoom(id).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
+        }, "Move to the next room?");
+    };
+    
+    $scope.rollInit =  function() {
+        var roll = $scope.getRandomInt(20) + 1;
+      
+        vtdHistory.add({"type":"INIT","sub":"INIT","roll":roll,"result":roll + $scope.characterContext.stats.initiative + $scope.characterContext.initBonus});
+        
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();                      
+    };
+    
+    $scope.rollReflex =  function() {
+        var save = $scope.getRandomInt(20) + 1;
+        
+        if (save > 1)
+            vtdHistory.add({"type":"SAVE","sub":"REFLEX","roll":save,"save":save+$scope.characterContext.stats.reflex});
+        else
+            vtdHistory.add({"type":"SAVE","sub":"REFLEX","roll":save,"save":save});
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();                          
+    };
+    
+    $scope.rollFort =  function() {
+        var save = $scope.getRandomInt(20) + 1;
+        
+        if (save > 1)
+            vtdHistory.add({"type":"SAVE","sub":"FORT","roll":save,"save":save+$scope.characterContext.stats.fort});
+        else
+            vtdHistory.add({"type":"SAVE","sub":"FORT","roll":save,"save":save});
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();                        
+    };
+    
+    $scope.rollWill =  function() {
+        var save = $scope.getRandomInt(20) + 1;
+        
+        if (save > 1)
+            vtdHistory.add({"type":"SAVE","sub":"WILL","roll":save,"save":save+$scope.characterContext.stats.will});
+        else
+            vtdHistory.add({"type":"SAVE","sub":"WILL","roll":save,"save":save});
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();                     
+    };
+    
+    $scope.takeDamage =  function(damage) {
+        this.damageAmount = 0;
+
+        if ($scope.damageIndex === 0 && $scope.characterContext.stats.drMelee)
+            damage -= $scope.characterContext.stats.drMelee;
+        else if ($scope.damageIndex === 1 && $scope.characterContext.stats.drRange)
+            damage -= $scope.characterContext.stats.drRange;
+        else if ($scope.damageIndex === 2 && $scope.characterContext.stats.drSpell)
+            damage -= $scope.characterContext.stats.drSpell;
+                     
+        if ($scope.damageIndex !== 4) {
+            if ($scope.damageModifierIndex === 1 && $scope.characterContext.stats.drFire)
+                damage -= $scope.characterContext.stats.drFire;
+            else if ($scope.damageModifierIndex === 2 && $scope.characterContext.stats.drCold)
+                damage -= $scope.characterContext.stats.drCold;
+            else if ($scope.damageModifierIndex === 3 && $scope.characterContext.stats.drShock)
+                damage -= $scope.characterContext.stats.drShock;
+            else if ($scope.damageModifierIndex === 4 && $scope.characterContext.stats.drSonic)
+                damage -= $scope.characterContext.stats.drSonic;
+            else if ($scope.damageModifierIndex === 5 && $scope.characterContext.stats.drEldritch)
+                damage -= $scope.characterContext.stats.drEldritch;
+            else if ($scope.damageModifierIndex === 6 && $scope.characterContext.stats.drPoison)
+                damage -= $scope.characterContext.stats.drPoison;
+            else if ($scope.damageModifierIndex === 7 && $scope.characterContext.stats.drDarkrift)
+                damage -= $scope.characterContext.stats.drDarkrift;
+            else if ($scope.damageModifierIndex === 8 && $scope.characterContext.stats.drSacred)
+                damage -= $scope.characterContext.stats.drSacred;
+            else if ($scope.damageModifierIndex === 9 && $scope.characterContext.stats.drAcid)
+                damage -= $scope.characterContext.stats.drAcid;
+        }
+        
+        if (damage > 0) {
+            vtdSvc.modifyHealth($scope.characterContext.id, -1*damage).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
+        }
+    };
+    
+    $scope.healDamage =  function(heal) {
+        $scope.healAmount = null;
+
+        //if (+$scope.characterContext.currentHealth > 0 && +heal > 0) {
+        if (+heal > 0) {
+            vtdSvc.modifyHealth($scope.characterContext.id, heal).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
+        }
+    };
+    
+    $scope.setInitBonus =  function(bonus) {
+        if (bonus !== null && bonus >= 0) {
+            vtdSvc.setInitBonus($scope.characterContext.id, bonus).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
+        }
+    };
+    
+    $scope.setHealthBonus =  function(bonus) {
+        if (bonus !== null && bonus >= 0) {
+            vtdSvc.setHealthBonus($scope.characterContext.id, bonus).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
+        }
+    };
+    
+    $scope.resetCharacter = function(id) {
+        confirmDialogSvc.confirm("Are you sure you wish to reset your character?", function(){
+            vtdSvc.resetCharacter(id).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+                $route.updateParams({ characterId: $scope.characterContext.id });
+                $route.reload();
+            });
+        }, "Reset Character?");
+    }; 
+    
+    $scope.hasEffect = function(list, effect) {
+        if(list) {
+            for(var i = 0; i < list.length; i++) {
+                if (list[i] === effect) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+    
+    $scope.hasBuff = function(buffName) {
+        for(var i = 0; i < $scope.characterContext.buffs.length; i++) {
+            if ($scope.characterContext.buffs[i].name === buffName) {
+                return $scope.characterContext.buffs[i];
+            }
+        }
+        return null;
+    };
+    
+    $scope.rollToHitMelee =  function(monsterIndex) {        
+        var hitRoll = 1;
+        var offhandHitRoll = 1;
+        var monster = null;
+        
+        if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
+            hitRoll = $scope.getRandomInt(20) + 1;
+            offhandHitRoll = $scope.getRandomInt(20) + 1;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === null) {
+          
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== null) {
+            
+        } else {
+            monster = $scope.characterContext.monsters[0];
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+        }
+        
+        if ($scope.characterContext.stats.meleeOffhandHit === null) {
+            offhandHitRoll = 1;
+        }
+        
+        if (hitRoll === 1 && offhandHitRoll === 1)
+            vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":true,"roll":1});
+        else {
+            var hitRollMod = 1;
+            var offhandHitRollMod = 1;
+            var rollDmg = 0;
+            var mDmg = 0;
+            var oDmg = 0;
+            var mDmgExp = null;
+            var oDmgExp = null;
+            var mCritDmg = 0;
+            var oCritDmg = 0;
+                
+            if ($scope.isFurryThrow) {
+                if (hitRoll > 1)
+                    hitRollMod = hitRoll + $scope.characterContext.stats.rangeHit;
+                if (offhandHitRoll > 1)
+                    offhandHitRollMod = offhandHitRoll + Math.round($scope.characterContext.stats.rangeHit * .75);
+                if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
+                    rollDmg = $scope.characterContext.stats.rangeDmg + 7;
+            } else {
+                if (hitRoll > 1)
+                    hitRollMod = hitRoll + $scope.characterContext.stats.meleeHit;
+                if (offhandHitRoll > 1)
+                    offhandHitRollMod = offhandHitRoll + $scope.characterContext.stats.meleeOffhandHit;
+                if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
+                    rollDmg = $scope.characterContext.stats.meleeDmg;
+            }
+                
+            if (hitRoll > 1 && $scope.characterContext.meleeDmgRange && $scope.characterContext.meleeDmgRange.length > 0) {
+                mDmg = $scope.characterContext.meleeDmgRange[$scope.getRandomInt($scope.characterContext.meleeDmgRange.length)];
+
+                if ($scope.characterContext.meleeWeaponExplodeRange && $scope.characterContext.meleeWeaponExplodeRange.includes(mDmg)) {
+                    mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
+                }
+
+                if (hitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD")) {
+                    if (hitRoll === 20) {
+                        if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
+                            mCritDmg = (rollDmg + mDmg) * 3;
+                        else 
+                            mCritDmg = (rollDmg + mDmg) * 2;
+                    } else {
+                        if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
+                            mCritDmg = (rollDmg + mDmg) * 3;
+                        else
+                            mCritDmg = (rollDmg + mDmg) * 2;
+                    }
+                    var buff = $scope.hasBuff("Fury");
+                    if (buff !== null) 
+                        $scope.removeBuff(buff);
+                } else if ($scope.hasBuff("Fury")) {
+                    var buff = $scope.hasBuff("Fury");
+                    if (buff !== null) {
+                        if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
+                            mCritDmg = (rollDmg + mDmg) * 3;
+                        else
+                            mCritDmg = (rollDmg + mDmg) * 2;
+                        $scope.removeBuff(buff);
+                    }
+                }
+            }
+
+            if (offhandHitRoll > 1 && $scope.characterContext.meleeOffhandDmgRange && $scope.characterContext.meleeOffhandDmgRange.length > 0) {
+                oDmg = $scope.characterContext.meleeOffhandDmgRange[$scope.getRandomInt($scope.characterContext.meleeOffhandDmgRange.length)];
+
+                if ($scope.characterContext.meleeOffhandWeaponExplodeRange && $scope.characterContext.meleeOffhandWeaponExplodeRange.includes(oDmg)) {
+                    oDmgExp = $scope.characterContext.meleeOffhandWeaponExplodeText;
+                }
+
+                if (offhandHitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD")) {
+                    if (offhandHitRoll === 20) {
+                        if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
+                            oCritDmg = (rollDmg + oDmg) * 3;
+                        else 
+                            oCritDmg = (rollDmg + oDmg) * 2;
+                    } else {
+                        if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
+                            oCritDmg = (rollDmg + oDmg) * 3;
+                        else
+                            oCritDmg = (rollDmg + oDmg) * 2;
+                    }
+                }
+            }
+ 
+            vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
+                "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmg+rollDmg,"oDmg":oDmg+rollDmg,
+                "mCrit":mCritDmg,"oCrit":oCritDmg,"mWeaponExp":mDmgExp,"oWeaponExp":oDmgExp});
+        }
+         
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();  
+    };
 }])
 
 .controller('VtdPlayCtrl', ['$scope', 'VtdSvc', 'VtdState', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', function ($scope, vtdSvc, vtdState, RESOURCES, $routeParams, $route, confirmDialogSvc) {
@@ -788,6 +1076,18 @@ angular.module('main')
         
         function setContext(data) {
             vtdState = data;
+            if (vtdState.characterClass === 'RANGER' && !(vtdState.meleeOffhandDmgRange === null || vtdState.meleeOffhandDmgRange.length === 0)) {
+                vtdState.stats.meleeOffhandHit = Math.round(vtdState.stats.meleeHit * .75);
+            }
+   
+            if (vtdState.characterClass === 'MONK') {
+                if (!(vtdState.meleeOffhandDmgRange === null || vtdState.meleeOffhandDmgRange.length === 0)) {
+                    vtdState.stats.meleeOffhandHit = Math.round(vtdState.stats.meleeHit * .75);
+                }
+                if (!(vtdState.rangeOffhandDmgRange === null || vtdState.meleeOffhandDmgRange.length === 0)) {
+                    vtdState.stats.rangeOffhandHit = Math.round(vtdState.stats.meleeHit * .75);
+                }
+            }  
         }
         
         function get() {
@@ -806,7 +1106,7 @@ angular.module('main')
         var vtdLast = {};
         
         function add(data) {
-            last = data;
+            vtdLast = data;
             vtdHistory.push(data);
         }
         
@@ -814,14 +1114,14 @@ angular.module('main')
             return vtdHistory;
         }
         
-        function last() {
+        function getLast() {
             return vtdLast;
         }
 
         return {
             add: add,
             get: get,
-            last: last
+            getLast: getLast
         };
     }])
 
@@ -917,7 +1217,14 @@ angular.module('main')
         });
     };
     
-    tokenAdminSvc.nextRoom = function(id, buff) {
+    tokenAdminSvc.previousRoom = function(id) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/previous').catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.nextRoom = function(id) {
         return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/next').catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));

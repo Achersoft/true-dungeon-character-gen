@@ -14,11 +14,26 @@
                     <div style="display:flex;flex-direction:row;width:100%;">
                         <div style="width:70%;margin-left:15px;margin-right:10px">
                             <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Attack Melee</strong></h4>
-                            <div style="display:flex;flex-direction:row;width:100%;">
+                            <div style="display:flex;flex-direction:row;width:100%;" ng-if="characterContext.stats.meleeOffhandHit !== nan">
+                                <div style="width:65%">
+                                    <div class="col-xs-12" style="padding:0px">
+                                        <div class="col-xs-6" style="padding:0px">
+                                            <strong>Hit(M):</strong>&nbsp;{{characterContext.stats.meleeHit}}
+                                        </div>
+                                        <div class="col-xs-6 text-right" style="padding:0px">
+                                            <strong>Hit(O):</strong>&nbsp;{{characterContext.stats.meleeOffhandHit}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="width:40%" class="text-right">
+                                    <strong>Damage:</strong>&nbsp;{{characterContext.stats.meleeDmg}}
+                                </div>
+                            </div>
+                            <div style="display:flex;flex-direction:row;width:100%;" ng-if="characterContext.stats.meleeOffhandHit === nan">
                                 <div style="width:50%">
                                     <strong>Hit:</strong>&nbsp;{{characterContext.stats.meleeHit}}
                                 </div>
-                                <div style="width:50%">
+                                <div style="width:00%" class="text-right">
                                     <strong>Damage:</strong>&nbsp;{{characterContext.stats.meleeDmg}}
                                 </div>
                             </div>
@@ -35,7 +50,7 @@
                             </div>
                         </div>
                         <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
-                            <img  src="images/d20.png" style="width:100%">
+                            <img ng-click="rollToHitMelee()" src="images/d20.png" style="width:100%">
                         </div>
                     </div>          
                 </div>
@@ -128,7 +143,7 @@
                             </div>
                         </div>
                         <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
-                            <img  src="images/d20.png" style="width:100%">
+                            <img src="images/d20.png" style="width:100%">
                         </div>
                     </div>          
                 </div>
@@ -169,8 +184,8 @@
             <div style="width:100%;margin-left:auto;margin-right:auto">
                 <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
                     <div class="text-center" style="margin-left:10px;margin-right:10px">
-                        <h2 style="border-bottom:1pt solid black;margin-bottom:0px;margin-top:0px">Thornbarb Pass</h2>
-                        <h4 style="margin-top:0px"><strong>Room: {{characterContext.roomNumber}}/7 <span class="fa fa-arrow-circle-right"></span></strong></h4>
+                        <h2 style="border-bottom:1pt solid black;margin-bottom:0px;margin-top:0px">{{characterContext.adventureName}}</h2>
+                        <h4 style="margin-top:0px"><strong><span class="fa fa-arrow-circle-left" ng-if="characterContext.roomNumber > 1" ng-click="previousRoom(characterContext.id)"></span> Room: {{characterContext.roomNumber}}/7 <span class="fa fa-arrow-circle-right" ng-click="nextRoom(characterContext.id)"></span></strong></h4>
                     </div>
                 </div>
             </div>
@@ -182,7 +197,7 @@
                             <div style="margin-top:5px;background-color: white; border: 2px solid grey">
                                {{characterContext.stats.initiative + characterContext.initBonus}}
                             </div>
-                            <img class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
+                            <img ng-click="rollInit()" class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
                         </div> 
                     </div>
                 </div>
@@ -193,7 +208,7 @@
                             <div style="margin-top:5px;background-color: white; border: 2px solid grey">
                                {{characterContext.stats.fort}} 
                             </div>
-                            <img class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
+                            <img ng-click="rollFort()" class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
                         </div>
                     </div>
                 </div>
@@ -204,7 +219,7 @@
                             <div style="margin-top:5px;background-color: white; border: 2px solid grey">
                                {{characterContext.stats.reflex}} 
                             </div>
-                            <img class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
+                            <img ng-click="rollReflex()" class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
                         </div>
                     </div>
                 </div>
@@ -215,7 +230,7 @@
                             <div style="margin-top:5px;background-color: white; border: 2px solid grey">
                                {{characterContext.stats.will}} 
                             </div>
-                            <img class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
+                            <img ng-click="rollWill()" class="img-thumbnail img-responsive img-circle" src="images/roll20.png" style="margin-top:-10px;position:relative;bottom:-15px;border: 2px solid #73AD21;height:40px">
                         </div>
                     </div>
                 </div> 
@@ -234,9 +249,9 @@
                             <span class="fa fa-bolt"></span> Take Damage 
                         </button>
                         <md-input-container md-no-float class="md-block hide-validation-error" style="margin:0px">
-                            <input type="number" ng-model="user.address2" placeholder="Heal Amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            <input type="number" ng-model="healAmount" placeholder="Heal Amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                         </md-input-container>
-                        <button class="btn btn-success" style="width:100%;border-bottom-left-radius:25px" ng-click="">
+                        <button class="btn btn-success" style="width:100%;border-bottom-left-radius:25px" ng-click="healDamage(healAmount)">
                             <span class="fa fa-medkit"></span> Heal 
                         </button>
                     </div>

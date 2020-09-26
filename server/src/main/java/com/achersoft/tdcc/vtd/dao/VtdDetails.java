@@ -5,6 +5,7 @@ import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.enums.DamageModEffect;
 import com.achersoft.tdcc.enums.WeaponExplodeCondition;
+import com.achersoft.tdcc.vtd.admin.dao.VtdRoom;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,9 @@ public class VtdDetails {
     private String characterId;
     private String characterOrigId;
     private String userId;
+    private String adventureId;
+    private String adventureName;
+    private List<VtdMonster> monsters;
     private Date expires;
     private String name;
     private CharacterClass characterClass;
