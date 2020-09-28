@@ -123,6 +123,8 @@ public class VtdRestService {
     @Consumes({MediaType.APPLICATION_JSON})
     public VtdDetailsDTO setAdventure(@PathParam("id") String id,
                                       @QueryParam("passcode") String passcode) throws Exception {
+        if (passcode == null || passcode.isEmpty())
+            throw new InvalidDataException("Passcode was empty");
         return VtdDetailsDTO.fromDAO(virtualTdService.setAdventure(id, passcode));
     }
 

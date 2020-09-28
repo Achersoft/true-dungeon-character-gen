@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Builder
@@ -18,17 +17,26 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class VtdMonster {
     private int room;
-    private @Builder.Default CritType critType = CritType.ANY;
     private String name;
+    private boolean critical;
+    private boolean sneak;
     private @Builder.Default List<Integer> roller = new ArrayList<>();
+    private @Builder.Default int cold = 0;
+    private @Builder.Default int fire = 0;
+    private @Builder.Default int shock = 0;
+    private @Builder.Default int sonic = 0;
+    private @Builder.Default int poison = 0;
+    private @Builder.Default int sacred = 0;
+    private @Builder.Default int darkrift = 0;
+    private @Builder.Default int acid = 0;
 
-    public static List<VtdMonster> fromRoom(List<VtdRoom> vtdRooms) {
+    public static List<VtdMonster> fromRoom(List<VtdRoom> vtdRooms, CritType critType) {
         if (vtdRooms == null)
             return new ArrayList<>();
-        return vtdRooms.stream().map(VtdMonster::fromRoom).collect(Collectors.toList());
+        return vtdRooms.stream().map(vtdRoom -> VtdMonster.fromRoom(vtdRoom, critType)).collect(Collectors.toList());
     }
 
-    public static VtdMonster fromRoom(VtdRoom vtdRoom) {
+    public static VtdMonster fromRoom(VtdRoom vtdRoom, CritType critType) {
         if (vtdRoom == null)
             return null;
 
@@ -74,11 +82,26 @@ public class VtdMonster {
         for (int i=0; i<vtdRoom.getTwenty(); i++)
             rollerValues.add(20);
 
+        boolean isCritable = false;
+        if (critType == CritType.ANY || vtdRoom.getCritType() == CritType.ANY)
+            isCritable = true;
+        else if (vtdRoom.getCritType() == critType)
+            isCritable = true;
+
         return VtdMonster.builder()
                 .room(vtdRoom.getRoom())
-                .critType(vtdRoom.getCritType())
+                .critical(isCritable)
+                .sneak(isCritable)
                 .name(vtdRoom.getName())
                 .roller(rollerValues)
+                .cold(vtdRoom.getCold())
+                .fire(vtdRoom.getFire())
+                .shock(vtdRoom.getShock())
+                .sonic(vtdRoom.getSonic())
+                .poison(vtdRoom.getPoison())
+                .sacred(vtdRoom.getSacred())
+                .darkrift(vtdRoom.getDarkrift())
+                .acid(vtdRoom.getAcid())
                 .build();
     }
 }

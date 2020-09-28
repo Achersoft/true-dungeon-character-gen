@@ -556,7 +556,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .rollerDifficulty(0)
                     .initBonus(0)
                     .roomNumber(1)
-                    .monsters(VtdMonster.fromRoom(roomsByNumber))
+                    .monsters(VtdMonster.fromRoom(roomsByNumber, CritType.ANY))
                     .availableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())))
                     .notes(characterDetails.getNotes())
                     .characterSkills(characterSkills)
@@ -965,14 +965,15 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     public VtdDetails setAdventure(String id, String passcode) {
         final VtdDetails vtdDetails = calculateStats(id);
 
-        final VtdSetting adventureByCode = vtdAdminMapper.getAdventureByCode(passcode);
+        final VtdSetting adventureByCode = vtdAdminMapper.getAdventureByCode(passcode.toLowerCase());
         if (adventureByCode != null) {
             vtdDetails.setAdventureId(adventureByCode.getId());
             vtdDetails.setAdventureName(adventureByCode.getName());
-            vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber())));
+            vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber()), CritType.ANY));
 
             vtdMapper.updateCharacter(vtdDetails);
-        }
+        } else
+            throw new InvalidDataException("Passcode does not match any known adventures.");
 
         return vtdDetails;
     }
@@ -993,7 +994,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         vtdDetails.setStats(vtdMapper.getCharacterStats(vtdDetails.getCharacterId()));
         vtdDetails.setNotes(mapper.getCharacterNotes(vtdDetails.getCharacterOrigId()));
         vtdDetails.setPolys(vtdMapper.getCharacterPolys(vtdDetails.getCharacterId()));
-        vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber())));
+        vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber()), CritType.ANY));
 
         applyBuffsToStats(vtdDetails.getBuffs(), vtdDetails.getStats(), vtdDetails.isMightyWeapon());
 

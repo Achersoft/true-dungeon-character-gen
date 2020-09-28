@@ -49,6 +49,12 @@
   font-weight: bold;
 }
 
+.desktop-vtd-dialog .modal-dialog{
+  width: 40%;
+  height: 90%;
+  margin-left: 30%;
+}
+
 .desktop-item-modal-dialog .modal-dialog{
   width: 60%;
   height: 90%;

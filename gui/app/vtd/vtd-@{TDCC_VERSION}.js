@@ -38,6 +38,7 @@ angular.module('main')
     $scope.skillIndex = 0;
     $scope.resultIndex = 0;
     $scope.healAmount = null;
+    $scope.adventurePasscode = null;
     $scope.characterContext = vtdState.get();
     $scope.history = vtdHistory.get();
     $scope.lastEvent = vtdHistory.getLast();
@@ -45,6 +46,9 @@ angular.module('main')
     vtdSvc.getCharacter($routeParams.characterId).then(function(result) {
         vtdState.setContext(result.data);
         $scope.characterContext = vtdState.get();
+        vtdHistory.clearData();
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();
     });
     
     $scope.setSkillIndex =  function(index) {
@@ -75,6 +79,15 @@ angular.module('main')
         });
     };
     
+    $scope.setAdventure = function(id, passcode) {
+        vtdSvc.setAdventure(id, passcode).then(function(result) {
+            $scope.adventurePasscode = null;
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+            alert("Successfully loaded adventure " + $scope.characterContext.adventureName);
+        });
+    };
+    
     $scope.previousRoom = function(id) {
         confirmDialogSvc.confirm("Are you sure you wish to move to the previous room?  This will reset all room effects and buffs except bardsong", function(){
             vtdSvc.previousRoom(id).then(function(result) {
@@ -94,6 +107,7 @@ angular.module('main')
     };
     
     $scope.rollInit =  function() {
+        $scope.resultIndex = 0;
         var roll = $scope.getRandomInt(20) + 1;
       
         vtdHistory.add({"type":"INIT","sub":"INIT","roll":roll,"result":roll + $scope.characterContext.stats.initiative + $scope.characterContext.initBonus});
@@ -103,6 +117,7 @@ angular.module('main')
     };
     
     $scope.rollReflex =  function() {
+        $scope.resultIndex = 0;
         var save = $scope.getRandomInt(20) + 1;
         
         if (save > 1)
@@ -114,6 +129,7 @@ angular.module('main')
     };
     
     $scope.rollFort =  function() {
+        $scope.resultIndex = 0;
         var save = $scope.getRandomInt(20) + 1;
         
         if (save > 1)
@@ -125,6 +141,7 @@ angular.module('main')
     };
     
     $scope.rollWill =  function() {
+        $scope.resultIndex = 0;
         var save = $scope.getRandomInt(20) + 1;
         
         if (save > 1)
@@ -240,6 +257,8 @@ angular.module('main')
         var offhandHitRoll = 1;
         var monster = null;
         
+        $scope.resultIndex = 0;
+        
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             hitRoll = $scope.getRandomInt(20) + 1;
             offhandHitRoll = $scope.getRandomInt(20) + 1;
@@ -253,7 +272,7 @@ angular.module('main')
             offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
         }
         
-        if ($scope.characterContext.stats.meleeOffhandHit === null) {
+        if (!('meleeOffhandHit' in $scope.characterContext.stats)) {
             offhandHitRoll = 1;
         }
         
@@ -341,10 +360,18 @@ angular.module('main')
                     }
                 }
             }
+            
+            var totalCrit = 0;
+            if (mCritDmg > 0 && oCritDmg > 0)
+                totalCrit = mCritDmg + oCritDmg;
+            else if (mCritDmg > 0)
+                totalCrit = mCritDmg + oDmg + rollDmg;
+            else if (oCritDmg > 0)
+                totalCrit = oCritDmg + mDmg + rollDmg;
  
             vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
-                "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmg+rollDmg,"oDmg":oDmg+rollDmg,
-                "mCrit":mCritDmg,"oCrit":oCritDmg,"mWeaponExp":mDmgExp,"oWeaponExp":oDmgExp});
+                "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmg+rollDmg,"oDmg":oDmg+rollDmg,"totalDmg":mDmg+rollDmg+oDmg+rollDmg,
+                "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"oWeaponExp":oDmgExp});
         }
          
         $scope.history = vtdHistory.get();
@@ -1105,6 +1132,11 @@ angular.module('main')
         var vtdHistory = [];
         var vtdLast = {};
         
+        function clearData() {
+            vtdHistory = [];
+            vtdLast = {};
+        }
+       
         function add(data) {
             vtdLast = data;
             vtdHistory.push(data);
@@ -1119,6 +1151,7 @@ angular.module('main')
         }
 
         return {
+            clearData: clearData,
             add: add,
             get: get,
             getLast: getLast
@@ -1229,6 +1262,21 @@ angular.module('main')
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });
+    };
+    
+    tokenAdminSvc.nextRoom = function(id) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/next').catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.setAdventure = function(id, passcode) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/adventure/?passcode=' + passcode)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
     };
     
     tokenAdminSvc.getCharacter = function(id) {

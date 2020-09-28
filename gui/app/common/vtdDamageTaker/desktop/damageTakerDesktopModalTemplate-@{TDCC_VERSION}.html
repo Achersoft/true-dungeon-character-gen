@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="closeModal()" style="font-size:30px;color: rgb(255, 255, 255)">&times;</button>
+    <h4 class="modal-title">Take Damage</h4>
+</div>
+<div class="modal-body" style="padding:0px;margin-top:10px;height:375px">
+    <div class="col-xs-12 col-md-12 text-left" style="margin-top:3px;margin-bottom:2px">
+        Damage Type:
+    </div>
+    <div class="col-xs-12 col-md-12 text-center" style="margin:0px;padding-left:15px;padding-right:15px">
+        <span class="col-xs-4 col-md-4 btn" ng-class="damageIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageIndex(0)">Melee </span> 
+        <span class="col-xs-4 col-md-4 btn" ng-class="damageIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageIndex(1)">Range </span> 
+        <span class="col-xs-4 col-md-4 btn" ng-class="damageIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageIndex(2)">Spell </span> 
+        <span class="col-xs-6 col-md-6 btn" ng-class="damageIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageIndex(3)">Puzzle </span>
+        <span class="col-xs-6 col-md-6 btn" ng-class="damageIndex === 4 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageIndex(4)">Push </span>
+    </div>
+    <div class="col-xs-12 col-md-12 text-left" style="margin-top: 12px;margin-bottom: 2px">
+        Damage Modifier:
+    </div>
+    <div class="col-xs-12 col-md-12 text-center" style="margin:0px;padding-left:15px;padding-right:15px">
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(0)">None </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(1)">Fire </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(2)">Cold </span>
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(3)">Shock </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 4 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(4)">Sonic </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 5 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(5)">Eldritch </span>
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 6 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(6)">Poison </span>
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 7 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(7)">Darkrift </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 8 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(8)">Sacred </span> 
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 9 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(9)">Acid </span>
+        <span class="col-xs-3 col-md-3 btn" ng-class="damageModifierIndex === 10 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setDamageModifierIndex(10)">Other </span> 
+    </div>
+
+    <div class="col-xs-12 col-md-12 text-left" style="margin-top: 15px;margin-bottom: 2px">
+        Damage Amount:
+    </div>
+    <div class="col-xs-12 col-md-12">
+        <input class="form-control" type="number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" ng-model="damageAmount"/>
+    </div>
+    
+    <center>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="unequipItemSlot()" style="width:90%;margin-top:15px">
+            Take Damage
+        </button>
+    </center>
+</div>
