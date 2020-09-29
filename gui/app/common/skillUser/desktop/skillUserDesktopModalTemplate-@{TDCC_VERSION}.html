@@ -1,0 +1,170 @@
+<div class="modal-header" style="border-bottom-width: 2px; border-color: royalblue">
+    <button type="button" class="close" ng-click="closeModal()" style="font-size:30px;color: rgb(255, 255, 255)">&times;</button>
+    <h4 class="modal-title">Cast {{model.name}}</h4>
+</div>
+<div class="modal-body" style="padding:0px;overflow-y:auto;height:550px">
+    <div ng-show="spellCast === false">
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="model.minEffect !== model.maxEffect">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Skill Check:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-6 col-md-6 btn" ng-class="skillCheckIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillCheckIndex(0)">Pass </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="skillCheckIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillCheckIndex(1)">Failed </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="model.name === 'Lay on Hands' && characterContext.effects.includes('PLUS_10_LOH')">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Use one per game +10 healing?:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-6 col-md-6 btn" ng-class="loh10Index === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setLoH10Index(0)">No </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="loh10Index === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setLoH10Index(1)">Yes </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="model.name === 'Lay on Hands' && characterContext.effects.includes('PLUS_15_LOH')">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Use one per game +15 healing?:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-6 col-md-6 btn" ng-class="loh15Index === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setLoH15Index(0)">No </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="loh15Index === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setLoH15Index(1)">Yes </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.madEvoker && (model.skillType === 'DAMAGE' || model.skillType === 'DAMAGE_RANGE_AC_15')">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Use Mad Evoker's Charm?:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-6 col-md-6 btn" ng-class="madEvokerIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setMadEvokerIndex(0)">No </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="madEvokerIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setMadEvokerIndex(1)">Yes </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="model.skillTarget === 'ANY'">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Spell Target:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-6 col-md-6 btn" ng-class="targetIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setTargetIndex(0)">Other </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="targetIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setTargetIndex(1)">Self </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.splitHeal && model.skillType === 'HEAL'">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Use Lenses of Divine Sight on Secondary Target?
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-4 col-md-4 btn" ng-class="secondaryTargetIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSecondaryTargetIndex(0)">None </span> 
+                <span class="col-xs-4 col-md-4 btn" ng-class="secondaryTargetIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSecondaryTargetIndex(1)">Other </span> 
+                <span class="col-xs-4 col-md-4 btn" ng-class="secondaryTargetIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSecondaryTargetIndex(2)">Self </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="secondaryTargetIndex !== 0">
+            <div class="col-xs-12 col-md-12 text-center" style="font-size:30px;color: rgb(255, 255, 255)">
+                Total heal amount is: {{characterContext.stats.spellHeal + ((skillCheckIndex === 0)?model.maxEffect:model.minEffect)}}
+            </div>
+            <div class="col-xs-12 col-md-12" style="margin-top:18px;padding:0px">
+                <div class="col-xs-6 col-md-6">
+                    <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                        Primary Heal:
+                    </div>
+                    <div class="col-xs-12 col-md-12">
+                        <input class="form-control" type="number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" ng-model="primaryHealAmount"/>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-6">
+                    <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                        Secondary Heal:
+                    </div>
+                    <div class="col-xs-12 col-md-12">
+                        <input class="form-control" type="number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" ng-model="seconaryHealAmount"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="model.name === 'Lay on Hands'">
+            <div class="col-xs-12 col-md-12" style="margin-top:18px;padding:0px">
+                <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                    How many Lay on Hands are being cast?
+                </div>
+                <div class="col-xs-12 col-md-12">
+                    <input class="form-control" type="number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" ng-model="lohUseAmount"/>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:30px;padding:15px">
+            <button class="btn btn-primary" ng-click="useSkill(primaryHealAmount, seconaryHealAmount, lohUseAmount)" style="width:90%">
+                Cast Spell
+            </button>
+        </div>
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px;color:red" ng-show="healError === true">
+            Total heal amount must be spit between both targets to equal the heal total
+        </div>
+    </div>
+    <div ng-show="spellCast === true">
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px" ng-show="secondaryTargetIndex === 0 && model.skillType === 'HEAL'">
+            <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                {{model.name}} healed {{(targetIndex === 0) ? "target" : "yourself"}} for:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color:lime">
+                {{primaryHealAmount}}
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px" ng-show="secondaryTargetIndex !== 0 && model.skillType === 'HEAL'">
+            <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                {{model.name}} healed for:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center" style="font-size:55px;color:lime">
+                Primary: {{primaryHealAmount}}
+            </div>
+            <div class="col-xs-12 col-md-12 text-center" style="font-size:55px;color:lime">
+                Secondary: {{seconaryHealAmount}}
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px" ng-show="model.skillType === 'DAMAGE'">
+            <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                {{model.name}} cast damage for:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color: #e3a345">
+                {{damage}}
+            </div>
+            <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px" ng-show="damagePool > 0">
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                    And pooled damage of:
+                </div>
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color: #e3a345" >
+                    {{damagePool}}
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px" ng-show="model.skillType === 'DAMAGE_RANGE_AC_15'">
+            <div ng-show="hitRollNatural > 1">
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                    {{model.name}} cast damage for:
+                </div>
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color: #e3a345">
+                    {{damage}}
+                </div>
+                <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px">
+                    <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                        If hit on:
+                    </div>
+                    <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color: #26b3f7" >
+                        {{hitRoll}}({{hitRollNatural}})
+                    </div>
+                </div>
+            </div>
+            <div ng-show="hitRollNatural === 1">
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color: red">
+                    Miss
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:30px">
+            <button class="btn btn-default" ng-click="closeModal()" style="width:75%">
+                Close
+            </button>
+        </div> 
+    </div>
+</div>

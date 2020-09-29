@@ -3,7 +3,7 @@
         <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="resultIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-left-radius:25px" ng-click="setResultIndex(0)">Result </span> 
         <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="resultIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setResultIndex(1)">Buffs </span> 
         <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="resultIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setResultIndex(2)">Bard Song </span>
-        <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="resultIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-right-radius:25px" ng-click="setResultIndex(3)">History </span>
+        <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="resultIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-right-radius:25px" ng-click="setResultIndex(3)">Psychic </span>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12" style="overflow-y:auto;height:360px;padding:0px">
          <div ng-if="resultIndex === 0">
@@ -26,13 +26,15 @@
                 </div>
             </div>
              <div class="text-center" ng-show="lastEvent.type === 'ATTACK'">
-                <div class="text-center" ng-show="lastEvent.sub === 'MELEE'">
-                    <h1 style="margin:0;margin-top: 10px"><strong>Melee Attack</strong></h1>
+                <div class="text-center" >
+                    <h1 ng-show="lastEvent.sub === 'MELEE'" style="margin:0;margin-top: 10px"><strong>Melee Attack</strong></h1>
+                    <h1 ng-show="lastEvent.sub === 'RANGE'" style="margin:0;margin-top: 10px"><strong>Range Attack</strong></h1>
+                    <h1 ng-show="lastEvent.sub === 'POLY'" style="margin:0;margin-top: 10px"><strong>Polymorph Attack</strong></h1>
                     <div class="text-center text-danger" ng-show="lastEvent.isMiss === true">
                         <span style="font-size:72px">Miss!!!</span>
                     </div>
                     <div class="text-center" style="margin-top:25px" ng-show="lastEvent.isMiss !== true">
-                        <div class="text-center" ng-if="characterContext.stats.meleeOffhandHit === undefined">
+                        <div class="text-center" ng-if="lastEvent.sub === 'POLY' || (lastEvent.sub === 'MELEE' && characterContext.stats.meleeOffhandHit === undefined) || (lastEvent.sub === 'RANGE' && characterContext.stats.rangeOffhandHit === undefined)">
                             <div class="col-xs-6">
                                 <div class="col-xs-12">
                                     <h2 style="margin:0px"><strong><u>Hit</u></strong></h2>
@@ -61,7 +63,7 @@
                                 <h2 style="margin:0px">{{lastEvent.mWeaponExp}}</h2>
                             </div>
                         </div>  
-                        <div class="text-center" ng-if="characterContext.stats.meleeOffhandHit !== undefined">
+                        <div class="text-center" ng-if="(lastEvent.sub === 'MELEE' && characterContext.stats.meleeOffhandHit !== undefined) || (lastEvent.sub === 'RANGE' && characterContext.stats.rangeOffhandHit !== undefined)">
                             <div class="col-xs-6">
                                 <div class="col-xs-12">
                                     <h3 style="margin:0px"><strong><u>Hit</u></strong></h3>
@@ -113,7 +115,95 @@
                     </div>
                 </div>
             </div>
-         </div>
+        </div>
+        <div ng-if="resultIndex === 1">
+            <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:15px;"></div>
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:15px">
+                <span class="col-xs-6 col-sm-6 col-md-6 btn" ng-class="activeIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setActiveIndex(0)">Available </span> 
+                <span class="col-xs-6 col-sm-6 col-md-6 btn" ng-class="activeIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setActiveIndex(1)">Active </span> 
+            </div>
+            <div class="table-responsive col-xs-12" style="border:none" ng-if="activeIndex === 0 ">          
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat-start="buff in characterContext.availableBuffs" ng-repeat-end>
+                            <td>
+                                <button class="btn btn-primary" ng-click="activateBuff(buff)" style="width:100%">
+                                    Activate
+                                </button>
+                            </td>
+                            <td>{{buff.name}}</td>
+                            <td>{{buff.displayText}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive col-xs-12" style="border:none" ng-if="activeIndex === 1">          
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat-start="buff in characterContext.buffs" ng-repeat-end>
+                            <td ng-if="buff.bardsong === false">
+                                <button class="btn btn-primary" ng-click="removeBuff(buff)" style="width:100%">
+                                    Remove
+                                </button>
+                            </td>
+                            <td ng-if="buff.bardsong === false">{{buff.name}}</td>
+                            <td ng-if="buff.bardsong === false">{{buff.displayText}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div ng-if="resultIndex === 2">
+            <div style="margin-left:5px;margin-right:5px" ng-if="characterContext.availableBardsong !== null && characterContext.availableBardsong.length > 0">
+                <div class="table-responsive" style="border:none">          
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat-start="buff in characterContext.availableBardsong" ng-repeat-end>
+                                <td>
+                                    <button class="btn btn-primary" ng-click="activateBuff(buff)" style="width:50%">
+                                        Activate
+                                    </button>
+                                </td>
+                                <td>{{buff.name}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="margin-left:5px;margin-right:5px" ng-if="characterContext.availableBardsong === null || characterContext.availableBardsong.length === 0">
+                <div class="col-xs-12 col-sm-12 col-md-12" ng-repeat-start="buff in characterContext.buffs track by $index" ng-repeat-end>
+                    <div class="text-center" style="margin-top:25px" ng-if="buff.bardsong === true">
+                        <h3><strong>Active {{buff.name}}</strong></h3>
+                        <button class="btn btn-primary" ng-click="removeBuff(buff)" style="width:60%;margin-top:15px">
+                            Deactivate
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center" ng-if="resultIndex === 3">
+            <h1 style="margin:0;margin-top: 10px"><strong>Coming Soon</strong></h1>
+        </div>
         
         <div class="col-xs-12" style="margin-top:15px;"></div>
     </div>

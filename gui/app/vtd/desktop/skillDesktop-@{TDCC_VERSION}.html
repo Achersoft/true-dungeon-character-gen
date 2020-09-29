@@ -1,40 +1,62 @@
 <div style="height:475px;width:100%;padding-left:0;padding-right:0">
-    <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:0px">
-        <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="skillIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-left-radius:25px" ng-click="setSkillIndex(0)">Skill</span> 
-        <span class="col-xs-2 col-sm-2 col-md-2 btn nowrap-truncate" ng-class="skillIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillIndex(1)">0<sup>th</sup></span> 
-        <span class="col-xs-2 col-sm-2 col-md-2 btn nowrap-truncate" ng-class="skillIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillIndex(2)">1<sup>st</sup></span>
-        <span class="col-xs-2 col-sm-2 col-md-2 btn nowrap-truncate" ng-class="skillIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillIndex(3)">2<sup>nd</sup></span>
-        <span class="col-xs-3 col-sm-3 col-md-3 btn nowrap-truncate" ng-class="skillIndex === 4 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-right-radius:25px" ng-click="setSkillIndex(4)">3<sup>rd</sup></span>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:0px" ng-if='displayIndex === null'>
+        <span class="col-xs-3 btn nowrap-truncate" ng-class="skillIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-left-radius:25px" ng-click="setSkillIndex(0)">Skill</span> 
+        <span class="col-xs-2 btn nowrap-truncate" ng-class="skillIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillIndex(1)">0<sup>th</sup></span> 
+        <span class="col-xs-2 btn nowrap-truncate" ng-class="skillIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillIndex(2)">1<sup>st</sup></span>
+        <span class="col-xs-2 btn nowrap-truncate" ng-class="skillIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillIndex(3)">2<sup>nd</sup></span>
+        <span class="col-xs-3 btn nowrap-truncate" ng-class="skillIndex === 4 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-right-radius:25px" ng-click="setSkillIndex(4)">3<sup>rd</sup></span>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:0px" ng-if='displayIndex === 0'>
+        <span class="col-xs-12 btn nowrap-truncate" ng-class="skillIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-left-radius:25px;border-top-right-radius:25px" ng-click="setSkillIndex(0)">Skill</span> 
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:0px" ng-if='displayIndex === 1'>
+        <span class="col-xs-6 btn nowrap-truncate" ng-class="skillIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-left-radius:25px" ng-click="setSkillIndex(0)">Skill</span> 
+        <span class="col-xs-6 btn nowrap-truncate" ng-class="skillIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-right-radius:25px" ng-click="setSkillIndex(2)">1<sup>st</sup></span>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:0px" ng-if='displayIndex === 2'>
+        <span class="col-xs-3 btn nowrap-truncate" ng-class="skillIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-left-radius:25px" ng-click="setSkillIndex(0)">Skill</span> 
+        <span class="col-xs-2 btn nowrap-truncate" ng-class="skillIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-right-radius:25px" ng-click="setSkillIndex(1)">0<sup>th</sup></span> 
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:0px" ng-if='displayIndex === 3'>
+        <span class="col-xs-3 btn nowrap-truncate" ng-class="skillIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-left-radius:25px" ng-click="setSkillIndex(0)">Skill</span> 
+        <span class="col-xs-2 btn nowrap-truncate" ng-class="skillIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillIndex(1)">0<sup>th</sup></span> 
+        <span class="col-xs-2 btn nowrap-truncate" ng-class="skillIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-right-radius:25px" ng-click="setSkillIndex(2)">1<sup>st</sup></span>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="margin:0px;padding:0px" ng-if='displayIndex === 4'>
+        <span class="col-xs-3 btn nowrap-truncate" ng-class="skillIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-left-radius:25px" ng-click="setSkillIndex(0)">Skill</span> 
+        <span class="col-xs-2 btn nowrap-truncate" ng-class="skillIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillIndex(1)">0<sup>th</sup></span> 
+        <span class="col-xs-2 btn nowrap-truncate" ng-class="skillIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillIndex(2)">1<sup>st</sup></span>
+        <span class="col-xs-2 btn nowrap-truncate" ng-class="skillIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;border-top-right-radius:25px" ng-click="setSkillIndex(3)">2<sup>nd</sup></span>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12" style="overflow-y:auto;height:425px;padding:0px">
         <div class="col-xs-12 col-sm-12 col-md-12" ng-if="skillIndex === 0">
             <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px;"></div>
             <div class="col-xs-12 col-sm-12 col-md-12" style="padding:0" ng-repeat-start="skill in characterContext.characterSkills track by $index" ng-repeat-end>
-                <skill-user-mobile roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="charSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="charSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12" ng-if="skillIndex === 1">
             <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px;"></div>
             <div class="col-xs-12 col-sm-12 col-md-12" style="padding:0" ng-repeat-start="skill in characterContext.zeroSkills track by $index" ng-repeat-end>
-                <skill-user-mobile roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="zeroSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="zeroSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
             </div> 
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12" ng-if="skillIndex === 2">
             <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px;"></div>
             <div class="col-xs-12 col-sm-12 col-md-12" style="padding:0" ng-repeat-start="skill in characterContext.oneSkills track by $index" ng-repeat-end>
-                <skill-user-mobile roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="oneSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="oneSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12" ng-if="skillIndex === 3">
             <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px;"></div>
             <div class="col-xs-12 col-sm-12 col-md-12" style="padding:0" ng-repeat-start="skill in characterContext.twoSkills track by $index" ng-repeat-end>
-                <skill-user-mobile roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="twoSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="twoSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
             </div> 
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12" ng-if="skillIndex === 4">
             <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px;"></div>
             <div class="col-xs-12 col-sm-12 col-md-12" style="padding:0" ng-repeat-start="skill in characterContext.threeSkills track by $index" ng-repeat-end>
-                <skill-user-mobile roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="threeSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-mobile>
+                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="threeSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
             </div>
         </div>
     

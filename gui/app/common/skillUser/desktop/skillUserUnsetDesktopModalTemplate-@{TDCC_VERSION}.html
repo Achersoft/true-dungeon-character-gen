@@ -1,0 +1,20 @@
+<div class="modal-header" style="border-bottom-width: 2px; border-color: royalblue">
+    <button type="button" class="close" ng-click="closeModal()" style="font-size:30px;color: rgb(255, 255, 255)">&times;</button>
+    <h4 class="modal-title">Undo Cast of {{model.name}}</h4>
+</div>
+<div class="modal-body" style="padding:0px;height:350px">
+    <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px;font-size:30px;color: rgb(255, 255, 255)">
+        Are you sure you wish to undo cast of {{model.name}}? Note that this will reset the skill for use but will not undo any affects of the spell.
+    </div> 
+   
+    <div class="col-xs-12 col-md-12 text-center" style="margin-top:30px">
+        <button class="btn btn-primary" ng-click="unuseSkill()" style="width:35%; margin-right:10px">
+            Yes
+        </button>
+        <button class="btn btn-default" ng-click="closeModal()" style="width:35%; margin-left:10px">
+            No 
+        </button>
+    </div>
+
+    
+</div>
