@@ -37,7 +37,7 @@
                                     <strong>Damage:</strong>&nbsp;{{characterContext.stats.meleeDmg}}
                                 </div>
                             </div>
-                            <div style="margin-top:5px">
+                            <div style="margin-top:5px;margin-bottom:8px">
                                 <strong>Type:</strong>&nbsp;
                                 <span ng-if="characterContext.stats.meleeFire">Fire</span>
                                 <span ng-if="characterContext.stats.meleeCold">Cold</span>
@@ -49,8 +49,8 @@
                                 <span ng-if="characterContext.stats.meleeSacred">Sacred</span>
                             </div>
                         </div>
-                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
-                            <img ng-click="rollToHitMelee()" src="images/d20.png" style="width:100%">
+                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px;display:flex">
+                            <img ng-click="rollToHitMelee()" src="images/d20.png" style="width:100%;margin:auto">
                         </div>
                     </div>          
                 </div>
@@ -68,7 +68,7 @@
                                     <strong>Damage:</strong>&nbsp;{{characterContext.stats.rangeDmg}}
                                 </div>
                             </div>
-                            <div style="margin-top:5px">
+                            <div style="margin-top:5px;margin-bottom:8px">
                                 <strong>Type:</strong>&nbsp;
                                 <span ng-if="characterContext.stats.rangeFire">Fire</span>
                                 <span ng-if="characterContext.stats.rangeCold">Cold</span>
@@ -80,8 +80,8 @@
                                 <span ng-if="characterContext.stats.rangeSacred">Sacred</span>
                             </div>
                         </div>
-                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
-                            <img ng-click='rollToHitRange()' src="images/d20.png" style="width:100%">
+                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px;display:flex">
+                            <img ng-click='rollToHitRange()' src="images/d20.png" style="width:100%;margin:auto">
                         </div>
                     </div>          
                 </div>
@@ -91,6 +91,7 @@
                     <div style="display:flex;flex-direction:row;width:100%;">
                         <div style="width:70%;margin-left:15px;margin-right:10px">
                             <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Attack Polymorph</strong></h4>
+                            <poly-selector-desktop set-poly ="setPoly" element-id="activePoly" character-context="characterContext"></poly-selector-desktop>
                             <div style="display:flex;flex-direction:row;width:100%;">
                                 <div style="width:50%">
                                     <strong>Hit:</strong>&nbsp;{{characterContext.stats.meleePolyHit}}
@@ -99,7 +100,7 @@
                                     <strong>Damage:</strong>&nbsp;{{characterContext.stats.meleePolyDmg}}
                                 </div>
                             </div>
-                            <div style="margin-top:5px">
+                            <div style="margin-top:5px;margin-bottom:8px">
                                 <strong>Type:</strong>&nbsp;
                                 <span ng-if="characterContext.stats.meleeFire">Fire</span>
                                 <span ng-if="characterContext.stats.meleeCold">Cold</span>
@@ -111,8 +112,8 @@
                                 <span ng-if="characterContext.stats.meleeSacred">Sacred</span>
                             </div>
                         </div>
-                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
-                            <img ng-click='rollToHitPoly()' src="images/d20.png" style="width:100%">
+                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px;display:flex">
+                            <img ng-click='rollToHitPoly()' src="images/d20.png" style="width:100%;margin:auto;">
                         </div>
                     </div>          
                 </div>
