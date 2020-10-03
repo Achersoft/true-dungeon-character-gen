@@ -144,12 +144,12 @@
                             </div>
                         </div>
                         <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
-                            <img src="images/d20.png" style="width:100%">
+                            <img ng-click="rollToHitSneak()" src="images/d20.png" style="width:100%">
                         </div>
                     </div>          
                 </div>
             </div>
-            <div style="width:100%;margin-left:auto;margin-right:auto;margin-top:15px" ng-if="characterContext.characterClass === 'ROGUE'">
+            <div style="width:100%;margin-left:auto;margin-right:auto;margin-top:15px" ng-if="characterContext.characterClass === 'ROGUE' && characterContext.sneakAtRange">
                 <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
                     <div style="display:flex;flex-direction:row;width:100%;">
                         <div style="width:70%;margin-left:15px;margin-right:10px">
@@ -175,7 +175,7 @@
                             </div>
                         </div>
                         <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
-                            <img  src="images/d20.png" style="width:100%">
+                            <img ng-click="rollToHitSneakRange()" src="images/d20.png" style="width:100%">
                         </div>
                     </div>          
                 </div>

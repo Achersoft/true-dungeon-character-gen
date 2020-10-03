@@ -33,7 +33,7 @@ angular.module('main')
     };
 }])
 
-.controller('VtdPlayDesktopCtrl', ['$scope', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', function ($scope, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, confirmDialogSvc) {
+.controller('VtdPlayDesktopCtrl', ['$scope', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', 'WarnDialogSvc', function ($scope, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, confirmDialogSvc, warnDialogSvc) {
     $scope.attackIndex = 0;
     $scope.skillIndex = 0;
     $scope.resultIndex = 0;
@@ -553,6 +553,11 @@ angular.module('main')
         var hitRoll = 1;
         var monster = null;
         
+        if (!($scope.characterContext.meleePolyDmgRange && $scope.characterContext.meleePolyDmgRange.length > 0)) {
+            warnDialogSvc.showMessage("Polymorph Seelection Required", "You must select your ploymorph form before attacking.");
+            return;
+        }
+        
         $scope.resultIndex = 0;
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
@@ -603,6 +608,168 @@ angular.module('main')
             }
 
             vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                "mWheel":mDmg,"mDmg":mDmg+rollDmg,"totalDmg":mDmg+rollDmg,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp});
+        }
+         
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();  
+    };
+    
+    $scope.rollToHitSneak =  function(monsterIndex) {        
+        var hitRoll = 1;
+        var monster = null;
+        
+        $scope.resultIndex = 0;
+        
+        if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
+            hitRoll = $scope.getRandomInt(20) + 1;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === null) {
+          
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== null) {
+            
+        } else {
+            monster = $scope.characterContext.monsters[0];
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+        }
+        
+        if (monster !== null && !monster.sneak) 
+            vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isImmune":true,"immuneText":"Your sneak attack failed to find any vulnerable weak spots"});
+        else if (hitRoll === 1)
+            vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isImmune":false,"isMiss":true,"roll":1});
+        else {
+            var hitRollMod = 1;
+            var rollDmg = 0;
+            var mDmg = 0;
+            var mDmgExp = null;
+            var mCritDmg = 0;
+
+            if (hitRoll > 1)
+                hitRollMod = hitRoll + ($scope.characterContext.stats.meleeHit + $scope.characterContext.meleeSneakHit);
+            if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
+                rollDmg =  $scope.characterContext.stats.meleeDmg + $scope.characterContext.meleeSneakDamage;
+                      
+            if (hitRoll > 1 && $scope.characterContext.meleeDmgRange && $scope.characterContext.meleeDmgRange.length > 0) {
+                mDmg = $scope.characterContext.meleeDmgRange[$scope.getRandomInt($scope.characterContext.meleeDmgRange.length)];
+
+                if ($scope.characterContext.meleeWeaponExplodeRange && $scope.characterContext.meleeWeaponExplodeRange.includes(mDmg)) {
+                    mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
+                }
+                
+                if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "PLUS_2_SNEAK_DAMAGE")) {
+                    rollDmg += 2;
+                }
+
+                if (monster.critical && hitRoll >= $scope.characterContext.meleeSneakCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD")) {
+                    if ($scope.characterContext.sneakCanCrit) {
+                        if ($scope.characterContext.stats.level === 5)
+                            rollDmg += 20;
+                        else 
+                            rollDmg += 15;
+                    }
+                    if (hitRoll === 20) {
+                        if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
+                            mCritDmg = (rollDmg + mDmg) * 3;
+                        else 
+                            mCritDmg = (rollDmg + mDmg) * 2;
+                    } else {
+                        if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
+                            mCritDmg = (rollDmg + mDmg) * 3;
+                        else
+                            mCritDmg = (rollDmg + mDmg) * 2;
+                    }
+                } else {
+                    if ($scope.characterContext.stats.level === 5)
+                        rollDmg += 20;
+                    else 
+                        rollDmg += 15;
+                }
+                
+                mCritDmg += $scope.characterContext.unmodifiableSneakDamage;
+                rollDmg += $scope.characterContext.unmodifiableSneakDamage;
+            }
+
+            vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isImmune":false,"isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                "mWheel":mDmg,"mDmg":mDmg+rollDmg,"totalDmg":mDmg+rollDmg,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp});
+        }
+         
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();  
+    };
+    
+    $scope.rollToHitSneakRange =  function(monsterIndex) {        
+        var hitRoll = 1;
+        var monster = null;
+        
+        $scope.resultIndex = 0;
+        
+        if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
+            hitRoll = $scope.getRandomInt(20) + 1;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === null) {
+          
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== null) {
+            
+        } else {
+            monster = $scope.characterContext.monsters[0];
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+        }
+        
+        if (monster !== null && !monster.sneak) 
+            vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isImmune":true,"immuneText":"Your sneak attack failed to find any vulnerable weak spots"});
+        else if (hitRoll === 1)
+            vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isImmune":false,"isMiss":true,"roll":1});
+        else {
+            var hitRollMod = 1;
+            var rollDmg = 0;
+            var mDmg = 0;
+            var mDmgExp = null;
+            var mCritDmg = 0;
+
+            if (hitRoll > 1)
+                hitRollMod = hitRoll + ($scope.characterContext.stats.rangeHit + $scope.characterContext.rangeSneakHit);
+            if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD"))
+                rollDmg =  $scope.characterContext.stats.rangeDmg + $scope.characterContext.rangeSneakDamage;
+                      
+            if (hitRoll > 1 && $scope.characterContext.rangeDmgRange && $scope.characterContext.rangeDmgRange.length > 0) {
+                mDmg = $scope.characterContext.rangeDmgRange[$scope.getRandomInt($scope.characterContext.rangeDmgRange.length)];
+
+                if ($scope.characterContext.rangeWeaponExplodeRange && $scope.characterContext.rangeWeaponExplodeRange.includes(mDmg)) {
+                    mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
+                }
+                
+                if ($scope.hasEffect($scope.characterContext.rangeDmgEffects, "PLUS_2_SNEAK_DAMAGE")) {
+                    rollDmg += 2;
+                }
+
+                if (monster.critical && hitRoll >= $scope.characterContext.rangeSneakCritMin && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD")) {
+                    if ($scope.characterContext.sneakCanCrit) {
+                        if ($scope.characterContext.stats.level === 5)
+                            rollDmg += 20;
+                        else 
+                            rollDmg += 15;
+                    }
+                    if (hitRoll === 20) {
+                        if ($scope.hasEffect($scope.characterContext.rangeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.rangeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.rangeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
+                            mCritDmg = (rollDmg + mDmg) * 3;
+                        else 
+                            mCritDmg = (rollDmg + mDmg) * 2;
+                    } else {
+                        if ($scope.hasEffect($scope.characterContext.rangeDmgEffects, "TRIPPLE_CRIT"))
+                            mCritDmg = (rollDmg + mDmg) * 3;
+                        else
+                            mCritDmg = (rollDmg + mDmg) * 2;
+                    }
+                } else {
+                    if ($scope.characterContext.stats.level === 5)
+                        rollDmg += 20;
+                    else 
+                        rollDmg += 15;
+                }
+                
+                mCritDmg += $scope.characterContext.unmodifiableSneakDamage;
+                rollDmg += $scope.characterContext.unmodifiableSneakDamage;
+            }
+
+            vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isImmune":false,"isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
                 "mWheel":mDmg,"mDmg":mDmg+rollDmg,"totalDmg":mDmg+rollDmg,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp});
         }
          

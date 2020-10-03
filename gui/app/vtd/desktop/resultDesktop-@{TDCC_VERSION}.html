@@ -30,11 +30,16 @@
                     <h1 ng-show="lastEvent.sub === 'MELEE'" style="margin:0;margin-top: 10px"><strong>Melee Attack</strong></h1>
                     <h1 ng-show="lastEvent.sub === 'RANGE'" style="margin:0;margin-top: 10px"><strong>Range Attack</strong></h1>
                     <h1 ng-show="lastEvent.sub === 'POLY'" style="margin:0;margin-top: 10px"><strong>Polymorph Attack</strong></h1>
+                    <h1 ng-show="lastEvent.sub === 'MELEE_SNEAK'" style="margin:0;margin-top: 10px"><strong>Sneak Attack (Melee)</strong></h1>
+                    <h1 ng-show="lastEvent.sub === 'RANGE_SNEAK'" style="margin:0;margin-top: 10px"><strong>Sneak Attack (Range)</strong></h1>
+                    <div class="text-center text-danger" ng-show="lastEvent.isImmune === true" style="margin-top:20px">
+                        <span style="font-size:32px">{{lastEvent.immuneText}}</span>
+                    </div>
                     <div class="text-center text-danger" ng-show="lastEvent.isMiss === true">
                         <span style="font-size:72px">Miss!!!</span>
                     </div>
                     <div class="text-center" style="margin-top:25px" ng-show="lastEvent.isMiss !== true">
-                        <div class="text-center" ng-if="lastEvent.sub === 'POLY' || (lastEvent.sub === 'MELEE' && characterContext.stats.meleeOffhandHit === undefined) || (lastEvent.sub === 'RANGE' && characterContext.stats.rangeOffhandHit === undefined)">
+                        <div class="text-center" ng-if="lastEvent.sub === 'POLY' || (lastEvent.sub === 'MELEE_SNEAK' && lastEvent.isImmune === false) || (lastEvent.sub === 'RANGE_SNEAK' && lastEvent.isImmune === false) || (lastEvent.sub === 'MELEE' && characterContext.stats.meleeOffhandHit === undefined) || (lastEvent.sub === 'RANGE' && characterContext.stats.rangeOffhandHit === undefined)">
                             <div class="col-xs-6">
                                 <div class="col-xs-12">
                                     <h2 style="margin:0px"><strong><u>Hit</u></strong></h2>
