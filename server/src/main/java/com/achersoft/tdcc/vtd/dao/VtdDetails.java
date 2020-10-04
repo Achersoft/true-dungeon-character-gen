@@ -38,6 +38,7 @@ public class VtdDetails {
     private List<CharacterSkill> characterSkills;
     private List<VtdBuff> buffs;
     private List<VtdPoly> polys;
+    private String critTypes;
     private String availableEffects;
     private String meleeDmgRange;
     private String meleeOffhandDmgRange;

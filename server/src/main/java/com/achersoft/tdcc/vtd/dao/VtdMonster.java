@@ -30,13 +30,13 @@ public class VtdMonster {
     private @Builder.Default int darkrift = 0;
     private @Builder.Default int acid = 0;
 
-    public static List<VtdMonster> fromRoom(List<VtdRoom> vtdRooms, CritType critType) {
+    public static List<VtdMonster> fromRoom(List<VtdRoom> vtdRooms, List<CritType> critTypes) {
         if (vtdRooms == null)
             return new ArrayList<>();
-        return vtdRooms.stream().map(vtdRoom -> VtdMonster.fromRoom(vtdRoom, critType)).collect(Collectors.toList());
+        return vtdRooms.stream().map(vtdRoom -> VtdMonster.fromRoom(vtdRoom, critTypes)).collect(Collectors.toList());
     }
 
-    public static VtdMonster fromRoom(VtdRoom vtdRoom, CritType critType) {
+    public static VtdMonster fromRoom(VtdRoom vtdRoom, List<CritType> critTypes) {
         if (vtdRoom == null)
             return null;
 
@@ -83,10 +83,12 @@ public class VtdMonster {
             rollerValues.add(20);
 
         boolean isCritable = false;
-        if (critType == CritType.ANY || vtdRoom.getCritType() == CritType.ANY)
+        if (vtdRoom.getCritType() == CritType.ANY)
             isCritable = true;
-        else if (vtdRoom.getCritType() == critType)
-            isCritable = true;
+        else if (critTypes != null) {
+            if (critTypes.contains(CritType.ANY) || critTypes.contains(vtdRoom.getCritType()))
+                isCritable = true;
+        }
 
         return VtdMonster.builder()
                 .room(vtdRoom.getRoom())

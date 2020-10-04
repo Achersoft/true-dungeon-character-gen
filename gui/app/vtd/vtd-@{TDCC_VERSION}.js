@@ -33,7 +33,7 @@ angular.module('main')
     };
 }])
 
-.controller('VtdPlayDesktopCtrl', ['$scope', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', 'WarnDialogSvc', function ($scope, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, confirmDialogSvc, warnDialogSvc) {
+.controller('VtdPlayDesktopCtrl', ['$scope', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', 'WarnDialogSvc', 'MonsterSelectorSvc', function ($scope, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, confirmDialogSvc, warnDialogSvc, monsterSelectorSvc) {
     $scope.attackIndex = 0;
     $scope.skillIndex = 0;
     $scope.resultIndex = 0;
@@ -285,10 +285,8 @@ angular.module('main')
     $scope.getRoll =  function(monsterIndex) {
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             return $scope.getRandomInt(20) + 1;
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === null) {
-          
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== null) {
-            
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            return monsterIndex.roller[$scope.getRandomInt(monsterIndex.roller.length)];
         } else {
             return $scope.characterContext.monsters[0].roller[$scope.getRandomInt($scope.characterContext.monsters[0].roller.length)];
         }    
@@ -304,10 +302,15 @@ angular.module('main')
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             hitRoll = $scope.getRandomInt(20) + 1;
             offhandHitRoll = $scope.getRandomInt(20) + 1;
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === null) {
-          
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== null) {
-            
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollToHitMelee(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monster = monsterIndex;
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
         } else {
             monster = $scope.characterContext.monsters[0];
             hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
@@ -405,13 +408,15 @@ angular.module('main')
                 }
             }
             
+            var mDmgTotal = 0;
             if (hitRoll > 1)
-                mDmg = mDmg + rollDmg;
+                mDmgTotal = mDmg + rollDmg;
             else
                 mDmg = 0;
             
+            var oDmgTotal = 0;
             if (offhandHitRoll > 1)
-                oDmg = oDmg + rollDmg;
+                oDmgTotal = oDmg + rollDmg;
             else
                 oDmg = 0;
             
@@ -419,13 +424,13 @@ angular.module('main')
             if (mCritDmg > 0 && oCritDmg > 0)
                 totalCrit = mCritDmg + oCritDmg;
             else if (mCritDmg > 0) {
-                totalCrit = mCritDmg + oDmg;
+                totalCrit = mCritDmg + oDmgTotal;
             } else if (oCritDmg > 0) {
-                totalCrit = oCritDmg + mDmg;
+                totalCrit = oCritDmg + mDmgTotal;
             }
  
             vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
-                "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmg,"oDmg":oDmg,"totalDmg":mDmg+oDmg,
+                "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
                 "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"oWeaponExp":oDmgExp});
         }
          
@@ -443,10 +448,15 @@ angular.module('main')
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             hitRoll = $scope.getRandomInt(20) + 1;
             offhandHitRoll = $scope.getRandomInt(20) + 1;
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === null) {
-          
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== null) {
-            
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollToHitRange(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monster = monsterIndex;
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
         } else {
             monster = $scope.characterContext.monsters[0];
             hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
@@ -521,13 +531,15 @@ angular.module('main')
                 }
             }
             
+            var mDmgTotal = 0;
             if (hitRoll > 1)
-                mDmg = mDmg + rollDmg;
+                mDmgTotal = mDmg + rollDmg;
             else
                 mDmg = 0;
             
+            var oDmgTotal = 0;
             if (offhandHitRoll > 1)
-                oDmg = oDmg + rollDmg;
+                oDmgTotal = oDmg + rollDmg;
             else
                 oDmg = 0;
             
@@ -535,13 +547,13 @@ angular.module('main')
             if (mCritDmg > 0 && oCritDmg > 0)
                 totalCrit = mCritDmg + oCritDmg;
             else if (mCritDmg > 0) {
-                totalCrit = mCritDmg + oDmg;
+                totalCrit = mCritDmg + oDmgTotal;
             } else if (oCritDmg > 0) {
-                totalCrit = oCritDmg + mDmg;
+                totalCrit = oCritDmg + mDmgTotal;
             }
  
             vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
-                "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmg,"oDmg":oDmg,"totalDmg":mDmg+oDmg,
+                "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
                 "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"oWeaponExp":oDmgExp});
         }
          
@@ -562,10 +574,14 @@ angular.module('main')
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             hitRoll = $scope.getRandomInt(20) + 1;
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === null) {
-          
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== null) {
-            
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollToHitPoly(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monster = monsterIndex;
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
         } else {
             monster = $scope.characterContext.monsters[0];
             hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
@@ -623,10 +639,14 @@ angular.module('main')
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             hitRoll = $scope.getRandomInt(20) + 1;
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === null) {
-          
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== null) {
-            
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollToHitSneak(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monster = monsterIndex;
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
         } else {
             monster = $scope.characterContext.monsters[0];
             hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
@@ -704,10 +724,14 @@ angular.module('main')
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             hitRoll = $scope.getRandomInt(20) + 1;
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === null) {
-          
-        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== null) {
-            
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollToHitSneakRange(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monster = monsterIndex;
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
         } else {
             monster = $scope.characterContext.monsters[0];
             hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];

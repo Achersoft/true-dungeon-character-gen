@@ -4,6 +4,7 @@ public enum CritType {
     ANY,
     ELEMENTAL,
     CONSTRUCT,
+    PLANT,
     UNDEAD;
 }
 

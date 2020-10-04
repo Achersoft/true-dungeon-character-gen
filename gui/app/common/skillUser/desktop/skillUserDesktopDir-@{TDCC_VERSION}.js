@@ -1,4 +1,4 @@
-angular.module('main').directive('skillUserDesktop',['VtdSvc', '$uibModal', function(vtdSvc, $uibModal){
+angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorSvc', '$uibModal', function(vtdSvc, monsterSelectorSvc, $uibModal){
     return {
         restrict:'E',
         scope:{
@@ -28,7 +28,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', '$uibModal', func
             scope.healError = false;
             scope.modalInstance = null;
             
-            scope.openModal = function(isChecked) {
+            scope.openModal = function(isChecked, monster) {
                 scope.targetIndex = 0;
                 scope.madEvokerIndex = 0;
                 scope.loh10Index = 0;
@@ -44,6 +44,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', '$uibModal', func
                 scope.lohUseAmount = 1;
                 scope.spellCast = false;
                 scope.healError = false;
+                scope.monster = monster;
                 
                 if (isChecked) {
                     scope.modalInstance = $uibModal.open({
@@ -56,6 +57,13 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', '$uibModal', func
                         templateUrl: 'common/skillUser/desktop/skillUserUnsetDesktopModalTemplate-@{TDCC_VERSION}.html'
                     });
                 } else {
+                    if (scope.model.skillType === 'DAMAGE_RANGE_AC_15' && scope.characterContext.monsters.length > 1 && monster === undefined) {
+                         monsterSelectorSvc.selectMonster(scope.characterContext.monsters, function(index) {
+                            scope.openModal(isChecked, index);
+                        });
+                        return;
+                    }
+                    
                     scope.modalInstance = $uibModal.open({
                         ariaLabelledBy: 'modal-title',
                         ariaDescribedBy: 'modal-body',
@@ -171,7 +179,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', '$uibModal', func
                     var totalDamage = scope.characterContext.stats.spellDmg + dmg;
                     var madEvoker = false;
 
-                    scope.hitRollNatural = scope.roll()();
+                    scope.hitRollNatural = scope.roll()(scope.monster);
                     scope.hitRoll = scope.hitRollNatural + scope.characterContext.stats.rangeHit;
                     
                     if (scope.madEvokerIndex === 1) {

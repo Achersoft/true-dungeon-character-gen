@@ -171,6 +171,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasMonkRelic = new AtomicBoolean(false);
             final AtomicBoolean hasMonkLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasShamansBelt = new AtomicBoolean(false);
+            final List<CritType> critTypes = new ArrayList<>();
 
             for (CharacterItem characterItem : characterDetails.getItems()) {
                 if (characterItem != null && characterItem.getItemId() != null) {
@@ -207,6 +208,18 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasMonkLegendary.set(true);
                     else if (characterItem.getItemId().equals("e604ae878baea5348138a4b22180b74a34c6ecce"))
                         hasShamansBelt.set(true);
+                    else if (characterItem.getItemId().equals("afd90da9d4f05dbce780a2befb67cd1d47187782") ||
+                             characterItem.getItemId().equals("80fdb7fe44986e27f987260c94d2fedebda46888") ||
+                             characterItem.getItemId().equals("69174ff87b87325b034df0adc38d418859a11a09"))
+                        critTypes.add(CritType.CONSTRUCT);
+                    else if (characterItem.getItemId().equals("65cf6807e85d0ef42294e339ad83c65c4436a61b"))
+                        critTypes.add(CritType.UNDEAD);
+                    else if (characterItem.getItemId().equals("eb43d244380e38b71f149e07b3993eb7b382ef1a"))
+                        critTypes.add(CritType.ELEMENTAL);
+                    else if (characterItem.getItemId().equals("99561249745b26c94a83e3e45be1acb4ef44cad2"))
+                        critTypes.add(CritType.PLANT);
+                    else if (characterItem.getItemId().equals("2bc4f9b17575f86929e7c3e06656c0c3c79a6812"))
+                        critTypes.add(CritType.ANY);
                 }
             }
 
@@ -556,7 +569,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .rollerDifficulty(0)
                     .initBonus(0)
                     .roomNumber(1)
-                    .monsters(VtdMonster.fromRoom(roomsByNumber, CritType.ANY))
+                    .critTypes(String.join(",", critTypes.stream().map(Enum::name).collect(Collectors.toList())))
+                    .monsters(VtdMonster.fromRoom(roomsByNumber, critTypes))
                     .availableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())))
                     .notes(characterDetails.getNotes())
                     .characterSkills(characterSkills)
@@ -969,13 +983,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         if (adventureByCode != null) {
             vtdDetails.setAdventureId(adventureByCode.getId());
             vtdDetails.setAdventureName(adventureByCode.getName());
-            vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber()), CritType.ANY));
 
             vtdMapper.updateCharacter(vtdDetails);
         } else
             throw new InvalidDataException("Passcode does not match any known adventures.");
 
-        return vtdDetails;
+        return calculateStats(id);
     }
 
     @Override
@@ -994,7 +1007,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         vtdDetails.setStats(vtdMapper.getCharacterStats(vtdDetails.getCharacterId()));
         vtdDetails.setNotes(mapper.getCharacterNotes(vtdDetails.getCharacterOrigId()));
         vtdDetails.setPolys(vtdMapper.getCharacterPolys(vtdDetails.getCharacterId()));
-        vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber()), CritType.ANY));
+
+        final List<CritType> critTypes = (vtdDetails.getCritTypes() == null || vtdDetails.getCritTypes().isEmpty()) ? new ArrayList<>() : Arrays.stream(vtdDetails.getCritTypes().split(",")).map(CritType::valueOf).collect(Collectors.toList());
+        if (vtdDetails.getBuffs() != null && vtdDetails.getBuffs().stream().filter(vtdBuff -> vtdBuff.getBuff() == Buff.OIL_OF_THE_TINKERER).count() > 0)
+            critTypes.add(CritType.CONSTRUCT);
+
+        vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber()), critTypes));
 
         applyBuffsToStats(vtdDetails.getBuffs(), vtdDetails.getStats(), vtdDetails.isMightyWeapon());
 

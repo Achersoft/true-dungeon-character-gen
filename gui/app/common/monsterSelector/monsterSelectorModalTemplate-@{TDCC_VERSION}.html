@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$ctrl.close()" style="font-size:30px;color: rgb(255, 255, 255)">&times;</button>
+    <h4 class="modal-title">Select A Monster</h4>
+</div>
+<div class="modal-body" style="background-color: rgb(51, 51, 51);color:white">
+    <div ng-class-odd="'esi-row-alt'" ng-repeat-start="monster in $ctrl.monsters track by $index" ng-repeat-end data-dismiss="modal">
+        <span class="col-xs-12 btn nowrap-truncate btn-info" style="padding-top:12px;padding-bottom:12px;margin-bottom:20px;border-radius:25px" ng-click="$ctrl.ok(monster)">{{monster.name}}</span> 
+     <div style="padding: 18px"></div>
+    </div>
+    
+    <div style="padding: 25px"></div>
+</div>
