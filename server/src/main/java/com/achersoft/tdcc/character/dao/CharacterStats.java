@@ -92,4 +92,24 @@ public class CharacterStats {
     private int drDarkrift = 0;
     private int drSacred = 0;
     private int drForce = 0;
+    private int mFire = 0;
+    private int mCold = 0;
+    private int mShock = 0;
+    private int mSonic = 0;
+    private int mEldritch = 0;
+    private int mPoison = 0;
+    private int mDarkrift = 0;
+    private int mSacred = 0;
+    private int mForce = 0;
+    private int mAcid = 0;
+    private int rFire = 0;
+    private int rCold = 0;
+    private int rShock = 0;
+    private int rSonic = 0;
+    private int rEldritch = 0;
+    private int rPoison = 0;
+    private int rDarkrift = 0;
+    private int rSacred = 0;
+    private int rForce = 0;
+    private int rAcid = 0;
 }

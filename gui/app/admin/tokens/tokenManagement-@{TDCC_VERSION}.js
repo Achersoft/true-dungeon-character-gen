@@ -19,7 +19,6 @@ angular.module('main')
 .controller('SetManagementCtrl', ['$scope', 'SetAdminState', 'TokenAdminSvc', '$location', '$route', function ($scope, setAdminState, tokenAdminSvc, $location, $route) {
     $scope.search = setAdminState.reset();
 
-    
     $scope.toggleSlotSelected =  function(slot){
         $scope.search.slot = slot;
     };
@@ -285,6 +284,16 @@ angular.module('main')
                 intel: 0,
                 wis: 0,
                 cha: 0,
+                fire: 0,
+                cold: 0,
+                shock: 0,
+                sonic: 0,
+                eldritch: 0,
+                poison: 0,
+                darkrift: 0,
+                sacred: 0,
+                force: 0,
+                acid: 0,
                 health: 0,
                 regen: 0,
                 oneHanded: false,
@@ -407,6 +416,16 @@ angular.module('main')
                     intel: 0,
                     wis: 0,
                     cha: 0,
+                    fire: 0,
+                    cold: 0,
+                    shock: 0,
+                    sonic: 0,
+                    eldritch: 0,
+                    poison: 0,
+                    darkrift: 0,
+                    sacred: 0,
+                    force: 0,
+                    acid: 0,
                     health: 0,
                     regen: 0,
                     meleeHit: 0,
@@ -499,6 +518,16 @@ angular.module('main')
                     intel: 0,
                     wis: 0,
                     cha: 0,
+                    fire: 0,
+                    cold: 0,
+                    shock: 0,
+                    sonic: 0,
+                    eldritch: 0,
+                    poison: 0,
+                    darkrift: 0,
+                    sacred: 0,
+                    force: 0,
+                    acid: 0,
                     health: 0,
                     regen: 0,
                     meleeHit: 0,

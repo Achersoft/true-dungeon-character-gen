@@ -1786,7 +1786,7 @@ public class CharacterServiceImpl implements CharacterService {
             } else {
                 // check for same shield
                 if (item.getTokenFullDetails().isShield()) {
-                    if (sheildId.get().isEmpty()) {
+                   /* if (sheildId.get().isEmpty()) {
                         sheildId.set(item.getTokenFullDetails().getId());
                         updateStats(stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
                     }
@@ -1794,18 +1794,22 @@ public class CharacterServiceImpl implements CharacterService {
                     if (!sheildId.get().equals(item.getTokenFullDetails().getId())) {
                         item.getItem().setSlotStatus(SlotStatus.INVALID);
                         item.getItem().setStatusText("Sheilds used for range and melee must be the same.");
-                    } else {
+                    } else { */
                         if (item.getItem().getSlot() == Slot.OFFHAND) {
                             item.getItem().setSlotStatus(SlotStatus.OK);
                             item.getItem().setStatusText(null);
                             stats.setMeleeAC(stats.getMeleeAC()+ item.getTokenFullDetails().getMeleeAC());
+
+                            updateStats(stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
                         } else if (item.getItem().getSlot() == Slot.RANGE_OFFHAND) {
                             item.getItem().setSlotStatus(SlotStatus.OK);
                             item.getItem().setStatusText(null);
                             stats.setRangeAC(stats.getRangeAC() + item.getTokenFullDetails().getRangeAC());
                             stats.setRangeMissileAC(stats.getRangeMissileAC() + item.getTokenFullDetails().getRangeMissileAC());
+
+                            updateStats(stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
                         }
-                    }
+                  //  }
                 } else {
                     item.getItem().setSlotStatus(SlotStatus.OK);
                     item.getItem().setStatusText(null);
@@ -1873,14 +1877,30 @@ public class CharacterServiceImpl implements CharacterService {
     }
     
     private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails, List<Integer> meleeWeaponHit, List<Integer> rangeWeaponHit) {
-        List<CharacterNote> notes = characterDetails.getNotes();
-        conditionalTokens.stream().forEach((token) -> {
+        final List<CharacterNote> notes = characterDetails.getNotes();
+        List<CharacterItem> failedConditions = checkConditionals(conditionalTokens, null, notes, metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
+
+        if (!failedConditions.isEmpty()) {
+            int errorCount = failedConditions.size();
+            int newErrorCount = 0;
+
+            while (errorCount != newErrorCount) {
+                failedConditions = checkConditionals(conditionalTokens, failedConditions, notes, metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
+                newErrorCount = failedConditions.size();
+            }
+        }
+    }
+
+    private List<CharacterItem> checkConditionals(List<CharacterItem> conditionalTokens, List<CharacterItem> retryTokens, List<CharacterNote> notes, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails, List<Integer> meleeWeaponHit, List<Integer> rangeWeaponHit) {
+        final List<CharacterItem> failedConditions = new ArrayList<>();
+        conditionalTokens.stream().filter(token -> retryTokens == null || retryTokens.contains(token)).forEach((token) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(token.getItemId());
             if(null != td.getConditionalUse()) switch (td.getConditionalUse()) {
                 case NOT_WITH_ROSP:
                     if(metCondition.contains(ConditionalUse.NOT_WITH_ROSP)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with the Rod of Seven Parts.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -1890,6 +1910,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(!metCondition.contains(ConditionalUse.WEAPON_2H)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a two handed weapon to use.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -1899,6 +1920,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(!metCondition.contains(ConditionalUse.WEAPON_1H)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a one handed weapon to use.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -1908,6 +1930,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(!metCondition.contains(ConditionalUse.WEAPON_RANGED)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a range weapon to use.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -1917,6 +1940,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(!metCondition.contains(ConditionalUse.WEAPON_RANGED_2H)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a two handed range weapon to use.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -1926,6 +1950,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(stats.getDex() < 18) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a dexterity of 18 or higher to use.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -1946,6 +1971,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(stats.getDex() < 20) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a dexterity of 20 or higher to use.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -1966,6 +1992,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(stats.getIntel()< 20) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a intellect of 20 or higher to use.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -1986,6 +2013,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(stats.getWis()< 20) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a wisdom of 20 or higher to use.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2006,6 +2034,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(stats.getStr()< 24) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a strength of 24 or higher to use.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2026,6 +2055,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NOT_WITH_COS_COA)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with the Charm of Awakened Synergy.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2035,6 +2065,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NOT_WITH_COA)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with the Charm of Avarice.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2044,6 +2075,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NOT_WITH_PRO_SCROLL)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with other scroll protection items.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2053,6 +2085,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NO_OTHER_TREASURE)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with any other treasure enchancing token.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2129,6 +2162,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.ONE_OTHER_UR_TREASURE)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with more than one other treasure enchancing token that is UR or lower.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2169,6 +2203,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.IOUNSTONE).count() > 1) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be equipped with any other ioun stone.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2178,6 +2213,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(!metCondition.contains(ConditionalUse.MISSILE_ATTACK)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("This token requires a missile projectile range weapon to use.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2187,6 +2223,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NOT_RARE_PLUS_TORSO)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with a rare or higher torso armor.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2196,6 +2233,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NOT_UR_PLUS_RING)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with a ultra rare or higher ring.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2205,6 +2243,7 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NO_OTHER_SIXTH_LEVEL_REWARD)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText("Only one player level reward item can equip at a time.");
+                        failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
@@ -2214,6 +2253,8 @@ public class CharacterServiceImpl implements CharacterService {
                     break;
             }
         });
+
+        return failedConditions;
     }
                 
     private void updateStats(CharacterStats stats, TokenFullDetails td, List<CharacterNote> notes, boolean ignoreHitAndDamage, boolean ignoreAC) {
@@ -2284,7 +2325,27 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setDrEldritch(stats.getDrEldritch() + td.getDrEldritch());
         stats.setDrPoison(stats.getDrPoison() + td.getDrPoison());
         stats.setDrDarkrift(stats.getDrDarkrift() + td.getDrDarkrift());
-        stats.setDrSacred(stats.getDrSacred() + td.getDrSacred()); 
+        stats.setDrSacred(stats.getDrSacred() + td.getDrSacred());
+        stats.setMFire(stats.getMFire() + td.getMFire());
+        stats.setMCold(stats.getMCold() + td.getMCold());
+        stats.setMShock(stats.getMShock() + td.getMShock());
+        stats.setMSonic(stats.getMSonic() + td.getMSonic());
+        stats.setMEldritch(stats.getMEldritch() + td.getMEldritch());
+        stats.setMPoison(stats.getMPoison() + td.getMPoison());
+        stats.setMDarkrift(stats.getMDarkrift() + td.getMDarkrift());
+        stats.setMSacred(stats.getMSacred() + td.getMSacred());
+        stats.setMForce(stats.getMForce() + td.getMForce());
+        stats.setMAcid(stats.getMAcid() + td.getMAcid());
+        stats.setRFire(stats.getRFire() + td.getRFire());
+        stats.setRCold(stats.getRCold() + td.getRCold());
+        stats.setRShock(stats.getRShock() + td.getRShock());
+        stats.setRSonic(stats.getRSonic() + td.getRSonic());
+        stats.setREldritch(stats.getREldritch() + td.getREldritch());
+        stats.setRPoison(stats.getRPoison() + td.getRPoison());
+        stats.setRDarkrift(stats.getRDarkrift() + td.getRDarkrift());
+        stats.setRSacred(stats.getRSacred() + td.getRSacred());
+        stats.setRForce(stats.getRForce() + td.getRForce());
+        stats.setRAcid(stats.getRAcid() + td.getRAcid());
 
         if(td.getSpecialText() != null && !td.getSpecialText().isEmpty()) {
              notes.add(CharacterNote.builder().alwaysInEffect(td.isAlwaysInEffect()).oncePerRound(td.isOncePerRound()).oncePerRoom(td.isOncePerRoom()).oncePerGame(td.isOncePerGame()).note(td.getSpecialText()).build());

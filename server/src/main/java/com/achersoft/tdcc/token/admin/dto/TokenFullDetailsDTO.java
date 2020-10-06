@@ -122,6 +122,26 @@ public class TokenFullDetailsDTO {
     public Boolean oncePerRoom;
     public Boolean oncePerGame;
     public String specialText;
+    public Integer mFire;
+    public Integer mCold;
+    public Integer mShock;
+    public Integer mSonic;
+    public Integer mEldritch;
+    public Integer mPoison;
+    public Integer mDarkrift;
+    public Integer mSacred;
+    public Integer mForce;
+    public Integer mAcid;
+    public Integer rFire;
+    public Integer rCold;
+    public Integer rShock;
+    public Integer rSonic;
+    public Integer rEldritch;
+    public Integer rPoison;
+    public Integer rDarkrift;
+    public Integer rSacred;
+    public Integer rForce;
+    public Integer rAcid;
     
     public static TokenFullDetailsDTO fromDAO(TokenFullDetails tokenFullDetails) {
         TokenFullDetailsDTO build = TokenFullDetailsDTO.builder()
@@ -229,6 +249,26 @@ public class TokenFullDetailsDTO {
                 .oncePerGame(tokenFullDetails.isOncePerGame())
                 .specialText(tokenFullDetails.getSpecialText())
                 .usableBy(new ArrayList())
+                .mFire(tokenFullDetails.getMFire())
+                .mCold(tokenFullDetails.getMCold())
+                .mShock(tokenFullDetails.getMShock())
+                .mSonic(tokenFullDetails.getMSonic())
+                .mEldritch(tokenFullDetails.getMEldritch())
+                .mPoison(tokenFullDetails.getMPoison())
+                .mDarkrift(tokenFullDetails.getMDarkrift())
+                .mSacred(tokenFullDetails.getMSacred())
+                .mForce(tokenFullDetails.getMForce())
+                .mAcid(tokenFullDetails.getMAcid())
+                .rFire(tokenFullDetails.getRFire())
+                .rCold(tokenFullDetails.getRCold())
+                .rShock(tokenFullDetails.getRShock())
+                .rSonic(tokenFullDetails.getRSonic())
+                .rEldritch(tokenFullDetails.getREldritch())
+                .rPoison(tokenFullDetails.getRPoison())
+                .rDarkrift(tokenFullDetails.getRDarkrift())
+                .rSacred(tokenFullDetails.getRSacred())
+                .rForce(tokenFullDetails.getRForce())
+                .rAcid(tokenFullDetails.getRAcid())
                 .build();
         
         if(tokenFullDetails.isUsableByBarbarian() && tokenFullDetails.isUsableByBard()&&
@@ -373,6 +413,26 @@ public class TokenFullDetailsDTO {
                 .oncePerRoom(oncePerRoom)
                 .oncePerGame(oncePerGame)
                 .specialText(specialText)
+                .mFire(this.getMFire())
+                .mCold(this.getMCold())
+                .mShock(this.getMShock())
+                .mSonic(this.getMSonic())
+                .mEldritch(this.getMEldritch())
+                .mPoison(this.getMPoison())
+                .mDarkrift(this.getMDarkrift())
+                .mSacred(this.getMSacred())
+                .mForce(this.getMForce())
+                .mAcid(this.getMAcid())
+                .rFire(this.getRFire())
+                .rCold(this.getRCold())
+                .rShock(this.getRShock())
+                .rSonic(this.getRSonic())
+                .rEldritch(this.getREldritch())
+                .rPoison(this.getRPoison())
+                .rDarkrift(this.getRDarkrift())
+                .rSacred(this.getRSacred())
+                .rForce(this.getRForce())
+                .rAcid(this.getRAcid())
                 .build();
         
         if(usableBy.contains(CharacterClass.ALL)){
