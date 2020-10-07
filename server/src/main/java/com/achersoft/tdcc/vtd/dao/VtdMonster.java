@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,6 +90,8 @@ public class VtdMonster {
             if (critTypes.contains(CritType.ANY) || critTypes.contains(vtdRoom.getCritType()))
                 isCritable = true;
         }
+
+        Collections.shuffle(rollerValues);
 
         return VtdMonster.builder()
                 .room(vtdRoom.getRoom())

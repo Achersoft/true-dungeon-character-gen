@@ -45,6 +45,25 @@ public class CharacterServiceImpl implements CharacterService {
     private @Inject UserPrincipalProvider userPrincipalProvider;
 
     @Override
+    public void recalculateCharacters() {
+        final List<String> allCharacters = mapper.getAllCharacters();
+        int index = 0;
+        System.err.println("Calculating stats for all characters #: " + allCharacters.size());
+        for (String id : allCharacters) {
+            System.err.println("Remaining ids: " + (allCharacters.size() - index) + " for id: " + id);
+            //if (index % 50 == 0)
+            //    System.err.println("Remaining ids: " + (allCharacters.size() - index));
+            try {
+                validateCharacterItems(id);
+            } catch (Exception e) {
+                System.err.println("Checking id: " + id +"\n" + e.getMessage());
+            }
+            index++;
+        }
+        System.err.println("Stat calculation complete");
+    }
+
+    @Override
     public CharacterDetails getCharacter(String id) {
         CharacterDetails characterDetails = mapper.getCharacter(id);
         
@@ -1883,10 +1902,12 @@ public class CharacterServiceImpl implements CharacterService {
         if (!failedConditions.isEmpty()) {
             int errorCount = failedConditions.size();
             int newErrorCount = 0;
+            int retry = 0;
 
-            while (errorCount != newErrorCount) {
+            while (errorCount != newErrorCount && retry < 5) {
                 failedConditions = checkConditionals(conditionalTokens, failedConditions, notes, metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
                 newErrorCount = failedConditions.size();
+                retry++;
             }
         }
     }

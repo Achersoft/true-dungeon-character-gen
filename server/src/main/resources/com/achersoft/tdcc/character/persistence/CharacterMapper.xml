@@ -2,7 +2,12 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="com.achersoft.tdcc.character.persistence.CharacterMapper">
-    
+
+    <select id="getAllCharacters" resultType="String">
+        SELECT cn.id
+        FROM character_name cn
+    </select>
+
     <insert id="addCharacter">
         INSERT INTO character_name (id,
                                     user_id,

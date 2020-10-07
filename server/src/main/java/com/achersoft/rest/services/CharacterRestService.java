@@ -27,7 +27,15 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class CharacterRestService {
 
     private @Inject CharacterCreatorService characterCreatorService; 
-    private @Inject CharacterService characterService; 
+    private @Inject CharacterService characterService;
+
+    @RequiresPrivilege({Privilege.ADMIN})
+    @GET
+    @Path("/resetAll")
+    @Produces({MediaType.APPLICATION_JSON})
+    public void resetAll() throws Exception {
+        characterService.recalculateCharacters();
+    }
     
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @PUT 

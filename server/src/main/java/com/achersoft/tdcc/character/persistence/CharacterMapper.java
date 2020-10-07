@@ -9,7 +9,8 @@ import com.achersoft.tdcc.enums.CharacterClass;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface CharacterMapper {   
+public interface CharacterMapper {
+    public List<String> getAllCharacters();
     public void addCharacter(CharacterDetails characterDetails);
     public void addCharacterStats(CharacterStats characterStats); 
     public void addCharacterItems(@Param("characterItems") List<CharacterItem> characterItem);

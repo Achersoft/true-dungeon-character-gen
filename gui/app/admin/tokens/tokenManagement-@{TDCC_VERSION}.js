@@ -13,7 +13,18 @@ angular.module('main')
     .when('/admin/tokens/edit', {
         templateUrl: 'admin/tokens/editToken-@{TDCC_VERSION}.html',
         controller: 'TokenEditCtrl'
+    })
+    .when('/admin/reset', {
+        templateUrl: 'admin/tokens/reset-@{TDCC_VERSION}.html',
+        controller: 'ResetManagementCtrl'
     });
+}])
+
+.controller('ResetManagementCtrl', ['$scope', 'TokenAdminSvc', '$location', '$route', function ($scope, tokenAdminSvc, $location, $route) {
+
+    $scope.resetCharacterStats = function(){
+        tokenAdminSvc.resetCharacterStats().then(function() {});
+    };
 }])
 
 .controller('SetManagementCtrl', ['$scope', 'SetAdminState', 'TokenAdminSvc', '$location', '$route', function ($scope, setAdminState, tokenAdminSvc, $location, $route) {
@@ -48,6 +59,26 @@ angular.module('main')
                     intel: 0,
                     wis: 0,
                     cha: 0,
+                    mFire: 0,
+                    mCold: 0,
+                    mShock: 0,
+                    mSonic: 0,
+                    mEldritch: 0,
+                    mPoison: 0,
+                    mDarkrift: 0,
+                    mSacred: 0,
+                    mForce: 0,
+                    mAcid: 0,
+                    rFire: 0,
+                    rCold: 0,
+                    rShock: 0,
+                    rSonic: 0,
+                    rEldritch: 0,
+                    rPoison: 0,
+                    rDarkrift: 0,
+                    rSacred: 0,
+                    rForce: 0,
+                    rAcid: 0,
                     health: 0,
                     regen: 0,
                     meleeHit: 0,
@@ -284,16 +315,26 @@ angular.module('main')
                 intel: 0,
                 wis: 0,
                 cha: 0,
-                fire: 0,
-                cold: 0,
-                shock: 0,
-                sonic: 0,
-                eldritch: 0,
-                poison: 0,
-                darkrift: 0,
-                sacred: 0,
-                force: 0,
-                acid: 0,
+                mFire: 0,
+                mCold: 0,
+                mShock: 0,
+                mSonic: 0,
+                mEldritch: 0,
+                mPoison: 0,
+                mDarkrift: 0,
+                mSacred: 0,
+                mForce: 0,
+                mAcid: 0,
+                rFire: 0,
+                rCold: 0,
+                rShock: 0,
+                rSonic: 0,
+                rEldritch: 0,
+                rPoison: 0,
+                rDarkrift: 0,
+                rSacred: 0,
+                rForce: 0,
+                rAcid: 0,
                 health: 0,
                 regen: 0,
                 oneHanded: false,
@@ -416,16 +457,26 @@ angular.module('main')
                     intel: 0,
                     wis: 0,
                     cha: 0,
-                    fire: 0,
-                    cold: 0,
-                    shock: 0,
-                    sonic: 0,
-                    eldritch: 0,
-                    poison: 0,
-                    darkrift: 0,
-                    sacred: 0,
-                    force: 0,
-                    acid: 0,
+                    mFire: 0,
+                    mCold: 0,
+                    mShock: 0,
+                    mSonic: 0,
+                    mEldritch: 0,
+                    mPoison: 0,
+                    mDarkrift: 0,
+                    mSacred: 0,
+                    mForce: 0,
+                    mAcid: 0,
+                    rFire: 0,
+                    rCold: 0,
+                    rShock: 0,
+                    rSonic: 0,
+                    rEldritch: 0,
+                    rPoison: 0,
+                    rDarkrift: 0,
+                    rSacred: 0,
+                    rForce: 0,
+                    rAcid: 0,
                     health: 0,
                     regen: 0,
                     meleeHit: 0,
@@ -518,16 +569,26 @@ angular.module('main')
                     intel: 0,
                     wis: 0,
                     cha: 0,
-                    fire: 0,
-                    cold: 0,
-                    shock: 0,
-                    sonic: 0,
-                    eldritch: 0,
-                    poison: 0,
-                    darkrift: 0,
-                    sacred: 0,
-                    force: 0,
-                    acid: 0,
+                    mFire: 0,
+                    mCold: 0,
+                    mShock: 0,
+                    mSonic: 0,
+                    mEldritch: 0,
+                    mPoison: 0,
+                    mDarkrift: 0,
+                    mSacred: 0,
+                    mForce: 0,
+                    mAcid: 0,
+                    rFire: 0,
+                    rCold: 0,
+                    rShock: 0,
+                    rSonic: 0,
+                    rEldritch: 0,
+                    rPoison: 0,
+                    rDarkrift: 0,
+                    rSacred: 0,
+                    rForce: 0,
+                    rAcid: 0,
                     health: 0,
                     regen: 0,
                     meleeHit: 0,
@@ -640,6 +701,13 @@ angular.module('main')
     
     tokenAdminSvc.search = function(name) {
         return $http.get(RESOURCES.REST_BASE_URL + '/token/search/?name=' + name).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.resetCharacterStats = function() {
+        return $http.get(RESOURCES.REST_BASE_URL + '/character/resetAll').catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });

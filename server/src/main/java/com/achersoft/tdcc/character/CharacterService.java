@@ -7,6 +7,7 @@ import java.util.List;
 import javax.ws.rs.core.StreamingOutput;
 
 public interface CharacterService {
+    void recalculateCharacters();
     CharacterDetails getCharacter(String id);
     List<CharacterName> getCharacters();
     SelectableCharacters getSelectableCharacters(String userId);
