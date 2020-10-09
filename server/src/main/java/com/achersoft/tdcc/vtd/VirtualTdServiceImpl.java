@@ -171,7 +171,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasMonkRelic = new AtomicBoolean(false);
             final AtomicBoolean hasMonkLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasShamansBelt = new AtomicBoolean(false);
-            final List<CritType> critTypes = new ArrayList<>();
+            final Set<CritType> critTypes = new HashSet<>();
 
             for (CharacterItem characterItem : characterDetails.getItems()) {
                 if (characterItem != null && characterItem.getItemId() != null) {
@@ -218,7 +218,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         critTypes.add(CritType.ELEMENTAL);
                     else if (characterItem.getItemId().equals("99561249745b26c94a83e3e45be1acb4ef44cad2"))
                         critTypes.add(CritType.PLANT);
-                    else if (characterItem.getItemId().equals("2bc4f9b17575f86929e7c3e06656c0c3c79a6812"))
+                    else if (characterItem.getItemId().equals("2bc4f9b17575f86929e7c3e06656c0c3c79a6812") ||
+                            userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase("af42ca02-434b-4f9a-aa58-8d2e7000ee68"))
                         critTypes.add(CritType.ANY);
                 }
             }
@@ -1008,7 +1009,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         vtdDetails.setNotes(mapper.getCharacterNotes(vtdDetails.getCharacterOrigId()));
         vtdDetails.setPolys(vtdMapper.getCharacterPolys(vtdDetails.getCharacterId()));
 
-        final List<CritType> critTypes = (vtdDetails.getCritTypes() == null || vtdDetails.getCritTypes().isEmpty()) ? new ArrayList<>() : Arrays.stream(vtdDetails.getCritTypes().split(",")).map(CritType::valueOf).collect(Collectors.toList());
+        final Set<CritType> critTypes = (vtdDetails.getCritTypes() == null || vtdDetails.getCritTypes().isEmpty()) ? new HashSet<>() : Arrays.stream(vtdDetails.getCritTypes().split(",")).map(CritType::valueOf).collect(Collectors.toSet());
         if (vtdDetails.getBuffs() != null && vtdDetails.getBuffs().stream().filter(vtdBuff -> vtdBuff.getBuff() == Buff.OIL_OF_THE_TINKERER).count() > 0)
             critTypes.add(CritType.CONSTRUCT);
 

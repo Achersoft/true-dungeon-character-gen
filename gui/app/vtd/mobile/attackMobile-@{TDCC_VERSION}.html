@@ -36,6 +36,34 @@
         <div class="col-xs-6 text-center" style="padding:0px" ng-show="isFurryThrow">
             <strong>Damage Mod:</strong> {{characterContext.stats.rangeDmg+7}}
         </div>
+        <div class="col-xs-12 text-center" style="margin-top:15px">
+            <div style="display:flex;justify-content: center">
+                <div ng-if="characterContext.stats.mfire > 0">
+                    <img src="images/fire.png" width="22px" style="padding:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.mfire}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.mcold > 0" style="margin-left:15px">
+                    <img src="images/cold.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.mcold}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.mshock > 0" style="margin-left:15px">
+                    <img src="images/shock.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.mshock}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.msonic > 0" style="margin-left:15px">
+                    <img src="images/sonic.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.msonic}}</b></span>                     
+                </div>
+                <div ng-if="characterContext.stats.meldritch > 0" style="margin-left:15px">
+                    <img src="images/eldritch.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.meldritch}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.mpoison > 0" style="margin-left:15px">
+                    <img src="images/poison.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.mpoison}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.mdarkrift > 0" style="margin-left:15px">
+                    <img src="images/darkrift.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.mdarkrift}}</b></span> 
+                </div>
+                <div ng-if="characterContext.stats.msacred > 0" style="margin-left:15px">
+                    <img src="images/sacred.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.msacred}}</b></span>   
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-xs-12 text-center" style="padding:0px" ng-show="attackIndex === 1">
         <div class="col-xs-6 text-center" style="padding:0px">
@@ -43,6 +71,34 @@
         </div>
         <div class="col-xs-6 text-center" style="padding:0px">
             <strong>Damage Mod:</strong> {{characterContext.stats.rangeDmg}} 
+        </div>
+        <div class="col-xs-12 text-center" style="margin-top:15px">
+            <div style="display:flex;justify-content: center">
+                <div ng-if="characterContext.stats.rfire > 0">
+                    <img src="images/fire.png" width="22px" style="padding:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.rfire}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.rcold > 0" style="margin-left:15px">
+                    <img src="images/cold.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.rcold}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.rshock > 0" style="margin-left:15px">
+                    <img src="images/shock.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.rshock}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.rsonic > 0" style="margin-left:15px">
+                    <img src="images/sonic.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.rsonic}}</b></span>                     
+                </div>
+                <div ng-if="characterContext.stats.reldritch > 0" style="margin-left:15px">
+                    <img src="images/eldritch.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.reldritch}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.rpoison > 0" style="margin-left:15px">
+                    <img src="images/poison.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.rpoison}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.rdarkrift > 0" style="margin-left:15px">
+                    <img src="images/darkrift.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.rdarkrift}}</b></span> 
+                </div>
+                <div ng-if="characterContext.stats.rsacred > 0" style="margin-left:15px">
+                    <img src="images/sacred.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.rsacred}}</b></span>   
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-xs-12 text-center" style="padding:0px" ng-show="attackIndex === 2">
@@ -54,6 +110,34 @@
         </div>
         <div class="col-xs-12 text-center" style="margin-top:10px;padding:0px">
             <poly-selector-mobile set-poly ="setPoly" element-id="activePoly" character-context="characterContext"></poly-selector-mobile>
+        </div>
+        <div class="col-xs-12 text-center" style="margin-top:15px">
+            <div style="display:flex;justify-content: center">
+                <div ng-if="characterContext.stats.mfire > 0">
+                    <img src="images/fire.png" width="22px" style="padding:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.mfire}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.mcold > 0" style="margin-left:15px">
+                    <img src="images/cold.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.mcold}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.mshock > 0" style="margin-left:15px">
+                    <img src="images/shock.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.mshock}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.msonic > 0" style="margin-left:15px">
+                    <img src="images/sonic.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.msonic}}</b></span>                     
+                </div>
+                <div ng-if="characterContext.stats.meldritch > 0" style="margin-left:15px">
+                    <img src="images/eldritch.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.meldritch}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.mpoison > 0" style="margin-left:15px">
+                    <img src="images/poison.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.mpoison}}</b></span>
+                </div>
+                <div ng-if="characterContext.stats.mdarkrift > 0" style="margin-left:15px">
+                    <img src="images/darkrift.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.mdarkrift}}</b></span> 
+                </div>
+                <div ng-if="characterContext.stats.msacred > 0" style="margin-left:15px">
+                    <img src="images/sacred.png" width="22px" style="padding-left:0px;margin-top:-9px;"/><span style="font-size:22px"><b>: {{characterContext.stats.msacred}}</b></span>   
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-xs-12 text-center" style="padding:0px" ng-show="attackIndex === 3">

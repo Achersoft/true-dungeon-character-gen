@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Builder
@@ -31,13 +32,13 @@ public class VtdMonster {
     private @Builder.Default int darkrift = 0;
     private @Builder.Default int acid = 0;
 
-    public static List<VtdMonster> fromRoom(List<VtdRoom> vtdRooms, List<CritType> critTypes) {
+    public static List<VtdMonster> fromRoom(List<VtdRoom> vtdRooms, Set<CritType> critTypes) {
         if (vtdRooms == null)
             return new ArrayList<>();
         return vtdRooms.stream().map(vtdRoom -> VtdMonster.fromRoom(vtdRoom, critTypes)).collect(Collectors.toList());
     }
 
-    public static VtdMonster fromRoom(VtdRoom vtdRoom, List<CritType> critTypes) {
+    public static VtdMonster fromRoom(VtdRoom vtdRoom, Set<CritType> critTypes) {
         if (vtdRoom == null)
             return null;
 
