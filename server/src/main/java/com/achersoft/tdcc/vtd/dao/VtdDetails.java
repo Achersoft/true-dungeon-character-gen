@@ -46,14 +46,17 @@ public class VtdDetails {
     private String rangeDmgRange;
     private String rangeOffhandDmgRange;
     private String meleeWeaponExplodeRange;
+    private String meleeWeaponSecondaryExplodeRange;
     private String meleeOffhandWeaponExplodeRange;
     private String rangeWeaponExplodeRange;
     private String rangeOffhandWeaponExplodeRange;
     private WeaponExplodeCondition meleeWeaponExplodeEffect;
+    private WeaponExplodeCondition meleeWeaponSecondaryExplodeEffect;
     private WeaponExplodeCondition meleeOffhandWeaponExplodeEffect;
     private WeaponExplodeCondition rangeWeaponExplodeEffect;
     private WeaponExplodeCondition rangeOffhandWeaponExplodeEffect;
     private String meleeWeaponExplodeText;
+    private String meleeWeaponSecondaryExplodeText;
     private String meleeOffhandWeaponExplodeText;
     private String rangeWeaponExplodeText;
     private String rangeOffhandWeaponExplodeText;
@@ -78,4 +81,6 @@ public class VtdDetails {
     private boolean splitHeal;
     private boolean madEvoker;
     private boolean mightyWeapon;
+    private boolean prestigeAvailable;
+    private boolean prestigeActive;
 }

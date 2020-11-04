@@ -75,8 +75,15 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
-    public VtdDetails getVtdCharacter(String id, boolean reset) {
+    public VtdDetails getVtdCharacter(String id, boolean reset, boolean activatePrestige) {
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+
+        if (activatePrestige && vtdDetails != null) {
+            if (!vtdDetails.isPrestigeAvailable())
+                throw new InvalidDataException("Cannot activate prestige class, you do not have a Rod of Seven Parts or a Skull of Cavadar equipped.");
+            if (vtdDetails.getRoomNumber() > 1)
+                throw new InvalidDataException("Your VTD character is mid adventure and must be reset before a prestige class can be activated.");
+        }
 
         if (reset || vtdDetails == null || vtdDetails.getExpires().before(new Date())) {
             String origId = id;
@@ -137,7 +144,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             vtdMapper.deleteCharacterStats(id);
             vtdMapper.deleteCharacter(id);
 
-            final List<CharacterSkill> skills = vtdMapper.getSkills(characterDetails.getCharacterClass(), characterDetails.getStats().getLevel());
+            final List<CharacterSkill> skills = activatePrestige ? vtdMapper.getSkills(characterDetails.getCharacterClass(), 6) :
+                    vtdMapper.getSkills(characterDetails.getCharacterClass(), characterDetails.getStats().getLevel());
             if (skills != null) {
                 final String charId = characterDetails.getId();
                 skills.forEach(skill -> {
@@ -171,6 +179,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasMonkRelic = new AtomicBoolean(false);
             final AtomicBoolean hasMonkLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasShamansBelt = new AtomicBoolean(false);
+            final AtomicBoolean hasPrestigeClass = new AtomicBoolean(false);
             final Set<CritType> critTypes = new HashSet<>();
 
             for (CharacterItem characterItem : characterDetails.getItems()) {
@@ -208,6 +217,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasMonkLegendary.set(true);
                     else if (characterItem.getItemId().equals("e604ae878baea5348138a4b22180b74a34c6ecce"))
                         hasShamansBelt.set(true);
+                    else if (characterItem.getItemId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
+                        hasPrestigeClass.set(true);
                     else if (characterItem.getItemId().equals("afd90da9d4f05dbce780a2befb67cd1d47187782") ||
                              characterItem.getItemId().equals("80fdb7fe44986e27f987260c94d2fedebda46888") ||
                              characterItem.getItemId().equals("69174ff87b87325b034df0adc38d418859a11a09"))
@@ -267,6 +278,13 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                 case CLERIC:
                     if (divineSight.get())
                         builder.splitHeal(true);
+                    if (activatePrestige) {
+                        if (mainHand.get() != null && mainHand.get().getCritMin() > 18)
+                            mainHand.get().setCritMin(18);
+                        if (rangeMainHand.get() != null && rangeMainHand.get().getCritMin() > 18)
+                            rangeMainHand.get().setCritMin(18);
+                        critTypes.add(CritType.ANY);
+                    }
                     break;
                 case DRUID:
                     if (divineSight.get())
@@ -337,7 +355,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                 case FIGHTER:
                     break;
                 case DWARF_FIGHTER:
-                    if (characterDetails.getStats().getLevel() == 5) {
+                    if (activatePrestige) {
+                        if (offHand.get() != null && offHand.get().isShield())
+                            characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 2);
+                        if (rangeOffHand.get() != null && rangeOffHand.get().isShield())
+                            characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 2);
+                    } else if (characterDetails.getStats().getLevel() == 5) {
                         meleeDmgEffects.add(DamageModEffect.TRIPPLE_CRIT_ON_20);
                         meleeOffhandDmgEffects.add(DamageModEffect.TRIPPLE_CRIT_ON_20);
                         rangeDmgEffects.add(DamageModEffect.TRIPPLE_CRIT_ON_20);
@@ -448,6 +471,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             meleeOffhandDmgEffects.add(DamageModEffect.STUN_20);
                         }
                     }
+
+                    if (activatePrestige) {
+                        if (mainHand.get().isMonkOffhand() && offHand.get().isMonkOffhand())
+                            critTypes.add(CritType.ANY);
+                        characterDetails.getStats().setInitiative(characterDetails.getStats().getInitiative() + 3);
+                    }
                     break;
                 case PALADIN:
                     if (hasPaladinRelic.get())
@@ -529,6 +558,13 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             .unmodifiableSneakDamage(unmodifiableSneakDamage)
                             .isSneakCanCrit(isSneakCanCrit)
                             .isSneakAtRange(isSneakAtRange);
+
+                    if (activatePrestige) {
+                        builder.meleeWeaponSecondaryExplodeRange("6")
+                                .meleeWeaponSecondaryExplodeEffect(WeaponExplodeCondition.NATURAL_20)
+                                .meleeWeaponSecondaryExplodeText("Assassinate - You have instantly slain the monster!!!");
+                    }
+
                     break;
             }
 
@@ -570,6 +606,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .rollerDifficulty(0)
                     .initBonus(0)
                     .roomNumber(1)
+                    .prestigeAvailable(hasPrestigeClass.get())
+                    .prestigeActive(activatePrestige)
                     .critTypes(String.join(",", critTypes.stream().map(Enum::name).collect(Collectors.toList())))
                     .monsters(VtdMonster.fromRoom(roomsByNumber, critTypes))
                     .availableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())))
@@ -672,7 +710,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
         if (vtdDetails.getCurrentHealth() > (characterStats.getHealth() + vtdDetails.getHealthBonus()))
             vtdDetails.setCurrentHealth(characterStats.getHealth() + vtdDetails.getHealthBonus());
-        else if (vtdDetails.getCurrentHealth() < 0)
+        else if (vtdDetails.getCurrentHealth() < 0 && !(vtdDetails.getCharacterClass() == CharacterClass.BARBARIAN && vtdDetails.isPrestigeActive()))
             vtdDetails.setCurrentHealth(0);
 
         vtdMapper.updateCharacter(vtdDetails);
@@ -701,7 +739,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             skill.setUsedNumber(skill.getUsedNumber() + 1);
         vtdMapper.updateCharacterSkill(skill);
 
-        if (character.getCharacterClass() == CharacterClass.BARD) {
+        if (character.getCharacterClass() == CharacterClass.BARD || (character.getCharacterClass() == CharacterClass.WIZARD && character.isPrestigeActive())) {
             for (CharacterSkill characterSkill : vtdMapper.getCharacterSkills(id)) {
                 if (!characterSkill.getId().equals(skillId) && characterSkill.getSkillLevel() == skill.getSkillLevel()) {
                     characterSkill.setUsedNumber(skill.getUsedNumber());
@@ -728,8 +766,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final VtdDetails vtdDetails = calculateStats(id);
 
             vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + selfHeal);
-            if (vtdDetails.getCurrentHealth() > (vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus()))
-                vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus());
+            if (vtdDetails.getCurrentHealth() > (vtdDetails.getStats().getHealth()))
+                vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth());
 
             vtdMapper.updateCharacter(vtdDetails);
         } else if ((skill.getSkillType() == SkillType.DAMAGE || skill.getSkillType() == SkillType.DAMAGE_RANGE_AC_15) && madEvoker) {
@@ -762,7 +800,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             skill.setUsedNumber(skill.getUsedNumber() - 1);
             vtdMapper.updateCharacterSkill(skill);
 
-            if (character.getCharacterClass() == CharacterClass.BARD) {
+            if (character.getCharacterClass() == CharacterClass.BARD || (character.getCharacterClass() == CharacterClass.WIZARD && character.isPrestigeActive())) {
                 for (CharacterSkill characterSkill : vtdMapper.getCharacterSkills(id)) {
                     if (!characterSkill.getId().equals(skillId) && characterSkill.getSkillLevel() == skill.getSkillLevel()) {
                         characterSkill.setUsedNumber(skill.getUsedNumber());
@@ -817,7 +855,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
         if (vtdDetails == null)
-            vtdDetails = getVtdCharacter(id, false);
+            vtdDetails = getVtdCharacter(id, false, false);
         if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
             throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
 
@@ -837,7 +875,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
         if (vtdDetails == null)
-            vtdDetails = getVtdCharacter(id, false);
+            vtdDetails = getVtdCharacter(id, false, false);
         if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
             throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
 
@@ -994,14 +1032,19 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
     @Override
     public VtdDetails resetCharacter(String id) {
-        return getVtdCharacter(id, true);
+        return getVtdCharacter(id, true, false);
+    }
+
+    @Override
+    public VtdDetails activatePrestigeClass(String id) {
+        return getVtdCharacter(id, true, true);
     }
 
     private VtdDetails calculateStats(String id) {
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
         if (vtdDetails == null)
-            vtdDetails = getVtdCharacter(id, false);
+            vtdDetails = getVtdCharacter(id, false, false);
 
         vtdDetails.setBuffs(vtdMapper.getCharacterBuffs(vtdDetails.getCharacterId()));
         vtdDetails.setCharacterSkills(vtdMapper.getCharacterSkills(vtdDetails.getCharacterId()));

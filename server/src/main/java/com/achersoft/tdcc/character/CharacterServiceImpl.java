@@ -1464,24 +1464,24 @@ public class CharacterServiceImpl implements CharacterService {
        
         // Cabal set
         // Gloves
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("3dcfd7948a3c9196556ef7e069a36174396297ad"))).count() > 0)
+        if(itemsMap.keySet().stream().anyMatch((id) -> (id.equals("3dcfd7948a3c9196556ef7e069a36174396297ad"))))
             characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("You may have a second target for and COMMON scroll used.").build());
         // Bracelets
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("f225241f60605ef641beeecd5003ba4129dbf46e"))).count() > 0) {
+        if(itemsMap.keySet().stream().anyMatch((id) -> id.equals("f225241f60605ef641beeecd5003ba4129dbf46e"))) {
             characterDetails.getStats().setSpellDmg(characterDetails.getStats().getSpellDmg()+1);
             characterDetails.getStats().setSpellHeal(characterDetails.getStats().getSpellHeal()+1);
         }
         // Charm
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65"))).count() > 0) {
+        if(itemsMap.keySet().stream().anyMatch((id) -> (id.equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65")))) {
             characterDetails.getStats().setSpellResist(10);
         }
         // all three two spells in one round once per room
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("3dcfd7948a3c9196556ef7e069a36174396297ad") || item.getItemId().equals("f225241f60605ef641beeecd5003ba4129dbf46e") || item.getItemId().equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65"))).count() == 3)
+        if(itemsMap.keySet().stream().filter((id) -> (id.equals("3dcfd7948a3c9196556ef7e069a36174396297ad") || id.equals("f225241f60605ef641beeecd5003ba4129dbf46e") || id.equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65"))).count() == 3)
             characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("You may cast two spells in one round.  Spell modifiers apply to both.").build());
         
         // Celestial Set
         // all 3 immune to melee and mental attacks from evil outsiders
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("09a0ad7cb78d898992c96ab00487bc8ffdc66f5a") || item.getItemId().equals("4b4e1b22e1ce20a529920fd48f8b891ec8e0b74a") || item.getItemId().equals("c34921c9623d7d3c1eee054e646fc3cdc7f08659"))).count() == 3)
+        if(itemsMap.keySet().stream().filter((id) -> id.equals("09a0ad7cb78d898992c96ab00487bc8ffdc66f5a") || id.equals("4b4e1b22e1ce20a529920fd48f8b891ec8e0b74a") || id.equals("c34921c9623d7d3c1eee054e646fc3cdc7f08659")).count() == 3)
             characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("You are immune to melee and mental attacks from evil outsiders.").build());
        
         // Charming items
@@ -1509,13 +1509,12 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Darkthorn Set
         // all 3 +2 ret dmg
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("2439ce9af26dfa74294083c13b73e3cc00405793") || item.getItemId().equals("770a1850602b0854e7be9256f55f1b0ce2ac50ea") || item.getItemId().equals("e6d0a8722540345c6a236a0aeeaf92d12c66e370"))).count() == 3)
+        if(itemsMap.keySet().stream().filter((id) -> id.equals("2439ce9af26dfa74294083c13b73e3cc00405793") || id.equals("770a1850602b0854e7be9256f55f1b0ce2ac50ea") || id.equals("e6d0a8722540345c6a236a0aeeaf92d12c66e370")).count() == 3)
             characterDetails.getStats().setRetDmg(characterDetails.getStats().getRetDmg() + 2);
-       
         
         // Defender Set
         // all 3 free action movement and +1 AC
-        if(characterDetails.getItems().stream().map(CharacterItem::getItemId).filter(Objects::nonNull).distinct().filter((item) -> item.equals("89abc3b184b2b30d1a967aee7a32ccbf107532ed") || item.equals("b29ffe03ba83c567fb95ddedeb8cef8c515c003f") || item.equals("debb8b6d4a22654fadfa4983b84cac3bd69db814")).count() >= 3) {
+        if(itemsMap.keySet().stream().filter((item) -> item.equals("89abc3b184b2b30d1a967aee7a32ccbf107532ed") || item.equals("b29ffe03ba83c567fb95ddedeb8cef8c515c003f") || item.equals("debb8b6d4a22654fadfa4983b84cac3bd69db814")).count() >= 3) {
             characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 1);
             characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 1);
             characterDetails.getStats().setFreeMovement(true);
@@ -1523,8 +1522,8 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Dragonhide Set
         // 3 or more auto pass saves vs dragon breath, +3 saves
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("2a05d3436a948f9bb29e1ebfd9f3ac55115445a2") || item.getItemId().equals("33205cbfbe448541fae56600346027284edc52e1") || item.getItemId().equals("643e19c4273dcb6f2e8b2ce56241beb1efde902e") ||
-                                                                                                         item.getItemId().equals("67935e7e953d26c83d095fd188a226d16fc16e1f") || item.getItemId().equals("81fbf796065e19a88ea36b4b9413946839f10eb6") || item.getItemId().equals("90af6fea77a9670b41a34812b45be7ace7e11e37"))).count() == 3) {
+        if(itemsMap.keySet().stream().distinct().filter((id) -> id.equals("2a05d3436a948f9bb29e1ebfd9f3ac55115445a2") || id.equals("33205cbfbe448541fae56600346027284edc52e1") || id.equals("643e19c4273dcb6f2e8b2ce56241beb1efde902e") ||
+                 id.equals("67935e7e953d26c83d095fd188a226d16fc16e1f") || id.equals("81fbf796065e19a88ea36b4b9413946839f10eb6") || id.equals("90af6fea77a9670b41a34812b45be7ace7e11e37")).count() >= 3) {
             characterDetails.getStats().setFort(characterDetails.getStats().getFort() + 3);
             characterDetails.getStats().setReflex(characterDetails.getStats().getReflex() + 3);
             characterDetails.getStats().setWill(characterDetails.getStats().getWill() + 3);
@@ -1533,10 +1532,10 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Dragonscale Set
         // all 3 - 7 fire dr
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("3f9d6414ad5259959d23f8b509b8881d47ca1d11") || item.getItemId().equals("72341d583d26a57a7f3d3f460f2e976d315688b0") || item.getItemId().equals("2effa74fb480d06733e2aeff29394badf15e58c8"))).count() == 3) {
+        if(itemsMap.keySet().stream().filter((item) -> item.equals("3f9d6414ad5259959d23f8b509b8881d47ca1d11") || item.equals("72341d583d26a57a7f3d3f460f2e976d315688b0") || item.equals("2effa74fb480d06733e2aeff29394badf15e58c8")).count() >= 3) {
             characterDetails.getStats().setDrFire(characterDetails.getStats().getDrFire() + 7);
         }
-        
+
         // Eldritch Set
         // 2 piece ignore spell resistence, healing spells +10, melee igonore DR
         if (eldrichCount >= 5) {
@@ -1563,7 +1562,7 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Footman Set
         // all 3 +2 AC and cold DR 1
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("a0963d04a21f5987224588d320e66dcb1bec5e07") || item.getItemId().equals("c431e2d1507703f78db6d76a5c65c697e9a3f795") || item.getItemId().equals("dff11b4606afca716d94fafa81382a9078ff43d7"))).count() == 3) {
+        if(itemsMap.keySet().stream().filter((item) -> item.equals("a0963d04a21f5987224588d320e66dcb1bec5e07") || item.equals("c431e2d1507703f78db6d76a5c65c697e9a3f795") || item.equals("dff11b4606afca716d94fafa81382a9078ff43d7")).count() >= 3) {
             characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 2);
             characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 2);
             characterDetails.getStats().setDrCold(characterDetails.getStats().getDrCold() + 1);
@@ -1591,7 +1590,7 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Mountain Dwarf Set
         //all 3 1 cold DR
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("886c908995eae55ebb33ff143b07b969fcab09b3") || item.getItemId().equals("d55ed0f77c4a340d2f7fe558e49700861a23d221") || item.getItemId().equals("f67c01d654eacdd3a021dc0d3fe3c319043d8caf"))).count() == 3) {
+        if(itemsMap.keySet().stream().filter((item) -> item.equals("886c908995eae55ebb33ff143b07b969fcab09b3") || item.equals("d55ed0f77c4a340d2f7fe558e49700861a23d221") || item.equals("f67c01d654eacdd3a021dc0d3fe3c319043d8caf")).count() >= 3) {
             characterDetails.getStats().setDrCold(characterDetails.getStats().getDrCold() + 1);
         }
         
@@ -1604,7 +1603,7 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Templar Set
         // All 3 regen 3
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("d9ebb109843e8fa1aa04d90dbf7405e572042fa1") || item.getItemId().equals("e5b7a23fc4208752b6e29c1c0c040279425bc898") || item.getItemId().equals("4fb8d5b22892902f33a73630d5dddb8cff8e244b"))).count() == 3) {
+        if(itemsMap.keySet().stream().filter((item) -> item.equals("d9ebb109843e8fa1aa04d90dbf7405e572042fa1") || item.equals("e5b7a23fc4208752b6e29c1c0c040279425bc898") || item.equals("4fb8d5b22892902f33a73630d5dddb8cff8e244b")).count() >= 3) {
             characterDetails.getStats().setRegen(characterDetails.getStats().getRegen() + 3);
         }
         
@@ -1636,14 +1635,14 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Wind Set
         // all 3 character gains the feather fall effect and immunity to non-magical physical missiles.
-        if(characterDetails.getItems().stream().distinct().filter((item) -> item.getItemId() != null && (item.getItemId().equals("0d71d03613ff843d7a933d65f848375000e76641") || item.getItemId().equals("5118b837bd908c60e7dac00767c4836a31a85878") || item.getItemId().equals("db2de322945529f5dbf3c97030ffa6ff52df96c4"))).count() == 3) {
+        if(itemsMap.keySet().stream().filter((item) -> item.equals("0d71d03613ff843d7a933d65f848375000e76641") || item.equals("5118b837bd908c60e7dac00767c4836a31a85878") || item.equals("db2de322945529f5dbf3c97030ffa6ff52df96c4")).count() >= 3) {
             characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("You have the feather fall effect and immunity to non-magical physical missiles.").build());
         }
     }
     
     private void setCharacterNotes(CharacterDetails characterDetails) {
         // Reset Notes
-        characterDetails.setNotes(new ArrayList());
+        characterDetails.setNotes(new ArrayList<>());
         
         if(null != characterDetails.getCharacterClass()) switch (characterDetails.getCharacterClass()) {
             case BARBARIAN:
@@ -1718,10 +1717,10 @@ public class CharacterServiceImpl implements CharacterService {
     
     private void calculateStats(CharacterDetails characterDetails, Map<String, CharacterItemSet> itemDetailsMap) {
         final CharacterStats stats = characterDetails.getStats();
-        final List<CharacterItem> conditionalTokens = new ArrayList();
-        final Set<ConditionalUse> metCondition = new HashSet();
-        final List<Integer> meleeWeaponHit = new ArrayList();
-        final List<Integer> rangeWeaponHit = new ArrayList();
+        final List<CharacterItem> conditionalTokens = new ArrayList<>();
+        final Set<ConditionalUse> metCondition = new HashSet<>();
+        final List<Integer> meleeWeaponHit = new ArrayList<>();
+        final List<Integer> rangeWeaponHit = new ArrayList<>();
         AtomicBoolean hasSemiLichCharm = new AtomicBoolean(false);
         AtomicBoolean canHaveRareMelee = new AtomicBoolean(true);
         AtomicInteger sixLevelReward = new AtomicInteger(0);
@@ -1805,30 +1804,28 @@ public class CharacterServiceImpl implements CharacterService {
             } else {
                 // check for same shield
                 if (item.getTokenFullDetails().isShield()) {
-                   /* if (sheildId.get().isEmpty()) {
-                        sheildId.set(item.getTokenFullDetails().getId());
-                        updateStats(stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
+                    if (item.getItem().getSlot() == Slot.OFFHAND) {
+                        item.getItem().setSlotStatus(SlotStatus.OK);
+                        item.getItem().setStatusText(null);
+                        stats.setMeleeAC(stats.getMeleeAC()+ item.getTokenFullDetails().getMeleeAC());
+
+                        if (sheildId.get().isEmpty() || !sheildId.get().equals(item.getTokenFullDetails().getId()))
+                            updateStats(stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
+
+                        if (sheildId.get().isEmpty())
+                            sheildId.set(item.getTokenFullDetails().getId());
+                    } else if (item.getItem().getSlot() == Slot.RANGE_OFFHAND) {
+                        item.getItem().setSlotStatus(SlotStatus.OK);
+                        item.getItem().setStatusText(null);
+                        stats.setRangeAC(stats.getRangeAC() + item.getTokenFullDetails().getRangeAC());
+                        stats.setRangeMissileAC(stats.getRangeMissileAC() + item.getTokenFullDetails().getRangeMissileAC());
+
+                        if (sheildId.get().isEmpty() || !sheildId.get().equals(item.getTokenFullDetails().getId()))
+                            updateStats(stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
+
+                        if (sheildId.get().isEmpty())
+                            sheildId.set(item.getTokenFullDetails().getId());
                     }
-                    
-                    if (!sheildId.get().equals(item.getTokenFullDetails().getId())) {
-                        item.getItem().setSlotStatus(SlotStatus.INVALID);
-                        item.getItem().setStatusText("Sheilds used for range and melee must be the same.");
-                    } else { */
-                        if (item.getItem().getSlot() == Slot.OFFHAND) {
-                            item.getItem().setSlotStatus(SlotStatus.OK);
-                            item.getItem().setStatusText(null);
-                            stats.setMeleeAC(stats.getMeleeAC()+ item.getTokenFullDetails().getMeleeAC());
-
-                            updateStats(stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
-                        } else if (item.getItem().getSlot() == Slot.RANGE_OFFHAND) {
-                            item.getItem().setSlotStatus(SlotStatus.OK);
-                            item.getItem().setStatusText(null);
-                            stats.setRangeAC(stats.getRangeAC() + item.getTokenFullDetails().getRangeAC());
-                            stats.setRangeMissileAC(stats.getRangeMissileAC() + item.getTokenFullDetails().getRangeMissileAC());
-
-                            updateStats(stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
-                        }
-                  //  }
                 } else {
                     item.getItem().setSlotStatus(SlotStatus.OK);
                     item.getItem().setStatusText(null);

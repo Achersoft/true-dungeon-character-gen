@@ -26,6 +26,7 @@ public class VtdDetailsDTO {
     public String name;
     public String adventureName;
     public CharacterClass characterClass;
+    public String characterClassString;
     public CharacterStats stats;
     public Integer currentHealth;
     public int rollerDifficulty;
@@ -55,14 +56,17 @@ public class VtdDetailsDTO {
     public List<Integer> rangeDmgRange;
     public List<Integer> rangeOffhandDmgRange;
     public List<Integer> meleeWeaponExplodeRange;
+    public List<Integer> meleeWeaponSecondaryExplodeRange;
     public List<Integer> meleeOffhandWeaponExplodeRange;
     public List<Integer> rangeWeaponExplodeRange;
     public List<Integer> rangeOffhandWeaponExplodeRange;
     public WeaponExplodeCondition meleeWeaponExplodeEffect;
+    public WeaponExplodeCondition meleeWeaponSecondaryExplodeEffect;
     public WeaponExplodeCondition meleeOffhandWeaponExplodeEffect;
     public WeaponExplodeCondition rangeWeaponExplodeEffect;
     public WeaponExplodeCondition rangeOffhandWeaponExplodeEffect;
     public String meleeWeaponExplodeText;
+    public String meleeWeaponSecondaryExplodeText;
     public String meleeOffhandWeaponExplodeText;
     public String rangeWeaponExplodeText;
     public String rangeOffhandWeaponExplodeText;
@@ -75,18 +79,20 @@ public class VtdDetailsDTO {
     public Integer meleeOffhandCritMin;
     public Integer meleePolyCritMin;
     public Integer rangeCritMin;
-    private Integer meleeSneakHit;
-    private Integer meleeSneakDamage;
-    private Integer meleeSneakCritMin;
-    private Integer rangeSneakHit;
-    private Integer rangeSneakDamage;
-    private Integer rangeSneakCritMin;
-    private Integer unmodifiableSneakDamage;
-    private boolean sneakCanCrit;
-    private boolean sneakAtRange;
+    public Integer meleeSneakHit;
+    public Integer meleeSneakDamage;
+    public Integer meleeSneakCritMin;
+    public Integer rangeSneakHit;
+    public Integer rangeSneakDamage;
+    public Integer rangeSneakCritMin;
+    public Integer unmodifiableSneakDamage;
+    public boolean sneakCanCrit;
+    public boolean sneakAtRange;
     public boolean splitHeal;
     public boolean madEvoker;
     public boolean mightyWeapon;
+    public boolean prestigeAvailable;
+    public boolean prestigeActive;
     
     public static VtdDetailsDTO fromDAO(VtdDetails dao) {
         VtdDetailsDTO build = VtdDetailsDTO.builder()
@@ -95,6 +101,7 @@ public class VtdDetailsDTO {
                 .adventureName(dao.getAdventureName())
                 .currentHealth(dao.getCurrentHealth())
                 .characterClass(dao.getCharacterClass())
+                .characterClassString(dao.getCharacterClass().getDtoValue(dao.isPrestigeActive()))
                 .stats(dao.getStats())
                 .rollerDifficulty(dao.getRollerDifficulty())
                 .initBonus(dao.getInitBonus())
@@ -120,14 +127,17 @@ public class VtdDetailsDTO {
                 .rangeDmgRange(new ArrayList<>())
                 .rangeOffhandDmgRange(new ArrayList<>())
                 .meleeWeaponExplodeRange(new ArrayList<>())
+                .meleeWeaponSecondaryExplodeRange(new ArrayList<>())
                 .meleeOffhandDmgRange(new ArrayList<>())
                 .rangeWeaponExplodeRange(new ArrayList<>())
                 .rangeOffhandWeaponExplodeRange(new ArrayList<>())
                 .meleeWeaponExplodeEffect(dao.getMeleeWeaponExplodeEffect())
+                .meleeWeaponSecondaryExplodeEffect(dao.getMeleeWeaponSecondaryExplodeEffect())
                 .meleeOffhandWeaponExplodeEffect(dao.getMeleeOffhandWeaponExplodeEffect())
                 .rangeWeaponExplodeEffect(dao.getRangeWeaponExplodeEffect())
                 .rangeOffhandWeaponExplodeEffect(dao.getRangeOffhandWeaponExplodeEffect())
                 .meleeWeaponExplodeText(dao.getMeleeWeaponExplodeText())
+                .meleeWeaponSecondaryExplodeText(dao.getMeleeWeaponSecondaryExplodeText())
                 .meleeOffhandWeaponExplodeText(dao.getMeleeOffhandWeaponExplodeText())
                 .rangeWeaponExplodeText(dao.getRangeWeaponExplodeText())
                 .rangeOffhandWeaponExplodeText(dao.getRangeOffhandWeaponExplodeText())
@@ -151,6 +161,8 @@ public class VtdDetailsDTO {
                 .sneakAtRange(dao.isSneakAtRange())
                 .splitHeal(dao.isSplitHeal())
                 .madEvoker(dao.isMadEvoker())
+                .prestigeAvailable(dao.isPrestigeAvailable())
+                .prestigeActive(dao.isPrestigeActive())
                 .build();
 
         if (dao.getCharacterSkills() != null) {
@@ -240,6 +252,9 @@ public class VtdDetailsDTO {
 
         if (dao.getMeleeWeaponExplodeRange() != null && !dao.getMeleeWeaponExplodeRange().isEmpty())
             build.setMeleeWeaponExplodeRange(Arrays.stream(dao.getMeleeWeaponExplodeRange().split(",")).map(Integer::valueOf).collect(Collectors.toList()));
+
+        if (dao.getMeleeWeaponSecondaryExplodeRange() != null && !dao.getMeleeWeaponSecondaryExplodeRange().isEmpty())
+            build.setMeleeWeaponSecondaryExplodeRange(Arrays.stream(dao.getMeleeWeaponSecondaryExplodeRange().split(",")).map(Integer::valueOf).collect(Collectors.toList()));
 
         if (dao.getMeleeOffhandWeaponExplodeRange() != null && !dao.getMeleeOffhandWeaponExplodeRange().isEmpty())
             build.setMeleeOffhandDmgRange(Arrays.stream(dao.getMeleeOffhandWeaponExplodeRange().split(",")).map(Integer::valueOf).collect(Collectors.toList()));

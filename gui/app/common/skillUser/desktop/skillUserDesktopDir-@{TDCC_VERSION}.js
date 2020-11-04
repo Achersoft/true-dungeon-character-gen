@@ -166,7 +166,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     
                     if (scope.madEvokerIndex === 1) {
                         madEvoker = true;
-                        if (scope.model.name === 'Fireball' || scope.model.name === 'Lightning Storm' || scope.model.name === 'Burning Hands')
+                        if (scope.model.name === 'Fireball' || scope.model.name === 'Lightning Storm' || scope.model.name === 'Burning Hands' || scope.model.name === 'Prismatic Spray' || scope.model.name === 'Stone Storm')
                             scope.damagePool = dmg;
                         else 
                             totalDamage += dmg;

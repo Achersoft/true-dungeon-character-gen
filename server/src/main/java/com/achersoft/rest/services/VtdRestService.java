@@ -63,7 +63,16 @@ public class VtdRestService {
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})	
     public VtdDetailsDTO getVtdCharacter(@PathParam("id") String id) throws Exception {
-        return VtdDetailsDTO.fromDAO(virtualTdService.getVtdCharacter(id, false));
+        return VtdDetailsDTO.fromDAO(virtualTdService.getVtdCharacter(id, false, false));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
+    @Path("/{id}/prestige")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO activatePrestige(@PathParam("id") String id) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.activatePrestigeClass(id));
     }
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})

@@ -25,14 +25,17 @@
                                     range_dmg_range,
                                     range_offhand_dmg_range,
                                     melee_weapon_explode_range,
+                                    melee_weapon_secondary_explode_range,
                                     melee_offhand_weapon_explode_range,
                                     range_weapon_explode_range,
                                     range_offhand_weapon_explode_range,
                                     melee_weapon_explode_effect,
+                                    melee_weapon_secondary_explode_effect,
                                     melee_offhand_weapon_explode_effect,
                                     range_weapon_explode_effect,
                                     range_offhand_weapon_explode_effect,
                                     melee_weapon_explode_text,
+                                    melee_weapon_secondary_explode_text,
                                     melee_offhand_weapon_explode_text,
                                     range_weapon_explode_text,
                                     range_offhand_weapon_explode_text,
@@ -56,7 +59,9 @@
                                     is_sneak_at_range,
                                     split_heal,
                                     mad_evoker,
-                                    mighty_weapon)
+                                    mighty_weapon,
+                                    prestigeAvailable,
+                                    prestigeActive)
                             VALUES (#{characterId},
                                     #{characterOrigId},
                                     #{userId},
@@ -78,14 +83,17 @@
                                     #{rangeDmgRange},
                                     #{rangeOffhandDmgRange},
                                     #{meleeWeaponExplodeRange},
+                                    #{meleeWeaponSecondaryExplodeRange},
                                     #{meleeOffhandWeaponExplodeRange},
                                     #{rangeWeaponExplodeRange},
                                     #{rangeOffhandWeaponExplodeRange},
                                     #{meleeWeaponExplodeEffect},
+                                    #{meleeWeaponSecondaryExplodeEffect},
                                     #{meleeOffhandWeaponExplodeEffect},
                                     #{rangeWeaponExplodeEffect},
                                     #{rangeOffhandWeaponExplodeEffect},
                                     #{meleeWeaponExplodeText},
+                                    #{meleeWeaponSecondaryExplodeText},
                                     #{meleeOffhandWeaponExplodeText},
                                     #{rangeWeaponExplodeText},
                                     #{rangeOffhandWeaponExplodeText},
@@ -109,7 +117,9 @@
                                     #{isSneakAtRange},
                                     #{splitHeal},
                                     #{madEvoker},
-                                    #{mightyWeapon})
+                                    #{mightyWeapon},
+                                    #{prestigeAvailable},
+                                    #{prestigeActive})
     </insert>
 
     <insert id="addCharacterSkill">
@@ -401,14 +411,17 @@
                 range_dmg_range 'rangeDmgRange',
                 range_offhand_dmg_range 'rangeOffhandDmgRange',
                 melee_weapon_explode_range 'meleeWeaponExplodeRange',
+                melee_weapon_secondary_explode_range 'meleeWeaponSecondaryExplodeRange',
                 melee_offhand_weapon_explode_range 'meleeOffhandWeaponExplodeRange',
                 range_weapon_explode_range 'rangeWeaponExplodeRange',
                 range_offhand_weapon_explode_range 'rangeOffhandWeaponExplodeRange',
                 melee_weapon_explode_effect 'meleeWeaponExplodeEffect',
+                melee_weapon_secondary_explode_effect 'meleeWeaponSecondaryExplodeEffect',
                 melee_offhand_weapon_explode_effect 'meleeOffhandWeaponExplodeEffect',
                 range_weapon_explode_effect 'rangeWeaponExplodeEffect',
                 range_offhand_weapon_explode_effect 'rangeOffhandWeaponExplodeEffect',
                 melee_weapon_explode_text 'meleeWeaponExplodeText',
+                melee_weapon_secondary_explode_text 'meleeWeaponSecondaryExplodeText',
                 melee_offhand_weapon_explode_text 'meleeOffhandWeaponExplodeText',
                 range_weapon_explode_text 'rangeWeaponExplodeText',
                 range_offhand_weapon_explode_text 'rangeOffhandWeaponExplodeText',
@@ -432,7 +445,9 @@
                 is_sneak_at_range 'isSneakAtRange',
                 split_heal 'splitHeal',
                 mad_evoker 'madEvoker',
-                mighty_weapon 'mightyWeapon'
+                mighty_weapon 'mightyWeapon',
+                prestigeAvailable,
+                prestigeActive
           FROM vtd_character
          WHERE id = #{id}
     </select>
@@ -459,14 +474,17 @@
                 range_dmg_range 'rangeDmgRange',
                 range_offhand_dmg_range 'rangeOffhandDmgRange',
                 melee_weapon_explode_range 'meleeWeaponExplodeRange',
+                melee_weapon_secondary_explode_range 'meleeWeaponSecondaryExplodeRange',
                 melee_offhand_weapon_explode_range 'meleeOffhandWeaponExplodeRange',
                 range_weapon_explode_range 'rangeWeaponExplodeRange',
                 range_offhand_weapon_explode_range 'rangeOffhandWeaponExplodeRange',
                 melee_weapon_explode_effect 'meleeWeaponExplodeEffect',
+                melee_weapon_secondary_explode_effect 'meleeWeaponSecondaryExplodeEffect',
                 melee_offhand_weapon_explode_effect 'meleeOffhandWeaponExplodeEffect',
                 range_weapon_explode_effect 'rangeWeaponExplodeEffect',
                 range_offhand_weapon_explode_effect 'rangeOffhandWeaponExplodeEffect',
                 melee_weapon_explode_text 'meleeWeaponExplodeText',
+                melee_weapon_secondary_explode_text 'meleeWeaponSecondaryExplodeText',
                 melee_offhand_weapon_explode_text 'meleeOffhandWeaponExplodeText',
                 range_weapon_explode_text 'rangeWeaponExplodeText',
                 range_offhand_weapon_explode_text 'rangeOffhandWeaponExplodeText',
@@ -490,7 +508,9 @@
                 is_sneak_at_range 'isSneakAtRange',
                 split_heal 'splitHeal',
                 mad_evoker 'madEvoker',
-                mighty_weapon 'mightyWeapon'
+                mighty_weapon 'mightyWeapon',
+                prestigeAvailable,
+                prestigeActive
         FROM vtd_character
         WHERE user_id = #{userId}
           AND name = #{name}
@@ -518,14 +538,17 @@
                 range_dmg_range 'rangeDmgRange',
                 range_offhand_dmg_range 'rangeOffhandDmgRange',
                 melee_weapon_explode_range 'meleeWeaponExplodeRange',
+                melee_weapon_secondary_explode_range 'meleeWeaponSecondaryExplodeRange',
                 melee_offhand_weapon_explode_range 'meleeOffhandWeaponExplodeRange',
                 range_weapon_explode_range 'rangeWeaponExplodeRange',
                 range_offhand_weapon_explode_range 'rangeOffhandWeaponExplodeRange',
                 melee_weapon_explode_effect 'meleeWeaponExplodeEffect',
+                melee_weapon_secondary_explode_effect 'meleeWeaponSecondaryExplodeEffect',
                 melee_offhand_weapon_explode_effect 'meleeOffhandWeaponExplodeEffect',
                 range_weapon_explode_effect 'rangeWeaponExplodeEffect',
                 range_offhand_weapon_explode_effect 'rangeOffhandWeaponExplodeEffect',
                 melee_weapon_explode_text 'meleeWeaponExplodeText',
+                melee_weapon_secondary_explode_text 'meleeWeaponSecondaryExplodeText',
                 melee_offhand_weapon_explode_text 'meleeOffhandWeaponExplodeText',
                 range_weapon_explode_text 'rangeWeaponExplodeText',
                 range_offhand_weapon_explode_text 'rangeOffhandWeaponExplodeText',
@@ -549,7 +572,9 @@
                 is_sneak_at_range 'isSneakAtRange',
                 split_heal 'splitHeal',
                 mad_evoker 'madEvoker',
-                mighty_weapon 'mightyWeapon'
+                mighty_weapon 'mightyWeapon',
+                prestigeAvailable,
+                prestigeActive
         FROM vtd_character
         WHERE user_id = #{userId}
     </select>
@@ -778,7 +803,8 @@
             melee_poly_damage_effect = #{meleePolyDmgEffects},
             melee_poly_crit_min = #{meleePolyCritMin},
             adventureId = #{adventureId},
-            adventureName = #{adventureName}
+            adventureName = #{adventureName},
+            prestigeActive = #{prestigeActive}
         WHERE id = #{characterId}
     </insert>
     

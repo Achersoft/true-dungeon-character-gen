@@ -2,6 +2,7 @@ package com.achersoft.tdcc.enums;
 
 public enum SkillStatEffect {
     NONE("None"),
+    BARDSONG("Bardsong"),
     HIT("Hit"),
     MELEE_HIT("Melee Hit"),
     RANGE_HIT("Range Hit"),
