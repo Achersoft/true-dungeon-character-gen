@@ -21,6 +21,7 @@ public class VtdPoly {
     private String id;
     private String characterId;
     private String name;
+    private boolean companion;
     private boolean active;
     private String dmgRange;
     private String explodeRange;
@@ -38,7 +39,7 @@ public class VtdPoly {
                 .build();
     }
 
-    public static VtdPoly fromToken(String characterId, CharacterClass characterClass, int critMin, List<DamageModEffect> dmgEffects, TokenFullDetails dao) {
+    public static VtdPoly fromToken(String characterId, CharacterClass characterClass, int critMin, List<DamageModEffect> dmgEffects, TokenFullDetails dao, boolean isCompanion) {
         if (dao.getWeaponExplodeCondition() != null) {
             final DamageModEffect damageModEffect = dao.getWeaponExplodeCondition().getDamageModEffect(characterClass);
             if (damageModEffect != null)
@@ -48,6 +49,7 @@ public class VtdPoly {
                 .id(UUID.randomUUID().toString())
                 .characterId(characterId)
                 .name(dao.getName())
+                .companion(isCompanion)
                 .active(false)
                 .dmgRange(dao.getDamageRange())
                 .explodeRange(dao.getDamageExplodeRange())

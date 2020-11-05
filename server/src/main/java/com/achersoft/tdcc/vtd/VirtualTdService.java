@@ -25,6 +25,7 @@ public interface VirtualTdService {
     VtdDetails previousRoom(String id);
     VtdDetails nextRoom(String id);
     VtdDetails setPoly(String id, String polyId);
+    VtdDetails setCompanion(String id, String polyId);
     VtdDetails setAdventure(String id, String passcode);
     VtdDetails resetCharacter(String id);
     VtdDetails activatePrestigeClass(String id);

@@ -50,9 +50,12 @@ public class VtdDetailsDTO {
     public List<BuffDTO> availableBardsong;
     public List<VtdPoly> availablePoly;
     public VtdPoly poly;
+    public List<VtdPoly> availableAnimalCompanion;
+    public VtdPoly animalCompanion;
     public List<Integer> meleeDmgRange;
     public List<Integer> meleeOffhandDmgRange;
     public List<Integer> meleePolyDmgRange;
+    public List<Integer> meleeAnimalCompanionDmgRange;
     public List<Integer> rangeDmgRange;
     public List<Integer> rangeOffhandDmgRange;
     public List<Integer> meleeWeaponExplodeRange;
@@ -121,9 +124,11 @@ public class VtdDetailsDTO {
                 .fourSkills(new ArrayList<>())
                 .buffs(new ArrayList<>())
                 .availablePoly(new ArrayList<>())
+                .availableAnimalCompanion(new ArrayList<>())
                 .meleeDmgRange(new ArrayList<>())
                 .meleeOffhandDmgRange(new ArrayList<>())
                 .meleePolyDmgRange(new ArrayList<>())
+                .meleeAnimalCompanionDmgRange(new ArrayList<>())
                 .rangeDmgRange(new ArrayList<>())
                 .rangeOffhandDmgRange(new ArrayList<>())
                 .meleeWeaponExplodeRange(new ArrayList<>())
@@ -217,22 +222,42 @@ public class VtdDetailsDTO {
                 build.setAvailableBardsong(new ArrayList<>());
         }
 
+        VtdPoly activePoly = null;
         if (dao.getPolys() != null) {
             VtdPoly nonePoly = null;
+            VtdPoly noneAnimalPoly = null;
             for (VtdPoly poly : dao.getPolys()) {
-                if (nonePoly == null && poly.getName().equalsIgnoreCase("None")) {
-                    nonePoly = poly;
-                    if (poly.isActive())
-                        build.setPoly(poly);
+                if (poly.isCompanion()) {
+                    if (noneAnimalPoly == null && poly.getName().equalsIgnoreCase("None")) {
+                        noneAnimalPoly = poly;
+                        if (poly.isActive()) {
+                            build.setAnimalCompanion(poly);
+                            activePoly = poly;
+                        }
+                    } else {
+                        if (poly.isActive()) {
+                            build.setAnimalCompanion(poly);
+                            activePoly = poly;
+                        } else
+                            build.getAvailableAnimalCompanion().add(poly);
+                    }
                 } else {
-                    if (poly.isActive())
-                        build.setPoly(poly);
-                    else
-                        build.getAvailablePoly().add(poly);
+                    if (nonePoly == null && poly.getName().equalsIgnoreCase("None")) {
+                        nonePoly = poly;
+                        if (poly.isActive())
+                            build.setPoly(poly);
+                    } else {
+                        if (poly.isActive())
+                            build.setPoly(poly);
+                        else
+                            build.getAvailablePoly().add(poly);
+                    }
                 }
             }
             build.getAvailablePoly().sort(Comparator.comparing(vtdPoly -> vtdPoly.getName().toLowerCase()));
             build.getAvailablePoly().add(0, nonePoly);
+            build.getAvailableAnimalCompanion().sort(Comparator.comparing(vtdPoly -> vtdPoly.getName().toLowerCase()));
+            build.getAvailableAnimalCompanion().add(0, noneAnimalPoly);
         }
 
         if (dao.getMeleeDmgRange() != null && !dao.getMeleeDmgRange().isEmpty())
@@ -243,6 +268,9 @@ public class VtdDetailsDTO {
 
         if (dao.getMeleePolyDmgRange() != null && !dao.getMeleePolyDmgRange().isEmpty())
             build.setMeleePolyDmgRange(Arrays.stream(dao.getMeleePolyDmgRange().split(",")).map(Integer::valueOf).collect(Collectors.toList()));
+
+        if (activePoly != null && activePoly.getDmgRange() != null && !activePoly.getDmgRange().isEmpty())
+            build.setMeleeAnimalCompanionDmgRange(Arrays.stream(activePoly.getDmgRange().split(",")).map(Integer::valueOf).collect(Collectors.toList()));
 
         if (dao.getRangeDmgRange() != null && !dao.getRangeDmgRange().isEmpty())
             build.setRangeDmgRange(Arrays.stream(dao.getRangeDmgRange().split(",")).map(Integer::valueOf).collect(Collectors.toList()));

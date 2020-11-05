@@ -2,7 +2,9 @@ angular.module('main').directive('polySelectorDesktop',['$uibModal', function($u
     return {
         restrict:'E',
         scope:{
-            characterContext:'=',
+            available:'=',
+            active:'=',
+            label: '@',
             elementId: '@',
             setPoly: '&?'
         },

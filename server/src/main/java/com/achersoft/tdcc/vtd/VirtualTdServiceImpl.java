@@ -179,6 +179,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasMonkRelic = new AtomicBoolean(false);
             final AtomicBoolean hasMonkLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasShamansBelt = new AtomicBoolean(false);
+            final AtomicBoolean hasRangerLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasPrestigeClass = new AtomicBoolean(false);
             final Set<CritType> critTypes = new HashSet<>();
 
@@ -217,6 +218,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasMonkLegendary.set(true);
                     else if (characterItem.getItemId().equals("e604ae878baea5348138a4b22180b74a34c6ecce"))
                         hasShamansBelt.set(true);
+                    else if (characterItem.getItemId().equals("186c34894ca45e6acdd58a0d6cab9ef1be36e3ad"))
+                        hasRangerLegendary.set(true);
                     else if (characterItem.getItemId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
                         hasPrestigeClass.set(true);
                     else if (characterItem.getItemId().equals("afd90da9d4f05dbce780a2befb67cd1d47187782") ||
@@ -293,6 +296,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     List<VtdPoly> polyList = new ArrayList<>();
                     polyList.add(VtdPoly.getDefault(characterDetails.getId()));
 
+                    if (activatePrestige) {
+                        final VtdPoly vtdPoly = VtdPoly.getDefault(characterDetails.getId());
+                        vtdPoly.setCompanion(true);
+                        polyList.add(vtdPoly);
+                    }
+
                     final List<Token> all = tokenMapper.getNonWeaponSlotItems(null, characterDetails.getId(), characterDetails.getCharacterClass().name(), Slot.POLYMORPH.name(), "ALL");
                     if (all != null) {
                         for (Token token : all) {
@@ -300,7 +309,10 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             if (tokenDetails != null) {
                                 polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                         (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                        tokenDetails));
+                                        tokenDetails, false));
+                                if (activatePrestige)
+                                    polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                             20, new ArrayList<>(), tokenDetails, true));
                             }
                         }
                     }
@@ -309,7 +321,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         final TokenFullDetails belt = tokenAdminMapper.getTokenDetails("e604ae878baea5348138a4b22180b74a34c6ecce");
                         polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                belt));
+                                belt, false));
                     }
 
                     if (hasDruidRelic.get()) {
@@ -317,37 +329,37 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         relic.setName("Shaman’s Greater Necklace - Air");
                         polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                relic));
+                                relic, false));
                         relic.setName("Shaman’s Greater Necklace - Earth");
                         polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                relic));
+                                relic, false));
                         relic.setName("Shaman’s Greater Necklace - Fire");
                         polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                relic));
+                                relic, false));
                         relic.setName("Shaman’s Greater Necklace - Ice");
                         polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                relic));
+                                relic, false));
                     } else if (hasDruidLegendary.get()) {
                         final TokenFullDetails legendary = tokenAdminMapper.getTokenDetails("c9182371165f18e7fdbce5da41a69af3934d6ee7");
                         legendary.setName("Iktomi’s Shaper Necklace - Air");
                         polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                legendary));
+                                legendary, false));
                         legendary.setName("Iktomi’s Shaper Necklace - Earth");
                         polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                legendary));
+                                legendary, false));
                         legendary.setName("Iktomi’s Shaper Necklace - Fire");
                         polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                legendary));
+                                legendary, false));
                         legendary.setName("Iktomi’s Shaper Necklace - Ice");
                         polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                legendary));
+                                legendary, false));
                     }
                     vtdMapper.addPolys(polyList);
                     builder.polys(polyList);
@@ -381,7 +393,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             if (tokenDetails != null) {
                                 elfPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                         (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                        tokenDetails));
+                                        tokenDetails, false));
                             }
                         }
                     }
@@ -390,7 +402,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         final TokenFullDetails belt = tokenAdminMapper.getTokenDetails("e604ae878baea5348138a4b22180b74a34c6ecce");
                         elfPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                belt));
+                                belt, false));
                     }
 
                     vtdMapper.addPolys(elfPolyList);
@@ -410,7 +422,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             if (tokenDetails != null) {
                                 wizardPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                         (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                        tokenDetails));
+                                        tokenDetails, false));
                             }
                         }
                     }
@@ -419,7 +431,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         final TokenFullDetails belt = tokenAdminMapper.getTokenDetails("e604ae878baea5348138a4b22180b74a34c6ecce");
                         wizardPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                belt));
+                                belt, false));
                     }
 
                     vtdMapper.addPolys(wizardPolyList);
@@ -487,6 +499,27 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                 case RANGER:
                     if (charmShadowShot.get()) {
                         rangeOffHand.set(tokenAdminMapper.getTokenDetails("f2f2a4950f8e1a2415890a370b54efc1605b551a"));
+                    }
+                    if (hasRangerLegendary.get()) {
+                        List<VtdPoly> rangerPolyList = new ArrayList<>();
+                        final VtdPoly vtdPoly = VtdPoly.getDefault(characterDetails.getId());
+                        vtdPoly.setCompanion(true);
+                        rangerPolyList.add(vtdPoly);
+
+                        final List<Token> allRanger = tokenMapper.getNonWeaponSlotItems(null, characterDetails.getId(), "DRUID", Slot.POLYMORPH.name(), "ALL");
+                        if (allRanger != null) {
+                            for (Token token : allRanger) {
+                                final TokenFullDetails tokenDetails = tokenAdminMapper.getTokenDetails(token.getId());
+                                if (tokenDetails != null) {
+                                    rangerPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                            (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
+                                            tokenDetails, true));
+                                }
+                            }
+                        }
+
+                        vtdMapper.addPolys(rangerPolyList);
+                        builder.polys(rangerPolyList);
                     }
                     break;
                 case ROGUE:
@@ -903,110 +936,133 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
         if (characterPolys != null) {
             for (VtdPoly characterPoly : characterPolys) {
-                if (characterPoly.isActive() && !characterPoly.getId().equals(polyId)) {
-                    characterPoly.setActive(false);
-                    vtdMapper.updateCharacterPoly(characterPoly);
+                if (!characterPoly.isCompanion()) {
+                    if (characterPoly.isActive() && !characterPoly.getId().equals(polyId)) {
+                        characterPoly.setActive(false);
+                        vtdMapper.updateCharacterPoly(characterPoly);
 
-                    if (characterPoly.getName().equals("Shaman’s Greater Necklace - Air")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        if (characterStats.getDrShock() >= 10) {
-                            characterStats.setDrShock(characterStats.getDrShock() - 10);
+                        if (characterPoly.getName().equals("Shaman’s Greater Necklace - Air")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrShock() >= 10) {
+                                characterStats.setDrShock(characterStats.getDrShock() - 10);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Earth")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrSonic() >= 10) {
+                                characterStats.setDrSonic(characterStats.getDrSonic() - 10);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Fire")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrFire() >= 10) {
+                                characterStats.setDrFire(characterStats.getDrFire() - 10);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Ice")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrCold() >= 10) {
+                                characterStats.setDrCold(characterStats.getDrCold() - 10);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Air")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrShock() >= 10) {
+                                characterStats.setDrShock(characterStats.getDrShock() - 10);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Earth")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrSonic() >= 10) {
+                                characterStats.setDrSonic(characterStats.getDrSonic() - 10);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Fire")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrFire() >= 10) {
+                                characterStats.setDrFire(characterStats.getDrFire() - 10);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Ice")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrCold() >= 10) {
+                                characterStats.setDrCold(characterStats.getDrCold() - 10);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        }
+                    } else if (characterPoly.getId().equals(polyId)) {
+                        characterPoly.setActive(true);
+                        vtdMapper.updateCharacterPoly(characterPoly);
+
+                        final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+                        final List<DamageModEffect> meleeDmgEffects = new ArrayList<>();
+
+                        if (characterPoly.getName().equals("Shaman’s Greater Necklace - Air")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            characterStats.setDrShock(characterStats.getDrShock() + 10);
+                            vtdMapper.updateCharacterDr(characterStats);
+                        } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Earth")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            characterStats.setDrSonic(characterStats.getDrSonic() + 10);
+                            vtdMapper.updateCharacterDr(characterStats);
+                        } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Fire")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            characterStats.setDrFire(characterStats.getDrFire() + 10);
+                            vtdMapper.updateCharacterDr(characterStats);
+                        } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Ice")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            characterStats.setDrCold(characterStats.getDrCold() + 10);
+                            vtdMapper.updateCharacterDr(characterStats);
+                        } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Air")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            characterStats.setDrShock(characterStats.getDrShock() + 10);
+                            vtdMapper.updateCharacterDr(characterStats);
+                        } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Earth")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            characterStats.setDrSonic(characterStats.getDrSonic() + 10);
+                            vtdMapper.updateCharacterDr(characterStats);
+                        } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Fire")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            characterStats.setDrFire(characterStats.getDrFire() + 10);
+                            vtdMapper.updateCharacterDr(characterStats);
+                        } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Ice")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            characterStats.setDrCold(characterStats.getDrCold() + 10);
                             vtdMapper.updateCharacterDr(characterStats);
                         }
-                    } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Earth")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        if (characterStats.getDrSonic() >= 10) {
-                            characterStats.setDrSonic(characterStats.getDrSonic() - 10);
-                            vtdMapper.updateCharacterDr(characterStats);
+
+                        if (characterPoly.getExplodeEffect() != null) {
+                            final DamageModEffect damageModEffect = characterPoly.getExplodeEffect().getDamageModEffect(vtdDetails.getCharacterClass());
+                            if (damageModEffect != null)
+                                meleeDmgEffects.add(damageModEffect);
                         }
-                    } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Fire")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        if (characterStats.getDrFire() >= 10) {
-                            characterStats.setDrFire(characterStats.getDrFire() - 10);
-                            vtdMapper.updateCharacterDr(characterStats);
-                        }
-                    } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Ice")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        if (characterStats.getDrCold() >= 10) {
-                            characterStats.setDrCold(characterStats.getDrCold() - 10);
-                            vtdMapper.updateCharacterDr(characterStats);
-                        }
-                    } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Air")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        if (characterStats.getDrShock() >= 10) {
-                            characterStats.setDrShock(characterStats.getDrShock() - 10);
-                            vtdMapper.updateCharacterDr(characterStats);
-                        }
-                    } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Earth")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        if (characterStats.getDrSonic() >= 10) {
-                            characterStats.setDrSonic(characterStats.getDrSonic() - 10);
-                            vtdMapper.updateCharacterDr(characterStats);
-                        }
-                    } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Fire")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        if (characterStats.getDrFire() >= 10) {
-                            characterStats.setDrFire(characterStats.getDrFire() - 10);
-                            vtdMapper.updateCharacterDr(characterStats);
-                        }
-                    } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Ice")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        if (characterStats.getDrCold() >= 10) {
-                            characterStats.setDrCold(characterStats.getDrCold() - 10);
-                            vtdMapper.updateCharacterDr(characterStats);
-                        }
+
+                        vtdDetails.setMeleePolyDmgRange(characterPoly.getDmgRange());
+                        vtdDetails.setMeleePolyDmgEffects(String.join(",", meleeDmgEffects.stream().map(Enum::name).collect(Collectors.toList())));
+                        vtdDetails.setMeleePolyCritMin(characterPoly.getCritMin());
+                        vtdMapper.updateCharacter(vtdDetails);
                     }
-                } else if (characterPoly.getId().equals(polyId)) {
-                    characterPoly.setActive(true);
-                    vtdMapper.updateCharacterPoly(characterPoly);
+                }
+            }
+        }
 
-                    final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
-                    final List<DamageModEffect> meleeDmgEffects = new ArrayList<>();
+        return calculateStats(id);
+    }
 
-                    if (characterPoly.getName().equals("Shaman’s Greater Necklace - Air")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        characterStats.setDrShock(characterStats.getDrShock() + 10);
-                        vtdMapper.updateCharacterDr(characterStats);
-                    } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Earth")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        characterStats.setDrSonic(characterStats.getDrSonic() + 10);
-                        vtdMapper.updateCharacterDr(characterStats);
-                    } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Fire")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        characterStats.setDrFire(characterStats.getDrFire() + 10);
-                        vtdMapper.updateCharacterDr(characterStats);
-                    } else if (characterPoly.getName().equals("Shaman’s Greater Necklace - Ice")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        characterStats.setDrCold(characterStats.getDrCold() + 10);
-                        vtdMapper.updateCharacterDr(characterStats);
-                    } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Air")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        characterStats.setDrShock(characterStats.getDrShock() + 10);
-                        vtdMapper.updateCharacterDr(characterStats);
-                    } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Earth")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        characterStats.setDrSonic(characterStats.getDrSonic() + 10);
-                        vtdMapper.updateCharacterDr(characterStats);
-                    } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Fire")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        characterStats.setDrFire(characterStats.getDrFire() + 10);
-                        vtdMapper.updateCharacterDr(characterStats);
-                    } else if (characterPoly.getName().equals("Iktomi’s Shaper Necklace - Ice")) {
-                        final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
-                        characterStats.setDrCold(characterStats.getDrCold() + 10);
-                        vtdMapper.updateCharacterDr(characterStats);
+    @Override
+    public VtdDetails setCompanion(String id, String polyId) {
+        final List<VtdPoly> characterPolys = vtdMapper.getCharacterPolys(id);
+
+        if (characterPolys != null) {
+            for (VtdPoly characterPoly : characterPolys) {
+                if (characterPoly.isCompanion()) {
+                    if (characterPoly.isActive() && !characterPoly.getId().equals(polyId)) {
+                        characterPoly.setActive(false);
+                        vtdMapper.updateCharacterPoly(characterPoly);
+                    } else if (characterPoly.getId().equals(polyId)) {
+                        characterPoly.setActive(true);
+                        vtdMapper.updateCharacterPoly(characterPoly);
                     }
-
-                    if (characterPoly.getExplodeEffect() != null) {
-                        final DamageModEffect damageModEffect = characterPoly.getExplodeEffect().getDamageModEffect(vtdDetails.getCharacterClass());
-                        if (damageModEffect != null)
-                            meleeDmgEffects.add(damageModEffect);
-                    }
-
-                    vtdDetails.setMeleePolyDmgRange(characterPoly.getDmgRange());
-                    vtdDetails.setMeleePolyDmgEffects(String.join(",", meleeDmgEffects.stream().map(Enum::name).collect(Collectors.toList())));
-                    vtdDetails.setMeleePolyCritMin(characterPoly.getCritMin());
-                    vtdMapper.updateCharacter(vtdDetails);
                 }
             }
         }

@@ -248,7 +248,6 @@ angular.module('main')
     $scope.hasEffect = function(list, effect) {
         if(list) {
             for(var i = 0; i < list.length; i++) {
-                console.log(list[i] + " : " + effect);
                 if (list[i] === effect) {
                     return true;
                 }
@@ -268,6 +267,13 @@ angular.module('main')
     
     $scope.setPoly =  function(polyId) {
         vtdSvc.setPoly($scope.characterContext.id, polyId).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
+    $scope.setCompanion =  function(polyId) {
+        vtdSvc.setCompanion($scope.characterContext.id, polyId).then(function(result) {
             vtdState.setContext(result.data);
             $scope.characterContext = vtdState.get();
         });
@@ -670,6 +676,8 @@ angular.module('main')
         var hitRoll = 1;
         var offhandHitRoll = 1;
         var monster = null;
+        var isOffhandAttack = false;
+        var isCompanion = ($scope.characterContext.meleeAnimalCompanionDmgRange && $scope.characterContext.meleeAnimalCompanionDmgRange.length > 0);
         
         $scope.resultIndex = 0;
         
@@ -691,12 +699,13 @@ angular.module('main')
             offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
         }
         
-        if (!('rangeOffhandHit' in $scope.characterContext.stats)) {
+        if (!('rangeOffhandHit' in $scope.characterContext.stats) && !isCompanion) {
             offhandHitRoll = 1;
-        }
+        } else
+            isOffhandAttack = true;
         
         if (hitRoll === 1 && offhandHitRoll === 1)
-            vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":true,"roll":1});
+            vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":true,"roll":1,"isOffhandAttack":isOffhandAttack});
         else {
             var hitRollMod = 1;
             var offhandHitRollMod = 1;
@@ -711,11 +720,15 @@ angular.module('main')
 
             if (hitRoll > 1)
                 hitRollMod = hitRoll + $scope.characterContext.stats.rangeHit;
-            if (offhandHitRoll > 1)
-                offhandHitRollMod = offhandHitRoll + $scope.characterContext.stats.rangeOffhandHit;
+            if (offhandHitRoll > 1) {
+                if (isCompanion)
+                    offhandHitRollMod = offhandHitRoll + $scope.characterContext.stats.meleeHit;
+                else
+                    offhandHitRollMod = offhandHitRoll + $scope.characterContext.stats.rangeOffhandHit;
+            }
             if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD"))
                 mRollDmg = $scope.characterContext.stats.rangeDmg;
-            if (!$scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "NO_DAMAGE_MOD"))
+            if (!$scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "NO_DAMAGE_MOD") && !isCompanion)
                 oRollDmg = $scope.characterContext.stats.rangeDmg;
                       
             if (hitRoll > 1 && $scope.characterContext.rangeDmgRange && $scope.characterContext.rangeDmgRange.length > 0) {
@@ -740,7 +753,7 @@ angular.module('main')
                 }
             }
 
-            if (offhandHitRoll > 1 && $scope.characterContext.rangeOffhandDmgRange && $scope.characterContext.rangeOffhandDmgRange.length > 0) {
+            if (offhandHitRoll > 1 && !isCompanion && $scope.characterContext.rangeOffhandDmgRange && $scope.characterContext.rangeOffhandDmgRange.length > 0) {
                 oDmg = $scope.characterContext.rangeOffhandDmgRange[$scope.getRandomInt($scope.characterContext.rangeOffhandDmgRange.length)];
 
                 if ($scope.characterContext.rangeOffhandWeaponExplodeRange && $scope.characterContext.rangeOffhandWeaponExplodeRange.includes(oDmg)) {
@@ -760,6 +773,10 @@ angular.module('main')
                         });
                     }
                 }
+            }
+            
+            if (offhandHitRoll > 1 && isCompanion) {
+                oDmg = $scope.characterContext.meleeAnimalCompanionDmgRange[$scope.getRandomInt($scope.characterContext.meleeAnimalCompanionDmgRange.length)];
             }
             
             var mDmgTotal = 0;
@@ -971,7 +988,7 @@ angular.module('main')
                 "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"oWeaponExp":oDmgExp,"fire":$scope.characterContext.stats.rfire,
                 "cold":$scope.characterContext.stats.rcold,"shock":$scope.characterContext.stats.rshock,"sonic":$scope.characterContext.stats.rsonic,
                 "eldritch":$scope.characterContext.stats.reldritch,"poison":$scope.characterContext.stats.rpoison,"darkrift":$scope.characterContext.stats.rdarkrift,
-                "sacred":$scope.characterContext.stats.rsacred,"force":$scope.characterContext.stats.rforce,"acid":$scope.characterContext.stats.racid});
+                "sacred":$scope.characterContext.stats.rsacred,"force":$scope.characterContext.stats.rforce,"acid":$scope.characterContext.stats.racid,"isOffhandAttack":isOffhandAttack});
         }
          
         $scope.history = vtdHistory.get();
@@ -1221,6 +1238,57 @@ angular.module('main')
                     "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
                     "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid}); 
             }
+        }
+         
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();  
+    };
+    
+    $scope.rollToHitAnimalCompanion =  function(monsterIndex) {        
+        var hitRoll = 1;
+        var monster = null;
+        
+        if (!($scope.characterContext.animalCompanion && $scope.characterContext.animalCompanion.dmgRange && $scope.characterContext.animalCompanion.dmgRange.length > 0)) {
+            warnDialogSvc.showMessage("Animal Companion Seelection Required", "You must select your animal companion form before attacking.");
+            return;
+        }
+        
+        $scope.resultIndex = 0;
+        
+        if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
+            hitRoll = $scope.getRandomInt(20) + 1;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollToHitAnimalCompanion(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monster = monsterIndex;
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+        } else {
+            monster = $scope.characterContext.monsters[0];
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+        }
+        
+        if (hitRoll === 1)
+            vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":true,"roll":1});
+        else {
+            var hitRollMod = hitRoll;
+            var mDmg = 0;
+            var mCritDmg = 0;
+
+            //if (hitRoll > 1 && $scope.characterContext.characterClass === "RANGER")
+            //    hitRollMod = hitRoll + $scope.characterContext.stats.meleeHit;
+                 
+            if (hitRoll > 1 && $scope.characterContext.meleeAnimalCompanionDmgRange && $scope.characterContext.meleeAnimalCompanionDmgRange.length > 0) {
+                mDmg = $scope.characterContext.meleeAnimalCompanionDmgRange[$scope.getRandomInt($scope.characterContext.meleeAnimalCompanionDmgRange.length)];
+            }
+            
+            if(hitRoll === 20)
+                mCritDmg = mDmg * 2;
+            
+            vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                "mWheel":mDmg,"mDmg":mDmg,"totalDmg":mDmg,"mCrit":mCritDmg,"critTotal":mCritDmg}); 
         }
          
         $scope.history = vtdHistory.get();
@@ -2567,6 +2635,13 @@ angular.module('main')
     
     tokenAdminSvc.setPoly = function(id, polyId) {
         return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/poly/' + polyId).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.setCompanion = function(id, polyId) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/companion/' + polyId).catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });

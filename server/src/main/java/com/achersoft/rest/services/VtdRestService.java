@@ -127,6 +127,16 @@ public class VtdRestService {
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @POST
+    @Path("/{id}/companion/{polyId}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO setCompanion(@PathParam("id") String id,
+                                      @PathParam("polyId") String polyId) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.setCompanion(id, polyId));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
     @Path("/{id}/adventure")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
