@@ -224,7 +224,7 @@ angular.module('main')
     };
     
     $scope.activatePrestigeClass = function(id) {
-        confirmDialogSvc.confirm("Are you sure you wish to activate presige class?", function(){
+        confirmDialogSvc.confirm("Are you sure you wish to activate prestige class?", function(){
             vtdSvc.activatePrestigeClass(id).then(function(result) {
                 vtdState.setContext(result.data);
                 $scope.characterContext = vtdState.get();
