@@ -1988,7 +1988,21 @@ angular.module('main')
                             $scope.rollDmg += $scope.rollDmgNatural;
 
                             if ($scope.characterContext.meleeWeaponExplodeRange && $scope.characterContext.meleeWeaponExplodeRange.includes($scope.rollDmgNatural)) {
-                                $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                if ($scope.characterContext.meleeWeaponExplodeEffect === null || $scope.characterContext.meleeWeaponExplodeEffect === "" ||
+                                        $scope.characterContext.meleeWeaponExplodeEffect === "NONE")
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                else if ($scope.characterContext.meleeWeaponExplodeEffect === "NATURAL_20" && $scope.rollHitNatural === 20)
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && monster.critical && $scope.rollHitNatural >= $scope.characterContext.meleeCritMin)
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                else if ($scope.characterContext.meleeWeaponExplodeEffect === "MISFIRE") {
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+
+                                    vtdSvc.modifyHealth($scope.characterContext.id, 2).then(function(result) {
+                                        vtdState.setContext(result.data);
+                                        $scope.characterContext = vtdState.get();
+                                    });
+                                }
                             }
 
                             if ($scope.rollHitNatural >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD")) {
@@ -2014,7 +2028,21 @@ angular.module('main')
                             $scope.rollDmg += $scope.rollDmgNatural;
 
                             if ($scope.characterContext.meleeWeaponExplodeRange && $scope.characterContext.meleeWeaponExplodeRange.includes($scope.rollDmgNatural)) {
-                                $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                if ($scope.characterContext.meleeWeaponExplodeEffect === null || $scope.characterContext.meleeWeaponExplodeEffect === "" ||
+                                        $scope.characterContext.meleeWeaponExplodeEffect === "NONE")
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                else if ($scope.characterContext.meleeWeaponExplodeEffect === "NATURAL_20" && $scope.rollHitNatural === 20)
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && monster.critical && $scope.rollHitNatural >= $scope.characterContext.meleeCritMin)
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                else if ($scope.characterContext.meleeWeaponExplodeEffect === "MISFIRE") {
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+
+                                    vtdSvc.modifyHealth($scope.characterContext.id, 2).then(function(result) {
+                                        vtdState.setContext(result.data);
+                                        $scope.characterContext = vtdState.get();
+                                    });
+                                }
                             }
 
                             if ($scope.rollHitNatural >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD")) {
@@ -2053,7 +2081,21 @@ angular.module('main')
                         $scope.rollDmg += $scope.rollDmgNatural;
 
                         if ($scope.characterContext.rangeWeaponExplodeRange && $scope.characterContext.rangeWeaponExplodeRange.includes($scope.rollDmgNatural)) {
-                            $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+                            if ($scope.characterContext.rangeWeaponExplodeEffect === null || $scope.characterContext.rangeWeaponExplodeEffect === "" ||
+                                        $scope.characterContext.rangeWeaponExplodeEffect === "NONE")
+                                $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+                            else if ($scope.characterContext.rangeWeaponExplodeEffect === "NATURAL_20" && $scope.rollHitNatural === 20)
+                                $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+                            else if ($scope.characterContext.rangeWeaponExplodeEffect === "CRIT" && monster.critical && $scope.rollHitNatural >= $scope.characterContext.meleeCritMin)
+                                $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+                            else if ($scope.characterContext.rangeWeaponExplodeEffect === "MISFIRE") {
+                                $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+
+                                vtdSvc.modifyHealth($scope.characterContext.id, 2).then(function(result) {
+                                    vtdState.setContext(result.data);
+                                    $scope.characterContext = vtdState.get();
+                                });
+                            }
                         }
 
                         if ($scope.rollHitNatural >= $scope.characterContext.rangeCritMin && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD")) {
@@ -2126,7 +2168,21 @@ angular.module('main')
                             $scope.rollDmg += $scope.rollDmgNatural;
 
                             if ($scope.characterContext.meleeWeaponExplodeRange && $scope.characterContext.meleeWeaponExplodeRange.includes($scope.rollDmgNatural)) {
-                                $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                if ($scope.characterContext.meleeWeaponExplodeEffect === null || $scope.characterContext.meleeWeaponExplodeEffect === "" ||
+                                        $scope.characterContext.meleeWeaponExplodeEffect === "NONE")
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                else if ($scope.characterContext.meleeWeaponExplodeEffect === "NATURAL_20" && $scope.rollHitNatural === 20)
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && monster.critical && $scope.rollHitNatural >= $scope.characterContext.meleeCritMin)
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+                                else if ($scope.characterContext.meleeWeaponExplodeEffect === "MISFIRE") {
+                                    $scope.rollDmgExplosionText = $scope.characterContext.meleeWeaponExplodeText;
+
+                                    vtdSvc.modifyHealth($scope.characterContext.id, 2).then(function(result) {
+                                        vtdState.setContext(result.data);
+                                        $scope.characterContext = vtdState.get();
+                                    });
+                                }
                             }
 
                             if (($scope.rollHitNatural >= $scope.characterContext.meleeCritMin || $scope.rollHitNatural >= $scope.characterContext.meleeSneakCritMin) && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD")) {
@@ -2186,7 +2242,21 @@ angular.module('main')
                             $scope.rollDmg += $scope.rollDmgNatural;
 
                             if ($scope.characterContext.rangeWeaponExplodeRange && $scope.characterContext.rangeWeaponExplodeRange.includes($scope.rollDmgNatural)) {
-                                $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+                                if ($scope.characterContext.rangeWeaponExplodeEffect === null || $scope.characterContext.rangeWeaponExplodeEffect === "" ||
+                                        $scope.characterContext.rangeWeaponExplodeEffect === "NONE")
+                                    $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+                                else if ($scope.characterContext.rangeWeaponExplodeEffect === "NATURAL_20" && $scope.rollHitNatural === 20)
+                                    $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+                                else if ($scope.characterContext.rangeWeaponExplodeEffect === "CRIT" && monster.critical && $scope.rollHitNatural >= $scope.characterContext.meleeCritMin)
+                                    $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+                                else if ($scope.characterContext.rangeWeaponExplodeEffect === "MISFIRE") {
+                                    $scope.rollDmgExplosionText = $scope.characterContext.rangeWeaponExplodeText;
+
+                                    vtdSvc.modifyHealth($scope.characterContext.id, 2).then(function(result) {
+                                        vtdState.setContext(result.data);
+                                        $scope.characterContext = vtdState.get();
+                                    });
+                                }
                             }
 
                             if (($scope.rollHitNatural >= $scope.characterContext.rangeCritMin || $scope.rollHitNatural >= $scope.characterContext.rangeSneakCritMin) && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD")) {
@@ -2252,8 +2322,22 @@ angular.module('main')
                         $scope.rollDmgNaturalOff = $scope.characterContext.meleeOffhandDmgRange[$scope.getRandomInt($scope.characterContext.meleeOffhandDmgRange.length)];
                         $scope.rollDmgOff += $scope.rollDmgNaturalOff;
 
-                        if ($scope.characterContext.meleeOffhandWeaponExplodeEffect && $scope.characterContext.meleeOffhandWeaponExplodeEffect.includes($scope.rollDmgNaturalOff)) {
-                            $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+                        if ($scope.characterContext.meleeOffhandWeaponExplodeRange && $scope.characterContext.meleeOffhandWeaponExplodeRange.includes($scope.rollDmgNaturalOff)) {
+                           if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === null || $scope.characterContext.meleeOffhandWeaponExplodeEffect === "" ||
+                                    $scope.characterContext.meleeOffhandWeaponExplodeEffect === "NONE")
+                                $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+                            else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "NATURAL_20" && $scope.rollHitNatural === 20)
+                                $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+                            else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "CRIT" && monster.critical && $scope.rollHitNatural >= $scope.characterContext.meleeCritMin)
+                                $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+                            else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "MISFIRE") {
+                                $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+
+                                vtdSvc.modifyHealth($scope.characterContext.id, 2).then(function(result) {
+                                    vtdState.setContext(result.data);
+                                    $scope.characterContext = vtdState.get();
+                                });
+                            }
                         }
 
                         if ($scope.rollHitNaturalOff >= $scope.characterContext.meleeOffhandCritMin && !$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD")) {
@@ -2278,8 +2362,22 @@ angular.module('main')
                         $scope.rollDmgNaturalOff = $scope.characterContext.meleeOffhandDmgRange[$scope.getRandomInt($scope.characterContext.meleeOffhandDmgRange.length)];
                         $scope.rollDmgOff += $scope.rollDmgNaturalOff;
 
-                        if ($scope.characterContext.meleeOffhandWeaponExplodeEffect && $scope.characterContext.meleeOffhandWeaponExplodeEffect.includes($scope.rollDmgNaturalOff)) {
-                            $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+                        if ($scope.characterContext.meleeOffhandWeaponExplodeRange && $scope.characterContext.meleeOffhandWeaponExplodeRange.includes($scope.rollDmgNaturalOff)) {
+                            if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === null || $scope.characterContext.meleeOffhandWeaponExplodeEffect === "" ||
+                                    $scope.characterContext.meleeOffhandWeaponExplodeEffect === "NONE")
+                                $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+                            else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "NATURAL_20" && $scope.rollHitNatural === 20)
+                                $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+                            else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "CRIT" && monster.critical && $scope.rollHitNatural >= $scope.characterContext.meleeCritMin)
+                                $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+                            else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "MISFIRE") {
+                                $scope.rollDmgExplosionTextOff = $scope.characterContext.meleeOffhandWeaponExplodeText;
+
+                                vtdSvc.modifyHealth($scope.characterContext.id, 2).then(function(result) {
+                                    vtdState.setContext(result.data);
+                                    $scope.characterContext = vtdState.get();
+                                });
+                            }
                         }
 
                         if ($scope.rollHitNaturalOff >= $scope.characterContext.meleeOffhandCritMin && !$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD")) {

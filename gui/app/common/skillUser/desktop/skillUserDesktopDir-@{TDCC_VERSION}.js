@@ -161,7 +161,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     }
                 } else if (scope.model.skillType === 'DAMAGE') {
                     var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
-                    var totalDamage = scope.characterContext.stats.spellDmg + dmg;
+                    var totalDamage = (scope.model.name === 'Improved Turn Undead' || scope.model.name === 'Turn Undead') ? dmg : scope.characterContext.stats.spellDmg + dmg;
                     var madEvoker = false;
                     
                     if (scope.madEvokerIndex === 1) {
