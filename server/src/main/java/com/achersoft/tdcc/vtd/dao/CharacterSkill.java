@@ -23,4 +23,5 @@ public class CharacterSkill {
     private int usableNumber;
     private int minEffect;
     private int maxEffect;
+    private boolean oncePerRoom;
 }

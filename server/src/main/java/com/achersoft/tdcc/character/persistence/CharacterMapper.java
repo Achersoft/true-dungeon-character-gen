@@ -6,6 +6,8 @@ import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.character.dao.CharacterNote;
 import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.enums.CharacterClass;
+
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,6 +27,7 @@ public interface CharacterMapper {
     public CharacterStats getStartingStats(@Param("characterClass") CharacterClass characterClass, @Param("level") int level);
     public void updateCharacterStats(CharacterStats characterStats); 
     public void updateCharacterName(@Param("id") String id, @Param("name") String name);
+    public void updateCharacterTime(@Param("id") String id, @Param("time") Date time);
     public void deleteCharacter(@Param("id") String id, @Param("userId") String userId);
     public void deleteCharacterItems(@Param("id") String id);
     public void deleteCharacterNotes(@Param("id") String id);

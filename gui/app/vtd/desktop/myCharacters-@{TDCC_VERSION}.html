@@ -11,6 +11,7 @@
                     <th>Name</th>
                     <th>Class</th>
                     <th>Level</th>
+                    <th>Last Modified</th>
                 </tr>
             </thead>
             <tbody>
@@ -18,6 +19,7 @@
                     <td><a ng-href="#/vtd/play/{{myCharacter.id}}">{{myCharacter.name | limitTo : 25}}</a></td>
                     <td>{{myCharacter.characterClass | characterclassformat}}</td>
                     <td>{{myCharacter.level}}</td>
+                    <td>{{myCharacter.lastModified | date: 'MM/dd/yyyy hh:mm:ss a'}}</td>
                 </tr>
             </tbody>
         </table>

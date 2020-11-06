@@ -897,6 +897,17 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         if (vtdDetails.getRoomNumber() > 1)
             vtdDetails.setRoomNumber(vtdDetails.getRoomNumber() - 1);
 
+        final List<CharacterSkill> characterSkills = vtdMapper.getCharacterSkills(vtdDetails.getCharacterId());
+
+        if (characterSkills != null) {
+            characterSkills.forEach(characterSkill -> {
+                if (characterSkill.isOncePerRoom() && characterSkill.getUsedNumber() > 0) {
+                    characterSkill.setUsedNumber(0);
+                    vtdMapper.updateCharacterSkill(characterSkill);
+                }
+            });
+        }
+
         vtdMapper.updateCharacter(vtdDetails);
         vtdMapper.resetCharacterBuffs(id);
 
@@ -922,6 +933,17 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
             if (vtdDetails.getCurrentHealth() > (vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus()))
                 vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus());
+        }
+
+        final List<CharacterSkill> characterSkills = vtdMapper.getCharacterSkills(vtdDetails.getCharacterId());
+
+        if (characterSkills != null) {
+            characterSkills.forEach(characterSkill -> {
+                if (characterSkill.isOncePerRoom() && characterSkill.getUsedNumber() > 0) {
+                    characterSkill.setUsedNumber(0);
+                    vtdMapper.updateCharacterSkill(characterSkill);
+                }
+            });
         }
 
         vtdMapper.updateCharacter(vtdDetails);

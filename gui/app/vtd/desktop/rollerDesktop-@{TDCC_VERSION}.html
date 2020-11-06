@@ -97,7 +97,7 @@
                     <div style="display:flex;flex-direction:row;width:100%;">
                         <div style="width:70%;margin-left:15px;margin-right:10px">
                             <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Attack Range</strong></h4>
-                            <div ng-if="characterContext.characterClass === 'RANGER' && characterContext.availableAnimalCompanion !== null && characterContext.availableAnimalCompanion.length > 0">
+                            <div ng-if="characterContext.characterClass === 'RANGER' && characterContext.availableAnimalCompanion !== null && characterContext.availableAnimalCompanion.length > 1">
                                  <poly-selector-desktop label="Companion" set-poly="setCompanion" element-id="activeCompanion" available="characterContext.availableAnimalCompanion" active="characterContext.animalCompanion"></poly-selector-desktop>
                             </div>
                             <div style="display:flex;flex-direction:row;width:100%;">

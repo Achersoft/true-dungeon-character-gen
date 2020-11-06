@@ -659,6 +659,10 @@ angular.module('main')
             } else if (oCritDmg > 0) {
                 totalCrit = oCritDmg + mDmgTotal;
             }
+            
+            var buff = $scope.hasBuff("Righteous Wrath");
+            if (buff !== null) 
+                $scope.removeBuff(buff);
            
             vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
                 "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
@@ -982,6 +986,10 @@ angular.module('main')
             } else if (oCritDmg > 0) {
                 totalCrit = oCritDmg + mDmgTotal;
             }
+            
+            var buff = $scope.hasBuff("Righteous Wrath");
+            if (buff !== null) 
+                $scope.removeBuff(buff);
  
             vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
                 "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
@@ -2338,6 +2346,10 @@ angular.module('main')
             }
         }
         
+        var buff = $scope.hasBuff("Righteous Wrath");
+        if (buff !== null) 
+            $scope.removeBuff(buff);
+        
         $scope.totalDmg = $scope.rollDmgOff + $scope.rollDmg;
         $scope.totalCritDmg = (($scope.critDmgOff > 0) ? $scope.critDmgOff : $scope.rollDmgOff) + (($scope.critDmg > 0) ? $scope.critDmg : $scope.rollDmg); 
     };
@@ -2451,7 +2463,7 @@ angular.module('main')
     };
     
     $scope.activatePrestigeClass = function(id) {
-        confirmDialogSvc.confirm("Are you sure you wish to activate presige class?", function(){
+        confirmDialogSvc.confirm("Are you sure you wish to activate prestige class?", function(){
             vtdSvc.activatePrestigeClass(id).then(function(result) {
                 vtdState.setContext(result.data);
                 $scope.characterContext = vtdState.get();

@@ -20,6 +20,7 @@ public class CharacterDetails {
     private String name;
     private CharacterClass characterClass;
     private Date createdOn;
+    private Date lastModified;
     private CharacterStats stats;
     private List<CharacterItem> items;
     private List<CharacterNote> notes;

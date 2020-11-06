@@ -13,11 +13,13 @@
                                     user_id,
                                     name,
                                     character_class,
-                                    created) 
+                                    created,
+                                    last_modified)
                             VALUES (#{id},
                                     #{userId},
                                     #{name},
                                     #{characterClass},
+                                    #{createdOn},
                                     #{createdOn})
     </insert>
     
@@ -276,7 +278,8 @@
                u.user_name 'username',
                cn.name 'name',
                cn.character_class 'characterClass',
-               cn.created 'createdOn'
+               cn.created 'createdOn',
+               cn.last_modified 'lastModified'
           FROM character_name cn,
                user u
          WHERE cn.id = #{id}
@@ -289,6 +292,7 @@
                cn.name 'name',
                cn.character_class 'characterClass',
                cn.created 'createdOn',
+               cn.last_modified 'lastModified',
                cs.level 'level'
           FROM character_name cn,
                character_stats cs
@@ -303,6 +307,7 @@
                cn.name 'name',
                cn.character_class 'characterClass',
                cn.created 'createdOn',
+               cn.last_modified 'lastModified',
                cs.level 'level'
           FROM character_name cn,
                character_stats cs
@@ -639,7 +644,13 @@
                name = #{name}
          WHERE id = #{id};
     </update>
-    
+
+    <update id="updateCharacterTime">
+        UPDATE character_name SET
+        last_modified = #{time}
+        WHERE id = #{id};
+    </update>
+
     <delete id="deleteCharacter">
         DELETE FROM character_name WHERE id = #{id}
            AND user_id = #{userId}

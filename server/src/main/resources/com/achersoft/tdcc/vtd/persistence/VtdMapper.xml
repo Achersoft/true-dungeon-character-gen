@@ -134,7 +134,8 @@
                                 used_number,
                                 usable_number,
                                  min_effect,
-                                 max_effect)
+                                 max_effect,
+                                 once_per_room)
                         VALUES (#{id},
                                 #{characterId},
                                 #{name},
@@ -146,7 +147,8 @@
                                 #{usedNumber},
                                 #{usableNumber},
                                 #{minEffect},
-                                #{maxEffect})
+                                #{maxEffect},
+                                #{oncePerRoom})
     </insert>
 
     <insert id="addCharacterStats">
@@ -591,7 +593,8 @@
                used_number 'usedNumber',
                usable_number 'usableNumber',
                min_effect 'minEffect',
-               max_effect 'maxEffect'
+               max_effect 'maxEffect',
+               once_per_room 'oncePerRoom'
          FROM character_skills
         WHERE character_class = #{characterClass}
           AND character_level = #{characterLevel}
@@ -609,7 +612,8 @@
         used_number 'usedNumber',
         usable_number 'usableNumber',
         min_effect 'minEffect',
-        max_effect 'maxEffect'
+        max_effect 'maxEffect',
+        once_per_room 'oncePerRoom'
         FROM vtd_skills
         WHERE character_id = #{characterId}
           AND id = #{id}
@@ -627,7 +631,8 @@
                 used_number 'usedNumber',
                 usable_number 'usableNumber',
                 min_effect 'minEffect',
-                max_effect 'maxEffect'
+                max_effect 'maxEffect',
+               once_per_room 'oncePerRoom'
           FROM vtd_skills
          WHERE character_id = #{characterId}
         ORDER BY name

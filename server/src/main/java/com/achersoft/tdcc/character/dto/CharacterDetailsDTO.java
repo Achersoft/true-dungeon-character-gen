@@ -4,6 +4,7 @@ import com.achersoft.tdcc.character.dao.*;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.enums.Slot;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class CharacterDetailsDTO {
     public boolean editable;
     public String name;
     public String username;
+    public Date lastModified;
     public CharacterClass characterClass;
     public CharacterStats stats;
     public List<CharacterItemDTO> heads;
@@ -59,6 +61,7 @@ public class CharacterDetailsDTO {
                 .editable(dao.isEditable())
                 .name(dao.getName())
                 .username(dao.getUsername())
+                .lastModified(dao.getLastModified())
                 .characterClass(dao.getCharacterClass())
                 .stats(dao.getStats())
                 .instruments(new ArrayList())

@@ -957,6 +957,8 @@ public class CharacterServiceImpl implements CharacterService {
         mapper.deleteCharacterNotes(characterDetails.getId());
         if(!characterDetails.getNotes().isEmpty())
             mapper.addCharacterNotes(characterDetails.getId(), characterDetails.getNotes());
+
+        mapper.updateCharacterTime(characterDetails.getId(), new Date());
         
         return characterDetails;
     }
