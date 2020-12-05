@@ -158,8 +158,10 @@ public class VtdRestService {
                                   @QueryParam("selfHeal") int selfHeal,
                                   @QueryParam("madEvoker") boolean madEvoker,
                                   @QueryParam("lohNumber") int lohNumber,
-                                  @QueryParam("inGameEffect") InGameEffect inGameEffect) throws Exception {
-        return VtdDetailsDTO.fromDAO(virtualTdService.useSkill(id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect));
+                                  @QueryParam("inGameEffect") InGameEffect inGameEffect,
+                                  @QueryParam("markUse") boolean markUse,
+                                  @QueryParam("ignoreUse") boolean ignoreUse) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.useSkill(id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse));
     }
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})

@@ -17,7 +17,7 @@ public interface VirtualTdService {
     VtdDetails setBonusInit(String id, int init);
     VtdDetails setBonusHealth(String id, int health);
     VtdDetails modifyHealth(String id, int health);
-    VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect);
+    VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect, boolean markUse, boolean ignoreUse);
     VtdDetails unuseSkill(String id, String skillId);
     VtdDetails addBuff(String id, Buff buff);
     VtdDetails removeBuff(String id, Buff buff);

@@ -100,7 +100,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                  scope.loh15Index = index;
             };
             
-            scope.useSkill = function(primaryAmount, seconaryHealAmount, lohAmount) {
+            scope.useSkill = function(primaryAmount, seconaryHealAmount, lohAmount, markUse) {
                 if (scope.model.skillType === 'HEAL') {
                     if (scope.model.name === 'Lay on Hands') {
                         if (lohAmount < 1)
@@ -116,18 +116,18 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                             if (scope.targetIndex === 1) {
                                 selfHeal = scope.primaryHealAmount;
                             }
-                            scope.spellCastSucess(selfHeal > 0, selfHeal, false, lohAmount, "PLUS_10_LOH");
+                            scope.spellCastSucess(selfHeal > 0, selfHeal, false, lohAmount, "PLUS_10_LOH", markUse);
                         } else if (scope.loh15Index === 1) {
                             scope.primaryHealAmount += 15;
                             if (scope.targetIndex === 1) {
                                 selfHeal = scope.primaryHealAmount;
                             }
-                            scope.spellCastSucess(selfHeal > 0, selfHeal, false, lohAmount, "PLUS_15_LOH");
+                            scope.spellCastSucess(selfHeal > 0, selfHeal, false, lohAmount, "PLUS_15_LOH", markUse);
                         } else {
                             if (scope.targetIndex === 1) {
                                 selfHeal = scope.primaryHealAmount;
                             }
-                            scope.spellCastSucess(selfHeal > 0, selfHeal, false, lohAmount, null);
+                            scope.spellCastSucess(selfHeal > 0, selfHeal, false, lohAmount, null, markUse);
                         }
                     } else {
                         var totalHeal = scope.characterContext.stats.spellHeal + ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);
@@ -146,7 +146,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                                 if (scope.secondaryTargetIndex === 2) {
                                     selfHeal = scope.seconaryHealAmount;
                                 }
-                                scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null);
+                                scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null, markUse);
                             }
                         } else {
                             scope.primaryHealAmount = totalHeal;
@@ -156,7 +156,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                             if (scope.targetIndex === 1 || scope.model.skillTarget === 'PARTY') {
                                 selfHeal = scope.primaryHealAmount;
                             }
-                            scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null);
+                            scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null, markUse);
                         }
                     }
                 } else if (scope.model.skillType === 'DAMAGE') {
@@ -173,7 +173,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     }
                     
                     scope.damage = totalDamage;
-                    scope.spellCastSucess(false, 0, madEvoker, 0, null);
+                    scope.spellCastSucess(false, 0, madEvoker, 0, null, markUse);
                 } else if (scope.model.skillType === 'DAMAGE_RANGE_AC_15') {
                     var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
                     var totalDamage = scope.characterContext.stats.spellDmg + dmg;
@@ -188,19 +188,94 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     }
                     
                     scope.damage = totalDamage;
-                    scope.spellCastSucess(false, 0, madEvoker, 0, null);
+                    scope.spellCastSucess(false, 0, madEvoker, 0, null, markUse);
                 } else {
                     if (scope.targetIndex === 1) {
-                        scope.spellCastSucess(true, 0, false, 0, null);
+                        scope.spellCastSucess(true, 0, false, 0, null, markUse);
                     } else {
-                        scope.spellCastSucess(false, 0, false, 0, null);
+                        scope.spellCastSucess(false, 0, false, 0, null, markUse);
                     }
                     scope.closeModal();
                 }
             }; 
             
-            scope.spellCastSucess = function(selfTarget, healAmount, madEvoker, lohNumber, inGameEffect) {
-                scope.useAbility()(scope.model.id, selfTarget, healAmount, madEvoker, lohNumber, inGameEffect);
+            scope.useSkillAsScroll = function(primaryAmount, seconaryHealAmount, markUse) {
+                if (scope.model.skillType === 'HEAL') {
+                    var totalHeal = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);
+
+                    if (scope.secondaryTargetIndex !== 0) {
+                        scope.primaryHealAmount = primaryAmount;
+                        scope.seconaryHealAmount = seconaryHealAmount;
+
+                        if ((+scope.primaryHealAmount + +scope.seconaryHealAmount) !== totalHeal) {
+                            scope.healError = true;
+                        } else {
+                            var selfHeal = 0;
+                            if (scope.targetIndex === 1) {
+                                selfHeal = scope.primaryHealAmount;
+                            }
+                            if (scope.secondaryTargetIndex === 2) {
+                                selfHeal = scope.seconaryHealAmount;
+                            }
+                            scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null, markUse);
+                        }
+                    } else {
+                        scope.primaryHealAmount = totalHeal;
+                        scope.seconaryHealAmount = 0;
+                        var selfHeal = 0;
+
+                        if (scope.targetIndex === 1 || scope.model.skillTarget === 'PARTY') {
+                            selfHeal = scope.primaryHealAmount;
+                        }
+                        scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null, markUse);
+                    }
+                } else if (scope.model.skillType === 'DAMAGE') {
+                    var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
+                    var totalDamage = dmg;
+                    var madEvoker = false;
+                    
+                    if (scope.madEvokerIndex === 1) {
+                        madEvoker = true;
+                        if (scope.model.name === 'Fireball' || scope.model.name === 'Lightning Storm' || scope.model.name === 'Burning Hands' || scope.model.name === 'Prismatic Spray' || scope.model.name === 'Stone Storm')
+                            scope.damagePool = dmg;
+                        else 
+                            totalDamage += dmg;
+                    }
+                    
+                    scope.damage = totalDamage;
+                    scope.spellCastSucess(false, 0, madEvoker, 0, null, markUse);
+                } else if (scope.model.skillType === 'DAMAGE_RANGE_AC_15') {
+                    var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
+                    var totalDamage = dmg;
+                    var madEvoker = false;
+
+                    scope.hitRollNatural = scope.roll()(scope.monster);
+                    scope.hitRoll = scope.hitRollNatural + scope.characterContext.stats.rangeHit;
+                    
+                    if (scope.madEvokerIndex === 1) {
+                        madEvoker = true;
+                        totalDamage += dmg;
+                    }
+                    
+                    scope.damage = totalDamage;
+                    scope.spellCastSucess(false, 0, madEvoker, 0, null, markUse);
+                } else {
+                    if (scope.targetIndex === 1) {
+                        scope.spellCastSucess(true, 0, false, 0, null, markUse);
+                    } else {
+                        scope.spellCastSucess(false, 0, false, 0, null, markUse);
+                    }
+                    scope.closeModal();
+                }
+            }; 
+            
+            scope.markSkill = function() {
+                scope.useAbility()(scope.model.id, false, 0, false, 0, null, true, true);
+                scope.closeModal();
+            }; 
+            
+            scope.spellCastSucess = function(selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse) {
+                scope.useAbility()(scope.model.id, selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse, false);
                 scope.spellCast = true;
             };
             

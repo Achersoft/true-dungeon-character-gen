@@ -92,9 +92,32 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-md-12 text-center" style="margin-top:30px;padding:15px">
-            <button class="btn btn-primary" ng-click="useSkill(primaryHealAmount, seconaryHealAmount, lohUseAmount)" style="width:90%">
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:30px;padding:15px" ng-show="model.name === 'Lay on Hands'">
+            <button class="btn btn-primary" ng-click="useSkill(primaryHealAmount, seconaryHealAmount, lohUseAmount, true)" style="width:90%">
                 Cast Spell
+            </button>
+            <button class="btn btn-info" ng-click="useSkill(primaryHealAmount, seconaryHealAmount, lohUseAmount, false)" style="width:45%;margin-top:10px">
+                Cast Without Mark
+            </button>
+            <button class="btn btn-default" ng-click="markSkill()" style="width:45%;margin-left:5px;margin-top:10px">
+                Mark Without Casting
+            </button>
+        </div>
+        <div class="col-xs-12 col-md-12 text-center" style="margin-top:30px;padding:15px" ng-show="model.name !== 'Lay on Hands'">
+            <button class="btn btn-primary" ng-click="useSkill(primaryHealAmount, seconaryHealAmount, lohUseAmount, true)" style="width:45%">
+                Cast Spell
+            </button>
+            <button class="btn btn-warning" ng-click="useSkillAsScroll(primaryHealAmount, seconaryHealAmount, true)" style="width:45%;margin-left:5px">
+                Cast As Scroll
+            </button>
+            <button class="btn btn-info" ng-click="useSkill(primaryHealAmount, seconaryHealAmount, lohUseAmount, false)" style="width:45%;margin-top:10px">
+                Cast Without Mark
+            </button>
+            <button class="btn btn-danger" ng-click="useSkillAsScroll(primaryHealAmount, seconaryHealAmount, false)" style="width:45%;margin-left:5px;margin-top:10px">
+                Cast As Scroll Without Mark
+            </button>
+            <button class="btn btn-default" ng-click="markSkill()" style="width:90%;margin-top:10px">
+                Mark Without Casting
             </button>
         </div>
         <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px;color:red" ng-show="healError === true">

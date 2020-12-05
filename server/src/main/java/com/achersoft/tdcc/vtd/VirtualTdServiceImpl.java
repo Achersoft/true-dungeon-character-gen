@@ -752,7 +752,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
-    public VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect) {
+    public VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect, boolean markUse, boolean ignoreUse) {
         final CharacterSkill skill = vtdMapper.getCharacterSkill(skillId, id);
         final VtdDetails character = vtdMapper.getCharacter(id);
 
@@ -768,7 +768,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             else if (lohNumber > (skill.getUsableNumber() - skill.getUsedNumber()))
                 lohNumber = skill.getUsableNumber() - skill.getUsedNumber();
             skill.setUsedNumber(skill.getUsedNumber() + lohNumber);
-        } else
+        } else if (markUse)
             skill.setUsedNumber(skill.getUsedNumber() + 1);
         vtdMapper.updateCharacterSkill(skill);
 
@@ -781,7 +781,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             }
         }
 
-        if (inGameEffect != null && inGameEffect != InGameEffect.NONE) {
+        if (inGameEffect != null && inGameEffect != InGameEffect.NONE && !ignoreUse) {
             VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
             if (vtdDetails != null && vtdDetails.getAvailableEffects() != null && !vtdDetails.getAvailableEffects().isEmpty()) {
@@ -793,29 +793,31 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             }
         }
 
-        if (skill.getSkillType() == SkillType.BUFF && (skill.getSkillTarget() == SkillTarget.SELF || skill.getSkillTarget() == SkillTarget.PARTY || (skill.getSkillTarget() == SkillTarget.ANY && selfTarget))) {
-            return addBuff(id, Buff.getBuff(skill.getName()));
-        } else if (skill.getSkillType() == SkillType.HEAL && selfTarget && selfHeal > 0) {
-            final VtdDetails vtdDetails = calculateStats(id);
+        if (!ignoreUse) {
+            if (skill.getSkillType() == SkillType.BUFF && (skill.getSkillTarget() == SkillTarget.SELF || skill.getSkillTarget() == SkillTarget.PARTY || (skill.getSkillTarget() == SkillTarget.ANY && selfTarget))) {
+                return addBuff(id, Buff.getBuff(skill.getName()));
+            } else if (skill.getSkillType() == SkillType.HEAL && selfTarget && selfHeal > 0) {
+                final VtdDetails vtdDetails = calculateStats(id);
 
-            vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + selfHeal);
-            if (vtdDetails.getCurrentHealth() > (vtdDetails.getStats().getHealth()))
-                vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth());
-
-            vtdMapper.updateCharacter(vtdDetails);
-        } else if ((skill.getSkillType() == SkillType.DAMAGE || skill.getSkillType() == SkillType.DAMAGE_RANGE_AC_15) && madEvoker) {
-            final VtdDetails vtdDetails = calculateStats(id);
-
-            if (vtdDetails.getCharacterClass() == CharacterClass.ELF_WIZARD || vtdDetails.getCharacterClass() == CharacterClass.WIZARD) {
-                vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() - 10);
-                if (vtdDetails.getCurrentHealth() < 0)
-                    vtdDetails.setCurrentHealth(0);
+                vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + selfHeal);
+                if (vtdDetails.getCurrentHealth() > (vtdDetails.getStats().getHealth()))
+                    vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth());
 
                 vtdMapper.updateCharacter(vtdDetails);
+            } else if ((skill.getSkillType() == SkillType.DAMAGE || skill.getSkillType() == SkillType.DAMAGE_RANGE_AC_15) && madEvoker) {
+                final VtdDetails vtdDetails = calculateStats(id);
+
+                if (vtdDetails.getCharacterClass() == CharacterClass.ELF_WIZARD || vtdDetails.getCharacterClass() == CharacterClass.WIZARD) {
+                    vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() - 10);
+                    if (vtdDetails.getCurrentHealth() < 0)
+                        vtdDetails.setCurrentHealth(0);
+
+                    vtdMapper.updateCharacter(vtdDetails);
+                }
+            } else if (character.getCharacterClass() == CharacterClass.PALADIN && skill.getName().equalsIgnoreCase("Sacrifice")) {
+                character.setCurrentHealth(5);
+                vtdMapper.updateCharacter(character);
             }
-        } else if (character.getCharacterClass() == CharacterClass.PALADIN && skill.getName().equalsIgnoreCase("Sacrifice")) {
-            character.setCurrentHealth(5);
-            vtdMapper.updateCharacter(character);
         }
 
         return calculateStats(id);
