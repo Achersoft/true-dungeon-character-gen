@@ -24,7 +24,7 @@ public class CharacterDetailsDTO {
     public CharacterClass characterClass;
     public CharacterStats stats;
     public List<CharacterItemDTO> heads;
-    public CharacterItemDTO eyes;
+    public List<CharacterItemDTO> eyes;
     public CharacterItemDTO leftEar;
     public CharacterItemDTO rightEar;
     public CharacterItemDTO bead;
@@ -66,6 +66,7 @@ public class CharacterDetailsDTO {
                 .stats(dao.getStats())
                 .instruments(new ArrayList())
                 .heads(new ArrayList())
+                .eyes(new ArrayList<>())
                 .backs(new ArrayList())
                 .rings(new ArrayList())
                 .charms(new ArrayList())
@@ -85,7 +86,7 @@ public class CharacterDetailsDTO {
             if(item.getSlot() == Slot.HEAD)
                 build.heads.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.EYES)
-                build.eyes = CharacterItemDTO.fromDAO(item);
+                build.eyes.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.EAR) {
                if(item.getIndex() == 0)  
                    build.leftEar = CharacterItemDTO.fromDAO(item);

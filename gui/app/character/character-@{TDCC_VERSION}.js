@@ -99,6 +99,7 @@ angular.module('main')
     $scope.tabIndex = 0;
     $scope.characterContext = characterState.get();
     $scope.ringErrors = null;
+    $scope.eyeErrors = null;
     $scope.backErrors = null;
     $scope.iounStoneErrors = null;
     $scope.charmErrors = null;
@@ -155,6 +156,7 @@ angular.module('main')
     
     $scope.checkItemStatus = function() {
         $scope.ringErrors = null;
+        $scope.eyeErrors = null;
         $scope.backErrors = null;
         $scope.headErrors = null;
         $scope.iounStoneErrors = null;
@@ -189,6 +191,12 @@ angular.module('main')
             $scope.characterContext.heads.forEach(function(item, index) {
                 if(item.slotStatus === 'INVALID')
                     $scope.headErrors = item.statusText;
+            });
+        }
+        if($scope.characterContext.eyes.length > 0) {
+            $scope.characterContext.eyes.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID')
+                    $scope.eyeErrors = item.statusText;
             });
         }
         if($scope.characterContext.backs.length > 0) {

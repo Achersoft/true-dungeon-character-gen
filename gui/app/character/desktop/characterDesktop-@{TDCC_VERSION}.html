@@ -150,13 +150,13 @@
             </div>
             <div style="min-width:250px;width:25%">
                 <div style="display:flex;margin-top:10px">
-                    <div style="padding:0;width:60px">
-                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="left-top" set-token="setTokenSlot" unequip="unequipItem" element-id="eyes" model="characterContext.eyes" label="Eyes"></token-selector>
+                    <div style="padding:0;width:70px" ng-repeat-start="eye in characterContext.eyes track by $index" ng-repeat-end>
+                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="left-bottom" set-token="setTokenSlot" unequip="unequipItem" model="eye" label="Eyes"></token-selector>
                     </div>
-                    <label class="text-left" ng-class="{'error-text': characterContext.eyes.slotStatus === 'INVALID'}"  style="font-size:28px;padding-left:15px;margin-top:8px">:Eyes</label>
+                    <label class="text-left" ng-class="{'error-text': eyeErrors !== null}" style="font-size:28px;padding-left:5px;margin-top:8px">:Eyes</label>
                 </div>
-                <div style="display:flex;" ng-show="characterContext.eyes.slotStatus === 'INVALID'">
-                    <label style="min-width:210px;" class="error-text">{{characterContext.eyes.statusText}}</label>
+                <div style="display:flex;" ng-show="eyeErrors !== null">
+                    <label style="min-width:210px;" class="error-text">{{eyeErrors}}</label>
                 </div>
                 <div style="display:flex;margin-top:10px">
                     <div style="padding-right:0;width:70px">

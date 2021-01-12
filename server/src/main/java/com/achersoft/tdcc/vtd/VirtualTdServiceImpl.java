@@ -220,7 +220,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasShamansBelt.set(true);
                     else if (characterItem.getItemId().equals("186c34894ca45e6acdd58a0d6cab9ef1be36e3ad"))
                         hasRangerLegendary.set(true);
-                    else if (characterItem.getItemId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
+                    else if (characterItem.getItemId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3") ||
+                             characterItem.getItemId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa"))
                         hasPrestigeClass.set(true);
                     else if (characterItem.getItemId().equals("afd90da9d4f05dbce780a2befb67cd1d47187782") ||
                              characterItem.getItemId().equals("80fdb7fe44986e27f987260c94d2fedebda46888") ||

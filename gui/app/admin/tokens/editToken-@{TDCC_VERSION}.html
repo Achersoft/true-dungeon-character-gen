@@ -1,4 +1,4 @@
-<div class="row" style="margin:15px">
+<div class="row" style="margin:15px; background-color: #ffffff">
     <div class="row">
         <div class="col-md-12">
             <input type="text" class="form-control" ng-model="selectedToken" uib-typeahead="token for token in searchForToken($viewValue)" typeahead-popup-template-url="admin/tokens/template-@{TDCC_VERSION}.html" typeahead-on-select="onSelect($item)" placeholder="Search for token..." >
@@ -200,6 +200,7 @@
             <label class="checkbox-inline"><input type="checkbox" ng-model="search.instrument">Instrument Weapon?</label>
             <label class="checkbox-inline"><input type="checkbox" ng-model="search.shuriken">Shuriken?</label>
             <label class="checkbox-inline"><input type="checkbox" ng-model="search.bracerWeapon">Bracer Weapon?</label>
+            <label class="checkbox-inline"><input type="checkbox" ng-model="search.holyWeapon">Holy Weapon?</label>
         </div>
     </div>
     <hr>
@@ -421,6 +422,16 @@
         <div class="col-md-3">
             <label>charm Slots:</label>
             <input type="number" class="form-control" ng-model="search.charmSlots"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Eye slots:</label>
+            <input type="number" class="form-control" ng-model="search.eyeSlots"/>
+        </div>
+        <div class="col-md-3">
+            <label>Figurine Slots:</label>
+            <input type="number" class="form-control" ng-model="search.figurineSlots"/>
         </div>
     </div>
     <hr>

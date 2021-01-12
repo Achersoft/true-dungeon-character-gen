@@ -57,6 +57,7 @@ public class TokenFullDetails {
     private boolean instrument;
     private boolean shuriken;
     private boolean bracerWeapon;
+    private boolean holyWeapon;
     private int meleeHit;
     private int meleeDmg;
     private int meleePolyHit;
@@ -125,6 +126,8 @@ public class TokenFullDetails {
     private int backSlots;
     private int stoneSlots;
     private int charmSlots;
+    private int eyeSlots;
+    private int figurineSlots;
     private ConditionalUse conditionalUse;
     private boolean alwaysInEffect;
     private boolean oncePerRound;

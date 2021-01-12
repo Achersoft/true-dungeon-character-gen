@@ -1078,6 +1078,7 @@ public class CharacterServiceImpl implements CharacterService {
     
     private void checkSlotModItems(CharacterDetails characterDetails, Map<String, CharacterItemSet> itemDetailsMap) {
         AtomicReference<Integer> headSlots = new AtomicReference<>(1);
+        AtomicReference<Integer> eyeSlots = new AtomicReference<>(1);
         AtomicReference<Integer> backSlots = new AtomicReference<>(1);
         AtomicReference<Integer> charmSlots = new AtomicReference<>(3);
         AtomicReference<Integer> stoneSlots = new AtomicReference<>(5);
@@ -1085,6 +1086,7 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicReference<Boolean> noRings = new AtomicReference<>(false);
         itemDetailsMap.values().stream().filter(characterItemSet -> characterItemSet.getTokenFullDetails() != null).forEach(characterItemSet -> {
             headSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getHeadSlots());
+            eyeSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getEyeSlots());
             backSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getBackSlots());
             charmSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getCharmSlots());
             stoneSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getStoneSlots());
@@ -1141,6 +1143,26 @@ public class CharacterServiceImpl implements CharacterService {
                 itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
                 headsToAdd--;
                 headIndex--;
+            }
+        }
+
+        // Eye Slot
+        final List<CharacterItem> eyes = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.EYES).collect(Collectors.toList());
+        if (eyes.size() > eyeSlots.get()) {
+            eyes.stream().filter(characterItem -> characterItem.getIndex() >= eyeSlots.get()).forEach(characterItem -> {
+                characterDetails.getItems().remove(characterItem);
+                itemDetailsMap.remove(characterItem.getId());
+            });
+        } else if (eyes.size() < eyeSlots.get()) {
+            int eyesToAdd = eyeSlots.get() - eyes.size();
+            int eyeIndex = eyeSlots.get() - 1;
+
+            while (eyesToAdd > 0) {
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.EYES).index(eyeIndex).slotStatus(SlotStatus.OK).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                eyesToAdd--;
+                eyeIndex--;
             }
         }
 
@@ -1720,24 +1742,36 @@ public class CharacterServiceImpl implements CharacterService {
     private void calculateStats(CharacterDetails characterDetails, Map<String, CharacterItemSet> itemDetailsMap) {
         final CharacterStats stats = characterDetails.getStats();
         final List<CharacterItem> conditionalTokens = new ArrayList<>();
+        final List<CharacterItemSet> postConditionalTokens = new ArrayList<>();
         final Set<ConditionalUse> metCondition = new HashSet<>();
         final List<Integer> meleeWeaponHit = new ArrayList<>();
         final List<Integer> rangeWeaponHit = new ArrayList<>();
+        AtomicBoolean hasFighterRelic = new AtomicBoolean(true);
+        AtomicBoolean canSemiLichCharm = new AtomicBoolean(true);
         AtomicBoolean hasSemiLichCharm = new AtomicBoolean(false);
         AtomicBoolean canHaveRareMelee = new AtomicBoolean(true);
+        AtomicBoolean canHaveCommonMelee = new AtomicBoolean(true);
+        AtomicBoolean canHaveUncommonMelee = new AtomicBoolean(true);
         AtomicInteger sixLevelReward = new AtomicInteger(0);
         AtomicInteger mightyRanged = new AtomicInteger(0);
         AtomicInteger additionalTreasureTokens = new AtomicInteger(0);
         AtomicInteger iounStoneCount = new AtomicInteger(0);
+        AtomicInteger meleeShieldAc = new AtomicInteger(0);
         AtomicReference<String> sheildId = new AtomicReference<>("");
 
         itemDetailsMap.values().stream().filter((item) -> item.getItem().getItemId()!=null).forEach((item) -> {
-            if(item.getTokenFullDetails().getId().equals("5e9d4e09f933a6e2a09ecd875f762683baaa09c8"))
+            if(item.getTokenFullDetails().getId().equals("5e9d4e09f933a6e2a09ecd875f762683baaa09c8") && canSemiLichCharm.get())
                 hasSemiLichCharm.set(true);
+            if(item.getTokenFullDetails().getName().equals("Amulet of Noble Might") || item.getTokenFullDetails().getName().equals("Viv’s Amulet of Noble Might"))
+                hasFighterRelic.set(true);
             
             if(item.getTokenFullDetails().getId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
                 metCondition.add(ConditionalUse.NOT_WITH_ROSP);
-            else if(item.getTokenFullDetails().getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
+            else if(item.getTokenFullDetails().getId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa")) {
+                metCondition.add(ConditionalUse.NOT_WITH_SOC);
+                hasSemiLichCharm.set(false);
+                canSemiLichCharm.set(false);
+            } else if(item.getTokenFullDetails().getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
                 metCondition.add(ConditionalUse.NOT_WITH_COA);
             else if(item.getTokenFullDetails().getId().equals("63cc231ebcbb18e23c9979ba26b38f3ff9f21d92"))
                 metCondition.add(ConditionalUse.NOT_WITH_COS_COA);
@@ -1752,13 +1786,40 @@ public class CharacterServiceImpl implements CharacterService {
                     metCondition.add(ConditionalUse.WEAPON_1H);
                 if (item.getTokenFullDetails().isTwoHanded())
                     metCondition.add(ConditionalUse.WEAPON_2H);
-                if (canHaveRareMelee.get() && isMeleeWeapon(item.getItem(), item.getTokenFullDetails(), characterDetails.getCharacterClass())) {
-                    if (item.getTokenFullDetails().getRarity() != Rarity.RARE) {
-                        canHaveRareMelee.set(false);
-                        metCondition.remove(ConditionalUse.RARE_WEAPON_MELEE);
-                    } else
-                        metCondition.add(ConditionalUse.RARE_WEAPON_MELEE);
-                } 
+                if (isMeleeWeapon(item.getItem(), item.getTokenFullDetails(), characterDetails.getCharacterClass())) {
+                    if (item.getTokenFullDetails().getRarity() == Rarity.COMMON) {
+                        if (canHaveCommonMelee.get()) {
+                            metCondition.add(ConditionalUse.COMMON_WEAPON_MELEE);
+                            metCondition.add(ConditionalUse.UNCOMMON_OR_BELOW_WEAPON_MELEE);
+                        } else {
+                            canHaveRareMelee.set(false);
+                            canHaveUncommonMelee.set(false);
+                            metCondition.remove(ConditionalUse.RARE_WEAPON_MELEE);
+                            metCondition.remove(ConditionalUse.UNCOMMON_WEAPON_MELEE);
+                        }
+                    } else if (item.getTokenFullDetails().getRarity() == Rarity.UNCOMMON) {
+                        if (canHaveUncommonMelee.get()) {
+                            metCondition.add(ConditionalUse.UNCOMMON_WEAPON_MELEE);
+                            metCondition.add(ConditionalUse.UNCOMMON_OR_BELOW_WEAPON_MELEE);
+                        } else {
+                            canHaveRareMelee.set(false);
+                            canHaveCommonMelee.set(false);
+                            metCondition.remove(ConditionalUse.RARE_WEAPON_MELEE);
+                            metCondition.remove(ConditionalUse.COMMON_WEAPON_MELEE);
+                        }
+                    } else if (item.getTokenFullDetails().getRarity() == Rarity.RARE) {
+                        if (canHaveRareMelee.get()) {
+                            metCondition.add(ConditionalUse.RARE_WEAPON_MELEE);
+                            metCondition.remove(ConditionalUse.UNCOMMON_OR_BELOW_WEAPON_MELEE);
+                        } else {
+                            canHaveUncommonMelee.set(false);
+                            canHaveCommonMelee.set(false);
+                            metCondition.remove(ConditionalUse.COMMON_WEAPON_MELEE);
+                            metCondition.remove(ConditionalUse.UNCOMMON_WEAPON_MELEE);
+                        }
+                    }
+                }
+
                 if(item.getTokenFullDetails().getConditionalUse() == ConditionalUse.NONE && !item.getTokenFullDetails().isMug() && isMeleeWeapon(item.getItem(), item.getTokenFullDetails(), characterDetails.getCharacterClass()))
                     meleeWeaponHit.add(item.getTokenFullDetails().getMeleeHit());
             }
@@ -1774,8 +1835,17 @@ public class CharacterServiceImpl implements CharacterService {
                     metCondition.add(ConditionalUse.BOW);
                 if (item.getTokenFullDetails().isTwoHanded())
                     metCondition.add(ConditionalUse.WEAPON_RANGED_2H);
-                if (item.getItem().getSlot() == Slot.RANGE_MAINHAND && item.getTokenFullDetails().getRarity() == Rarity.RARE)
-                    metCondition.add(ConditionalUse.RARE_WEAPON_RANGE);
+                if (item.getItem().getSlot() == Slot.RANGE_MAINHAND) {
+                    if (item.getTokenFullDetails().getRarity() == Rarity.RARE)
+                        metCondition.add(ConditionalUse.RARE_WEAPON_RANGE);
+                    else if (item.getTokenFullDetails().getRarity() == Rarity.COMMON) {
+                        metCondition.add(ConditionalUse.COMMON_WEAPON_RANGE);
+                        metCondition.add(ConditionalUse.UNCOMMON_OR_BELOW_WEAPON_RANGE);
+                    } else if (item.getTokenFullDetails().getRarity() == Rarity.UNCOMMON) {
+                        metCondition.add(ConditionalUse.UNCOMMON_WEAPON_RANGE);
+                        metCondition.add(ConditionalUse.UNCOMMON_OR_BELOW_WEAPON_RANGE);
+                    }
+                }
                 if(item.getTokenFullDetails().isThrown() || item.getTokenFullDetails().getName().toLowerCase().contains("mighty"))
                     mightyRanged.set(1);
                 if (item.getTokenFullDetails().getConditionalUse() == ConditionalUse.NONE && isRangeWeapon(item.getItem(), item.getTokenFullDetails()))
@@ -1794,6 +1864,10 @@ public class CharacterServiceImpl implements CharacterService {
 
             if(item.getTokenFullDetails().getName().contains("Tooth of Cavadar")) {
                 stats.setPsychicLevel(stats.getPsychicLevel() + 1);
+                if (stats.getPsychicLevel() > 7)
+                    stats.setPsychicLevel(7);
+            } else if(item.getTokenFullDetails().getName().contains("Skull of Cavadar")) {
+                stats.setPsychicLevel(7);
             }
             if((item.getTokenFullDetails().getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") || item.getTokenFullDetails().getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2")) && sixLevelReward.get() == 0) {
                 sixLevelReward.set(1);
@@ -1802,7 +1876,10 @@ public class CharacterServiceImpl implements CharacterService {
             }
            
             if(item.getTokenFullDetails().getConditionalUse() != ConditionalUse.NONE) {
-                conditionalTokens.add(item.getItem());
+                if (item.getTokenFullDetails().getConditionalUse().isPost())
+                    postConditionalTokens.add(item);
+                else
+                    conditionalTokens.add(item.getItem());
             } else {
                 // check for same shield
                 if (item.getTokenFullDetails().isShield()) {
@@ -1810,6 +1887,7 @@ public class CharacterServiceImpl implements CharacterService {
                         item.getItem().setSlotStatus(SlotStatus.OK);
                         item.getItem().setStatusText(null);
                         stats.setMeleeAC(stats.getMeleeAC()+ item.getTokenFullDetails().getMeleeAC());
+                        meleeShieldAc.set(item.getTokenFullDetails().getMeleeAC());
 
                         if (sheildId.get().isEmpty() || !sheildId.get().equals(item.getTokenFullDetails().getId()))
                             updateStats(stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
@@ -1838,19 +1916,7 @@ public class CharacterServiceImpl implements CharacterService {
         
         // Check Conditionals 
         checkConditionals(conditionalTokens, metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
-        
-        if (!meleeWeaponHit.isEmpty())
-            meleeWeaponHit.remove(Collections.max(meleeWeaponHit));
-        meleeWeaponHit.stream().forEach(hit -> {
-            stats.setMeleeHit(stats.getMeleeHit() - hit);
-        });
-        
-        if (!rangeWeaponHit.isEmpty())
-            rangeWeaponHit.remove(Collections.max(rangeWeaponHit));
-        rangeWeaponHit.stream().forEach(hit -> {
-            stats.setRangeHit(stats.getRangeHit() - hit);
-        });
-      
+
         stats.setStrBonus((stats.getStr()-10 > 0)?(stats.getStr()-10)/2:(stats.getStr()-11)/2);
         stats.setDexBonus((stats.getDex()-10 > 0)?(stats.getDex()-10)/2:(stats.getDex()-11)/2);
         stats.setConBonus((stats.getCon()-10 > 0)?(stats.getCon()-10)/2:(stats.getCon()-11)/2);
@@ -1869,21 +1935,40 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setFort(stats.getFort() + stats.getConBonus());
         stats.setReflex(stats.getReflex() + stats.getDexBonus());
         stats.setWill(stats.getWill() + stats.getWisBonus());
-        
-        if(mightyRanged.get() == 1)
-            stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
-        
+
+        // Check Post Conditionals
+        checkPostConditionals(postConditionalTokens, characterDetails.getNotes(), metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
+
+        if (!meleeWeaponHit.isEmpty()) {
+            meleeWeaponHit.remove(Collections.max(meleeWeaponHit));
+            meleeWeaponHit.forEach(hit -> {
+                stats.setMeleeHit(stats.getMeleeHit() - hit);
+            });
+        } if (!rangeWeaponHit.isEmpty()) {
+            rangeWeaponHit.remove(Collections.max(rangeWeaponHit));
+            rangeWeaponHit.forEach(hit -> {
+                stats.setRangeHit(stats.getRangeHit() - hit);
+            });
+        }
+
         if(null != characterDetails.getCharacterClass()) switch (characterDetails.getCharacterClass()) {
             case BARBARIAN:
                 if(metCondition.contains(ConditionalUse.WEAPON_2H))
                     stats.setMeleeDmg(stats.getMeleeDmg() + 4);
                 break;
+            case FIGHTER:
+            case DWARF_FIGHTER:
+                if (hasFighterRelic.get()) {
+                    stats.setReflex(stats.getReflex() + meleeShieldAc.get());
+                }
             default:
                 break;
         }
         
         if (hasSemiLichCharm.get()) 
             stats.setHealth(stats.getHealth() + stats.getPsychicLevel());
+        if(mightyRanged.get() == 1)
+            stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
             
         long figurineCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FIGURINE).count();
         if(stats.getCha() >= 16) {
@@ -1911,6 +1996,38 @@ public class CharacterServiceImpl implements CharacterService {
         }
     }
 
+    private void checkPostConditionals(List<CharacterItemSet> conditionalTokens, List<CharacterNote> notes, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails, List<Integer> meleeWeaponHit, List<Integer> rangeWeaponHit) {
+        conditionalTokens.forEach((token) -> {
+            System.err.println("Checking post conditions");
+            TokenFullDetails td = token.getTokenFullDetails();
+            if (null != td.getConditionalUse()) switch (td.getConditionalUse()) {
+                case LESS_THAN_10_HIT_MELEE:
+                    System.err.println("plus to hit is: " + stats.getMeleeHit());
+                    if (stats.getMeleeHit() > 6) {
+                        token.getItem().setSlotStatus(SlotStatus.INVALID);
+                        token.getItem().setStatusText("Your plus to hit cannot exceed 10 to use.");
+                    } else {
+                        token.getItem().setSlotStatus(SlotStatus.OK);
+                        token.getItem().setStatusText(null);
+
+                        if (isMeleeWeapon(token.getItem(), td, characterDetails.getCharacterClass())) {
+                            meleeWeaponHit.add(td.getMeleeHit());
+                            stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                            stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                        } else if (isRangeWeapon(token.getItem(), td)) {
+                            rangeWeaponHit.add(td.getRangeHit());
+                            stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                            stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                        }
+
+                        updateStats(stats, td, notes, true, false);
+                    } break;
+                default:
+                    break;
+            }
+        });
+    }
+
     private List<CharacterItem> checkConditionals(List<CharacterItem> conditionalTokens, List<CharacterItem> retryTokens, List<CharacterNote> notes, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails, List<Integer> meleeWeaponHit, List<Integer> rangeWeaponHit) {
         final List<CharacterItem> failedConditions = new ArrayList<>();
         conditionalTokens.stream().filter(token -> retryTokens == null || retryTokens.contains(token)).forEach((token) -> {
@@ -1920,6 +2037,16 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NOT_WITH_ROSP)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with the Rod of Seven Parts.");
+                        failedConditions.add(token);
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(stats, td, notes, false, false);
+                    }   break;
+                case NOT_WITH_SOC:
+                    if(metCondition.contains(ConditionalUse.NOT_WITH_SOC)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with the Skull of Cavadar.");
                         failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
@@ -2177,7 +2304,41 @@ public class CharacterServiceImpl implements CharacterService {
                     token.setSlotStatus(SlotStatus.OK);
                     token.setStatusText(null);
                     updateStats(stats, td, notes, true, false);
-                    break;  
+                    break;
+                case GOBLIN_WEAPON:
+                    long goblinMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("goblin")).count();
+                    long goblinRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("goblin")).count();
+
+                    if(goblinMelee > 0) {
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                    }
+                    if(goblinRanged > 0) {
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                    }
+
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;
+                case DWARF_WEAPON:
+                    long dwarvenMelee = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&(item.getSlot()==Slot.MAINHAND||(item.getSlot()==Slot.OFFHAND&&!item.getName().toLowerCase().contains("shield")))&&item.getName().toLowerCase().contains("dwarven")).count();
+                    long dwarvenRanged = characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null&&item.getSlot()==Slot.RANGE_MAINHAND&&item.getName().toLowerCase().contains("dwarven")).count();
+
+                    if(dwarvenMelee > 0) {
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                    }
+                    if(dwarvenRanged > 0) {
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                    }
+
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;
                 case ONE_OTHER_UR_TREASURE:
                     if(metCondition.contains(ConditionalUse.ONE_OTHER_UR_TREASURE)) {
                         token.setSlotStatus(SlotStatus.INVALID);
@@ -2215,6 +2376,34 @@ public class CharacterServiceImpl implements CharacterService {
                         stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
                     }
                     
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;
+                case COMMON_WEAPON:
+                    if(metCondition.contains(ConditionalUse.COMMON_WEAPON_MELEE)) {
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                    }
+                    if(metCondition.contains(ConditionalUse.COMMON_WEAPON_RANGE)) {
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                    }
+
+                    token.setSlotStatus(SlotStatus.OK);
+                    token.setStatusText(null);
+                    updateStats(stats, td, notes, true, false);
+                    break;
+                case UNCOMMON_OR_BELOW_WEAPON:
+                    if(metCondition.contains(ConditionalUse.UNCOMMON_OR_BELOW_WEAPON_MELEE)) {
+                        stats.setMeleeHit(stats.getMeleeHit() + td.getMeleeHit());
+                        stats.setMeleeDmg(stats.getMeleeDmg() + td.getMeleeDmg());
+                    }
+                    if(metCondition.contains(ConditionalUse.UNCOMMON_OR_BELOW_WEAPON_RANGE)) {
+                        stats.setRangeHit(stats.getRangeHit() + td.getRangeHit());
+                        stats.setRangeDmg(stats.getRangeDmg() + td.getRangeDmg());
+                    }
+
                     token.setSlotStatus(SlotStatus.OK);
                     token.setStatusText(null);
                     updateStats(stats, td, notes, true, false);
@@ -2268,6 +2457,10 @@ public class CharacterServiceImpl implements CharacterService {
                         token.setSlotStatus(SlotStatus.OK);
                         token.setStatusText(null);
                         updateStats(stats, td, notes, false, false);
+                    } break;
+                case PLUS_1_AC_GOBLIN_WEAPON:
+                    if(metCondition.contains(ConditionalUse.GOBLIN_WEAPON)) {
+                        stats.setMeleeAC(stats.getMeleeAC() + 1);
                     } break;
                 default:
                     break;

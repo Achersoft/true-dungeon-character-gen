@@ -48,6 +48,7 @@ public class TokenFullDetailsDTO {
     public Boolean monkOffhand;
     public Boolean shuriken;
     public Boolean bracerWeapon;
+    public Boolean holyWeapon;
     public Integer meleeHit;
     public Integer meleeDmg;
     public Integer meleePolyHit;
@@ -116,6 +117,8 @@ public class TokenFullDetailsDTO {
     public Integer backSlots;
     public Integer stoneSlots;
     public Integer charmSlots;
+    public Integer eyeSlots;
+    public Integer figurineSlots;
     public ConditionalUse conditionalUse;
     public Boolean alwaysInEffect;
     public Boolean oncePerRound;
@@ -242,6 +245,8 @@ public class TokenFullDetailsDTO {
                 .backSlots(tokenFullDetails.getBackSlots())
                 .charmSlots(tokenFullDetails.getCharmSlots())
                 .stoneSlots(tokenFullDetails.getStoneSlots())
+                .eyeSlots(tokenFullDetails.getEyeSlots())
+                .figurineSlots(tokenFullDetails.getFigurineSlots())
                 .conditionalUse(tokenFullDetails.getConditionalUse())
                 .alwaysInEffect(tokenFullDetails.isAlwaysInEffect())
                 .oncePerRound(tokenFullDetails.isOncePerRound())
@@ -407,6 +412,8 @@ public class TokenFullDetailsDTO {
                 .backSlots(backSlots)
                 .charmSlots(charmSlots)
                 .stoneSlots(stoneSlots)
+                .figurineSlots(figurineSlots)
+                .eyeSlots(eyeSlots)
                 .conditionalUse((conditionalUse != null)?conditionalUse:ConditionalUse.NONE)
                 .alwaysInEffect(alwaysInEffect)
                 .oncePerRound(oncePerRound)
