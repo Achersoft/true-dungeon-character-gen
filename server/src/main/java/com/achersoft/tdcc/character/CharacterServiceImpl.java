@@ -1459,7 +1459,7 @@ public class CharacterServiceImpl implements CharacterService {
         long viperCount = characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && (item.getItemId().equals("4b469b628a8c57e294268dfac4b51d302b1e9123") || item.getItemId().equals("9431d39ad2fba9953bf4b526d86f41f37022efeb") || item.getItemId().equals("f2ff2a508dd3075633ca2fd9e58c0e1a76088af8") || item.getItemId().equals("dd565d74807cc9094990b324465612d52b3070bf") || item.getItemId().equals("09ad5527813c4f087f3123cd6a40404b9377a4bc"))).count();
         viperCount += characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && item.getItemId().equals("bd21afd63114346decea5fc899ff697106e99429")).map(CharacterItem::getName).distinct().count();
         // Lucky Set
-        long luckyCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("lucky")).count();
+        long luckyCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("lucky")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Arcane Set
         long arcaneCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && (a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane belt") ||
                 a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane bracelets") || a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane earcuff"))).count();
@@ -1746,7 +1746,7 @@ public class CharacterServiceImpl implements CharacterService {
         final Set<ConditionalUse> metCondition = new HashSet<>();
         final List<Integer> meleeWeaponHit = new ArrayList<>();
         final List<Integer> rangeWeaponHit = new ArrayList<>();
-        AtomicBoolean hasFighterRelic = new AtomicBoolean(true);
+        AtomicBoolean hasFighterRelic = new AtomicBoolean(false);
         AtomicBoolean canSemiLichCharm = new AtomicBoolean(true);
         AtomicBoolean hasSemiLichCharm = new AtomicBoolean(false);
         AtomicBoolean canHaveRareMelee = new AtomicBoolean(true);

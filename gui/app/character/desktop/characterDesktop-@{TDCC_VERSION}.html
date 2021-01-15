@@ -294,8 +294,10 @@
                 <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="head{{$index}}" model="head" label="Head"></item-desktop-selector>
             </div>
         </div>
-        <div class="col-xs-12" style="padding:0" ng-if="characterContext.eyes !== null">
-            <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="eyes" model="characterContext.eyes" label="Eyes"></item-desktop-selector>
+        <div ng-if="characterContext.eyes !== null && characterContext.eyes.length > 0">
+            <div class="col-xs-12" style="padding:0" ng-repeat-start="eye in characterContext.eyes track by $index" ng-repeat-end>
+                <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="eye{{$index}}" model="eye" label="Eyes"></item-desktop-selector>
+            </div>
         </div>
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.leftEar !== null">
             <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="leftEar" model="characterContext.leftEar" label="Ear"></item-desktop-selector>

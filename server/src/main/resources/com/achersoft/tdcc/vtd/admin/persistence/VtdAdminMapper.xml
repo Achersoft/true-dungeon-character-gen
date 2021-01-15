@@ -142,7 +142,12 @@
                 poison,
                 sacred,
                 darkrift,
-                acid
+                acid,
+                u_dr 'universalDr',
+                m_dr 'meleeDr',
+                r_dr 'rangeDr',
+                s_dr 'spellDr',
+                monsterEffects
            FROM vtd_room
           WHERE vtdId = #{vtdId}
     </select>
@@ -180,7 +185,12 @@
                 poison,
                 sacred,
                 darkrift,
-                acid
+                acid,
+                u_dr 'universalDr',
+                m_dr 'meleeDr',
+                r_dr 'rangeDr',
+                s_dr 'spellDr',
+                monsterEffects
            FROM vtd_room
           WHERE id = #{id}
     </select>
@@ -218,7 +228,12 @@
         poison,
         sacred,
         darkrift,
-        acid
+        acid,
+        u_dr 'universalDr',
+        m_dr 'meleeDr',
+        r_dr 'rangeDr',
+        s_dr 'spellDr',
+        monsterEffects
         FROM vtd_room
         WHERE vtdId = #{vtdId}
         AND room = #{room}

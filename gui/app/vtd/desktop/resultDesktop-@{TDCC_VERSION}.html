@@ -35,8 +35,14 @@
                     <div class="text-center text-danger" ng-show="lastEvent.isImmune === true" style="margin-top:20px">
                         <span style="font-size:32px">{{lastEvent.immuneText}}</span>
                     </div>
-                    <div class="text-center text-danger" ng-show="lastEvent.isMiss === true">
-                        <span style="font-size:72px">Miss!!!</span>
+                    <div class="text-center" ng-show="lastEvent.isMiss === true">
+                        <span class="text-danger" style="font-size:72px">Miss!!!</span>
+                        <div class="col-xs-12 text-center" style="margin-top:15px">
+                            <h2 style="margin:0px">Main Hand Roll: {{lastEvent.mRoll}}</h2>
+                        </div>
+                        <div class="col-xs-12 text-center" style="margin-top:15px" ng-if="lastEvent.oRoll > 2">
+                            <h2 style="margin:0px">Offhand Roll: {{lastEvent.oRoll}}</h2>
+                        </div>
                     </div>
                     <div class="text-center" style="margin-top:15px" ng-show="lastEvent.isMiss !== true">
                         <div class="text-center" ng-if="lastEvent.sub === 'POLY' || (lastEvent.sub === 'MELEE_SNEAK' && lastEvent.isImmune === false) || (lastEvent.sub === 'RANGE_SNEAK' && lastEvent.isImmune === false) || (lastEvent.sub === 'MELEE' && characterContext.stats.meleeOffhandHit === undefined) || (lastEvent.sub === 'RANGE' && (lastEvent.isOffhandAttack === undefined || lastEvent.isOffhandAttack === false))">

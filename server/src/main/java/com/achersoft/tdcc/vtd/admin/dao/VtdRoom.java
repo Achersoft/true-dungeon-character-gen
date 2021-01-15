@@ -1,6 +1,7 @@
 package com.achersoft.tdcc.vtd.admin.dao;
 
 import com.achersoft.tdcc.enums.CritType;
+import com.achersoft.tdcc.enums.MonsterEffects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class VtdRoom {
     private int room;
     private @Builder.Default CritType critType = CritType.ANY;
     private String name;
+    private @Builder.Default String monsterEffects = null;
     private @Builder.Default int one = 5;
     private @Builder.Default int two = 5;
     private @Builder.Default int three = 5;
@@ -46,4 +48,8 @@ public class VtdRoom {
     private @Builder.Default int sacred = 0;
     private @Builder.Default int darkrift = 0;
     private @Builder.Default int acid = 0;
+    private @Builder.Default int universalDr = 0;
+    private @Builder.Default int meleeDr = 0;
+    private @Builder.Default int rangeDr = 0;
+    private @Builder.Default int spellDr = 0;
 }

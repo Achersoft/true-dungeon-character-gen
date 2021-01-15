@@ -57,13 +57,16 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                         templateUrl: 'common/skillUser/desktop/skillUserUnsetDesktopModalTemplate-@{TDCC_VERSION}.html'
                     });
                 } else {
-                    if (scope.model.skillType === 'DAMAGE_RANGE_AC_15' && scope.characterContext.monsters.length > 1 && monster === undefined) {
+                    if (scope.model.skillType === 'DAMAGE_RANGE_AC_15' || scope.model.skillType === 'DAMAGE' && scope.characterContext.monsters.length > 1 && monster === undefined) {
                          monsterSelectorSvc.selectMonster(scope.characterContext.monsters, function(index) {
                             scope.openModal(isChecked, index);
                         });
                         return;
+                    } 
+                    if (scope.monster === undefined) {
+                        scope.monster = scope.characterContext.monsters[0];
                     }
-                    
+       
                     scope.modalInstance = $uibModal.open({
                         ariaLabelledBy: 'modal-title',
                         ariaDescribedBy: 'modal-body',
@@ -173,6 +176,28 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     }
                     
                     scope.damage = totalDamage;
+                    
+                    if(scope.monster.monsterEffects) {
+                        if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if((scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE')  && scope.monster.monsterEffects.includes("PHASING_HARDCORE")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if((scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE' || scope.model.skillLevel === 'TWO')  && scope.monster.monsterEffects.includes("PHASING_NIGHTMARE")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if(scope.monster.monsterEffects.includes("PHASING_EPIC")) {
+                            if (scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE' || scope.model.skillLevel === 'TWO') {
+                                scope.damage = 0;
+                                scope.damagePool = 0;
+                            } else {
+                                scope.damage =  Math.round(scope.damage * .5);
+                                scope.damagePool = Math.round(scope.damagePool * .5);
+                            }
+                        }
+                    }
+                    
                     scope.spellCastSucess(false, 0, madEvoker, 0, null, markUse);
                 } else if (scope.model.skillType === 'DAMAGE_RANGE_AC_15') {
                     var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
@@ -188,6 +213,28 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     }
                     
                     scope.damage = totalDamage;
+                    
+                    if(scope.monster.monsterEffects) {
+                        if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if((scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE')  && scope.monster.monsterEffects.includes("PHASING_HARDCORE")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if((scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE' || scope.model.skillLevel === 'TWO')  && scope.monster.monsterEffects.includes("PHASING_NIGHTMARE")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if(scope.monster.monsterEffects.includes("PHASING_EPIC")) {
+                            if (scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE' || scope.model.skillLevel === 'TWO') {
+                                scope.damage = 0;
+                                scope.damagePool = 0;
+                            } else {
+                                scope.damage =  Math.round(scope.damage * .5);
+                                scope.damagePool = Math.round(scope.damagePool * .5);
+                            }
+                        }
+                    }
+                    
                     scope.spellCastSucess(false, 0, madEvoker, 0, null, markUse);
                 } else {
                     if (scope.targetIndex === 1) {
@@ -243,6 +290,28 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     }
                     
                     scope.damage = totalDamage;
+                    
+                    if(scope.monster.monsterEffects) {
+                        if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if((scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE')  && scope.monster.monsterEffects.includes("PHASING_HARDCORE")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if((scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE' || scope.model.skillLevel === 'TWO')  && scope.monster.monsterEffects.includes("PHASING_NIGHTMARE")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if(scope.monster.monsterEffects.includes("PHASING_EPIC")) {
+                            if (scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE' || scope.model.skillLevel === 'TWO') {
+                                scope.damage = 0;
+                                scope.damagePool = 0;
+                            } else {
+                                scope.damage =  Math.round(scope.damage * .5);
+                                scope.damagePool = Math.round(scope.damagePool * .5);
+                            }
+                        }
+                    }
+                    
                     scope.spellCastSucess(false, 0, madEvoker, 0, null, markUse);
                 } else if (scope.model.skillType === 'DAMAGE_RANGE_AC_15') {
                     var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
@@ -258,6 +327,28 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     }
                     
                     scope.damage = totalDamage;
+                    
+                    if(scope.monster.monsterEffects) {
+                        if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if((scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE')  && scope.monster.monsterEffects.includes("PHASING_HARDCORE")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if((scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE' || scope.model.skillLevel === 'TWO')  && scope.monster.monsterEffects.includes("PHASING_NIGHTMARE")) {
+                            scope.damage = 0;
+                            scope.damagePool = 0;
+                        } else if(scope.monster.monsterEffects.includes("PHASING_EPIC")) {
+                            if (scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE' || scope.model.skillLevel === 'TWO') {
+                                scope.damage = 0;
+                                scope.damagePool = 0;
+                            } else {
+                                scope.damage =  Math.round(scope.damage * .5);
+                                scope.damagePool = Math.round(scope.damagePool * .5);
+                            }
+                        }
+                    }
+                    
                     scope.spellCastSucess(false, 0, madEvoker, 0, null, markUse);
                 } else {
                     if (scope.targetIndex === 1) {

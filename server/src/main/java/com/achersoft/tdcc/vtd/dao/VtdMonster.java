@@ -1,16 +1,14 @@
 package com.achersoft.tdcc.vtd.dao;
 
 import com.achersoft.tdcc.enums.CritType;
+import com.achersoft.tdcc.enums.MonsterEffects;
 import com.achersoft.tdcc.vtd.admin.dao.VtdRoom;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Builder
@@ -22,7 +20,9 @@ public class VtdMonster {
     private String name;
     private boolean critical;
     private boolean sneak;
+    private @Builder.Default List<MonsterEffects> monsterEffects = new ArrayList<>();
     private @Builder.Default List<Integer> roller = new ArrayList<>();
+    private @Builder.Default int bonusDmg = 0;
     private @Builder.Default int cold = 0;
     private @Builder.Default int fire = 0;
     private @Builder.Default int shock = 0;
@@ -31,14 +31,18 @@ public class VtdMonster {
     private @Builder.Default int sacred = 0;
     private @Builder.Default int darkrift = 0;
     private @Builder.Default int acid = 0;
+    private @Builder.Default int universalDr = 0;
+    private @Builder.Default int meleeDr = 0;
+    private @Builder.Default int rangeDr = 0;
+    private @Builder.Default int spellDr = 0;
 
-    public static List<VtdMonster> fromRoom(List<VtdRoom> vtdRooms, Set<CritType> critTypes) {
+    public static List<VtdMonster> fromRoom(List<VtdRoom> vtdRooms, Set<CritType> critTypes, int meleeWeaponHit, int meleeWeaponHitOff, int rangeWeaponHit, int rangeWeaponHitOff, boolean isRanger, boolean isLevel5) {
         if (vtdRooms == null)
             return new ArrayList<>();
-        return vtdRooms.stream().map(vtdRoom -> VtdMonster.fromRoom(vtdRoom, critTypes)).collect(Collectors.toList());
+        return vtdRooms.stream().map(vtdRoom -> VtdMonster.fromRoom(vtdRoom, critTypes, meleeWeaponHit, meleeWeaponHitOff, rangeWeaponHit, rangeWeaponHitOff, isRanger, isLevel5)).collect(Collectors.toList());
     }
 
-    public static VtdMonster fromRoom(VtdRoom vtdRoom, Set<CritType> critTypes) {
+    public static VtdMonster fromRoom(VtdRoom vtdRoom, Set<CritType> critTypes, int meleeWeaponHit,  int meleeWeaponHitOff, int rangeWeaponHit, int rangeWeaponHitOff, boolean isRanger, boolean isLevel5) {
         if (vtdRoom == null)
             return null;
 
@@ -92,14 +96,58 @@ public class VtdMonster {
                 isCritable = true;
         }
 
+        int bonusDamage = 0;
+        if (vtdRoom.getCritType() == CritType.UNDEAD && isRanger) {
+            if (isLevel5)
+                bonusDamage = 2;
+            else
+                bonusDamage = 1;
+        }
+
+        List<MonsterEffects> monsterEffects = new ArrayList<>();
+        if (vtdRoom.getMonsterEffects() != null && !vtdRoom.getMonsterEffects().isEmpty()) {
+            monsterEffects.addAll(Arrays.stream(vtdRoom.getMonsterEffects().split(",")).map(MonsterEffects::valueOf).distinct().collect(Collectors.toList()));
+
+            if (monsterEffects.contains(MonsterEffects.PHASING_HARDCORE)) {
+                if (meleeWeaponHit == 0)
+                    monsterEffects.add(MonsterEffects.MELEE_MAIN_ON_20);
+                if (meleeWeaponHitOff == 0)
+                    monsterEffects.add(MonsterEffects.MELEE_OFFHAND_ON_20);
+                if (rangeWeaponHit == 0)
+                    monsterEffects.add(MonsterEffects.RANGE_MAIN_ON_20);
+                if (rangeWeaponHitOff == 0)
+                    monsterEffects.add(MonsterEffects.RANGE_OFFHAND_ON_20);
+            } else if (monsterEffects.contains(MonsterEffects.PHASING_NIGHTMARE)) {
+                if (meleeWeaponHit < 3)
+                    monsterEffects.add(MonsterEffects.MELEE_MAIN_ON_20);
+                if (meleeWeaponHitOff < 3)
+                    monsterEffects.add(MonsterEffects.MELEE_OFFHAND_ON_20);
+                if (rangeWeaponHit < 3)
+                    monsterEffects.add(MonsterEffects.RANGE_MAIN_ON_20);
+                if (rangeWeaponHitOff < 3)
+                    monsterEffects.add(MonsterEffects.RANGE_OFFHAND_ON_20);
+            } else if (monsterEffects.contains(MonsterEffects.PHASING_EPIC)) {
+                if (meleeWeaponHit < 5)
+                    monsterEffects.add(MonsterEffects.MELEE_MAIN_ON_20);
+                if (meleeWeaponHitOff < 5)
+                    monsterEffects.add(MonsterEffects.MELEE_OFFHAND_ON_20);
+                if (rangeWeaponHit < 5)
+                    monsterEffects.add(MonsterEffects.RANGE_MAIN_ON_20);
+                if (rangeWeaponHitOff < 5)
+                    monsterEffects.add(MonsterEffects.RANGE_OFFHAND_ON_20);
+            }
+        }
+
         Collections.shuffle(rollerValues);
 
         return VtdMonster.builder()
                 .room(vtdRoom.getRoom())
                 .critical(isCritable)
                 .sneak(isCritable)
+                .monsterEffects(monsterEffects)
                 .name(vtdRoom.getName())
                 .roller(rollerValues)
+                .bonusDmg(bonusDamage)
                 .cold(vtdRoom.getCold())
                 .fire(vtdRoom.getFire())
                 .shock(vtdRoom.getShock())
@@ -108,6 +156,10 @@ public class VtdMonster {
                 .sacred(vtdRoom.getSacred())
                 .darkrift(vtdRoom.getDarkrift())
                 .acid(vtdRoom.getAcid())
+                .universalDr(vtdRoom.getUniversalDr())
+                .meleeDr(vtdRoom.getMeleeDr())
+                .rangeDr(vtdRoom.getRangeDr())
+                .spellDr(vtdRoom.getSpellDr())
                 .build();
     }
 }

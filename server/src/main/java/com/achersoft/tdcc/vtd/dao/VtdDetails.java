@@ -34,6 +34,10 @@ public class VtdDetails {
     private int initBonus;
     private int healthBonus;
     private int roomNumber = 0;
+    private int meleeMainHit;
+    private int meleeOffhandHit;
+    private int rangeMainHit;
+    private int rangeOffhandHit;
     private List<CharacterNote> notes;
     private List<CharacterSkill> characterSkills;
     private List<VtdBuff> buffs;

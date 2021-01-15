@@ -446,6 +446,13 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         offHand.set(TokenFullDetails.builder().name("Fist").monkOffhand(true).damageRange("1,2,3,4,5,6").critMin(20).build());
                     }
 
+                    if (characterDetails.getStats().getLevel() == 5) {
+                        if (mainHand.get().getMeleeHit() < 4)
+                            mainHand.get().setMeleeHit(4);
+                        if (offHand.get().getMeleeHit() < 4)
+                            offHand.get().setMeleeHit(4);
+                    }
+
                     if (hasMonkRelic.get()) {
                         if (mainHand.get().getCritMin() > 19)
                             mainHand.get().setCritMin(19);
@@ -626,6 +633,11 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final VtdSetting aDefault = vtdAdminMapper.getAdventure("default");
             final List<VtdRoom> roomsByNumber = vtdAdminMapper.getRoomsByNumber(aDefault.getId(), 1);
 
+            int meleeMainHit = mainHand.get() != null ? mainHand.get().getMeleeHit() : 0;
+            int meleeOffhandHit = offHand.get() != null ? offHand.get().getMeleeHit() : 0;
+            int rangeMainHit = rangeMainHand.get() != null ? rangeMainHand.get().getRangeHit() : 0;
+            int rangeOffhandHit = rangeOffHand.get() != null ? rangeOffHand.get().getRangeHit() : 0;
+
             vtdDetails = builder
                     .characterId(characterDetails.getId())
                     .characterOrigId(origId)
@@ -640,10 +652,14 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .rollerDifficulty(0)
                     .initBonus(0)
                     .roomNumber(1)
+                    .meleeMainHit(meleeMainHit)
+                    .meleeOffhandHit(meleeOffhandHit)
+                    .rangeMainHit(rangeMainHit)
+                    .rangeOffhandHit(rangeOffhandHit)
                     .prestigeAvailable(hasPrestigeClass.get())
                     .prestigeActive(activatePrestige)
                     .critTypes(String.join(",", critTypes.stream().map(Enum::name).collect(Collectors.toList())))
-                    .monsters(VtdMonster.fromRoom(roomsByNumber, critTypes))
+                    .monsters(VtdMonster.fromRoom(roomsByNumber, critTypes, meleeMainHit, meleeOffhandHit, rangeMainHit, rangeOffhandHit, characterDetails.getCharacterClass() == CharacterClass.RANGER, characterDetails.getStats().getLevel() == 5))
                     .availableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())))
                     .notes(characterDetails.getNotes())
                     .characterSkills(characterSkills)
@@ -809,7 +825,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                 final VtdDetails vtdDetails = calculateStats(id);
 
                 if (vtdDetails.getCharacterClass() == CharacterClass.ELF_WIZARD || vtdDetails.getCharacterClass() == CharacterClass.WIZARD) {
-                    vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() - 10);
+                    vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() - 25);
                     if (vtdDetails.getCurrentHealth() < 0)
                         vtdDetails.setCurrentHealth(0);
 
@@ -1137,7 +1153,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         if (vtdDetails.getBuffs() != null && vtdDetails.getBuffs().stream().filter(vtdBuff -> vtdBuff.getBuff() == Buff.OIL_OF_THE_TINKERER).count() > 0)
             critTypes.add(CritType.CONSTRUCT);
 
-        vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber()), critTypes));
+        vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber()), critTypes, vtdDetails.getMeleeMainHit(), vtdDetails.getMeleeOffhandHit(), vtdDetails.getRangeMainHit(), vtdDetails.getRangeOffhandHit(), vtdDetails.getCharacterClass() == CharacterClass.RANGER, vtdDetails.getStats().getLevel() == 5));
 
         applyBuffsToStats(vtdDetails.getBuffs(), vtdDetails.getStats(), vtdDetails.isMightyWeapon());
 
