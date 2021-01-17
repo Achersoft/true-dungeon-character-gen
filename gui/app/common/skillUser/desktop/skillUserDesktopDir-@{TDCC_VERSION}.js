@@ -57,7 +57,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                         templateUrl: 'common/skillUser/desktop/skillUserUnsetDesktopModalTemplate-@{TDCC_VERSION}.html'
                     });
                 } else {
-                    if (scope.model.skillType === 'DAMAGE_RANGE_AC_15' || scope.model.skillType === 'DAMAGE' && scope.characterContext.monsters.length > 1 && monster === undefined) {
+                    if ((scope.model.skillType === 'DAMAGE_RANGE_AC_15' || scope.model.skillType === 'DAMAGE') && scope.characterContext.monsters.length > 1 && scope.monster === undefined) {
                          monsterSelectorSvc.selectMonster(scope.characterContext.monsters, function(index) {
                             scope.openModal(isChecked, index);
                         });

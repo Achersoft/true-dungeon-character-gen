@@ -40,7 +40,6 @@ angular.module('main')
     $scope.healAmount = null;
     $scope.adventurePasscode = null;
     $scope.isFurryThrow = false;
-    $scope.furryThrowOffhandHit = 0;
     $scope.characterContext = vtdState.get();
     $scope.history = vtdHistory.get();
     $scope.lastEvent = vtdHistory.getLast();
@@ -67,7 +66,6 @@ angular.module('main')
     
     $scope.toggleFurryThrow =  function(isThrow) {
         $scope.isFurryThrow = isThrow;
-        $scope.furryThrowOffhandHit = Math.round($scope.characterContext.stats.rangeHit * .75);
     };
     
     $scope.getRandomInt =  function(max) {
@@ -373,13 +371,13 @@ angular.module('main')
                 
             if ($scope.isFurryThrow) {
                 if (hitRoll > 1)
-                    hitRollMod = hitRoll + $scope.characterContext.stats.rangeHit;
+                    hitRollMod = hitRoll + $scope.characterContext.stats.rangeHitBenrow;
                 if (offhandHitRoll > 1)
-                    offhandHitRollMod = offhandHitRoll + Math.round($scope.characterContext.stats.rangeHit * .75);
+                    offhandHitRollMod = offhandHitRoll + $scope.characterContext.stats.rangeOffhandHitBenrow;
                 if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
-                    mRollDmg = $scope.characterContext.stats.rangeDmg + 7;
+                    mRollDmg = $scope.characterContext.stats.rangeDmgBenrow;
                 if (!$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD"))
-                    oRollDmg = $scope.characterContext.stats.rangeDmg + 7;
+                    oRollDmg = $scope.characterContext.stats.rangeDmgBenrow;
             } else {
                 if (hitRoll > 1)
                     hitRollMod = hitRoll + $scope.characterContext.stats.meleeHit;
@@ -471,165 +469,330 @@ angular.module('main')
                 if (oDmgTotal > 0)
                     oDmgTotal -= monster.universalDr;
             }
-            if (monster.meleeDr !==0) {
-                if (mDmgTotal > 0)
-                    mDmgTotal -= monster.meleeDr;
-                if (oDmgTotal > 0)
-                    oDmgTotal -= monster.meleeDr;
-            }
-            if (monster.fire !== 0 && +$scope.characterContext.stats.mfire) {
-                if (monster.fire < 0) {
+            
+            if ($scope.isFurryThrow) {
+                if (monster.rangeDr !==0) {
                     if (mDmgTotal > 0)
-                        mDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.mfire) ? -1*monster.fire : +$scope.characterContext.stats.mfire;
+                        mDmgTotal -= monster.rangeDr;
                     if (oDmgTotal > 0)
-                        oDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.mfire) ? -1*monster.fire : +$scope.characterContext.stats.mfire;
-                } else if (monster.fire - +$scope.characterContext.stats.mfire >= 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= +$scope.characterContext.stats.mfire;
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= +$scope.characterContext.stats.mfire;
-                } else {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
-                } 
-            } if (monster.cold !== 0 && +$scope.characterContext.stats.mcold) {
-                if (monster.cold < 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.mcold) ? -1*monster.cold : +$scope.characterContext.stats.mcold;
-                    if (oDmgTotal > 0)
-                        oDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.mcold) ? -1*monster.cold : +$scope.characterContext.stats.mcold;
-                } else if (monster.cold - +$scope.characterContext.stats.mcold >= 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= +$scope.characterContext.stats.mcold;
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= +$scope.characterContext.stats.mcold;
-                } else {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
-                } 
-            } if (monster.shock !== 0 && +$scope.characterContext.stats.mshock) {
-                if (monster.shock < 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal += (-1*monster.shock < +$scope.characterContext.stats.mshock) ? -1*monster.shock : +$scope.characterContext.stats.mshock;
-                    if (oDmgTotal > 0)
-                        oDmgTotal += (-1*monster.shock < +$scope.characterContext.stats.mshock) ? -1*monster.shock : +$scope.characterContext.stats.mshock;
-                } else if (monster.shock - +$scope.characterContext.stats.mshock >= 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= +$scope.characterContext.stats.mshock;
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= +$scope.characterContext.stats.mshock;
-                } else {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
-                }  
-            } if (monster.sonic !== 0 && +$scope.characterContext.stats.msonic) {
-                if (monster.sonic < 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal += (-1*monster.sonic < +$scope.characterContext.stats.msonic) ? -1*monster.sonic : +$scope.characterContext.stats.msonic;
-                    if (oDmgTotal > 0)
-                        oDmgTotal += (-1*monster.sonic < +$scope.characterContext.stats.msonic) ? -1*monster.sonic : +$scope.characterContext.stats.msonic;
-                } else if (monster.sonic - +$scope.characterContext.stats.msonic >= 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= +$scope.characterContext.stats.msonic;
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= +$scope.characterContext.stats.msonic;
-                } else {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
+                        oDmgTotal -= monster.rangeDr;
+                }    
+             
+                if (monster.fire !== 0 && +$scope.characterContext.stats.bfire) {
+                    if (monster.fire < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.bfire) ? -1*monster.fire : +$scope.characterContext.stats.bfire;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.bfire) ? -1*monster.fire : +$scope.characterContext.stats.bfire;
+                    } else if (monster.fire - +$scope.characterContext.stats.bfire >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.bfire;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.bfire;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.bfire - monster.fire);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.bfire - monster.fire);
+                    } 
+                } if (monster.cold !== 0 && +$scope.characterContext.stats.bcold) {
+                    if (monster.cold < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.bcold) ? -1*monster.cold : +$scope.characterContext.stats.bcold;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.bcold) ? -1*monster.cold : +$scope.characterContext.stats.bcold;
+                    } else if (monster.cold - +$scope.characterContext.stats.bcold >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.bcold;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.bcold;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.bcold - monster.cold);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.bcold - monster.cold);
+                    } 
+                } if (monster.shock !== 0 && +$scope.characterContext.stats.bshock) {
+                    if (monster.shock < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.shock < +$scope.characterContext.stats.bshock) ? -1*monster.shock : +$scope.characterContext.stats.bshock;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.shock < +$scope.characterContext.stats.bshock) ? -1*monster.shock : +$scope.characterContext.stats.bshock;
+                    } else if (monster.shock - +$scope.characterContext.stats.bshock >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.bshock;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.bshock;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.bshock - monster.shock);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.bshock - monster.shock);
+                    }  
+                } if (monster.sonic !== 0 && +$scope.characterContext.stats.bsonic) {
+                    if (monster.sonic < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.sonic < +$scope.characterContext.stats.bsonic) ? -1*monster.sonic : +$scope.characterContext.stats.bsonic;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.sonic < +$scope.characterContext.stats.bsonic) ? -1*monster.sonic : +$scope.characterContext.stats.bsonic;
+                    } else if (monster.sonic - +$scope.characterContext.stats.bsonic >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.bsonic;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.bsonic;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.bsonic - monster.sonic);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.bsonic - monster.sonic);
+                    }
+                } if (monster.poison !== 0 && +$scope.characterContext.stats.bpoison) {
+                    if (monster.poison < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.poison < +$scope.characterContext.stats.bpoison) ? -1*monster.poison : +$scope.characterContext.stats.bpoison;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.poison < +$scope.characterContext.stats.bpoison) ? -1*monster.poison : +$scope.characterContext.stats.bpoison;
+                    } else if (monster.poison - +$scope.characterContext.stats.bpoison >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.bpoison;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.bpoison;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.bpoison - monster.poison);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.bpoison - monster.poison);
+                    }  
+                } if (monster.darkrift !== 0 && +$scope.characterContext.stats.bdarkrift) {
+                    if (monster.darkrift < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.darkrift < +$scope.characterContext.stats.bdarkrift) ? -1*monster.darkrift : +$scope.characterContext.stats.bdarkrift;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.darkrift < +$scope.characterContext.stats.bdarkrift) ? -1*monster.darkrift : +$scope.characterContext.stats.bdarkrift;
+                    } else if (monster.darkrift - +$scope.characterContext.stats.bdarkrift >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.bdarkrift;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.bdarkrift;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.bdarkrift - monster.darkrift);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.bdarkrift - monster.darkrift);
+                    }  
+                } if (monster.sacred !== 0 && +$scope.characterContext.stats.bsacred) {
+                    if (monster.sacred < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.sacred < +$scope.characterContext.stats.bsacred) ? -1*monster.sacred : +$scope.characterContext.stats.bsacred;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.sacred < +$scope.characterContext.stats.bsacred) ? -1*monster.sacred : +$scope.characterContext.stats.bsacred;;
+                    } else if (monster.sacred - +$scope.characterContext.stats.bsacred >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.bsacred;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.bsacred;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.bsacred - monster.sacred);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.bsacred - monster.sacred);
+                    }   
+                } if (monster.force !== 0 && +$scope.characterContext.stats.bforce) {
+                    if (monster.force < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.force < +$scope.characterContext.stats.bforce) ? -1*monster.force : +$scope.characterContext.stats.bforce;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.force < +$scope.characterContext.stats.bforce) ? -1*monster.force : +$scope.characterContext.stats.bforce;
+                    } else if (monster.force - +$scope.characterContext.stats.bforce >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.bforce;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.bforce;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.bforce - monster.force);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.bforce - monster.force);
+                    }  
+                } if (monster.acid !== 0 && +$scope.characterContext.stats.bacid) {
+                    if (monster.acid < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.acid < +$scope.characterContext.stats.bacid) ? -1*monster.acid : +$scope.characterContext.stats.bacid;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.acid < +$scope.characterContext.stats.bacid) ? -1*monster.acid : +$scope.characterContext.stats.bacid;
+                    } else if (monster.acid - +$scope.characterContext.stats.bacid >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.bacid;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.bacid;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.bacid - monster.acid);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.bacid - monster.acid);
+                    }  
                 }
-            } if (monster.poison !== 0 && +$scope.characterContext.stats.mpoison) {
-                if (monster.poison < 0) {
+            } else {
+                if (monster.meleeDr !==0) {
                     if (mDmgTotal > 0)
-                        mDmgTotal += (-1*monster.poison < +$scope.characterContext.stats.mpoison) ? -1*monster.poison : +$scope.characterContext.stats.mpoison;
+                        mDmgTotal -= monster.meleeDr;
                     if (oDmgTotal > 0)
-                        oDmgTotal += (-1*monster.poison < +$scope.characterContext.stats.mpoison) ? -1*monster.poison : +$scope.characterContext.stats.mpoison;
-                } else if (monster.poison - +$scope.characterContext.stats.mpoison >= 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= +$scope.characterContext.stats.mpoison;
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= +$scope.characterContext.stats.mpoison;
-                } else {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
-                }  
-            } if (monster.darkrift !== 0 && +$scope.characterContext.stats.mdarkrift) {
-                if (monster.darkrift < 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal += (-1*monster.darkrift < +$scope.characterContext.stats.mdarkrift) ? -1*monster.darkrift : +$scope.characterContext.stats.mdarkrift;
-                    if (oDmgTotal > 0)
-                        oDmgTotal += (-1*monster.darkrift < +$scope.characterContext.stats.mdarkrift) ? -1*monster.darkrift : +$scope.characterContext.stats.mdarkrift;
-                } else if (monster.darkrift - +$scope.characterContext.stats.mdarkrift >= 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= +$scope.characterContext.stats.mdarkrift;
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= +$scope.characterContext.stats.mdarkrift;
-                } else {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
-                }  
-            } if (monster.sacred !== 0 && +$scope.characterContext.stats.msacred) {
-                if (monster.sacred < 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal += (-1*monster.sacred < +$scope.characterContext.stats.msacred) ? -1*monster.sacred : +$scope.characterContext.stats.msacred;
-                    if (oDmgTotal > 0)
-                        oDmgTotal += (-1*monster.sacred < +$scope.characterContext.stats.msacred) ? -1*monster.sacred : +$scope.characterContext.stats.msacred;;
-                } else if (monster.sacred - +$scope.characterContext.stats.msacred >= 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= +$scope.characterContext.stats.msacred;
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= +$scope.characterContext.stats.msacred;
-                } else {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
-                }   
-            } if (monster.force !== 0 && +$scope.characterContext.stats.mforce) {
-                if (monster.force < 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal += (-1*monster.force < +$scope.characterContext.stats.mforce) ? -1*monster.force : +$scope.characterContext.stats.mforce;
-                    if (oDmgTotal > 0)
-                        oDmgTotal += (-1*monster.force < +$scope.characterContext.stats.mforce) ? -1*monster.force : +$scope.characterContext.stats.mforce;
-                } else if (monster.force - +$scope.characterContext.stats.mforce >= 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= +$scope.characterContext.stats.mforce;
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= +$scope.characterContext.stats.mforce;
-                } else {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
-                }  
-            } if (monster.acid !== 0 && +$scope.characterContext.stats.macid) {
-                if (monster.acid < 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal += (-1*monster.acid < +$scope.characterContext.stats.macid) ? -1*monster.acid : +$scope.characterContext.stats.macid;
-                    if (oDmgTotal > 0)
-                        oDmgTotal += (-1*monster.acid < +$scope.characterContext.stats.macid) ? -1*monster.acid : +$scope.characterContext.stats.macid;
-                } else if (monster.acid - +$scope.characterContext.stats.macid >= 0) {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= +$scope.characterContext.stats.macid;
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= +$scope.characterContext.stats.macid;
-                } else {
-                    if (mDmgTotal > 0)
-                        mDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
-                    if (oDmgTotal > 0)
-                        oDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
-                }  
+                        oDmgTotal -= monster.meleeDr;
+                }
+                if (monster.fire !== 0 && +$scope.characterContext.stats.mfire) {
+                    if (monster.fire < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.mfire) ? -1*monster.fire : +$scope.characterContext.stats.mfire;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.mfire) ? -1*monster.fire : +$scope.characterContext.stats.mfire;
+                    } else if (monster.fire - +$scope.characterContext.stats.mfire >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.mfire;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.mfire;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
+                    } 
+                } if (monster.cold !== 0 && +$scope.characterContext.stats.mcold) {
+                    if (monster.cold < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.mcold) ? -1*monster.cold : +$scope.characterContext.stats.mcold;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.mcold) ? -1*monster.cold : +$scope.characterContext.stats.mcold;
+                    } else if (monster.cold - +$scope.characterContext.stats.mcold >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.mcold;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.mcold;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
+                    } 
+                } if (monster.shock !== 0 && +$scope.characterContext.stats.mshock) {
+                    if (monster.shock < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.shock < +$scope.characterContext.stats.mshock) ? -1*monster.shock : +$scope.characterContext.stats.mshock;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.shock < +$scope.characterContext.stats.mshock) ? -1*monster.shock : +$scope.characterContext.stats.mshock;
+                    } else if (monster.shock - +$scope.characterContext.stats.mshock >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.mshock;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.mshock;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
+                    }  
+                } if (monster.sonic !== 0 && +$scope.characterContext.stats.msonic) {
+                    if (monster.sonic < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.sonic < +$scope.characterContext.stats.msonic) ? -1*monster.sonic : +$scope.characterContext.stats.msonic;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.sonic < +$scope.characterContext.stats.msonic) ? -1*monster.sonic : +$scope.characterContext.stats.msonic;
+                    } else if (monster.sonic - +$scope.characterContext.stats.msonic >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.msonic;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.msonic;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
+                    }
+                } if (monster.poison !== 0 && +$scope.characterContext.stats.mpoison) {
+                    if (monster.poison < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.poison < +$scope.characterContext.stats.mpoison) ? -1*monster.poison : +$scope.characterContext.stats.mpoison;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.poison < +$scope.characterContext.stats.mpoison) ? -1*monster.poison : +$scope.characterContext.stats.mpoison;
+                    } else if (monster.poison - +$scope.characterContext.stats.mpoison >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.mpoison;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.mpoison;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
+                    }  
+                } if (monster.darkrift !== 0 && +$scope.characterContext.stats.mdarkrift) {
+                    if (monster.darkrift < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.darkrift < +$scope.characterContext.stats.mdarkrift) ? -1*monster.darkrift : +$scope.characterContext.stats.mdarkrift;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.darkrift < +$scope.characterContext.stats.mdarkrift) ? -1*monster.darkrift : +$scope.characterContext.stats.mdarkrift;
+                    } else if (monster.darkrift - +$scope.characterContext.stats.mdarkrift >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.mdarkrift;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.mdarkrift;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
+                    }  
+                } if (monster.sacred !== 0 && +$scope.characterContext.stats.msacred) {
+                    if (monster.sacred < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.sacred < +$scope.characterContext.stats.msacred) ? -1*monster.sacred : +$scope.characterContext.stats.msacred;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.sacred < +$scope.characterContext.stats.msacred) ? -1*monster.sacred : +$scope.characterContext.stats.msacred;;
+                    } else if (monster.sacred - +$scope.characterContext.stats.msacred >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.msacred;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.msacred;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
+                    }   
+                } if (monster.force !== 0 && +$scope.characterContext.stats.mforce) {
+                    if (monster.force < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.force < +$scope.characterContext.stats.mforce) ? -1*monster.force : +$scope.characterContext.stats.mforce;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.force < +$scope.characterContext.stats.mforce) ? -1*monster.force : +$scope.characterContext.stats.mforce;
+                    } else if (monster.force - +$scope.characterContext.stats.mforce >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.mforce;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.mforce;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
+                    }  
+                } if (monster.acid !== 0 && +$scope.characterContext.stats.macid) {
+                    if (monster.acid < 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal += (-1*monster.acid < +$scope.characterContext.stats.macid) ? -1*monster.acid : +$scope.characterContext.stats.macid;
+                        if (oDmgTotal > 0)
+                            oDmgTotal += (-1*monster.acid < +$scope.characterContext.stats.macid) ? -1*monster.acid : +$scope.characterContext.stats.macid;
+                    } else if (monster.acid - +$scope.characterContext.stats.macid >= 0) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= +$scope.characterContext.stats.macid;
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= +$scope.characterContext.stats.macid;
+                    } else {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
+                    }  
+                }
             }
             
             if (monster.critical && hitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
@@ -685,13 +848,22 @@ angular.module('main')
             var buff = $scope.hasBuff("Righteous Wrath");
             if (buff !== null) 
                 $scope.removeBuff(buff);
-           
-            vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
-                "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
-                "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"sWeaponExp":sDmgExp,"oWeaponExp":oDmgExp,"fire":$scope.characterContext.stats.mfire,
-                "cold":$scope.characterContext.stats.mcold,"shock":$scope.characterContext.stats.mshock,"sonic":$scope.characterContext.stats.msonic,
-                "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
-                "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid});
+            
+            if ($scope.isFurryThrow) {
+                vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
+                    "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
+                    "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"sWeaponExp":sDmgExp,"oWeaponExp":oDmgExp,"fire":$scope.characterContext.stats.bfire,
+                    "cold":$scope.characterContext.stats.bcold,"shock":$scope.characterContext.stats.bshock,"sonic":$scope.characterContext.stats.bsonic,
+                    "eldritch":$scope.characterContext.stats.beldritch,"poison":$scope.characterContext.stats.bpoison,"darkrift":$scope.characterContext.stats.bdarkrift,
+                    "sacred":$scope.characterContext.stats.bsacred,"force":$scope.characterContext.stats.bforce,"acid":$scope.characterContext.stats.bacid});
+            } else {
+                vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
+                    "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
+                    "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"sWeaponExp":sDmgExp,"oWeaponExp":oDmgExp,"fire":$scope.characterContext.stats.mfire,
+                    "cold":$scope.characterContext.stats.mcold,"shock":$scope.characterContext.stats.mshock,"sonic":$scope.characterContext.stats.msonic,
+                    "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
+                    "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid});
+            }
         }
          
         $scope.history = vtdHistory.get();
@@ -2072,9 +2244,9 @@ angular.module('main')
                         if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("RANGE_MAIN_ON_20")) {
                             $scope.rollHit = 1;
                         } else {
-                            $scope.rollHit += $scope.characterContext.stats.rangeHit;
+                            $scope.rollHit += $scope.characterContext.stats.rangeHitBenrow;
                             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
-                                $scope.rollDmg = $scope.characterContext.stats.rangeDmg + 7;
+                                $scope.rollDmg = $scope.characterContext.stats.rangeDmgBenrow;
                             if ($scope.characterContext.meleeDmgRange && $scope.characterContext.meleeDmgRange.length > 0) {
                                 $scope.rollDmgNatural = $scope.characterContext.meleeDmgRange[$scope.getRandomInt($scope.characterContext.meleeDmgRange.length)];
                                 $scope.rollDmg += $scope.rollDmgNatural;
@@ -2761,6 +2933,7 @@ angular.module('main')
             if (vtdState.characterClass === 'MONK') {
                 if (!(vtdState.meleeOffhandDmgRange === null || vtdState.meleeOffhandDmgRange.length === 0)) {
                     vtdState.stats.meleeOffhandHit = Math.round(vtdState.stats.meleeHit * .75);
+                    vtdState.stats.rangeOffhandHitBenrow = Math.round(vtdState.stats.rangeHitBenrow * .75);
                 }
                 if (!(vtdState.rangeOffhandDmgRange === null || vtdState.rangeOffhandDmgRange.length === 0)) {
                     vtdState.stats.rangeOffhandHit = Math.round(vtdState.stats.rangeHit * .75);

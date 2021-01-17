@@ -54,6 +54,16 @@ public class CharacterStats {
     private boolean rangePoison = false;
     private boolean rangeDarkrift = false;
     private boolean rangeSacred = false;
+    private int rangeHitBenrow = 0;
+    private int rangeDmgBenrow = 0;
+    private boolean rangeFireBenrow = false;
+    private boolean rangeColdBenrow = false;
+    private boolean rangeShockBenrow = false;
+    private boolean rangeSonicBenrow = false;
+    private boolean rangeEldritchBenrow = false;
+    private boolean rangePoisonBenrow = false;
+    private boolean rangeDarkriftBenrow = false;
+    private boolean rangeSacredBenrow = false;
     private int rangeAC = 0;
     private int rangeMissileAC = 0;
     private int fort = 0;
@@ -112,4 +122,14 @@ public class CharacterStats {
     private int rSacred = 0;
     private int rForce = 0;
     private int rAcid = 0;
+    private int bFire = 0;
+    private int bCold = 0;
+    private int bShock = 0;
+    private int bSonic = 0;
+    private int bEldritch = 0;
+    private int bPoison = 0;
+    private int bDarkrift = 0;
+    private int bSacred = 0;
+    private int bForce = 0;
+    private int bAcid = 0;
 }
