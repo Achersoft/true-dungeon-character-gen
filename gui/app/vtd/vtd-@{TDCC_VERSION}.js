@@ -2021,6 +2021,193 @@ angular.module('main')
         $scope.history = vtdHistory.get();
         $scope.lastEvent = vtdHistory.getLast();  
     };
+    
+    $scope.rollToHitSubdual =  function(monsterIndex) {        
+        var hitRoll = 1;
+        var hitRollOG = 1;
+        var monster = null;
+        
+        $scope.resultIndex = 0;
+        
+        if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
+            hitRoll = $scope.getRandomInt(20) + 1;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollToHitSubdual(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monster = monsterIndex;
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+        } else {
+            monster = $scope.characterContext.monsters[0];
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+        }
+        
+        if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
+            hitRollOG = hitRoll;
+            hitRoll = 1;
+        }  
+ 
+        if (hitRoll === 1)
+            vtdHistory.add({"type":"ATTACK","sub":"MELEE_SUBDUAL","isMiss":true,"roll":1,"mRoll":hitRollOG});
+        else {
+            var hitRollMod = 1;
+            var rollDmg = 0;
+            var mDmg = 1;
+            var mDmgExp = null;
+            var sDmgExp = null;
+            var mCritDmg = 0;
+
+            if (hitRoll > 1)
+                hitRollMod = hitRoll + $scope.characterContext.stats.meleeHit;
+            if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
+                rollDmg =  $scope.characterContext.stats.meleeDmg;
+                      
+            var mDmgTotal = 0;
+            if (hitRoll > 1)
+                mDmgTotal = mDmg + rollDmg;
+            else
+                mDmg = 0;
+           
+            if (monster.fire !== 0 && +$scope.characterContext.stats.mfire) {
+                if (monster.fire < 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.mfire) ? -1*monster.fire : +$scope.characterContext.stats.mfire;
+                } else if (monster.fire - +$scope.characterContext.stats.mfire >= 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= +$scope.characterContext.stats.mfire;
+                } else {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
+                } 
+            } if (monster.cold !== 0 && +$scope.characterContext.stats.mcold) {
+                if (monster.cold < 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.mcold) ? -1*monster.cold : +$scope.characterContext.stats.mcold;
+                } else if (monster.cold - +$scope.characterContext.stats.mcold >= 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= +$scope.characterContext.stats.mcold;
+                } else {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
+                } 
+            } if (monster.shock !== 0 && +$scope.characterContext.stats.mshock) {
+                if (monster.shock < 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal += (-1*monster.shock < +$scope.characterContext.stats.mshock) ? -1*monster.shock : +$scope.characterContext.stats.mshock;
+                } else if (monster.shock - +$scope.characterContext.stats.mshock >= 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= +$scope.characterContext.stats.mshock;
+                } else {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
+                }  
+            } if (monster.sonic !== 0 && +$scope.characterContext.stats.msonic) {
+                if (monster.sonic < 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal += (-1*monster.sonic < +$scope.characterContext.stats.msonic) ? -1*monster.sonic : +$scope.characterContext.stats.msonic;
+                } else if (monster.sonic - +$scope.characterContext.stats.msonic >= 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= +$scope.characterContext.stats.msonic;
+                } else {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
+                }
+            } if (monster.poison !== 0 && +$scope.characterContext.stats.mpoison) {
+                if (monster.poison < 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal += (-1*monster.poison < +$scope.characterContext.stats.mpoison) ? -1*monster.poison : +$scope.characterContext.stats.mpoison;
+                } else if (monster.poison - +$scope.characterContext.stats.mpoison >= 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= +$scope.characterContext.stats.mpoison;
+                } else {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
+                }  
+            } if (monster.darkrift !== 0 && +$scope.characterContext.stats.mdarkrift) {
+                if (monster.darkrift < 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal += (-1*monster.darkrift < +$scope.characterContext.stats.mdarkrift) ? -1*monster.darkrift : +$scope.characterContext.stats.mdarkrift;
+                } else if (monster.darkrift - +$scope.characterContext.stats.mdarkrift >= 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= +$scope.characterContext.stats.mdarkrift;
+                } else {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
+                }  
+            } if (monster.sacred !== 0 && +$scope.characterContext.stats.msacred) {
+                if (monster.sacred < 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal += (-1*monster.sacred < +$scope.characterContext.stats.msacred) ? -1*monster.sacred : +$scope.characterContext.stats.msacred;
+                } else if (monster.sacred - +$scope.characterContext.stats.msacred >= 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= +$scope.characterContext.stats.msacred;
+                } else {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
+                }   
+            } if (monster.force !== 0 && +$scope.characterContext.stats.mforce) {
+                if (monster.force < 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal += (-1*monster.force < +$scope.characterContext.stats.mforce) ? -1*monster.force : +$scope.characterContext.stats.mforce;
+                } else if (monster.force - +$scope.characterContext.stats.mforce >= 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= +$scope.characterContext.stats.mforce;
+                } else {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
+                }  
+            } if (monster.acid !== 0 && +$scope.characterContext.stats.macid) {
+                if (monster.acid < 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal += (-1*monster.acid < +$scope.characterContext.stats.macid) ? -1*monster.acid : +$scope.characterContext.stats.macid;
+                } else if (monster.acid - +$scope.characterContext.stats.macid >= 0) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= +$scope.characterContext.stats.macid;
+                } else {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
+                }  
+            }
+            
+            if (monster.critical && hitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
+                if (hitRoll === 20) {
+                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
+                        mCritDmg = mDmgTotal * 3;
+                    else 
+                        mCritDmg = mDmgTotal * 2;
+                } else {
+                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
+                        mCritDmg = mDmgTotal * 3;
+                    else
+                        mCritDmg = mDmgTotal * 2;
+                }
+                var buff = $scope.hasBuff("Fury");
+                if (buff !== null) 
+                    $scope.removeBuff(buff);
+            } else if ($scope.hasBuff("Fury")) {
+                var buff = $scope.hasBuff("Fury");
+                if (buff !== null) {
+                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
+                        mCritDmg = mDmgTotal * 3;
+                    else
+                        mCritDmg = mDmgTotal * 2;
+                    
+                    $scope.removeBuff(buff);
+                }
+            }
+
+            vtdHistory.add({"type":"ATTACK","sub":"MELEE_SUBDUAL","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"sWeaponExp":sDmgExp,"fire":$scope.characterContext.stats.mfire,
+                "cold":$scope.characterContext.stats.mcold,"shock":$scope.characterContext.stats.mshock,"sonic":$scope.characterContext.stats.msonic,
+                "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
+                "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid});
+        }
+         
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();  
+    };
 }])
 
 .controller('VtdPlayCtrl', ['$scope', 'VtdSvc', 'VtdState', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', 'MonsterSelectorSvc', function ($scope, vtdSvc, vtdState, RESOURCES, $routeParams, $route, confirmDialogSvc, monsterSelectorSvc) {

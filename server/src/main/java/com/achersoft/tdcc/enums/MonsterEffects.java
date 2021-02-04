@@ -12,3 +12,7 @@ public enum MonsterEffects {
     COLD_PIERCE,
     SUBDUE;
 }
+
+fix sheild bs
+cleric turn undead
+cabal sets

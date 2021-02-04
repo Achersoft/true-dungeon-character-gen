@@ -240,7 +240,38 @@
                         </div>
                     </div>          
                 </div>
-            </div>       
+            </div>      
+            <div style="width:100%;margin-left:auto;margin-right:auto;margin-top:15px" ng-if="characterContext.monsters.length > 0 && characterContext.monsters[0].monsterEffects.indexOf('SUBDUE') >= 0">
+                <div style="width:100%;background-color: white;border-radius: 25px; border: 2px solid #73AD21">
+                    <div style="display:flex;flex-direction:row;width:100%;">
+                        <div style="width:70%;margin-left:15px;margin-right:10px">
+                            <h4 style="margin-top:10px;border-bottom:1pt solid black;"><strong>Subdual</strong></h4>
+                            <div style="display:flex;flex-direction:row;width:100%;">
+                                <div style="width:50%">
+                                    <strong>Hit:</strong>&nbsp;{{characterContext.stats.meleeHit}}
+                                </div>
+                                <div style="width:50%">
+                                    <strong>Damage:</strong>&nbsp;{{characterContext.stats.meleeDmg}} 
+                                </div>
+                            </div>
+                            <div style="margin-top:5px;margin-bottom:5px">
+                                <strong>Type:</strong>&nbsp;
+                                <span ng-if="characterContext.stats.meleeFire">Fire</span>
+                                <span ng-if="characterContext.stats.meleeCold">Cold</span>
+                                <span ng-if="characterContext.stats.meleeShock">Shock</span>
+                                <span ng-if="characterContext.stats.meleeSonic">Sonic</span>
+                                <span ng-if="characterContext.stats.meleeEldritch">Eldritch</span>
+                                <span ng-if="characterContext.stats.meleePoison">Poison</span>
+                                <span ng-if="characterContext.stats.meleeDarkrift">Darkrift</span>
+                                <span ng-if="characterContext.stats.meleeSacred">Sacred</span>
+                            </div>
+                        </div>
+                        <div class="text-center" style="width:30%;background-color:lightgray;border-bottom-right-radius:25px;border-top-right-radius:25px">
+                            <img ng-click="rollToHitSubdual()" src="images/d20.png" style="width:100%">
+                        </div>
+                    </div>          
+                </div>
+            </div>
         </div>
         <div style="display:flex;flex-direction:column;min-width:375px;width:33%;margin-left:auto;margin-right:auto;">
             <div style="width:100%;margin-left:auto;margin-right:auto">
