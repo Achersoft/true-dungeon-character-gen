@@ -7,12 +7,36 @@
 
 .navbar {
     margin-bottom: 0px;
+    background-color: #0b2b19;
 }
 
 .navbar-nav > li > a {
     padding-top: 0px;
     padding-bottom: 0px;
     line-height: 75px;
+}
+
+.navbar-default .navbar-nav > li > a:focus {
+    color:#ffffff;
+    background-color:#0b2b19;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+    color:#ffffff;
+    background-color:#144d2d;
+}
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+	background-color: #144d2d;
+	color: #ffffff;
+}
+
+.navbar-default .dropdown-menu > li > a:hover, .navbar-default .dropdown-menu > .active > a, .navbar-default .dropdown-menu > .active > a:hover {
+	background-color: #144d2d;
+}
+
+.navbar-default .dropdown-menu {
+	background-color: #0b2b19;
 }
 
 @media (max-width: 767px) {
@@ -193,7 +217,7 @@
 }
 
 .vtd-background {
-    background-image: url("../images/dmb.jpg");
+    background-image: url("../images/v4.jpg");
     background-color: #cccccc;
     height: 100%;
     width: 100%;

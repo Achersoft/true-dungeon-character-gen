@@ -20,6 +20,7 @@ public enum ConditionalUse {
     NOT_WITH_COA(false),
     NOT_WITH_COS_COA(false),
     NOT_WITH_PRO_SCROLL(false),
+    NOT_WITH_OTHER_WONDER(false),
     IRON_WEAPON(false),
     SLING(false),
     THRALL_WEAPON(false),

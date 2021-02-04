@@ -7,6 +7,7 @@ import com.achersoft.security.UserAuthenticationServiceImpl;
 import com.achersoft.security.authenticator.Authenticator;
 import com.achersoft.security.providers.SignatureServiceProvider;
 import com.achersoft.security.providers.UserPrincipalProvider;
+import com.achersoft.tdcc.account.persistence.AccountMapper;
 import com.achersoft.tdcc.character.CharacterService;
 import com.achersoft.tdcc.character.CharacterServiceImpl;
 import com.achersoft.tdcc.character.create.CharacterCreatorService;
@@ -63,7 +64,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                                    CharacterMapper.class,
                                    PartyMapper.class,
                                    VtdMapper.class,
-                                   VtdAdminMapper.class
+                                   VtdAdminMapper.class,
+                                   AccountMapper.class
                                  })
 public class SpringConfig {
     

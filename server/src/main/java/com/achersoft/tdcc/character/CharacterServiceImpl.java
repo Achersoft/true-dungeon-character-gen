@@ -1747,6 +1747,7 @@ public class CharacterServiceImpl implements CharacterService {
         final List<Integer> meleeWeaponHit = new ArrayList<>();
         final List<Integer> rangeWeaponHit = new ArrayList<>();
         AtomicBoolean hasFighterRelic = new AtomicBoolean(false);
+        AtomicBoolean hasWonderEffect = new AtomicBoolean(false);
         AtomicBoolean hasBenrows = new AtomicBoolean(false);
         AtomicBoolean canSemiLichCharm = new AtomicBoolean(true);
         AtomicBoolean hasSemiLichCharm = new AtomicBoolean(false);
@@ -1767,7 +1768,14 @@ public class CharacterServiceImpl implements CharacterService {
                 hasBenrows.set(true);
             if(item.getTokenFullDetails().getName().equals("Amulet of Noble Might") || item.getTokenFullDetails().getName().equals("Viv’s Amulet of Noble Might"))
                 hasFighterRelic.set(true);
-            
+            if (item.getTokenFullDetails().isWonderEffect()) {
+                if (hasWonderEffect.get()) {
+                    metCondition.add(ConditionalUse.NOT_WITH_OTHER_WONDER);
+                } else {
+                    hasWonderEffect.set(true);
+                }
+            }
+
             if(item.getTokenFullDetails().getId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
                 metCondition.add(ConditionalUse.NOT_WITH_ROSP);
             else if(item.getTokenFullDetails().getId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa")) {
@@ -1877,7 +1885,7 @@ public class CharacterServiceImpl implements CharacterService {
                 stats.setTreasureMin(stats.getTreasureMin() + 1);
                 stats.setTreasureMax(stats.getTreasureMax() + 1);
             }
-           
+
             if(item.getTokenFullDetails().getConditionalUse() != ConditionalUse.NONE) {
                 if (item.getTokenFullDetails().getConditionalUse().isPost())
                     postConditionalTokens.add(item);
@@ -1915,8 +1923,8 @@ public class CharacterServiceImpl implements CharacterService {
                     updateStats(item.getItem().getSlot(), stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, false);
                 }
             }
-        });   
-        
+        });
+
         // Check Conditionals 
         checkConditionals(conditionalTokens, metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
 
@@ -2357,6 +2365,16 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.ONE_OTHER_UR_TREASURE)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with more than one other treasure enchancing token that is UR or lower.");
+                        failedConditions.add(token);
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(token.getSlot(), stats, td, notes, false, false);
+                    }   break;
+                case NOT_WITH_OTHER_WONDER:
+                    if(metCondition.contains(ConditionalUse.NOT_WITH_OTHER_WONDER)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with other wonder effects.");
                         failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);

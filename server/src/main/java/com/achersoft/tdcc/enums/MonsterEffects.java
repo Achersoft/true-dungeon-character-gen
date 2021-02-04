@@ -8,7 +8,7 @@ public enum MonsterEffects {
     MELEE_OFFHAND_ON_20,
     RANGE_MAIN_ON_20,
     RANGE_OFFHAND_ON_20,
-    PHASING_EPIC;
+    PHASING_EPIC,
+    COLD_PIERCE,
+    SUBDUE;
 }
-
-
