@@ -19,6 +19,7 @@ public class CharacterSkill {
     private SkillType skillType;
     private SkillTarget skillTarget;
     private SkillStatEffect skillStatEffect;
+    private boolean aoe;
     private int usedNumber;
     private int usableNumber;
     private int minEffect;

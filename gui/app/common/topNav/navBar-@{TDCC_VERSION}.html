@@ -1,5 +1,5 @@
 <nav class="navbar navbar-default" ng-controller="PrivilegeCtrl as privilegeCheck">
-  <div class="container-fluid">
+  <div class="container-fluid" style="padding-right:0px">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
             <span class="icon-bar"></span>
@@ -51,6 +51,13 @@
                 <a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/contact"><b>Contact Us</b></a>
             </li>
         </ul>
+    
+        <ul class="nav navbar-nav navbar-right" style="font-size: 15px;background-color:#274d3b;">
+            <li class="dropdown">
+                <a href='https://ko-fi.com/H2H23NS3D' target='_blank'><span class="fa fa-gratipay"></span><b> Help Support TDCC</b></a>
+            </li>
+        </ul>
+
       <ul class="nav navbar-nav navbar-right">
         <li ng-if="!privilegeCheck.isLoggedIn()"><a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/login"><span class="fa fa-sign-in"></span><b>Login</b></a></li>
         <li ng-if="privilegeCheck.isLoggedIn()"><a data-toggle="collapse" data-target=".navbar-collapse.in" href="" ng-click="logout()"><span class="fa fa-sign-out"></span><b>Logout</b></a></li>

@@ -12,10 +12,3 @@ public enum MonsterEffects {
     COLD_PIERCE,
     SUBDUE;
 }
-
-//fix sheild bs -done
-//cleric turn undead
-//cabal sets ui
-//spell dr
-//mobile dr
-//share builds

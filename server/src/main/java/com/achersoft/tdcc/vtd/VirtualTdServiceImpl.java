@@ -243,6 +243,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasShamansBelt.set(true);
                     else if (characterItem.getItemId().equals("186c34894ca45e6acdd58a0d6cab9ef1be36e3ad"))
                         hasRangerLegendary.set(true);
+                    else if (characterItem.getItemId().equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65")) //Charm of the Cabal
+                        builder.charmCabalBonus(1);
+                    else if (characterItem.getItemId().equals("3dcfd7948a3c9196556ef7e069a36174396297ad")) //Gloves of the Cabal
+                        builder.glovesCabalBonus(1);
+                    else if (characterItem.getItemId().equals("f225241f60605ef641beeecd5003ba4129dbf46e"))  //Bracelets of the Cabal
+                        builder.braceletCabalBonus(1);
                     else if (characterItem.getItemId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3") ||
                              characterItem.getItemId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa"))
                         hasPrestigeClass.set(true);
@@ -255,15 +261,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         critTypes.add(CritType.ELEMENTAL);
                     else if (characterItem.getItemId().equals("99561249745b26c94a83e3e45be1acb4ef44cad2"))
                         critTypes.add(CritType.PLANT);
-                    else if (characterItem.getItemId().equals("2bc4f9b17575f86929e7c3e06656c0c3c79a6812") ||
-                            userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase("af42ca02-434b-4f9a-aa58-8d2e7000ee68"))
+                    else if (characterItem.getItemId().equals("2bc4f9b17575f86929e7c3e06656c0c3c79a6812") || userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase("af42ca02-434b-4f9a-aa58-8d2e7000ee68"))
                         critTypes.add(CritType.ANY);
-                    else if (characterItem.getItemId().equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65")) //Charm of the Cabal
-                        builder.charmCabalBonus(1);
-                    else if (characterItem.getItemId().equals("3dcfd7948a3c9196556ef7e069a36174396297ad")) //Gloves of the Cabal
-                        builder.glovesCabalBonus(1);
-                    else if (characterItem.getItemId().equals("f225241f60605ef641beeecd5003ba4129dbf46e")) //Bracelets of the Cabal
-                        builder.braceletCabalBonus(1);
                 }
             }
 
@@ -690,6 +689,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .monsters(VtdMonster.fromRoom(roomsByNumber, critTypes, meleeMainHit, meleeOffhandHit, rangeMainHit, rangeOffhandHit, characterDetails.getCharacterClass() == CharacterClass.RANGER, characterDetails.getStats().getLevel() == 5))
                     .availableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())))
                     .notes(characterDetails.getNotes())
+                    .items(characterDetails.getItems())
                     .characterSkills(characterSkills)
                     .buffs(new ArrayList<>())
                     .meleeDmgRange((mainHand.get() != null) ? mainHand.get().getDamageRange() : "0")
@@ -1247,6 +1247,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         vtdDetails.setCharacterSkills(vtdMapper.getCharacterSkills(vtdDetails.getCharacterId()));
         vtdDetails.setStats(vtdMapper.getCharacterStats(vtdDetails.getCharacterId()));
         vtdDetails.setNotes(mapper.getCharacterNotes(vtdDetails.getCharacterOrigId()));
+        vtdDetails.setItems(mapper.getCharacterItems(vtdDetails.getCharacterOrigId()));
         vtdDetails.setPolys(vtdMapper.getCharacterPolys(vtdDetails.getCharacterId()));
 
         final Set<CritType> critTypes = (vtdDetails.getCritTypes() == null || vtdDetails.getCritTypes().isEmpty()) ? new HashSet<>() : Arrays.stream(vtdDetails.getCritTypes().split(",")).map(CritType::valueOf).collect(Collectors.toSet());

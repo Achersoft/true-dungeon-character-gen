@@ -235,6 +235,15 @@ angular.module('main')
         }
     };
     
+    $scope.setBraceletCabalBonus =  function(bonus) {
+        if (bonus !== null && bonus >= 0) {
+            vtdSvc.setBraceletCabalBonus($scope.characterContext.id, bonus).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
+        }
+    };
+    
     $scope.activatePrestigeClass = function(id) {
         confirmDialogSvc.confirm("Are you sure you wish to activate prestige class?", function(){
             vtdSvc.activatePrestigeClass(id).then(function(result) {
@@ -3045,6 +3054,15 @@ angular.module('main')
         }
     };
     
+    $scope.setBraceletCabalBonus =  function(bonus) {
+        if (bonus !== null && bonus >= 0) {
+            vtdSvc.setBraceletCabalBonus($scope.characterContext.id, bonus).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });
+        }
+    };
+    
     $scope.activatePrestigeClass = function(id) {
         confirmDialogSvc.confirm("Are you sure you wish to activate prestige class?", function(){
             vtdSvc.activatePrestigeClass(id).then(function(result) {
@@ -3240,6 +3258,13 @@ angular.module('main')
     
     tokenAdminSvc.setHealthBonus = function(id, health) {
         return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/bonus/health/?health=' + health).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.setBraceletCabalBonus = function(id, bonus) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/bonus/bcabal/?bonus=' + bonus).catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });

@@ -1,5 +1,6 @@
 package com.achersoft.tdcc.vtd.dao;
 
+import com.achersoft.tdcc.character.dao.CharacterItem;
 import com.achersoft.tdcc.character.dao.CharacterNote;
 import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.enums.CharacterClass;
@@ -42,6 +43,7 @@ public class VtdDetails {
     private int rangeMainHit;
     private int rangeOffhandHit;
     private List<CharacterNote> notes;
+    private List<CharacterItem> items;
     private List<CharacterSkill> characterSkills;
     private List<VtdBuff> buffs;
     private List<VtdPoly> polys;

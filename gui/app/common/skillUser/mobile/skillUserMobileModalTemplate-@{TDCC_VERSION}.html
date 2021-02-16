@@ -126,11 +126,27 @@
     </div>
     <div ng-show="spellCast === true">
         <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px" ng-show="secondaryTargetIndex === 0 && model.skillType === 'HEAL'">
-            <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
-                {{model.name}} healed {{(targetIndex === 0) ? "target" : "yourself"}} for:
+            <div ng-if="!model.aoe">
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                    {{model.name}} healed {{(targetIndex === 0) ? "target" : "yourself"}} for:
+                </div>
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color:lime">
+                    {{primaryHealAmount}}
+                </div>
             </div>
-            <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color:lime">
-                {{primaryHealAmount}}
+            <div ng-if="model.aoe">
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                    {{model.name}} healed all party members for:
+                </div>
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color:lime">
+                    {{primaryHealAmount}}
+                </div>
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">
+                    And a pooled amount of:
+                </div>
+                <div class="col-xs-12 col-md-12 text-center" style="font-size:65px;color:lime">
+                    {{healPool}}
+                </div>
             </div>
         </div>
         <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px" ng-show="secondaryTargetIndex !== 0 && model.skillType === 'HEAL'">

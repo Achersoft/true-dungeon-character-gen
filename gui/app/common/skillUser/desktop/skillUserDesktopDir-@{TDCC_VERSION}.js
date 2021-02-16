@@ -21,6 +21,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
             scope.hitRollNatural = 0;
             scope.damage = 0;
             scope.damagePool = 0;
+            scope.healPool = 0;
             scope.primaryHealAmount = 0;
             scope.seconaryHealAmount = 0;
             scope.lohUseAmount = 1;
@@ -37,6 +38,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                 scope.hitRollNatural = 0;
                 scope.damage = 0;
                 scope.damagePool = 0;
+                scope.healPool = 0;
                 scope.secondaryTargetIndex = 0;
                 scope.skillCheckIndex = 0;
                 scope.primaryHealAmount = 0;
@@ -105,6 +107,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
             
             scope.useSkill = function(primaryAmount, seconaryHealAmount, lohAmount, markUse) {
                 if (scope.model.skillType === 'HEAL') {
+                    scope.healPool = 0;
                     if (scope.model.name === 'Lay on Hands') {
                         if (lohAmount < 1)
                             lohAmount = 1;
@@ -152,9 +155,10 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                                 scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null, markUse);
                             }
                         } else {
-                            scope.primaryHealAmount = totalHeal;
+                            scope.primaryHealAmount = (scope.model.aoe) ? ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect) : totalHeal;
                             scope.seconaryHealAmount = 0;
                             var selfHeal = 0;
+                            scope.healPool = (scope.model.aoe) ? scope.characterContext.stats.spellHeal : 0;
 
                             if (scope.targetIndex === 1 || scope.model.skillTarget === 'PARTY') {
                                 selfHeal = scope.primaryHealAmount;
@@ -164,13 +168,14 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     }
                 } else if (scope.model.skillType === 'DAMAGE') {
                     var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
-                    var totalDamage = (scope.model.name === 'Improved Turn Undead' || scope.model.name === 'Turn Undead') ? dmg : scope.characterContext.stats.spellDmg + dmg;
+                    var totalDamage = (scope.model.aoe) ? dmg : scope.characterContext.stats.spellDmg + dmg;
                     var madEvoker = false;
+                    scope.damagePool = (scope.model.aoe) ? scope.characterContext.stats.spellDmg : 0;
                     
                     if (scope.madEvokerIndex === 1) {
                         madEvoker = true;
-                        if (scope.model.name === 'Fireball' || scope.model.name === 'Lightning Storm' || scope.model.name === 'Burning Hands' || scope.model.name === 'Prismatic Spray' || scope.model.name === 'Stone Storm')
-                            scope.damagePool = dmg;
+                        if (scope.model.aoe)
+                            scope.damagePool += dmg;
                         else 
                             totalDamage += dmg;
                     }

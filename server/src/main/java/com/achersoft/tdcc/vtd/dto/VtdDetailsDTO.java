@@ -1,6 +1,7 @@
 package com.achersoft.tdcc.vtd.dto;
 
 import com.achersoft.tdcc.character.dao.CharacterStats;
+import com.achersoft.tdcc.character.dto.CharacterDetailsDTO;
 import com.achersoft.tdcc.enums.*;
 import com.achersoft.tdcc.vtd.admin.dao.VtdRoom;
 import com.achersoft.tdcc.vtd.dao.CharacterSkill;
@@ -33,6 +34,7 @@ public class VtdDetailsDTO {
     public int initBonus;
     public int healthBonus;
     public int glovesCabalBonus;
+    public boolean hasBraceletCabal;
     public int braceletCabalBonus;
     public int charmCabalBonus;
     public int roomNumber;
@@ -99,8 +101,22 @@ public class VtdDetailsDTO {
     public boolean mightyWeapon;
     public boolean prestigeAvailable;
     public boolean prestigeActive;
+    public VtdItemsDTO items;
     
     public static VtdDetailsDTO fromDAO(VtdDetails dao) {
+        if (dao.getBraceletCabalBonus() >= 1) {
+            if (dao.getBraceletCabalBonus() >= 5) {
+                dao.getStats().setSpellDmg(dao.getStats().getSpellDmg() + 3);
+                dao.getStats().setSpellHeal(dao.getStats().getSpellHeal() + 3);
+            } else if (dao.getBraceletCabalBonus() >= 3) {
+                dao.getStats().setSpellDmg(dao.getStats().getSpellDmg() + 2);
+                dao.getStats().setSpellHeal(dao.getStats().getSpellHeal() + 2);
+            } else  {
+                dao.getStats().setSpellDmg(dao.getStats().getSpellDmg() + 1);
+                dao.getStats().setSpellHeal(dao.getStats().getSpellHeal() + 1);
+            }
+        }
+
         VtdDetailsDTO build = VtdDetailsDTO.builder()
                 .id(dao.getCharacterId())
                 .name(dao.getName())
@@ -113,6 +129,7 @@ public class VtdDetailsDTO {
                 .initBonus(dao.getInitBonus())
                 .healthBonus(dao.getHealthBonus())
                 .glovesCabalBonus(dao.getGlovesCabalBonus())
+                .hasBraceletCabal(dao.getBraceletCabalBonus() >= 1)
                 .braceletCabalBonus(dao.getBraceletCabalBonus())
                 .charmCabalBonus(dao.getCharmCabalBonus())
                 .roomNumber(dao.getRoomNumber())
@@ -174,6 +191,7 @@ public class VtdDetailsDTO {
                 .madEvoker(dao.isMadEvoker())
                 .prestigeAvailable(dao.isPrestigeAvailable())
                 .prestigeActive(dao.isPrestigeActive())
+                .items(VtdItemsDTO.fromDAO(dao.getItems()))
                 .build();
 
         if (dao.getCharacterSkills() != null) {

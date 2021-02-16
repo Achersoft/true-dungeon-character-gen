@@ -121,6 +121,16 @@ public class VtdRestService {
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @POST
+    @Path("/{id}/bonus/bcabal")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO setBonusBraceletsOfCabal(@PathParam("id") String id,
+                                                  @QueryParam("bonus") int bonus) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.setBonusBraceletCabal(id, bonus));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
     @Path("/{id}/health")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
