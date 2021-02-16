@@ -32,6 +32,9 @@ public class VtdDetailsDTO {
     public int rollerDifficulty;
     public int initBonus;
     public int healthBonus;
+    public int glovesCabalBonus;
+    public int braceletCabalBonus;
+    public int charmCabalBonus;
     public int roomNumber;
     public List<VtdMonster> monsters;
     public List<InGameEffect> effects;
@@ -109,6 +112,9 @@ public class VtdDetailsDTO {
                 .rollerDifficulty(dao.getRollerDifficulty())
                 .initBonus(dao.getInitBonus())
                 .healthBonus(dao.getHealthBonus())
+                .glovesCabalBonus(dao.getGlovesCabalBonus())
+                .braceletCabalBonus(dao.getBraceletCabalBonus())
+                .charmCabalBonus(dao.getCharmCabalBonus())
                 .roomNumber(dao.getRoomNumber())
                 .monsters(dao.getMonsters())
                 .effects(new ArrayList<>())

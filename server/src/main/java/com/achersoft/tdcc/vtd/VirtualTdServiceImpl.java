@@ -54,6 +54,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             .userId(userid)
                             .characterClass(vtdDetail.getCharacterClass())
                             .level(characterStats.getLevel())
+                            .deletable(true)
                             .build();
                 return null;
             }).filter(Objects::nonNull).collect(Collectors.toSet()));
@@ -75,6 +76,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
+    public List<CharacterName> importCharacter(String id) {
+        getVtdCharacter(id, true,false);
+        return getSelectableCharacters();
+    }
+
+    @Override
     public VtdDetails getVtdCharacter(String id, boolean reset, boolean activatePrestige) {
         VtdDetails vtdDetails = vtdMapper.getCharacter(id);
 
@@ -89,16 +96,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             String origId = id;
             CharacterDetails characterDetails = null;
 
-            if (vtdDetails != null && vtdDetails.getName().contains("-VTD-Pregen")) {
-                final String pregenClass = vtdDetails.getName().replace("-VTD-Pregen", "");
-                List<CharacterName> pregenCharacters = mapper.getCharacters("pregen");
-                if (pregenCharacters != null) {
-                    final CharacterName pregenCharacterName = pregenCharacters.stream().filter(characterName -> characterName.getName().equalsIgnoreCase(pregenClass)).findFirst().orElse(null);
-                    if (pregenCharacterName != null) {
-                        characterDetails = characterService.getCharacter(pregenCharacterName.getId());
-                        origId = pregenCharacterName.getId();
-                    }
-                }
+            if (vtdDetails != null && vtdDetails.getCharacterOrigId() != null && !vtdDetails.getCharacterOrigId().isEmpty() && !vtdDetails.getCharacterOrigId().equals(id)) {
+                characterDetails = characterService.getCharacter(vtdDetails.getCharacterOrigId());
+                origId = vtdDetails.getCharacterOrigId();
             } else
                 characterDetails = characterService.getCharacter(id);
 
@@ -135,7 +135,30 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     return calculateStats(characterByName.getCharacterId());
                 }
             } else if (!characterDetails.isEditable()) {
-                throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
+                origId = characterDetails.getId();
+                final VtdDetails characterByName = vtdMapper.getCharacterByName(userPrincipalProvider.getUserPrincipal().getSub(), characterDetails.getName() + "-" + characterDetails.getUsername());
+                if (characterByName == null) {
+                    characterDetails.setId(UUID.randomUUID().toString());
+                    characterDetails.setUserId(userPrincipalProvider.getUserPrincipal().getSub());
+                    characterDetails.setName(characterDetails.getName() + "-" + characterDetails.getUsername());
+                    characterDetails.getStats().setCharacterId(characterDetails.getId());
+                } else if(reset || characterByName.getExpires().before(new Date())) {
+                    vtdMapper.deleteCharacterPolys(characterByName.getCharacterId());
+                    vtdMapper.deleteCharacterBuffs(characterByName.getCharacterId());
+                    vtdMapper.deleteCharacterSkills(characterByName.getCharacterId());
+                    vtdMapper.deleteCharacterStats(characterByName.getCharacterId());
+                    vtdMapper.deleteCharacter(characterByName.getCharacterId());
+
+                    characterDetails.setId(UUID.randomUUID().toString());
+                    characterDetails.setUserId(userPrincipalProvider.getUserPrincipal().getSub());
+                    characterDetails.setName(characterDetails.getName() + "-" + characterDetails.getUsername());
+                    characterDetails.getStats().setCharacterId(characterDetails.getId());
+                } else {
+                    characterByName.setExpires(new Date(new Date().getTime() + 86400000));
+                    vtdMapper.updateCharacter(characterByName);
+
+                    return calculateStats(characterByName.getCharacterId());
+                }
             }
 
             vtdMapper.deleteCharacterPolys(id);
@@ -224,8 +247,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                              characterItem.getItemId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa"))
                         hasPrestigeClass.set(true);
                     else if (characterItem.getItemId().equals("afd90da9d4f05dbce780a2befb67cd1d47187782") ||
-                             characterItem.getItemId().equals("80fdb7fe44986e27f987260c94d2fedebda46888") ||
-                             characterItem.getItemId().equals("69174ff87b87325b034df0adc38d418859a11a09"))
+                             characterItem.getItemId().equals("80fdb7fe44986e27f987260c94d2fedebda46888"))
                         critTypes.add(CritType.CONSTRUCT);
                     else if (characterItem.getItemId().equals("65cf6807e85d0ef42294e339ad83c65c4436a61b"))
                         critTypes.add(CritType.UNDEAD);
@@ -236,6 +258,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     else if (characterItem.getItemId().equals("2bc4f9b17575f86929e7c3e06656c0c3c79a6812") ||
                             userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase("af42ca02-434b-4f9a-aa58-8d2e7000ee68"))
                         critTypes.add(CritType.ANY);
+                    else if (characterItem.getItemId().equals("1c688491fcb8a12199e9eca6d97e3da5ef4f3d65")) //Charm of the Cabal
+                        builder.charmCabalBonus(1);
+                    else if (characterItem.getItemId().equals("3dcfd7948a3c9196556ef7e069a36174396297ad")) //Gloves of the Cabal
+                        builder.glovesCabalBonus(1);
+                    else if (characterItem.getItemId().equals("f225241f60605ef641beeecd5003ba4129dbf46e")) //Bracelets of the Cabal
+                        builder.braceletCabalBonus(1);
                 }
             }
 
@@ -749,6 +777,60 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
+    public VtdDetails setBonusBraceletCabal(String id, int bonus) {
+        final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
+            throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
+
+        if (bonus < 1)
+            bonus = 1;
+
+        if (vtdDetails.getBraceletCabalBonus() > 0) {
+            vtdDetails.setBraceletCabalBonus(bonus);
+            vtdMapper.updateCharacter(vtdDetails);
+        }
+
+        return calculateStats(id);
+    }
+
+    @Override
+    public VtdDetails setBonusGloveCabal(String id, int bonus) {
+        final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
+            throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
+
+        if (bonus < 1)
+            bonus = 1;
+
+        if (vtdDetails.getGlovesCabalBonus() > 0) {
+            vtdDetails.setGlovesCabalBonus(bonus);
+            vtdMapper.updateCharacter(vtdDetails);
+        }
+
+        return calculateStats(id);
+    }
+
+    @Override
+    public VtdDetails setBonusCharmCabal(String id, int bonus) {
+        final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
+            throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
+
+        if (bonus < 1)
+            bonus = 1;
+
+        if (vtdDetails.getCharmCabalBonus() > 0) {
+            vtdDetails.setCharmCabalBonus(bonus);
+            vtdMapper.updateCharacter(vtdDetails);
+        }
+
+        return calculateStats(id);
+    }
+
+    @Override
     public VtdDetails modifyHealth(String id, int health) {
         final VtdDetails vtdDetails = vtdMapper.getCharacter(id);
         final CharacterStats characterStats = vtdMapper.getCharacterStats(vtdDetails.getCharacterId());
@@ -1130,6 +1212,24 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     @Override
     public VtdDetails resetCharacter(String id) {
         return getVtdCharacter(id, true, false);
+    }
+
+    @Override
+    public List<CharacterName> deleteCharacter(String id) {
+        VtdDetails vtdDetails = vtdMapper.getCharacter(id);
+
+        if (vtdDetails == null)
+            return getSelectableCharacters();
+        if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(vtdDetails.getUserId())))
+            throw new InvalidDataException("Virtual True Dungeon is only for your own characters.");
+
+        vtdMapper.deleteCharacterPolys(id);
+        vtdMapper.deleteCharacterBuffs(id);
+        vtdMapper.deleteCharacterSkills(id);
+        vtdMapper.deleteCharacterStats(id);
+        vtdMapper.deleteCharacter(id);
+
+        return getSelectableCharacters();
     }
 
     @Override

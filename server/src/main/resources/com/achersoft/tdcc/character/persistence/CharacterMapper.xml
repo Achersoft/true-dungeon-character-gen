@@ -353,7 +353,9 @@
                character_stats cs
          WHERE cn.user_id = #{userId}
            AND cn.id = cs.id
-           AND cn.character_class = #{characterClass}
+        <if test="!characterClass.name().equals('ALL')">
+            AND cn.character_class = #{characterClass}
+        </if>
       ORDER BY cn.name
     </select>  
     

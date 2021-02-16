@@ -33,6 +33,9 @@ public class VtdDetails {
     private int rollerDifficulty;
     private int initBonus;
     private int healthBonus;
+    private int glovesCabalBonus;
+    private int braceletCabalBonus;
+    private int charmCabalBonus;
     private int roomNumber = 0;
     private int meleeMainHit;
     private int meleeOffhandHit;

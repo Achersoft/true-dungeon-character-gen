@@ -1759,6 +1759,8 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicInteger additionalTreasureTokens = new AtomicInteger(0);
         AtomicInteger iounStoneCount = new AtomicInteger(0);
         AtomicInteger meleeShieldAc = new AtomicInteger(0);
+        AtomicInteger meleeShieldStr = new AtomicInteger(0);
+        AtomicInteger rangeShieldStr = new AtomicInteger(0);
         AtomicReference<String> sheildId = new AtomicReference<>("");
 
         itemDetailsMap.values().stream().filter((item) -> item.getItem().getItemId()!=null).forEach((item) -> {
@@ -1899,6 +1901,8 @@ public class CharacterServiceImpl implements CharacterService {
                         item.getItem().setStatusText(null);
                         stats.setMeleeAC(stats.getMeleeAC()+ item.getTokenFullDetails().getMeleeAC());
                         meleeShieldAc.set(item.getTokenFullDetails().getMeleeAC());
+                        meleeShieldStr.set(item.getTokenFullDetails().getStr());
+                        item.getTokenFullDetails().setStr(0);
 
                         if (sheildId.get().isEmpty() || !sheildId.get().equals(item.getTokenFullDetails().getId()))
                             updateStats(item.getItem().getSlot(), stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
@@ -1910,6 +1914,8 @@ public class CharacterServiceImpl implements CharacterService {
                         item.getItem().setStatusText(null);
                         stats.setRangeAC(stats.getRangeAC() + item.getTokenFullDetails().getRangeAC());
                         stats.setRangeMissileAC(stats.getRangeMissileAC() + item.getTokenFullDetails().getRangeMissileAC());
+                        rangeShieldStr.set(item.getTokenFullDetails().getStr());
+                        item.getTokenFullDetails().setStr(0);
 
                         if (sheildId.get().isEmpty() || !sheildId.get().equals(item.getTokenFullDetails().getId()))
                             updateStats(item.getItem().getSlot(), stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, true);
@@ -1928,7 +1934,7 @@ public class CharacterServiceImpl implements CharacterService {
         // Check Conditionals 
         checkConditionals(conditionalTokens, metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
 
-        stats.setStrBonus((stats.getStr()-10 > 0)?(stats.getStr()-10)/2:(stats.getStr()-11)/2);
+        stats.setStrBonus((stats.getStr()+meleeShieldStr.get()-10 > 0)?(stats.getStr()+meleeShieldStr.get()-10)/2:(stats.getStr()+meleeShieldStr.get()-11)/2);
         stats.setDexBonus((stats.getDex()-10 > 0)?(stats.getDex()-10)/2:(stats.getDex()-11)/2);
         stats.setConBonus((stats.getCon()-10 > 0)?(stats.getCon()-10)/2:(stats.getCon()-11)/2);
         stats.setIntelBonus((stats.getIntel()-10 > 0)?(stats.getIntel()-10)/2:(stats.getIntel()-11)/2);
@@ -1991,8 +1997,14 @@ public class CharacterServiceImpl implements CharacterService {
         
         if (hasSemiLichCharm.get()) 
             stats.setHealth(stats.getHealth() + stats.getPsychicLevel());
-        if(mightyRanged.get() == 1)
-            stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
+        if(mightyRanged.get() == 1) {
+            if (rangeShieldStr.get() > 0) {
+                int str = stats.getStr() + rangeShieldStr.get();
+                int strBonus = (str-10 > 0)?(str-10)/2:(str-11)/2;
+                stats.setRangeDmg(stats.getRangeDmg() + strBonus);
+            } else
+                stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
+        }
             
         long figurineCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FIGURINE).count();
         if(stats.getCha() >= 16) {

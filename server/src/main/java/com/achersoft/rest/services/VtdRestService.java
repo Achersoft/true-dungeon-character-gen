@@ -58,6 +58,20 @@ public class VtdRestService {
         return Buff.getSelectableBuffs().stream().map(BuffDTO::fromDAO).collect(Collectors.toList());
     }
 
+    @POST
+    @Path("/import/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<CharacterName> importCharacter(@PathParam("id") String id) throws Exception {
+        return virtualTdService.importCharacter(id);
+    }
+
+    @DELETE
+    @Path("/import/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<CharacterName> deleteImportedCharacter(@PathParam("id") String id) throws Exception {
+        return virtualTdService.deleteCharacter(id);
+    }
+
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @GET 
     @Path("/{id}")

@@ -31,6 +31,20 @@ angular.module('main')
             });
         }
     };
+    
+    $scope.addCharacter = function(characterId) {
+        vtdSvc.importCharacter(characterId).then(function(result) {
+            $scope.myCharacterContext = result.data;
+        });
+    };
+    
+    $scope.deleteCharacter = function(id, name){
+        confirmDialogSvc.confirm("Are you sure you wish to delete character " + name +"?", function(){
+           vtdSvc.deleteCharacter(id).then(function(result) {
+                $scope.myCharacterContext = result.data;
+            });
+        });
+    };
 }])
 
 .controller('VtdPlayDesktopCtrl', ['$scope', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', 'WarnDialogSvc', 'MonsterSelectorSvc', function ($scope, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, confirmDialogSvc, warnDialogSvc, monsterSelectorSvc) {
@@ -1276,7 +1290,7 @@ angular.module('main')
                 mDmg = 0;
             
             if (monster.universalDr !==0) {
-                if (mDmgTotal > 0)
+                if (mDmgTotal > 0 && !($scope.characterContext.poly.name === "Iktomi’s Shaper Necklace - Ice" && monster.monsterEffects.includes("COLD_PIERCE")))
                     mDmgTotal -= monster.universalDr;
             }
             if (monster.meleeDr !==0) {
@@ -2171,31 +2185,13 @@ angular.module('main')
                 }  
             }
             
-            if (monster.critical && hitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
-                if (hitRoll === 20) {
-                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
-                        mCritDmg = mDmgTotal * 3;
-                    else 
-                        mCritDmg = mDmgTotal * 2;
-                } else {
-                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
-                        mCritDmg = mDmgTotal * 3;
-                    else
-                        mCritDmg = mDmgTotal * 2;
-                }
-                var buff = $scope.hasBuff("Fury");
-                if (buff !== null) 
-                    $scope.removeBuff(buff);
-            } else if ($scope.hasBuff("Fury")) {
-                var buff = $scope.hasBuff("Fury");
-                if (buff !== null) {
-                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
-                        mCritDmg = mDmgTotal * 3;
-                    else
-                        mCritDmg = mDmgTotal * 2;
-                    
-                    $scope.removeBuff(buff);
-                }
+             if (monster.universalDr !==0) {
+                if (mDmgTotal > 0)
+                    mDmgTotal -= Math.round(monster.universalDr * .5);
+            }
+            if (monster.meleeDr !==0) {
+                if (mDmgTotal > 0)
+                    mDmgTotal -= Math.round(monster.meleeDr * .5);
             }
 
             vtdHistory.add({"type":"ATTACK","sub":"MELEE_SUBDUAL","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
@@ -2390,7 +2386,7 @@ angular.module('main')
             var monster = null;
         
             if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
-                if (($scope.attackIndex === 0 && $scope.characterContext.meleeDmgRange.length > 0) || ($scope.attackIndex === 1 && $scope.characterContext.rangeDmgRange.length > 0) || ($scope.attackIndex === 2 && $scope.characterContext.meleePolyDmgRange.length > 0) || ($scope.attackIndex === 9 && $scope.characterContext.meleeDmgRange.length > 0)) {
+                if (($scope.attackIndex === 0 && $scope.characterContext.meleeDmgRange.length > 0) || ($scope.attackIndex === 1 && $scope.characterContext.rangeDmgRange.length > 0) || ($scope.attackIndex === 2 && $scope.characterContext.meleePolyDmgRange.length > 0) || ($scope.attackIndex === 9 && $scope.characterContext.meleeDmgRange.length > 0) || $scope.attackIndex === 11) {
                     $scope.rollHitNatural = $scope.getRandomInt(20) + 1;
                     $scope.rollHit = $scope.rollHitNatural;
                 }
@@ -2405,7 +2401,7 @@ angular.module('main')
                 return;
             } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
                 monster = monsterIndex;
-                if (($scope.attackIndex === 0 && $scope.characterContext.meleeDmgRange.length > 0) || ($scope.attackIndex === 1 && $scope.characterContext.rangeDmgRange.length > 0) || ($scope.attackIndex === 2 && $scope.characterContext.meleePolyDmgRange.length > 0) || ($scope.attackIndex === 9 && $scope.characterContext.meleeDmgRange.length > 0)) {
+                if ($scope.attackIndex === 11 || ($scope.attackIndex === 0 && $scope.characterContext.meleeDmgRange.length > 0) || ($scope.attackIndex === 1 && $scope.characterContext.rangeDmgRange.length > 0) || ($scope.attackIndex === 2 && $scope.characterContext.meleePolyDmgRange.length > 0) || ($scope.attackIndex === 9 && $scope.characterContext.meleeDmgRange.length > 0)) {
                     $scope.rollHitNatural = monster.roller[$scope.getRandomInt(monster.roller.length)];
                     $scope.rollHit = $scope.rollHitNatural;
                 }
@@ -2415,7 +2411,7 @@ angular.module('main')
                 }
             } else {
                 monster = $scope.characterContext.monsters[0];
-                if (($scope.attackIndex === 0 && $scope.characterContext.meleeDmgRange.length > 0) || ($scope.attackIndex === 1 && $scope.characterContext.rangeDmgRange.length > 0) || ($scope.attackIndex === 2 && $scope.characterContext.meleePolyDmgRange.length > 0) || ($scope.attackIndex === 9 && $scope.characterContext.meleeDmgRange.length > 0)) {
+                if ($scope.attackIndex === 11 || ($scope.attackIndex === 0 && $scope.characterContext.meleeDmgRange.length > 0) || ($scope.attackIndex === 1 && $scope.characterContext.rangeDmgRange.length > 0) || ($scope.attackIndex === 2 && $scope.characterContext.meleePolyDmgRange.length > 0) || ($scope.attackIndex === 9 && $scope.characterContext.meleeDmgRange.length > 0)) {
                     $scope.rollHitNatural = monster.roller[$scope.getRandomInt(monster.roller.length)];
                     $scope.rollHit = $scope.rollHitNatural;
                 }
@@ -2619,6 +2615,15 @@ angular.module('main')
                                 }
                             }
                         }
+                    }
+                }  else if ($scope.attackIndex === 11) {
+                    if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
+                            $scope.rollHit = 1;    
+                    } else {
+                        $scope.rollHit += $scope.characterContext.stats.meleeHit;
+                        $scope.rollDmg = $scope.characterContext.stats.meleeDmg;
+                        $scope.rollDmgNatural = 1;
+                        $scope.rollDmg += $scope.rollDmgNatural;
                     }
                 } else if ($scope.attackIndex === 9) {
                     if ($scope.sneakIndex === 0) {
@@ -3190,6 +3195,22 @@ angular.module('main')
     
     tokenAdminSvc.getBuffs = function() {
         return $http.get(RESOURCES.REST_BASE_URL + '/vtd/buffs')
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    tokenAdminSvc.importCharacter = function(id) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/import/' + id)
+            .catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+    };
+    
+    tokenAdminSvc.deleteCharacter = function(id) {
+        return $http.delete(RESOURCES.REST_BASE_URL + '/vtd/import/' + id)
             .catch(function(response) {
                 errorDialogSvc.showError(response);
                 return($q.reject(response));

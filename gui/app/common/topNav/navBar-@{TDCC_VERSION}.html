@@ -41,7 +41,7 @@
                 </ul>
             </li>
         </ul>
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav" ng-if="privilegeCheck.isUserAuthorized('ADMIN')">
             <li class="dropdown">
                 <a data-toggle="collapse" data-target=".navbar-collapse.in" href="#/account"><b>My Account</b></a>
             </li>

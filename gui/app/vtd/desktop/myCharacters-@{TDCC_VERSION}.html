@@ -4,6 +4,8 @@
         <toggle-switch style="width: 300px" ng-model="pregenerated" knob-label="Pregenerated" ng-click="toggleCharacters(pregenerated)"></toggle-switch>
     </center>
 
+    <vtd-import-desktop style="position: absolute;top:45px" ng-if="!pregenerated" add-character="addCharacter"></vtd-import-desktop>
+    
     <div class="table-responsive" style="border:none;margin-top:10px">          
         <table class="table table-striped">
             <thead>
@@ -12,14 +14,16 @@
                     <th>Class</th>
                     <th>Level</th>
                     <th>Last Modified</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat-start="myCharacter in myCharacterContext" ng-repeat-end>
-                    <td><a ng-href="#/vtd/play/{{myCharacter.id}}">{{myCharacter.name | limitTo : 25}}</a></td>
+                    <td><a ng-href="#/vtd/play/{{myCharacter.id}}">{{myCharacter.name | limitTo : 50}}</a></td>
                     <td>{{myCharacter.characterClass | characterclassformat}}</td>
                     <td>{{myCharacter.level}}</td>
                     <td>{{myCharacter.lastModified | date: 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                    <td><a ng-if="myCharacter.deletable" ng-click="deleteCharacter(myCharacter.id, myCharacter.name)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
                 </tr>
             </tbody>
         </table>

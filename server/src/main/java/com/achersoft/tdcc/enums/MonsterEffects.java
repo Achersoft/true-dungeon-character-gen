@@ -13,6 +13,9 @@ public enum MonsterEffects {
     SUBDUE;
 }
 
-fix sheild bs
-cleric turn undead
-cabal sets
+//fix sheild bs -done
+//cleric turn undead
+//cabal sets ui
+//spell dr
+//mobile dr
+//share builds

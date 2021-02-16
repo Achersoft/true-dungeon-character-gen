@@ -12,10 +12,14 @@ import java.util.List;
 public interface VirtualTdService {
     List<CharacterName> getSelectableCharacters();
     List<CharacterName> getPregeneratedCharacters();
+    List<CharacterName> importCharacter(String id);
     VtdDetails getVtdCharacter(String id, boolean reset, boolean activatePrestige);
     VtdDetails modifyDifficulty(String id, int difficulty);
     VtdDetails setBonusInit(String id, int init);
     VtdDetails setBonusHealth(String id, int health);
+    VtdDetails setBonusBraceletCabal(String id, int bonus);
+    VtdDetails setBonusGloveCabal(String id, int bonus);
+    VtdDetails setBonusCharmCabal(String id, int bonus);
     VtdDetails modifyHealth(String id, int health);
     VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect, boolean markUse, boolean ignoreUse);
     VtdDetails unuseSkill(String id, String skillId);
@@ -28,5 +32,6 @@ public interface VirtualTdService {
     VtdDetails setCompanion(String id, String polyId);
     VtdDetails setAdventure(String id, String passcode);
     VtdDetails resetCharacter(String id);
+    List<CharacterName> deleteCharacter(String id);
     VtdDetails activatePrestigeClass(String id);
 }

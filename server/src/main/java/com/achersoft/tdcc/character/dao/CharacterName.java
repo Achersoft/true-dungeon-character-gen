@@ -18,4 +18,5 @@ public class CharacterName {
     private Date createdOn;
     private Date lastModified;
     private int level;
+    private boolean deletable;
 }
