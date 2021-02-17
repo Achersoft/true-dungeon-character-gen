@@ -25,4 +25,20 @@ public class CharacterSkill {
     private int minEffect;
     private int maxEffect;
     private boolean oncePerRoom;
+    private boolean isCold;
+    private boolean isFire;
+    private boolean isShock;
+    private boolean isSonic;
+    private boolean isPoison;
+    private boolean isSacred;
+    private boolean isDarkrift;
+    private boolean isAcid;
+    private @Builder.Default int coldBonus = 0;
+    private @Builder.Default int fireBonus = 0;
+    private @Builder.Default int shockBonus = 0;
+    private @Builder.Default int sonicBonus = 0;
+    private @Builder.Default int poisonBonus = 0;
+    private @Builder.Default int sacredBonus = 0;
+    private @Builder.Default int darkriftBonus = 0;
+    private @Builder.Default int acidBonus = 0;
 }

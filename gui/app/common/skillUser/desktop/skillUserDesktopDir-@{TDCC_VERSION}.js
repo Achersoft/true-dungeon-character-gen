@@ -182,6 +182,8 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     
                     scope.damage = totalDamage;
                     
+                     scope.applyDr();
+                    
                     if(scope.monster.monsterEffects) {
                         if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
                             scope.damage = 0;
@@ -218,6 +220,8 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     }
                     
                     scope.damage = totalDamage;
+                    
+                    scope.applyDr();
                     
                     if(scope.monster.monsterEffects) {
                         if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
@@ -288,13 +292,15 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     
                     if (scope.madEvokerIndex === 1) {
                         madEvoker = true;
-                        if (scope.model.name === 'Fireball' || scope.model.name === 'Lightning Storm' || scope.model.name === 'Burning Hands' || scope.model.name === 'Prismatic Spray' || scope.model.name === 'Stone Storm')
+                        if (scope.model.aoe)
                             scope.damagePool = dmg;
                         else 
                             totalDamage += dmg;
                     }
                     
                     scope.damage = totalDamage;
+                    
+                    scope.applyDr();
                     
                     if(scope.monster.monsterEffects) {
                         if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
@@ -333,6 +339,8 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     
                     scope.damage = totalDamage;
                     
+                    scope.applyDr();
+                    
                     if(scope.monster.monsterEffects) {
                         if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
                             scope.damage = 0;
@@ -364,6 +372,64 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     scope.closeModal();
                 }
             }; 
+            
+            scope.applyDr = function() {
+                var damageDelta = 0;
+                
+                if (scope.monster.rangeDr !== 0) {
+                    damageDelta += scope.monster.rangeDr;
+                } if (scope.monster.universalDr !== 0) {
+                    damageDelta += scope.monster.universalDr;
+                } if (scope.monster.fire !== 0 && scope.model.fire) {
+                    damageDelta += scope.monster.fire;
+                } if (scope.monster.cold !== 0 && scope.model.cold) {
+                    damageDelta += scope.monster.cold;
+                } if (scope.monster.shock !== 0 && scope.model.shock) {
+                    damageDelta += scope.monster.shock;
+                } if (scope.monster.sonic !== 0 && scope.model.sonic) {
+                    damageDelta += scope.monster.sonic;
+                } if (scope.monster.poison !== 0 && scope.model.poison) {
+                    damageDelta += scope.monster.poison;
+                } if (scope.monster.sacred !== 0 && scope.model.sacred) {
+                    damageDelta += scope.monster.sacred;
+                } if (scope.monster.darkrift !== 0 && scope.model.darkrift) {
+                    damageDelta += scope.monster.darkrift;
+                } if (scope.monster.acid !== 0 && scope.model.acid) {
+                    damageDelta += scope.monster.acid;
+                }
+                
+                if (damageDelta !== 0) {
+                    if (scope.damagePool === 0) {
+                        if (damageDelta < 0) {
+                            if (damageDelta*-1 > scope.damage)
+                                scope.damage += scope.damage;
+                            else
+                                scope.damage += damageDelta*-1;
+                        } else 
+                            scope.damage -= damageDelta; 
+                    } else if (scope.damagePool > 0) {
+                        if (damageDelta < 0) {
+                            if (damageDelta*-1 > scope.damagePool) {
+                                var poolDelta = damageDelta*-1 - scope.damagePool;
+                                scope.damagePool += scope.damagePool;
+                                if (poolDelta > scope.damage)
+                                    scope.damagePool += scope.damage;
+                                else
+                                    scope.damagePool += poolDelta;
+                            } else
+                                scope.damagePool += damageDelta*-1;
+                        } else
+                            scope.damagePool -= damageDelta; 
+                    }
+                    if (scope.damagePool < 0) {
+                        scope.damage -= scope.damagePool; 
+                        scope.damagePool = 0;
+                    }
+                    if (scope.damage < 0) {
+                        scope.damage = 0;
+                    }
+                }
+            };
             
             scope.markSkill = function() {
                 scope.useAbility()(scope.model.id, false, 0, false, 0, null, true, true);

@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -204,6 +205,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasShamansBelt = new AtomicBoolean(false);
             final AtomicBoolean hasRangerLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasPrestigeClass = new AtomicBoolean(false);
+            final AtomicBoolean hasPelor = new AtomicBoolean(false);
+            final AtomicInteger turnUndeadDamage = new AtomicInteger(0);
             final Set<CritType> critTypes = new HashSet<>();
 
             for (CharacterItem characterItem : characterDetails.getItems()) {
@@ -252,6 +255,16 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     else if (characterItem.getItemId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3") ||
                              characterItem.getItemId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa"))
                         hasPrestigeClass.set(true);
+                    else if (characterItem.getItemId().equals("1ec328d0a1f1144b23fdd400412553a00df1b7b0"))  //Acolyte Holy Symbol
+                        turnUndeadDamage.set(1);
+                    else if (characterItem.getItemId().equals("1a1f740907d508cff6ca662ef11a83ec6f184806"))  //Commander’s Holy Symbol
+                        turnUndeadDamage.set(2);
+                    else if (characterItem.getItemId().equals("786e8cf2deed99f909facb6aaa9d58768a663f66"))  //Greater Holy Symbol
+                        turnUndeadDamage.set(2);
+                    else if (characterItem.getItemId().equals("972f6a25ff5823aa7b51ef56bf9f2b8d0b8c3da6"))  //Masterwork Holy Symbol
+                        turnUndeadDamage.set(1);
+                    else if (characterItem.getItemId().equals("29dd33d000f88cbd3a571551382d9f17d2b54fbc"))  //Greater Holy Symbol of Pelor
+                        hasPelor.set(true);
                     else if (characterItem.getItemId().equals("afd90da9d4f05dbce780a2befb67cd1d47187782") ||
                              characterItem.getItemId().equals("80fdb7fe44986e27f987260c94d2fedebda46888"))
                         critTypes.add(CritType.CONSTRUCT);
@@ -315,6 +328,19 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         if (rangeMainHand.get() != null && rangeMainHand.get().getCritMin() > 18)
                             rangeMainHand.get().setCritMin(18);
                         critTypes.add(CritType.ANY);
+                    }
+                    if (hasPelor.get()) {
+                        characterSkills.stream().filter(characterSkill -> characterSkill.getName().contains("Turn Undead")).forEach(skill -> {
+                            skill.setMinEffect(skill.getMinEffect()*2);
+                            skill.setMaxEffect(skill.getMaxEffect()*2);
+                            vtdMapper.updateCharacterSkill(skill);
+                        });
+                    } else if (turnUndeadDamage.get() > 0) {
+                        characterSkills.stream().filter(characterSkill -> characterSkill.getName().contains("Turn Undead")).forEach(skill -> {
+                            skill.setMinEffect(skill.getMinEffect()+turnUndeadDamage.get());
+                            skill.setMaxEffect(skill.getMaxEffect()+turnUndeadDamage.get());
+                            vtdMapper.updateCharacterSkill(skill);
+                        });
                     }
                     break;
                 case DRUID:
