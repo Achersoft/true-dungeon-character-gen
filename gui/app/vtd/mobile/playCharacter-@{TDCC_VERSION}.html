@@ -19,11 +19,12 @@
     </div>
     <div class="col-xs-12 col-md-12 text-center" style="margin:0px;padding:0px">
         <span class="col-xs-3 col-md-3 btn" ng-class="tabIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 0">Roller </span> 
-        <span class="col-xs-3 col-md-3 btn" ng-class="tabIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 1">Statistics </span> 
-        <span class="col-xs-3 col-md-3 btn" ng-class="tabIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 2">Notes </span> 
+        <span class="col-xs-2 col-md-2 btn" ng-class="tabIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 1">Stats </span> 
+        <span class="col-xs-2 col-md-2 btn" ng-class="tabIndex === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 2">Notes </span> 
+        <span class="col-xs-2 col-md-2 btn" ng-class="tabIndex === 4 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 4">Items </span> 
         <span class="col-xs-3 col-md-3 btn" ng-class="tabIndex === 3 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="tabIndex = 3">Settings </span> 
     </div>
-    <div class="col-md-12 hidden-sm hidden-xs">
+    <div class="col-md-12 hidden-sm hidden-xs" style="padding:0px">
         <div ng-if="tabIndex === 0">
             <roller-mobile></roller-mobile>
         </div>
@@ -36,8 +37,11 @@
         <div ng-if="tabIndex === 3">
             <play-settings-mobile></play-settings-mobile>
         </div>
+        <div ng-if="tabIndex === 4">
+            <play-items-tablet></play-items-tablet>
+        </div>
     </div>
-    <div class="col-xs-12 visible-sm visible-xs">
+    <div class="col-xs-12 visible-sm visible-xs" style="padding:0px">
         <div ng-if="tabIndex === 0">
             <roller-mobile></roller-mobile>
         </div>
@@ -49,6 +53,9 @@
         </div>
         <div ng-if="tabIndex === 3">
             <play-settings-mobile></play-settings-mobile>
+        </div>
+        <div ng-if="tabIndex === 4">
+            <play-items-mobile></play-items-mobile>
         </div>
     </div>
 </div>
