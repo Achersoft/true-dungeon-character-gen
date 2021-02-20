@@ -1483,6 +1483,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         case DR_FORCE:
                             stats.setDrForce(stats.getDrFire() + vtdBuffEffect.getModifier());
                             break;
+                        case BENROW_HIT:
+                            stats.setRangeHitBenrow(stats.getRangeHitBenrow() + vtdBuffEffect.getModifier());
+                            break;
+                        case BENROW_DMG:
+                            stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + vtdBuffEffect.getModifier());
+                            break;
                     }
                 });
             });
@@ -1497,7 +1503,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         stats.setMeleeDmg(stats.getMeleeDmg() + strDiff);
         stats.setMeleePolyHit(stats.getMeleePolyHit() + strDiff);
         stats.setMeleePolyDmg(stats.getMeleePolyDmg() + strDiff);
+        stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + strDiff);
         stats.setRangeHit(stats.getRangeHit() + dexDiff);
+        stats.setRangeHitBenrow(stats.getRangeHitBenrow() + dexDiff);
         stats.setMeleeAC(stats.getMeleeAC() + dexDiff);
         stats.setRangeAC(stats.getRangeAC() + dexDiff);
 

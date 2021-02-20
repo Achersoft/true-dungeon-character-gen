@@ -32,31 +32,31 @@
         <div class="col-xs-12 col-sm-12 col-md-12" ng-if="skillIndex === 0">
             <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px;"></div>
             <div class="col-xs-12 col-sm-12 col-md-12" style="padding:0" ng-repeat-start="skill in characterContext.characterSkills track by $index" ng-repeat-end>
-                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="charSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
+                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" has-buff="hasBuff" remove-buff="removeBuff" element-id="charSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12" ng-if="skillIndex === 1">
             <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px;"></div>
             <div class="col-xs-12 col-sm-12 col-md-12" style="padding:0" ng-repeat-start="skill in characterContext.zeroSkills track by $index" ng-repeat-end>
-                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="zeroSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
+                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" has-buff="hasBuff" remove-buff="removeBuff" element-id="zeroSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
             </div> 
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12" ng-if="skillIndex === 2">
             <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px;"></div>
             <div class="col-xs-12 col-sm-12 col-md-12" style="padding:0" ng-repeat-start="skill in characterContext.oneSkills track by $index" ng-repeat-end>
-                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="oneSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
+                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" has-buff="hasBuff" remove-buff="removeBuff" element-id="oneSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12" ng-if="skillIndex === 3">
             <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px;"></div>
             <div class="col-xs-12 col-sm-12 col-md-12" style="padding:0" ng-repeat-start="skill in characterContext.twoSkills track by $index" ng-repeat-end>
-                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="twoSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
+                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" has-buff="hasBuff" remove-buff="removeBuff" element-id="twoSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
             </div> 
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12" ng-if="skillIndex === 4">
             <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:10px;"></div>
             <div class="col-xs-12 col-sm-12 col-md-12" style="padding:0" ng-repeat-start="skill in characterContext.threeSkills track by $index" ng-repeat-end>
-                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" element-id="threeSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
+                <skill-user-desktop roll="getRoll" use-ability ="useSkill" unuse-ability ="unuseSkill" has-buff="hasBuff" remove-buff="removeBuff" element-id="threeSkill{{$index}}" model="skill" character-context="characterContext"></skill-user-desktop>
             </div>
         </div>
     

@@ -7,6 +7,8 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             elementId: '@',
             useAbility: '&?',
             unuseAbility: '&?',
+            hasBuff: '&?',
+            removeBuff: '&?',
             roll: '&?'
         },
         link: function(scope) {
@@ -126,6 +128,13 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                         }
                     } else {
                         var totalHeal = scope.characterContext.stats.spellHeal + ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);
+                        
+                        if (scope.hasBuff()("Spell Surge")) {
+                            if(scope.skillCheckIndex === 0)
+                                totalHeal += scope.model.maxEffect;
+                            else
+                               totalHeal += scope.model.minEffect; 
+                        }
 
                         if (scope.secondaryTargetIndex !== 0) {
                             scope.primaryHealAmount = primaryAmount;
@@ -141,17 +150,29 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                                 if (scope.secondaryTargetIndex === 2) {
                                     selfHeal = scope.seconaryHealAmount;
                                 }
+                                
+                                var buff = scope.hasBuff()("Spell Surge");
+                                if (buff !== null) {
+                                    scope.removeBuff()(buff);
+                                }
+                                
                                 scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null, markUse);
                             }
                         } else {
                             scope.primaryHealAmount = (scope.model.aoe) ? ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect) : totalHeal;
                             scope.seconaryHealAmount = 0;
                             var selfHeal = 0;
-                            scope.healPool = (scope.model.aoe) ? scope.characterContext.stats.spellHeal : 0;
+                            scope.healPool = (scope.model.aoe) ? (scope.hasBuff()("Spell Surge")) ? scope.characterContext.stats.spellHeal + ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect) : scope.characterContext.stats.spellHeal : 0;
 
                             if (scope.targetIndex === 1 || scope.model.skillTarget === 'PARTY') {
                                 selfHeal = scope.primaryHealAmount;
                             }
+                            
+                            var buff = scope.hasBuff()("Spell Surge");
+                            if (buff !== null) {
+                                scope.removeBuff()(buff);
+                            }
+                    
                             scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null, markUse);
                         }
                     }
@@ -167,6 +188,12 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                             scope.damagePool += dmg;
                         else 
                             totalDamage += dmg;
+                    }
+                    
+                    var buff = scope.hasBuff()("Spell Surge");
+                    if (buff !== null) {
+                        totalDamage += dmg;
+                        scope.removeBuff()(buff);
                     }
                     
                     scope.damage = totalDamage;
@@ -208,6 +235,12 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                         totalDamage += dmg;
                     }
                     
+                    var buff = scope.hasBuff()("Spell Surge");
+                    if (buff !== null) {
+                        totalDamage += dmg;
+                        scope.removeBuff()(buff);
+                    }
+                    
                     scope.damage = totalDamage;
                     
                     scope.applyDr();
@@ -247,6 +280,13 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             scope.useSkillAsScroll = function(primaryAmount, seconaryHealAmount, markUse) {
                 if (scope.model.skillType === 'HEAL') {
                     var totalHeal = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);
+                    
+                    if (scope.hasBuff()("Spell Surge")) {
+                        if(scope.skillCheckIndex === 0)
+                            totalHeal += scope.model.maxEffect;
+                        else
+                           totalHeal += scope.model.minEffect; 
+                    }
 
                     if (scope.secondaryTargetIndex !== 0) {
                         scope.primaryHealAmount = primaryAmount;
@@ -262,16 +302,29 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                             if (scope.secondaryTargetIndex === 2) {
                                 selfHeal = scope.seconaryHealAmount;
                             }
+                            
+                            var buff = scope.hasBuff()("Spell Surge");
+                            if (buff !== null) {
+                                scope.removeBuff()(buff);
+                            }
+
                             scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null, markUse);
                         }
                     } else {
-                        scope.primaryHealAmount = totalHeal;
+                        scope.primaryHealAmount = (scope.model.aoe) ? ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect) : totalHeal;
                         scope.seconaryHealAmount = 0;
                         var selfHeal = 0;
+                        scope.healPool = (scope.model.aoe) ? (scope.hasBuff()("Spell Surge")) ?((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect) : scope.characterContext.stats.spellHeal : 0;
 
                         if (scope.targetIndex === 1 || scope.model.skillTarget === 'PARTY') {
                             selfHeal = scope.primaryHealAmount;
                         }
+
+                        var buff = scope.hasBuff()("Spell Surge");
+                        if (buff !== null) {
+                            scope.removeBuff()(buff);
+                        }
+
                         scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null, markUse);
                     }
                 } else if (scope.model.skillType === 'DAMAGE') {
@@ -285,6 +338,12 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                             scope.damagePool = dmg;
                         else 
                             totalDamage += dmg;
+                    }
+                    
+                    var buff = scope.hasBuff()("Spell Surge");
+                    if (buff !== null) {
+                        totalDamage += dmg;
+                        scope.removeBuff()(buff);
                     }
                     
                     scope.damage = totalDamage;
@@ -324,6 +383,12 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                     if (scope.madEvokerIndex === 1) {
                         madEvoker = true;
                         totalDamage += dmg;
+                    }
+                    
+                    var buff = scope.hasBuff()("Spell Surge");
+                    if (buff !== null) {
+                        totalDamage += dmg;
+                        scope.removeBuff()(buff);
                     }
                     
                     scope.damage = totalDamage;
