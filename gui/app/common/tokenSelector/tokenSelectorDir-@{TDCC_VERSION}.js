@@ -19,6 +19,8 @@ angular.module('main').directive('tokenSelector',['CharacterSvc', 'RESOURCES', f
             
             scope.reloadTokens = function(rarity) {
                 if(scope.editable === true) {
+                    if (scope.model.maxRarity !== 'ALL')
+                        rarity = scope.model.maxRarity;
                     characterSvc.getSlotTokens(scope.model.id, scope.model.characterId, scope.characterClass, scope.model.slot, rarity).then(function(result) {
                         scope.itemSelection = result.data;
                     });

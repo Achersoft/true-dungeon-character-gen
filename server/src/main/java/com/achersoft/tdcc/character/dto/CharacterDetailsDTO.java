@@ -3,9 +3,9 @@ package com.achersoft.tdcc.character.dto;
 import com.achersoft.tdcc.character.dao.*;
 import com.achersoft.tdcc.enums.CharacterClass;
 import com.achersoft.tdcc.enums.Slot;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import java.util.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,8 +23,8 @@ public class CharacterDetailsDTO {
     public Date lastModified;
     public CharacterClass characterClass;
     public CharacterStats stats;
-    public List<CharacterItemDTO> heads;
-    public List<CharacterItemDTO> eyes;
+    public Set<CharacterItemDTO> heads;
+    public Set<CharacterItemDTO> eyes;
     public CharacterItemDTO leftEar;
     public CharacterItemDTO rightEar;
     public CharacterItemDTO bead;
@@ -35,21 +35,21 @@ public class CharacterDetailsDTO {
     public CharacterItemDTO hands;
     public CharacterItemDTO meleeMainhand;
     public CharacterItemDTO meleeOffhand;
-    public List<CharacterItemDTO> instruments;
+    public Set<CharacterItemDTO> instruments;
     public CharacterItemDTO rangedMainhand;
     public CharacterItemDTO rangedOffhand;
-    public List<CharacterItemDTO> backs;
-    public List<CharacterItemDTO> rings;
+    public Set<CharacterItemDTO> backs;
+    public Set<CharacterItemDTO> rings;
     public CharacterItemDTO waist;
     public CharacterItemDTO shirt;
     public CharacterItemDTO boots;
     public CharacterItemDTO shins;
     public CharacterItemDTO legs;
-    public List<CharacterItemDTO> figurines;
-    public List<CharacterItemDTO> charms;
-    public List<CharacterItemDTO> iounStones;
-    public List<CharacterItemDTO> slotless;
-    public List<CharacterItemDTO> runestones;
+    public Set<CharacterItemDTO> figurines;
+    public Set<CharacterItemDTO> charms;
+    public Set<CharacterItemDTO> iounStones;
+    public Set<CharacterItemDTO> slotless;
+    public Set<CharacterItemDTO> runestones;
     public List<String> alwaysInEffect;
     public List<String> oncePerRound;
     public List<String>  oncePerRoom;
@@ -64,20 +64,20 @@ public class CharacterDetailsDTO {
                 .lastModified(dao.getLastModified())
                 .characterClass(dao.getCharacterClass())
                 .stats(dao.getStats())
-                .instruments(new ArrayList())
-                .heads(new ArrayList())
-                .eyes(new ArrayList<>())
-                .backs(new ArrayList())
-                .rings(new ArrayList())
-                .charms(new ArrayList())
-                .iounStones(new ArrayList())
-                .slotless(new ArrayList())
-                .figurines(new ArrayList())
-                .runestones(new ArrayList())
-                .alwaysInEffect(new ArrayList())
-                .oncePerRound(new ArrayList())
-                .oncePerRoom(new ArrayList())
-                .oncePerGame(new ArrayList())
+                .instruments(new TreeSet<>())
+                .heads(new TreeSet<>())
+                .eyes(new TreeSet<>())
+                .backs(new TreeSet<>())
+                .rings(new TreeSet<>())
+                .charms(new TreeSet<>())
+                .iounStones(new TreeSet<>())
+                .slotless(new TreeSet<>())
+                .figurines(new TreeSet<>())
+                .runestones(new TreeSet<>())
+                .alwaysInEffect(new ArrayList<>())
+                .oncePerRound(new ArrayList<>())
+                .oncePerRoom(new ArrayList<>())
+                .oncePerGame(new ArrayList<>())
                 .build();
       
         dao.getItems().stream().forEach((item) -> {

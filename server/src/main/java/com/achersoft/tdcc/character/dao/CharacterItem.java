@@ -23,6 +23,7 @@ public class CharacterItem implements Comparable<CharacterItem>{
     private Slot slot;
     private int index;
     private Rarity rarity;
+    private @Builder.Default Rarity maxRarity = Rarity.ALL;
     private SlotStatus slotStatus;
     private String statusText;
     

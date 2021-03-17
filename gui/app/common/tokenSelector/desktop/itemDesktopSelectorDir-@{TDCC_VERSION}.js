@@ -18,7 +18,7 @@ angular.module('main').directive('itemDesktopSelector',['CharacterSvc', '$uibMod
             
             scope.openModal = function() {
                 if(scope.editable === true) {
-                    characterSvc.getSlotTokens(scope.model.id, scope.model.characterId, scope.characterClass, scope.model.slot, 'ALL').then(function(result) {
+                    characterSvc.getSlotTokens(scope.model.id, scope.model.characterId, scope.characterClass, scope.model.slot, scope.model.maxRarity).then(function(result) {
                         scope.itemSelection = result.data;
 
                         scope.modalInstance = $uibModal.open({
@@ -35,6 +35,8 @@ angular.module('main').directive('itemDesktopSelector',['CharacterSvc', '$uibMod
             };
             
             scope.reloadTokens = function(rarity) {
+                if (scope.model.maxRarity !== 'ALL')
+                    rarity = scope.model.maxRarity;
                 characterSvc.getSlotTokens(scope.model.id, scope.model.characterId, scope.characterClass, scope.model.slot, rarity).then(function(result) {
                     scope.itemSelection = result.data;
                 });

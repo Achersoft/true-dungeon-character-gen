@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor 
 @AllArgsConstructor
-public class CharacterItemDTO {
+public class CharacterItemDTO implements Comparable<CharacterItemDTO> {
     public String id;
     public String itemId;
     public String imgName;
@@ -23,6 +23,7 @@ public class CharacterItemDTO {
     public Slot slot;
     public int index;
     public Rarity rarity;
+    public Rarity maxRarity;
     public SlotStatus slotStatus;
     public String statusText;
     
@@ -37,8 +38,14 @@ public class CharacterItemDTO {
                 .slot(dao.getSlot())
                 .index(dao.getIndex())
                 .rarity(dao.getRarity())
+                .maxRarity(dao.getMaxRarity())
                 .slotStatus(dao.getSlotStatus())
                 .statusText(dao.getStatusText())
                 .build();
+    }
+
+    @Override
+    public int compareTo(CharacterItemDTO o) {
+        return Integer.compare(this.getIndex(), o.getIndex());
     }
 }

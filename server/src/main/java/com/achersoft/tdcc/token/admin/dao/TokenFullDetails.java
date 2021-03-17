@@ -128,6 +128,11 @@ public class TokenFullDetails {
     private int charmSlots;
     private int eyeSlots;
     private int figurineSlots;
+    private int rareEyeSlots;
+    private int rareFeetSlots;
+    private int rareLegSlots;
+    private int rareShirtSlots;
+    private int rareWaistSlots;
     private ConditionalUse conditionalUse;
     private boolean alwaysInEffect;
     private boolean oncePerRound;

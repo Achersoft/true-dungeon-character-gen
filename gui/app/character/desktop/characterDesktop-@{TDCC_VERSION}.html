@@ -151,7 +151,7 @@
             <div style="min-width:250px;width:25%">
                 <div style="display:flex;margin-top:10px">
                     <div style="padding:0;width:70px" ng-repeat-start="eye in characterContext.eyes track by $index" ng-repeat-end>
-                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="left-bottom" set-token="setTokenSlot" unequip="unequipItem" model="eye" label="Eyes"></token-selector>
+                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="left-top" set-token="setTokenSlot" unequip="unequipItem" model="eye" label="Eyes"></token-selector>
                     </div>
                     <label class="text-left" ng-class="{'error-text': eyeErrors !== null}" style="font-size:28px;padding-left:5px;margin-top:8px">:Eyes</label>
                 </div>

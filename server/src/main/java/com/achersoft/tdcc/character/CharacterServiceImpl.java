@@ -106,6 +106,7 @@ public class CharacterServiceImpl implements CharacterService {
         if(!(userPrincipalProvider.getUserPrincipal().getSub() != null && userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase(characterDetails.getUserId())))
             throw new InvalidDataException("Operation is not allowed. Character does not belong to logged in user."); 
 
+
         if(characterDetails.getCharacterClass() == CharacterClass.MONK){
             if(characterDetails.getItems().stream().filter((item) -> item.getId().equalsIgnoreCase(soltId)&&item.getSlot()==Slot.RANGE_MAINHAND).count() > 0) {
                 characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RANGE_OFFHAND).findAny().ifPresent((item) -> {
@@ -1078,10 +1079,17 @@ public class CharacterServiceImpl implements CharacterService {
     
     private void checkSlotModItems(CharacterDetails characterDetails, Map<String, CharacterItemSet> itemDetailsMap) {
         AtomicReference<Integer> headSlots = new AtomicReference<>(1);
+        AtomicReference<Integer> feetSlots = new AtomicReference<>(1);
         AtomicReference<Integer> eyeSlots = new AtomicReference<>(1);
         AtomicReference<Integer> backSlots = new AtomicReference<>(1);
         AtomicReference<Integer> charmSlots = new AtomicReference<>(3);
         AtomicReference<Integer> stoneSlots = new AtomicReference<>(5);
+        AtomicReference<Integer> legSlots = new AtomicReference<>(1);
+        AtomicReference<Integer> rareEyeSlots = new AtomicReference<>(0);
+        AtomicReference<Integer> rareFeetSlots = new AtomicReference<>(0);
+        AtomicReference<Integer> rareLegSlots = new AtomicReference<>(0);
+        AtomicReference<Integer> rareShirtSlots = new AtomicReference<>(0);
+        AtomicReference<Integer> rareWaistSlots = new AtomicReference<>(0);
         AtomicReference<Boolean> threeRings = new AtomicReference<>(false);
         AtomicReference<Boolean> noRings = new AtomicReference<>(false);
         itemDetailsMap.values().stream().filter(characterItemSet -> characterItemSet.getTokenFullDetails() != null).forEach(characterItemSet -> {
@@ -1090,6 +1098,11 @@ public class CharacterServiceImpl implements CharacterService {
             backSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getBackSlots());
             charmSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getCharmSlots());
             stoneSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getStoneSlots());
+            rareEyeSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareEyeSlots());
+            rareFeetSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareFeetSlots());
+            rareLegSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareLegSlots());
+            rareShirtSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareShirtSlots());
+            rareWaistSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareWaistSlots());
             threeRings.set(threeRings.get() || characterItemSet.getTokenFullDetails().isSetRingsThree());
             noRings.set(noRings.get() || characterItemSet.getTokenFullDetails().isNoRings());
         });
@@ -1148,21 +1161,46 @@ public class CharacterServiceImpl implements CharacterService {
 
         // Eye Slot
         final List<CharacterItem> eyes = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.EYES).collect(Collectors.toList());
-        if (eyes.size() > eyeSlots.get()) {
-            eyes.stream().filter(characterItem -> characterItem.getIndex() >= eyeSlots.get()).forEach(characterItem -> {
-                characterDetails.getItems().remove(characterItem);
-                itemDetailsMap.remove(characterItem.getId());
+        final List<CharacterItem> rareEyes = eyes.stream().filter(i -> i.getMaxRarity() == Rarity.RARE).collect(Collectors.toList());
+        final List<CharacterItem> normEyes = eyes.stream().filter(i -> i.getMaxRarity() == Rarity.ALL || i.getMaxRarity() == null).collect(Collectors.toList());
+        if (normEyes.size() > eyeSlots.get()) {
+            AtomicInteger eyesToRemove = new AtomicInteger(normEyes.size() - eyeSlots.get());
+            normEyes.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
+                if (eyesToRemove.getAndDecrement() > 0) {
+                    characterDetails.getItems().remove(characterItem);
+                    itemDetailsMap.remove(characterItem.getId());
+                }
             });
-        } else if (eyes.size() < eyeSlots.get()) {
-            int eyesToAdd = eyeSlots.get() - eyes.size();
-            int eyeIndex = eyeSlots.get() - 1;
+        } else if (normEyes.size() < eyeSlots.get()) {
+            int eyesToAdd = eyeSlots.get() - normEyes.size();
+            int eyeIndex = eyes.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
 
             while (eyesToAdd > 0) {
+                eyeIndex++;
                 CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.EYES).index(eyeIndex).slotStatus(SlotStatus.OK).build();
                 characterDetails.getItems().add(characterItem);
                 itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
                 eyesToAdd--;
-                eyeIndex--;
+            }
+        }
+        if (rareEyes.size() > rareEyeSlots.get()) {
+            AtomicInteger eyesToRemove = new AtomicInteger(rareEyes.size() - rareEyeSlots.get());
+            rareEyes.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
+                if (eyesToRemove.getAndDecrement() > 0) {
+                    characterDetails.getItems().remove(characterItem);
+                    itemDetailsMap.remove(characterItem.getId());
+                }
+            });
+        } else if (rareEyes.size() < rareEyeSlots.get()) {
+            int eyesToAdd = rareEyeSlots.get() - rareEyes.size();
+            int eyeIndex = eyes.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
+
+            while (eyesToAdd > 0) {
+                eyeIndex++;
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.EYES).index(eyeIndex).slotStatus(SlotStatus.OK).maxRarity(Rarity.RARE).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                eyesToAdd--;
             }
         }
 
@@ -1226,6 +1264,96 @@ public class CharacterServiceImpl implements CharacterService {
             }
         }
 
+        // Feet Slot
+        final List<CharacterItem> feet = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.FEET).collect(Collectors.toList());
+        final List<CharacterItem> rareFeet = feet.stream().filter(i -> i.getMaxRarity() == Rarity.RARE).collect(Collectors.toList());
+        final List<CharacterItem> normFeet = feet.stream().filter(i -> i.getMaxRarity() == Rarity.ALL || i.getMaxRarity() == null).collect(Collectors.toList());
+        if (normFeet.size() > feetSlots.get()) {
+            AtomicInteger feetToRemove = new AtomicInteger(normFeet.size() - feetSlots.get());
+            normFeet.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
+                if (feetToRemove.getAndDecrement() > 0) {
+                    characterDetails.getItems().remove(characterItem);
+                    itemDetailsMap.remove(characterItem.getId());
+                }
+            });
+        } else if (normFeet.size() < feetSlots.get()) {
+            int feetToAdd = feetSlots.get() - normFeet.size();
+            int feetIndex = feet.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
+
+            while (feetToAdd > 0) {
+                feetIndex++;
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FEET).index(feetIndex).slotStatus(SlotStatus.OK).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                feetToAdd--;
+            }
+        }
+        if (rareFeet.size() > rareFeetSlots.get()) {
+            AtomicInteger feetToRemove = new AtomicInteger(rareFeet.size() - rareFeetSlots.get());
+            rareFeet.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
+                if (feetToRemove.getAndDecrement() > 0) {
+                    characterDetails.getItems().remove(characterItem);
+                    itemDetailsMap.remove(characterItem.getId());
+                }
+            });
+        } else if (rareFeet.size() < rareFeetSlots.get()) {
+            int feetToAdd = rareFeetSlots.get() - rareFeet.size();
+            int feetIndex = feet.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
+
+            while (feetToAdd > 0) {
+                feetIndex++;
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FEET).index(feetIndex).slotStatus(SlotStatus.OK).maxRarity(Rarity.RARE).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                feetToAdd--;
+            }
+        }
+
+        // Leg Slot
+        final List<CharacterItem> legs = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.LEGS).collect(Collectors.toList());
+        final List<CharacterItem> rareLegs = legs.stream().filter(i -> i.getMaxRarity() == Rarity.RARE).collect(Collectors.toList());
+        final List<CharacterItem> normLegs = legs.stream().filter(i -> i.getMaxRarity() == Rarity.ALL || i.getMaxRarity() == null).collect(Collectors.toList());
+        if (normLegs.size() > legSlots.get()) {
+            AtomicInteger legsToRemove = new AtomicInteger(normLegs.size() - legSlots.get());
+            normLegs.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
+                if (legsToRemove.getAndDecrement() > 0) {
+                    characterDetails.getItems().remove(characterItem);
+                    itemDetailsMap.remove(characterItem.getId());
+                }
+            });
+        } else if (normLegs.size() < legSlots.get()) {
+            int legsToAdd = legSlots.get() - normLegs.size();
+            int legsIndex = legs.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
+
+            while (legsToAdd > 0) {
+                legsIndex++;
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.LEGS).index(legsIndex).slotStatus(SlotStatus.OK).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                legsToAdd--;
+            }
+        }
+        if (rareLegs.size() > rareLegSlots.get()) {
+            AtomicInteger legsToRemove = new AtomicInteger(rareLegs.size() - rareLegSlots.get());
+            rareLegs.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
+                if (legsToRemove.getAndDecrement() > 0) {
+                    characterDetails.getItems().remove(characterItem);
+                    itemDetailsMap.remove(characterItem.getId());
+                }
+            });
+        } else if (rareLegs.size() < rareLegSlots.get()) {
+            int legsToAdd = rareLegSlots.get() - rareLegs.size();
+            int legsIndex = legs.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
+
+            while (legsToAdd > 0) {
+                legsIndex++;
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.LEGS).index(legsIndex).slotStatus(SlotStatus.OK).maxRarity(Rarity.RARE).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                legsToAdd--;
+            }
+        }
+
         // Check Runestone Fitting Base
         final List<CharacterItem> runes = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.RUNESTONE).collect(Collectors.toList());
         int runeCount = (int) characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RUNESTONE).count();
@@ -1282,6 +1410,7 @@ public class CharacterServiceImpl implements CharacterService {
                 }
                 break;
         }
+
 /*
         final Map<String, CharacterItem> itemsMap = new HashMap();
         characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
@@ -1761,6 +1890,7 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicInteger meleeShieldAc = new AtomicInteger(0);
         AtomicInteger meleeShieldStr = new AtomicInteger(0);
         AtomicInteger rangeShieldStr = new AtomicInteger(0);
+        AtomicInteger figurineSlots = new AtomicInteger(0);
         AtomicReference<String> sheildId = new AtomicReference<>("");
 
         itemDetailsMap.values().stream().filter((item) -> item.getItem().getItemId()!=null).forEach((item) -> {
@@ -1929,6 +2059,9 @@ public class CharacterServiceImpl implements CharacterService {
                     updateStats(item.getItem().getSlot(), stats, item.getTokenFullDetails(), characterDetails.getNotes(), false, false);
                 }
             }
+
+            if (item.getTokenFullDetails().getFigurineSlots() > 0);
+                figurineSlots.getAndAdd(item.getTokenFullDetails().getFigurineSlots());
         });
 
         // Check Conditionals 
@@ -2006,13 +2139,14 @@ public class CharacterServiceImpl implements CharacterService {
                 stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
         }
             
-        long figurineCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FIGURINE).count();
-        if(stats.getCha() >= 16) {
-            if(figurineCount < 2)
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FIGURINE).index(1).slotStatus(SlotStatus.OK).build());
-        } else if(figurineCount > 1)       
-            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.FIGURINE && item.getIndex() > 0)).collect(Collectors.toList()));
-        
+        int figurineCount = (int)characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FIGURINE).count();
+        int figurineNeeded = figurineSlots.get() + 1 + ((stats.getCha() >= 16) ? 1 : 0);
+        if (figurineCount < figurineNeeded) {
+            for (int i=figurineCount; i<figurineNeeded; i++) {
+                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FIGURINE).index(i).slotStatus(SlotStatus.OK).build());
+            }
+        } else if (figurineCount > figurineNeeded)
+            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.FIGURINE && item.getIndex() > figurineNeeded-1)).collect(Collectors.toList()));
     }
     
     private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails, List<Integer> meleeWeaponHit, List<Integer> rangeWeaponHit) {

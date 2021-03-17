@@ -119,6 +119,11 @@ public class TokenFullDetailsDTO {
     public Integer charmSlots;
     public Integer eyeSlots;
     public Integer figurineSlots;
+    public Integer rareEyeSlots;
+    public Integer rareFeetSlots;
+    public Integer rareLegSlots;
+    public Integer rareShirtSlots;
+    public Integer rareWaistSlots;
     public ConditionalUse conditionalUse;
     public Boolean alwaysInEffect;
     public Boolean oncePerRound;
@@ -247,6 +252,11 @@ public class TokenFullDetailsDTO {
                 .stoneSlots(tokenFullDetails.getStoneSlots())
                 .eyeSlots(tokenFullDetails.getEyeSlots())
                 .figurineSlots(tokenFullDetails.getFigurineSlots())
+                .rareEyeSlots(tokenFullDetails.getRareEyeSlots())
+                .rareFeetSlots(tokenFullDetails.getRareFeetSlots())
+                .rareLegSlots(tokenFullDetails.getRareLegSlots())
+                .rareShirtSlots(tokenFullDetails.getRareShirtSlots())
+                .rareWaistSlots(tokenFullDetails.getRareWaistSlots())
                 .conditionalUse(tokenFullDetails.getConditionalUse())
                 .alwaysInEffect(tokenFullDetails.isAlwaysInEffect())
                 .oncePerRound(tokenFullDetails.isOncePerRound())
@@ -414,6 +424,11 @@ public class TokenFullDetailsDTO {
                 .stoneSlots(stoneSlots)
                 .figurineSlots(figurineSlots)
                 .eyeSlots(eyeSlots)
+                .rareEyeSlots(this.getRareEyeSlots() == null ? 0 : this.getRareEyeSlots())
+                .rareFeetSlots(this.getRareFeetSlots() == null ? 0 : this.getRareFeetSlots())
+                .rareLegSlots(this.getRareLegSlots() == null ? 0 : this.getRareLegSlots())
+                .rareShirtSlots(this.getRareShirtSlots() == null ? 0 : this.getRareShirtSlots())
+                .rareWaistSlots(this.getRareWaistSlots() == null ? 0 : this.getRareWaistSlots())
                 .conditionalUse((conditionalUse != null)?conditionalUse:ConditionalUse.NONE)
                 .alwaysInEffect(alwaysInEffect)
                 .oncePerRound(oncePerRound)
