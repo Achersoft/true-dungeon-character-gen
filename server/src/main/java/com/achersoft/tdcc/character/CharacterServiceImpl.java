@@ -1085,10 +1085,12 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicReference<Integer> charmSlots = new AtomicReference<>(3);
         AtomicReference<Integer> stoneSlots = new AtomicReference<>(5);
         AtomicReference<Integer> legSlots = new AtomicReference<>(1);
+        AtomicReference<Integer> shirtSlots = new AtomicReference<>(1);
+        AtomicReference<Integer> waistSlots = new AtomicReference<>(1);
         AtomicReference<Integer> rareEyeSlots = new AtomicReference<>(0);
         AtomicReference<Integer> rareFeetSlots = new AtomicReference<>(0);
         AtomicReference<Integer> rareLegSlots = new AtomicReference<>(0);
-        AtomicReference<Integer> rareShirtSlots = new AtomicReference<>(0);
+        AtomicReference<Integer> rareShirtslots = new AtomicReference<>(0);
         AtomicReference<Integer> rareWaistSlots = new AtomicReference<>(0);
         AtomicReference<Boolean> threeRings = new AtomicReference<>(false);
         AtomicReference<Boolean> noRings = new AtomicReference<>(false);
@@ -1101,7 +1103,7 @@ public class CharacterServiceImpl implements CharacterService {
             rareEyeSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareEyeSlots());
             rareFeetSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareFeetSlots());
             rareLegSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareLegSlots());
-            rareShirtSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareShirtSlots());
+            rareShirtslots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareShirtSlots());
             rareWaistSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareWaistSlots());
             threeRings.set(threeRings.get() || characterItemSet.getTokenFullDetails().isSetRingsThree());
             noRings.set(noRings.get() || characterItemSet.getTokenFullDetails().isNoRings());
@@ -1351,6 +1353,96 @@ public class CharacterServiceImpl implements CharacterService {
                 characterDetails.getItems().add(characterItem);
                 itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
                 legsToAdd--;
+            }
+        }
+
+        // shirt Slot
+        final List<CharacterItem> shirts = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.SHIRT).collect(Collectors.toList());
+        final List<CharacterItem> rareShirts = shirts.stream().filter(i -> i.getMaxRarity() == Rarity.RARE).collect(Collectors.toList());
+        final List<CharacterItem> normShirts = shirts.stream().filter(i -> i.getMaxRarity() == Rarity.ALL || i.getMaxRarity() == null).collect(Collectors.toList());
+        if (normShirts.size() > shirtSlots.get()) {
+            AtomicInteger shirtsToRemove = new AtomicInteger(normShirts.size() - shirtSlots.get());
+            normShirts.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
+                if (shirtsToRemove.getAndDecrement() > 0) {
+                    characterDetails.getItems().remove(characterItem);
+                    itemDetailsMap.remove(characterItem.getId());
+                }
+            });
+        } else if (normShirts.size() < shirtSlots.get()) {
+            int shirtsToAdd = shirtSlots.get() - normShirts.size();
+            int shirtsIndex = shirts.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
+
+            while (shirtsToAdd > 0) {
+                shirtsIndex++;
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.SHIRT).index(shirtsIndex).slotStatus(SlotStatus.OK).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                shirtsToAdd--;
+            }
+        }
+        if (rareShirts.size() > rareShirtslots.get()) {
+            AtomicInteger shirtsToRemove = new AtomicInteger(rareShirts.size() - rareShirtslots.get());
+            rareShirts.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
+                if (shirtsToRemove.getAndDecrement() > 0) {
+                    characterDetails.getItems().remove(characterItem);
+                    itemDetailsMap.remove(characterItem.getId());
+                }
+            });
+        } else if (rareShirts.size() < rareShirtslots.get()) {
+            int shirtsToAdd = rareShirtslots.get() - rareShirts.size();
+            int shirtsIndex = shirts.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
+
+            while (shirtsToAdd > 0) {
+                shirtsIndex++;
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.SHIRT).index(shirtsIndex).slotStatus(SlotStatus.OK).maxRarity(Rarity.RARE).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                shirtsToAdd--;
+            }
+        }
+
+        // Waist Slot
+        final List<CharacterItem> waists = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.WAIST).collect(Collectors.toList());
+        final List<CharacterItem> rareWaists = waists.stream().filter(i -> i.getMaxRarity() == Rarity.RARE).collect(Collectors.toList());
+        final List<CharacterItem> normWaists = waists.stream().filter(i -> i.getMaxRarity() == Rarity.ALL || i.getMaxRarity() == null).collect(Collectors.toList());
+        if (normWaists.size() > waistSlots.get()) {
+            AtomicInteger waistsToRemove = new AtomicInteger(normWaists.size() - waistSlots.get());
+            normWaists.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
+                if (waistsToRemove.getAndDecrement() > 0) {
+                    characterDetails.getItems().remove(characterItem);
+                    itemDetailsMap.remove(characterItem.getId());
+                }
+            });
+        } else if (normWaists.size() < waistSlots.get()) {
+            int waistsToAdd = waistSlots.get() - normWaists.size();
+            int waistsIndex = waists.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
+
+            while (waistsToAdd > 0) {
+                waistsIndex++;
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.WAIST).index(waistsIndex).slotStatus(SlotStatus.OK).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                waistsToAdd--;
+            }
+        }
+        if (rareWaists.size() > rareWaistSlots.get()) {
+            AtomicInteger waistsToRemove = new AtomicInteger(rareWaists.size() - rareWaistSlots.get());
+            rareWaists.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
+                if (waistsToRemove.getAndDecrement() > 0) {
+                    characterDetails.getItems().remove(characterItem);
+                    itemDetailsMap.remove(characterItem.getId());
+                }
+            });
+        } else if (rareWaists.size() < rareWaistSlots.get()) {
+            int waistsToAdd = rareWaistSlots.get() - rareWaists.size();
+            int waistsIndex = waists.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
+
+            while (waistsToAdd > 0) {
+                waistsIndex++;
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.WAIST).index(waistsIndex).slotStatus(SlotStatus.OK).maxRarity(Rarity.RARE).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                waistsToAdd--;
             }
         }
 

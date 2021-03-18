@@ -101,6 +101,9 @@ angular.module('main')
     $scope.ringErrors = null;
     $scope.eyeErrors = null;
     $scope.backErrors = null;
+    $scope.legsErrors = null;
+    $scope.waistErrors = null;
+    $scope.shirtErrors = null;
     $scope.iounStoneErrors = null;
     $scope.charmErrors = null;
     $scope.slotlessErrors = null;
@@ -159,12 +162,14 @@ angular.module('main')
         $scope.eyeErrors = null;
         $scope.backErrors = null;
         $scope.headErrors = null;
+        $scope.bootsErrors = null;
         $scope.iounStoneErrors = null;
         $scope.charmErrors = null;
         $scope.slotlessErrors = null;
         slotlessRow1 = [];
         slotlessRow2 = [];
         slotlessRow3 = [];
+        slotlessRow4 = [];
         
         if($scope.characterContext.slotless.length > 0) {
             $scope.characterContext.slotless.forEach(function(item, index) {
@@ -172,13 +177,16 @@ angular.module('main')
                     slotlessRow1.push(item);
                 if(index >= 10 && index < 20)
                     slotlessRow2.push(item);
-                if(index >= 20)
+                if(index >= 20 && index < 30)
                     slotlessRow3.push(item);
+                if(index >= 30)
+                    slotlessRow4.push(item);
             });
             
             $scope.slotlessRow1 = slotlessRow1;
             $scope.slotlessRow2 = slotlessRow2;
             $scope.slotlessRow3 = slotlessRow3;
+            $scope.slotlessRow4 = slotlessRow4;
         }
         
         if($scope.characterContext.rings.length > 0) {
@@ -193,10 +201,34 @@ angular.module('main')
                     $scope.headErrors = item.statusText;
             });
         }
+        if($scope.characterContext.boots.length > 0) {
+            $scope.characterContext.boots.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID')
+                    $scope.bootsErrors = item.statusText;
+            });
+        }
         if($scope.characterContext.eyes.length > 0) {
             $scope.characterContext.eyes.forEach(function(item, index) {
                 if(item.slotStatus === 'INVALID')
                     $scope.eyeErrors = item.statusText;
+            });
+        }
+        if($scope.characterContext.legs.length > 0) {
+            $scope.characterContext.legs.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID')
+                    $scope.legsErrors = item.statusText;
+            });
+        }
+        if($scope.characterContext.waist.length > 0) {
+            $scope.characterContext.waist.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID')
+                    $scope.waistErrors = item.statusText;
+            });
+        }
+        if($scope.characterContext.shirt.length > 0) {
+            $scope.characterContext.shirt.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID')
+                    $scope.shirtErrors = item.statusText;
             });
         }
         if($scope.characterContext.backs.length > 0) {

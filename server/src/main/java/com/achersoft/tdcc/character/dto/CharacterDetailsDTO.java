@@ -40,11 +40,11 @@ public class CharacterDetailsDTO {
     public CharacterItemDTO rangedOffhand;
     public Set<CharacterItemDTO> backs;
     public Set<CharacterItemDTO> rings;
-    public CharacterItemDTO waist;
-    public CharacterItemDTO shirt;
-    public CharacterItemDTO boots;
+    public Set<CharacterItemDTO> waist;
+    public Set<CharacterItemDTO> shirt;
+    public Set<CharacterItemDTO> boots;
     public CharacterItemDTO shins;
-    public CharacterItemDTO legs;
+    public Set<CharacterItemDTO> legs;
     public Set<CharacterItemDTO> figurines;
     public Set<CharacterItemDTO> charms;
     public Set<CharacterItemDTO> iounStones;
@@ -68,6 +68,10 @@ public class CharacterDetailsDTO {
                 .heads(new TreeSet<>())
                 .eyes(new TreeSet<>())
                 .backs(new TreeSet<>())
+                .boots(new TreeSet<>())
+                .legs(new TreeSet<>())
+                .shirt(new TreeSet<>())
+                .waist(new TreeSet<>())
                 .rings(new TreeSet<>())
                 .charms(new TreeSet<>())
                 .iounStones(new TreeSet<>())
@@ -120,15 +124,15 @@ public class CharacterDetailsDTO {
             if(item.getSlot() == Slot.FINGER)
                 build.rings.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.WAIST)
-                build.waist = CharacterItemDTO.fromDAO(item);
+                build.waist.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.SHIRT)
-                build.shirt = CharacterItemDTO.fromDAO(item);
+                build.shirt.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.FEET)
-                build.boots = CharacterItemDTO.fromDAO(item);
+                build.boots.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.SHINS)
                 build.shins = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.LEGS)
-                build.legs = CharacterItemDTO.fromDAO(item);
+                build.legs.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.FIGURINE)
                 build.figurines.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.CHARM)
