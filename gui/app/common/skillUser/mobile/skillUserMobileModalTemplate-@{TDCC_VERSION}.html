@@ -3,7 +3,62 @@
     <h4 class="modal-title">Cast {{model.name}}</h4>
 </div>
 <div class="modal-body" style="padding:0px">
-    <div ng-show="spellCast === false">
+    <div ng-show="spellCast === false  && magePowers === true">
+        <h4 class="modal-title text-center" style="margin-top:15px;color: rgb(255, 255, 255)">Select Any Mage Powers</h4>
+   
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.swapElements">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Change Element To:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-4 col-md-4 btn" ng-class="element === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setElement(0)">Cold </span> 
+                <span class="col-xs-4 col-md-4 btn" ng-class="element === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setElement(1)">Fire </span> 
+                <span class="col-xs-4 col-md-4 btn" ng-class="element === 2 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setElement(2)">Shock </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.archMagePower">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Conserve:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-6 col-md-6 btn" ng-class="conserve === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setConserve(0)">False </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="conserve === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setConserve(1)">True </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.magePower || characterContext.archMagePower">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Fork:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-6 col-md-6 btn" ng-class="fork === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setFork(0)">False </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="fork === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setFork(1)">True </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.magePower || characterContext.archMagePower">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Intensify:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-6 col-md-6 btn" ng-class="intensify === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setIntensify(0)">False </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="intensify === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setIntensify(1)">True </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="characterContext.magePower || characterContext.archMagePower">
+            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
+                Sharpen:
+            </div>
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-6 col-md-6 btn" ng-class="sharpen === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSharpen(0)">False </span> 
+                <span class="col-xs-6 col-md-6 btn" ng-class="sharpen === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSharpen(1)">True </span> 
+            </div> 
+        </div>
+        <div class="col-xs-12 col-md-12" style="margin-top:30px;padding-left:15px;padding-right:15px">
+            <div class="col-xs-12 col-md-12 text-center">
+                <span class="col-xs-12 col-md-12 btn btn-primary" style="margin:0px;padding:0px;line-height:30px;" ng-click="continueCast()">Continue Cast </span> 
+           </div> 
+        </div>
+    </div>
+    <div ng-show="spellCast === false && magePowers === false">
         <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="model.minEffect !== model.maxEffect">
             <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
                 Skill Check:
@@ -124,7 +179,7 @@
             </button>
         </div>
     </div>
-    <div ng-show="spellCast === true">
+    <div ng-show="spellCast === true && magePowers === false">
         <div class="col-xs-12 col-md-12 text-center" style="margin-top:15px" ng-show="secondaryTargetIndex === 0 && model.skillType === 'HEAL'">
             <div ng-if="!model.aoe">
                 <div class="col-xs-12 col-md-12 text-center" style="font-size:35px;color: rgb(255, 255, 255)">

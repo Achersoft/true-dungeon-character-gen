@@ -98,6 +98,9 @@ public class VtdDetailsDTO {
     public boolean sneakAtRange;
     public boolean splitHeal;
     public boolean madEvoker;
+    public boolean swapElements;
+    public boolean magePower;
+    public boolean archMagePower;
     public boolean mightyWeapon;
     public boolean prestigeAvailable;
     public boolean prestigeActive;
@@ -189,6 +192,9 @@ public class VtdDetailsDTO {
                 .sneakAtRange(dao.isSneakAtRange())
                 .splitHeal(dao.isSplitHeal())
                 .madEvoker(dao.isMadEvoker())
+                .swapElements(dao.isSwapElements())
+                .magePower(dao.isMagePower())
+                .archMagePower(dao.isArchMagePower())
                 .prestigeAvailable(dao.isPrestigeAvailable())
                 .prestigeActive(dao.isPrestigeActive())
                 .items(VtdItemsDTO.fromDAO(dao.getItems()))

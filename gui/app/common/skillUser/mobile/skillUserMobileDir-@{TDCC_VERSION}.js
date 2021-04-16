@@ -49,6 +49,12 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                 scope.spellCast = false;
                 scope.healError = false;
                 scope.monster = scope.characterContext.monsters[0];
+                scope.magePowers = false;
+                scope.element = -1;
+                scope.conserve = 0;
+                scope.fork = 0;
+                scope.intensify = 0;
+                scope.sharpen = 0;
                 
                 if (isChecked) {
                     scope.modalInstance = $uibModal.open({
@@ -61,6 +67,9 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                         templateUrl: 'common/skillUser/mobile/skillUserUnsetMobileModalTemplate-@{TDCC_VERSION}.html'
                     });
                 } else {
+                    if (scope.characterContext.magePower || scope.characterContext.archMagePower)
+                        scope.magePowers = true;
+                    
                     scope.modalInstance = $uibModal.open({
                         ariaLabelledBy: 'modal-title',
                         ariaDescribedBy: 'modal-body',
@@ -239,6 +248,8 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                     if (buff !== null) {
                         totalDamage += dmg;
                         scope.removeBuff()(buff);
+                    } else if (scope.sharpen === 1 && scope.hitRollNatural >= 18) {
+                        totalDamage = totalDamage*2;
                     }
                     
                     scope.damage = totalDamage;
@@ -389,6 +400,8 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                     if (buff !== null) {
                         totalDamage += dmg;
                         scope.removeBuff()(buff);
+                    } else if (scope.sharpen === 1 && scope.hitRollNatural >= 18) {
+                        totalDamage = totalDamage*2;
                     }
                     
                     scope.damage = totalDamage;
@@ -434,22 +447,34 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                     damageDelta += scope.monster.rangeDr;
                 } if (scope.monster.universalDr !== 0) {
                     damageDelta += scope.monster.universalDr;
-                } if (scope.monster.fire !== 0 && scope.model.fire) {
-                    damageDelta += scope.monster.fire;
-                } if (scope.monster.cold !== 0 && scope.model.cold) {
-                    damageDelta += scope.monster.cold;
-                } if (scope.monster.shock !== 0 && scope.model.shock) {
-                    damageDelta += scope.monster.shock;
-                } if (scope.monster.sonic !== 0 && scope.model.sonic) {
-                    damageDelta += scope.monster.sonic;
-                } if (scope.monster.poison !== 0 && scope.model.poison) {
-                    damageDelta += scope.monster.poison;
-                } if (scope.monster.sacred !== 0 && scope.model.sacred) {
-                    damageDelta += scope.monster.sacred;
-                } if (scope.monster.darkrift !== 0 && scope.model.darkrift) {
-                    damageDelta += scope.monster.darkrift;
-                } if (scope.monster.acid !== 0 && scope.model.acid) {
-                    damageDelta += scope.monster.acid;
+                } 
+                
+                if (scope.element !== -1) {
+                    if (scope.monster.fire !== 0 && scope.element === 1) {
+                        damageDelta += scope.monster.fire;
+                    } if (scope.monster.cold !== 0 && scope.element === 0) {
+                        damageDelta += scope.monster.cold;
+                    } if (scope.monster.shock !== 0 && scope.element === 2) {
+                        damageDelta += scope.monster.shock;
+                    }
+                } else {
+                    if (scope.monster.fire !== 0 && scope.model.fire) {
+                        damageDelta += scope.monster.fire;
+                    } if (scope.monster.cold !== 0 && scope.model.cold) {
+                        damageDelta += scope.monster.cold;
+                    } if (scope.monster.shock !== 0 && scope.model.shock) {
+                        damageDelta += scope.monster.shock;
+                    } if (scope.monster.sonic !== 0 && scope.model.sonic) {
+                        damageDelta += scope.monster.sonic;
+                    } if (scope.monster.poison !== 0 && scope.model.poison) {
+                        damageDelta += scope.monster.poison;
+                    } if (scope.monster.sacred !== 0 && scope.model.sacred) {
+                        damageDelta += scope.monster.sacred;
+                    } if (scope.monster.darkrift !== 0 && scope.model.darkrift) {
+                        damageDelta += scope.monster.darkrift;
+                    } if (scope.monster.acid !== 0 && scope.model.acid) {
+                        damageDelta += scope.monster.acid;
+                    }
                 }
                 
                 if (damageDelta !== 0) {
@@ -491,6 +516,8 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             }; 
             
             scope.spellCastSucess = function(selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse) {
+                if (scope.conserve === 1)
+                    markUse = false;
                 scope.useAbility()(scope.model.id, selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse, false);
                 scope.spellCast = true;
             };
@@ -499,6 +526,33 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                 scope.unuseAbility()(scope.model.id);
                 scope.closeModal();
             };  
+            
+            scope.setElement = function(index) {
+                if (scope.element === index)
+                    scope.element = -1;
+                else
+                    scope.element = index;
+            };  
+            
+            scope.setConserve = function(index) {
+                scope.conserve = index;
+            }; 
+            
+            scope.setFork = function(index) {
+                scope.fork = index;
+            };  
+            
+            scope.setIntensify = function(index) {
+                scope.intensify = index;
+            };
+            
+            scope.setSharpen = function(index) {
+                scope.sharpen = index;
+            };
+            
+            scope.continueCast = function() {
+                scope.magePowers = false;
+            };
             
             scope.closeModal = function() {
                 scope.modalInstance.close();
@@ -517,6 +571,12 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                 scope.lohUseAmount = 1;
                 scope.spellCast = false;
                 scope.healError = false;
+                scope.magePowers = false;
+                scope.element = -1;
+                scope.conserve = 0;
+                scope.fork = 0;
+                scope.intensify = 0;
+                scope.sharpen = 0;
             };
         },
         templateUrl:'common/skillUser/mobile/skillUserMobileTemplate-@{TDCC_VERSION}.html'

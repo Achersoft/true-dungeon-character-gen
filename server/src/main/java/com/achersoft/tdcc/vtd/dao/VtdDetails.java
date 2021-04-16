@@ -89,6 +89,9 @@ public class VtdDetails {
     private boolean isSneakAtRange;
     private boolean splitHeal;
     private boolean madEvoker;
+    private boolean swapElements;
+    private boolean magePower;
+    private boolean archMagePower;
     private boolean mightyWeapon;
     private boolean prestigeAvailable;
     private boolean prestigeActive;

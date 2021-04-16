@@ -66,6 +66,9 @@
                                     is_sneak_at_range,
                                     split_heal,
                                     mad_evoker,
+                                    swap_elements,
+                                    mage_power,
+                                    arch_mage_power,
                                     mighty_weapon,
                                     prestigeAvailable,
                                     prestigeActive)
@@ -131,6 +134,9 @@
                                     #{isSneakAtRange},
                                     #{splitHeal},
                                     #{madEvoker},
+                                    #{swapElements},
+                                    #{magePower},
+                                    #{archMagePower},
                                     #{mightyWeapon},
                                     #{prestigeAvailable},
                                     #{prestigeActive})
@@ -544,6 +550,9 @@
                 is_sneak_at_range 'isSneakAtRange',
                 split_heal 'splitHeal',
                 mad_evoker 'madEvoker',
+                swap_elements 'swapElements',
+                mage_power 'magePower',
+                arch_mage_power 'archMagePower',
                 mighty_weapon 'mightyWeapon',
                 prestigeAvailable,
                 prestigeActive
@@ -614,6 +623,9 @@
                 is_sneak_at_range 'isSneakAtRange',
                 split_heal 'splitHeal',
                 mad_evoker 'madEvoker',
+                swap_elements 'swapElements',
+                mage_power 'magePower',
+                arch_mage_power 'archMagePower',
                 mighty_weapon 'mightyWeapon',
                 prestigeAvailable,
                 prestigeActive
@@ -685,6 +697,9 @@
                 is_sneak_at_range 'isSneakAtRange',
                 split_heal 'splitHeal',
                 mad_evoker 'madEvoker',
+                swap_elements 'swapElements',
+                mage_power 'magePower',
+                arch_mage_power 'archMagePower',
                 mighty_weapon 'mightyWeapon',
                 prestigeAvailable,
                 prestigeActive

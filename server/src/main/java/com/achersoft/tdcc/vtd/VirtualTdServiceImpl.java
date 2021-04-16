@@ -207,6 +207,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasPrestigeClass = new AtomicBoolean(false);
             final AtomicBoolean hasPelor = new AtomicBoolean(false);
             final AtomicInteger turnUndeadDamage = new AtomicInteger(0);
+            final AtomicBoolean hasWizardRelic = new AtomicBoolean(false);
+            final AtomicBoolean hasWizardLegendary = new AtomicBoolean(false);
             final Set<CritType> critTypes = new HashSet<>();
 
             for (CharacterItem characterItem : characterDetails.getItems()) {
@@ -242,6 +244,10 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasMonkRelic.set(true);
                     else if (characterItem.getItemId().equals("1ee980321b7b26f523b7b5e10b6a2856400d1a67"))
                         hasMonkLegendary.set(true);
+                    else if (characterItem.getItemId().equals("64e85eb5edb7f5274adc05b3851732d04fd67949"))
+                        hasWizardRelic.set(true);
+                    else if (characterItem.getItemId().equals("df1626b8137744b80e95ec254745122f2c1e291f"))
+                        hasWizardLegendary.set(true);
                     else if (characterItem.getItemId().equals("e604ae878baea5348138a4b22180b74a34c6ecce"))
                         hasShamansBelt.set(true);
                     else if (characterItem.getItemId().equals("186c34894ca45e6acdd58a0d6cab9ef1be36e3ad"))
@@ -436,6 +442,16 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                 case ELF_WIZARD:
                     if (madEvoker.get())
                         builder.madEvoker(true);
+                    if (hasWizardRelic.get()) {
+                        builder.madEvoker(true);
+                        builder.swapElements(true);
+                        builder.magePower(true);
+                    } if (hasWizardLegendary.get()) {
+                        builder.madEvoker(true);
+                        builder.swapElements(true);
+                        builder.magePower(true);
+                        builder.archMagePower(true);
+                    }
 
                     List<VtdPoly> elfPolyList = new ArrayList<>();
                     elfPolyList.add(VtdPoly.getDefault(characterDetails.getId()));
@@ -465,6 +481,16 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                 case WIZARD:
                     if (madEvoker.get())
                         builder.madEvoker(true);
+                    if (hasWizardRelic.get()) {
+                        builder.madEvoker(true);
+                        builder.swapElements(true);
+                        builder.magePower(true);
+                    } if (hasWizardLegendary.get()) {
+                        builder.madEvoker(true);
+                        builder.swapElements(true);
+                        builder.magePower(true);
+                        builder.archMagePower(true);
+                    }
 
                     List<VtdPoly> wizardPolyList = new ArrayList<>();
                     wizardPolyList.add(VtdPoly.getDefault(characterDetails.getId()));
