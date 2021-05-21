@@ -328,6 +328,20 @@ angular.module('main')
         });
     };
     
+    $scope.activateDebuff =  function(debuff) {
+        vtdSvc.addDebuff($scope.characterContext.id, debuff.id).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
+    $scope.removeDebuff =  function(debuff) {
+        vtdSvc.removeDebuff($scope.characterContext.id, debuff.id).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
     $scope.getRoll =  function(monsterIndex) {
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             return $scope.getRandomInt(20) + 1;
@@ -1818,7 +1832,8 @@ angular.module('main')
                         mDmgTotal += 15;
                 }
                 
-                mCritDmg += $scope.characterContext.unmodifiableSneakDamage;
+                if (mCritDmg > 0)
+                    mCritDmg += $scope.characterContext.unmodifiableSneakDamage;
                 mDmgTotal += $scope.characterContext.unmodifiableSneakDamage;
             }
             
@@ -2056,7 +2071,8 @@ angular.module('main')
                         mDmgTotal += 15;
                 }
                 
-                mCritDmg += $scope.characterContext.unmodifiableSneakDamage;
+                if (mCritDmg > 0)
+                    mCritDmg += $scope.characterContext.unmodifiableSneakDamage;
                 mDmgTotal += $scope.characterContext.unmodifiableSneakDamage;
             }
 
@@ -2623,7 +2639,8 @@ angular.module('main')
                                         }
                                     }
 
-                                    $scope.critDmg += $scope.characterContext.unmodifiableSneakDamage;
+                                    if ($scope.critDmg > 0)
+                                        $scope.critDmg += $scope.characterContext.unmodifiableSneakDamage;
                                     $scope.rollDmg += $scope.characterContext.unmodifiableSneakDamage;
 
                                     if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "PLUS_2_SNEAK_DAMAGE")) {
@@ -2703,7 +2720,8 @@ angular.module('main')
                                         }
                                     }
 
-                                    $scope.critDmg += $scope.characterContext.unmodifiableSneakDamage;
+                                    if ($scope.critDmg > 0)
+                                        $scope.critDmg += $scope.characterContext.unmodifiableSneakDamage;
                                     $scope.rollDmg += $scope.characterContext.unmodifiableSneakDamage;
 
                                     if ($scope.hasEffect($scope.characterContext.rangeDmgEffects, "PLUS_2_SNEAK_DAMAGE")) {
@@ -3576,6 +3594,20 @@ angular.module('main')
             $scope.characterContext = vtdState.get();
         });
     };
+    
+    $scope.activateDebuff =  function(debuff) {
+        vtdSvc.addDebuff($scope.characterContext.id, debuff.id).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
+    $scope.removeDebuff =  function(debuff) {
+        vtdSvc.removeDebuff($scope.characterContext.id, debuff.id).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
 }])
 
 .factory('VtdState', [
@@ -3760,8 +3792,22 @@ angular.module('main')
         });
     };
     
+    tokenAdminSvc.addDebuff = function(id, debuff) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/debuff/?debuff=' + debuff).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
     tokenAdminSvc.removeBuff = function(id, buff) {
         return $http.delete(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/buff/?buff=' + buff).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.removeDebuff = function(id, debuff) {
+        return $http.delete(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/debuff/?debuff=' + debuff).catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });

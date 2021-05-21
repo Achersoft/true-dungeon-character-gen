@@ -30,6 +30,8 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
         request.setUserName(request.getUserName().toLowerCase());
         User user = userMapper.getUserFromName(request.getUserName());
         if(user == null)
+            userMapper.getUserFromEmail(request.getUserName());
+        if(user == null)
             throw new AuthenticationException("Invalid credentials.");
         if(user.getLocked()) {
             if(user.getLastAccessed() != null && user.getLastAccessed().before(new Date(new Date().getTime() - 1800000))) {

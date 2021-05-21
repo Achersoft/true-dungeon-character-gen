@@ -12,10 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Builder
@@ -53,6 +51,7 @@ public class VtdDetailsDTO {
     public List<BuffDTO> buffs;
     public List<BuffDTO> availableBuffs;
     public List<BuffDTO> availableBardsong;
+    public Set<DebuffDTO> debuffs;
     public List<VtdPoly> availablePoly;
     public VtdPoly poly;
     public List<VtdPoly> availableAnimalCompanion;
@@ -149,6 +148,7 @@ public class VtdDetailsDTO {
                 .threeSkills(new ArrayList<>())
                 .fourSkills(new ArrayList<>())
                 .buffs(new ArrayList<>())
+                .debuffs(new TreeSet<>())
                 .availablePoly(new ArrayList<>())
                 .availableAnimalCompanion(new ArrayList<>())
                 .meleeDmgRange(new ArrayList<>())
@@ -250,6 +250,10 @@ public class VtdDetailsDTO {
 
             if (build.getBuffs().stream().filter(BuffDTO::isBardsong).count() > 0)
                 build.setAvailableBardsong(new ArrayList<>());
+        }
+
+        if (dao.getDebuffs() != null) {
+            build.setDebuffs(dao.getDebuffs().stream().map(DebuffDTO::fromDAO).collect(Collectors.toSet()));
         }
 
         VtdPoly activePoly = null;

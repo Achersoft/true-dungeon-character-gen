@@ -46,6 +46,7 @@ public class VtdDetails {
     private List<CharacterItem> items;
     private List<CharacterSkill> characterSkills;
     private List<VtdBuff> buffs;
+    private List<VtdDebuff> debuffs;
     private List<VtdPoly> polys;
     private String critTypes;
     private String availableEffects;

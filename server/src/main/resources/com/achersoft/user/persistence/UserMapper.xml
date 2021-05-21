@@ -49,7 +49,12 @@
         <include refid="userSelection"/>
         WHERE u.user_name =  #{userName}
     </select>
-    
+
+    <select id="getUserFromEmail" resultType="com.achersoft.user.dao.User">
+        <include refid="userSelection"/>
+        WHERE u.email =  #{email}
+    </select>
+
     <select id="getUserPrivileges" resultType="com.achersoft.security.type.Privilege"> 
         SELECT privilege 
           FROM user_privilege

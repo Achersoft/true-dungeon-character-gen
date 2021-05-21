@@ -25,7 +25,7 @@ public class VtdItemsDTO {
     public List<CharacterItemDTO> eyes;
     public CharacterItemDTO leftEar;
     public CharacterItemDTO rightEar;
-    public CharacterItemDTO bead;
+    public List<CharacterItemDTO> bead;
     public CharacterItemDTO neck;
     public CharacterItemDTO aow;
     public CharacterItemDTO torso;
@@ -56,24 +56,25 @@ public class VtdItemsDTO {
     public static VtdItemsDTO fromDAO(List<CharacterItem> items) {
         VtdItemsDTO build = VtdItemsDTO.builder()
                 .editable(false)
-                .boots(new ArrayList())
-                .shirt(new ArrayList())
-                .waist(new ArrayList())
-                .legs(new ArrayList())
-                .instruments(new ArrayList())
-                .heads(new ArrayList())
+                .boots(new ArrayList<>())
+                .shirt(new ArrayList<>())
+                .waist(new ArrayList<>())
+                .legs(new ArrayList<>())
+                .instruments(new ArrayList<>())
+                .heads(new ArrayList<>())
                 .eyes(new ArrayList<>())
-                .backs(new ArrayList())
-                .rings(new ArrayList())
-                .charms(new ArrayList())
-                .iounStones(new ArrayList())
-                .slotless(new ArrayList())
-                .figurines(new ArrayList())
-                .runestones(new ArrayList())
-                .alwaysInEffect(new ArrayList())
-                .oncePerRound(new ArrayList())
-                .oncePerRoom(new ArrayList())
-                .oncePerGame(new ArrayList())
+                .backs(new ArrayList<>())
+                .rings(new ArrayList<>())
+                .charms(new ArrayList<>())
+                .iounStones(new ArrayList<>())
+                .slotless(new ArrayList<>())
+                .figurines(new ArrayList<>())
+                .runestones(new ArrayList<>())
+                .alwaysInEffect(new ArrayList<>())
+                .oncePerRound(new ArrayList<>())
+                .oncePerRoom(new ArrayList<>())
+                .oncePerGame(new ArrayList<>())
+                .bead(new ArrayList<>())
                 .build();
 
         items.forEach((item) -> {
@@ -92,7 +93,7 @@ public class VtdItemsDTO {
             if(item.getSlot() == Slot.NECK)
                 build.neck = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.BEAD)
-                build.bead = CharacterItemDTO.fromDAO(item);
+                build.bead.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.AOW)
                 build.aow = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.TORSO)

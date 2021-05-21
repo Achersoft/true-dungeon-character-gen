@@ -1141,6 +1141,26 @@ public class CharacterServiceImpl implements CharacterService {
             }
         }
 
+        // Bead Slot
+        final List<CharacterItem> beads = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.BEAD).collect(Collectors.toList());
+        if (beads.size() > 3) {
+            beads.stream().filter(characterItem -> characterItem.getIndex() >= 3).forEach(characterItem -> {
+                characterDetails.getItems().remove(characterItem);
+                itemDetailsMap.remove(characterItem.getId());
+            });
+        } else if (beads.size() < 3) {
+            int beadsToAdd = 3 - beads.size();
+            int beadIndex = 3 - 1;
+
+            while (beadsToAdd > 0) {
+                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.BEAD).index(beadIndex).slotStatus(SlotStatus.OK).build();
+                characterDetails.getItems().add(characterItem);
+                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                beadsToAdd--;
+                beadIndex--;
+            }
+        }
+
         // Head Slot
         final List<CharacterItem> heads = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.HEAD).collect(Collectors.toList());
         if (heads.size() > headSlots.get()) {

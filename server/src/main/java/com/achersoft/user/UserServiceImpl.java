@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) {
         user.setUsername(user.getUsername().toLowerCase());
+        user.setEmail(user.getEmail().toLowerCase());
         if(user.getPassword() == null || user.getPassword().isEmpty())
             throw new InvalidDataException("A user password must be provided.");
         if(user.getEmail() == null || user.getEmail().isEmpty() || !isValidEmailAddress(user.getEmail()))

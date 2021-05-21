@@ -11,6 +11,7 @@ public interface UserMapper {
     public List<User> getUsers();
     public User getUser(String id);
     public User getUserFromName(String userName);
+    public User getUserFromEmail(String email);
     public List<Privilege> getUserPrivileges(String id);
     public void addUserPrivilege(@Param("id") String id, @Param("privilege")Privilege privilege);
     public void removeUserPrivileges(@Param("id") String id);

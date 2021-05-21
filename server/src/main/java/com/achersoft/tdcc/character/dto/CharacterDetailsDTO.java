@@ -27,7 +27,7 @@ public class CharacterDetailsDTO {
     public Set<CharacterItemDTO> eyes;
     public CharacterItemDTO leftEar;
     public CharacterItemDTO rightEar;
-    public CharacterItemDTO bead;
+    public Set<CharacterItemDTO> bead;
     public CharacterItemDTO neck;
     public CharacterItemDTO aow;
     public CharacterItemDTO torso;
@@ -82,6 +82,7 @@ public class CharacterDetailsDTO {
                 .oncePerRound(new ArrayList<>())
                 .oncePerRoom(new ArrayList<>())
                 .oncePerGame(new ArrayList<>())
+                .bead(new TreeSet<>())
                 .build();
       
         dao.getItems().stream().forEach((item) -> {
@@ -100,7 +101,7 @@ public class CharacterDetailsDTO {
             if(item.getSlot() == Slot.NECK)
                 build.neck = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.BEAD)
-                build.bead = CharacterItemDTO.fromDAO(item);
+                build.bead.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.AOW)
                 build.aow = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.TORSO)

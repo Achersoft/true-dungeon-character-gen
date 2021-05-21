@@ -459,6 +459,15 @@
                                #{buff})
     </insert>
 
+    <insert id="addCharacterDebuff">
+        INSERT INTO vtd_debuffs (character_id,
+        level,
+        debuff)
+        VALUES (#{characterId},
+        #{level},
+        #{debuff})
+    </insert>
+
     <insert id="addPolys">
           INSERT INTO vtd_poly (id,
                                 character_id,
@@ -947,6 +956,14 @@
          WHERE character_id = #{characterId}
     </select>
 
+    <select id="getCharacterDebuffs" resultType="com.achersoft.tdcc.vtd.dao.VtdDebuff">
+        SELECT character_id 'characterId',
+        level,
+        debuff
+        FROM vtd_debuffs
+        WHERE character_id = #{characterId}
+    </select>
+
     <select id="getCharacterPolys" resultType="com.achersoft.tdcc.vtd.dao.VtdPoly">
         SELECT id,
                character_id 'characterId',
@@ -1040,5 +1057,17 @@
 
     <delete id="deleteCharacterBuff">
         DELETE FROM vtd_buffs WHERE character_id = #{id} AND buff = #{buff}
+    </delete>
+
+    <delete id="deleteCharacterDebuffs">
+        DELETE FROM vtd_debuffs WHERE character_id = #{id}
+    </delete>
+
+    <delete id="resetCharacterDebuffs">
+        DELETE FROM vtd_debuffs WHERE character_id = #{id}
+    </delete>
+
+    <delete id="deleteCharacterDebuff">
+        DELETE FROM vtd_debuffs WHERE character_id = #{id} AND debuff = #{debuff}
     </delete>
 </mapper>                          

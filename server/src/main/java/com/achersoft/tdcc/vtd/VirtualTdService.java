@@ -2,6 +2,7 @@ package com.achersoft.tdcc.vtd;
 
 import com.achersoft.tdcc.character.dao.CharacterName;
 import com.achersoft.tdcc.enums.Buff;
+import com.achersoft.tdcc.enums.Debuff;
 import com.achersoft.tdcc.enums.InGameEffect;
 import com.achersoft.tdcc.party.dao.SelectableCharacters;
 import com.achersoft.tdcc.vtd.dao.VtdBuff;
@@ -24,7 +25,9 @@ public interface VirtualTdService {
     VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect, boolean markUse, boolean ignoreUse);
     VtdDetails unuseSkill(String id, String skillId);
     VtdDetails addBuff(String id, Buff buff);
+    VtdDetails addDebuff(String id, Debuff debuff);
     VtdDetails removeBuff(String id, Buff buff);
+    VtdDetails removeDebuff(String id, Debuff debuff);
     VtdDetails removeEffect(String id, InGameEffect inGameEffect);
     VtdDetails previousRoom(String id);
     VtdDetails nextRoom(String id);

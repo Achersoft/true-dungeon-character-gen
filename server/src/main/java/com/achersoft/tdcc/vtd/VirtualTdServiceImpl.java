@@ -717,6 +717,11 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             int rangeMainHit = rangeMainHand.get() != null ? rangeMainHand.get().getRangeHit() : 0;
             int rangeOffhandHit = rangeOffHand.get() != null ? rangeOffHand.get().getRangeHit() : 0;
 
+            vtdMapper.deleteCharacterDebuffs(characterDetails.getId());
+            Debuff.getAll(characterDetails.getId()).forEach(vtdDebuff -> {
+                vtdMapper.addCharacterDebuff(vtdDebuff);
+            });
+
             vtdDetails = builder
                     .characterId(characterDetails.getId())
                     .characterOrigId(origId)
@@ -744,6 +749,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .items(characterDetails.getItems())
                     .characterSkills(characterSkills)
                     .buffs(new ArrayList<>())
+                    .debuffs(vtdMapper.getCharacterDebuffs(characterDetails.getId()))
                     .meleeDmgRange((mainHand.get() != null) ? mainHand.get().getDamageRange() : "0")
                     .meleeOffhandDmgRange((offHand.get() != null) ? offHand.get().getDamageRange() : (characterDetails.getCharacterClass() ==  CharacterClass.RANGER) ? "0" : null)
                     .rangeDmgRange((rangeMainHand.get() != null) ? rangeMainHand.get().getDamageRange() : null)
@@ -1013,9 +1019,45 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
+    public VtdDetails addDebuff(String id, Debuff debuff) {
+        if (debuff != null) {
+            final List<VtdDebuff> characterDebuffs = vtdMapper.getCharacterDebuffs(id);
+
+            for (VtdDebuff characterDebuff : characterDebuffs) {
+                if (characterDebuff.getDebuff() == debuff) {
+                    characterDebuff.setLevel(characterDebuff.getLevel() + 1);
+                    vtdMapper.deleteCharacterDebuff(id, debuff);
+                    vtdMapper.addCharacterDebuff(characterDebuff);
+                }
+            }
+        }
+
+        return calculateStats(id);
+    }
+
+    @Override
     public VtdDetails removeBuff(String id, Buff buff) {
         if (buff != null) {
             vtdMapper.deleteCharacterBuff(id, buff);
+        }
+
+        return calculateStats(id);
+    }
+
+    @Override
+    public VtdDetails removeDebuff(String id, Debuff debuff) {
+        if (debuff != null) {
+            final List<VtdDebuff> characterDebuffs = vtdMapper.getCharacterDebuffs(id);
+
+            for (VtdDebuff characterDebuff : characterDebuffs) {
+                if (characterDebuff.getDebuff() == debuff) {
+                    characterDebuff.setLevel(characterDebuff.getLevel() - 1);
+                    if (characterDebuff.getLevel() < 0)
+                        characterDebuff.setLevel(0);
+                    vtdMapper.deleteCharacterDebuff(id, debuff);
+                    vtdMapper.addCharacterDebuff(characterDebuff);
+                }
+            }
         }
 
         return calculateStats(id);
@@ -1296,6 +1338,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             vtdDetails = getVtdCharacter(id, false, false);
 
         vtdDetails.setBuffs(vtdMapper.getCharacterBuffs(vtdDetails.getCharacterId()));
+        vtdDetails.setDebuffs(vtdMapper.getCharacterDebuffs(vtdDetails.getCharacterId()));
         vtdDetails.setCharacterSkills(vtdMapper.getCharacterSkills(vtdDetails.getCharacterId()));
         vtdDetails.setStats(vtdMapper.getCharacterStats(vtdDetails.getCharacterId()));
         vtdDetails.setNotes(mapper.getCharacterNotes(vtdDetails.getCharacterOrigId()));
@@ -1311,6 +1354,21 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         applyBuffsToStats(vtdDetails.getBuffs(), vtdDetails.getStats(), vtdDetails.isMightyWeapon());
 
         vtdDetails.getStats().setHealth(vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus());
+
+        for (VtdDebuff vtdDebuff : vtdDetails.getDebuffs()) {
+            if (vtdDebuff.getLevel() > 0) {
+                if (vtdDebuff.getDebuff() == Debuff.DRAIN_LIFE) {
+                    vtdDetails.getStats().setHealth(vtdDetails.getStats().getHealth() - (int)(vtdDetails.getStats().getHealth() * vtdDebuff.getLevel() * .10));
+                } else if (vtdDebuff.getDebuff() == Debuff.DRAIN_LIFE_EPIC) {
+                    vtdDetails.getStats().setHealth(vtdDetails.getStats().getHealth() - (int)(vtdDetails.getStats().getHealth() * vtdDebuff.getLevel() * .20));
+                }
+
+                if (vtdDetails.getCurrentHealth() > vtdDetails.getStats().getHealth()) {
+                    vtdDetails.setCurrentHealth(vtdDetails.getStats().getHealth());
+                    vtdMapper.updateCharacter(vtdDetails);
+                }
+            }
+        }
 
         return vtdDetails;
     }
@@ -1385,9 +1443,11 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             break;
                         case RANGE_HIT:
                             stats.setRangeHit(stats.getRangeHit() + vtdBuffEffect.getModifier());
+                            stats.setRangeHitBenrow(stats.getRangeHitBenrow() + vtdBuffEffect.getModifier());
                             break;
                         case RANGE_DMG:
                             stats.setRangeDmg(stats.getRangeDmg() + vtdBuffEffect.getModifier());
+                            stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + vtdBuffEffect.getModifier());
                             break;
                         case RANGE_FIRE:
                             stats.setRangeFire(stats.isRangeFire() || vtdBuffEffect.getModifier() > 0);

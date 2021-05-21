@@ -4,10 +4,7 @@ import com.achersoft.exception.InvalidDataException;
 import com.achersoft.security.annotations.RequiresPrivilege;
 import com.achersoft.security.type.Privilege;
 import com.achersoft.tdcc.character.dao.CharacterName;
-import com.achersoft.tdcc.enums.Buff;
-import com.achersoft.tdcc.enums.CharacterClass;
-import com.achersoft.tdcc.enums.Difficulty;
-import com.achersoft.tdcc.enums.InGameEffect;
+import com.achersoft.tdcc.enums.*;
 import com.achersoft.tdcc.party.PartyService;
 import com.achersoft.tdcc.party.dao.Party;
 import com.achersoft.tdcc.party.dao.PartyDetails;
@@ -218,6 +215,28 @@ public class VtdRestService {
     public VtdDetailsDTO removeBuff(@PathParam("id") String id,
                                     @QueryParam("buff") Buff buff) throws Exception {
         return VtdDetailsDTO.fromDAO(virtualTdService.removeBuff(id, buff));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
+    @Path("/{id}/debuff")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO addDebuff(@PathParam("id") String id,
+                                   @QueryParam("debuff") Debuff debuff) throws Exception {
+        if (debuff == null)
+            throw new InvalidDataException("Buff was null");
+        return VtdDetailsDTO.fromDAO(virtualTdService.addDebuff(id, debuff));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @DELETE
+    @Path("/{id}/debuff")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO removeDebuff(@PathParam("id") String id,
+                                      @QueryParam("debuff") Debuff debuff) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.removeDebuff(id, debuff));
     }
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
