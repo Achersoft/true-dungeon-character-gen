@@ -35,8 +35,10 @@
     <div class="col-xs-12" style="padding:0" ng-if="characterContext.items.neck !== null">
         <item-tablet-selector editable="false" element-id="neck" model="characterContext.items.neck" label="Neck"></item-tablet-selector>
     </div>
-    <div class="col-xs-12" style="padding:0" ng-if="characterContext.items.bead !== null">
-        <item-tablet-selector editable="false" element-id="bead" model="characterContext.items.bead" label="Bead"></item-tablet-selector>
+    <div ng-if="characterContext.items.bead !== null && characterContext.items.bead.length > 0">
+        <div class="col-xs-12" style="padding:0" ng-repeat-start="bea in characterContext.items.bead track by $index" ng-repeat-end>
+            <item-tablet-selector editable="false" element-id="bead{{$index}}" model="bea" label="Bead"></item-tablet-selector>
+        </div>
     </div>
     <div class="col-xs-12" style="padding:0" ng-if="characterContext.items.aow !== null">
         <item-tablet-selector editable="false" element-id="aow" model="characterContext.items.aow" label="AoW Runestone"></item-tablet-selector>

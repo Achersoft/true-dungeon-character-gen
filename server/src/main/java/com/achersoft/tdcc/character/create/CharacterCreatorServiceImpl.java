@@ -92,7 +92,7 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
         
         try {
             List<CharacterItem> items = characterService.getCharacter(cloneId).getItems();
-            List<CharacterItem> necks = items.stream().filter(token -> token.getSlot() == Slot.NECK).collect(Collectors.toList());
+        /*    List<CharacterItem> necks = items.stream().filter(token -> token.getSlot() == Slot.NECK).collect(Collectors.toList());
             List<CharacterItem> wrists = items.stream().filter(token -> token.getSlot() == Slot.WRIST).collect(Collectors.toList());
             List<CharacterItem> ears = items.stream().filter(token -> token.getSlot() == Slot.EAR).collect(Collectors.toList());
             List<CharacterItem> slotless = items.stream().filter(token -> token.getSlot() == Slot.SLOTLESS).collect(Collectors.toList());
@@ -143,7 +143,7 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
                     if (charItem != null)
                         characterDetails.set(characterService.setTokenSlot(characterDetails.get().getId(), charItem.getId(), token.getItemId()));
                 }
-            });
+            });*/
            
             items.stream().filter(t -> t != null).forEach(token -> {
                 if (token.getItemId() != null && !token.getItemId().isEmpty() && tokenMapper.itemUsableByClass(token.getItemId(), characterClass.name())) {
