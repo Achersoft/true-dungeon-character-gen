@@ -57,7 +57,7 @@ angular.module('main')
     };
 }])
 
-.controller('CharacterCloneCtrl', ['$scope', 'CharacterSvc', 'AuthorizationState', '$location', '$route', function ($scope, characterSvc, AuthorizationState, $location, $route) {
+.controller('CharacterCloneCtrl', ['$scope', 'CharacterSvc', 'AuthorizationState', '$location', '$route', 'CharacterState', function ($scope, characterSvc, AuthorizationState, $location, $route, characterState) {
     $scope.name = null;
     $scope.characterClass = null;
     $scope.characterClasses = ["BARBARIAN", "BARD", "CLERIC", "DRUID", "DWARF_FIGHTER", "ELF_WIZARD", "FIGHTER", "MONK", "PALADIN", "RANGER", "ROGUE", "WIZARD"];
@@ -79,11 +79,20 @@ angular.module('main')
         $scope.characterClass = charClass;
     };
     
+    $scope.running =  function(){
+        return characterState.getRunning();
+    };
+    
     $scope.cloneCharacter = function(){
-        characterSvc.cloneCharacter($scope.character, $scope.characterClass, $scope.name).then(function(result) {
-            $location.path("/character/edit/" + result.data.id);
-            $route.reload();
-        });
+        if (!characterState.getRunning()) {
+            characterState.setRunning(true);
+            characterSvc.cloneCharacter($scope.character, $scope.characterClass, $scope.name, $scope.running).then(function(result) {
+                characterState.setRunning(false);
+                $location.path("/character/edit/" + result.data.id);
+                $route.reload();
+            });
+            
+        }
     };
     
     $scope.updateCharacters = function(user) {
@@ -270,6 +279,7 @@ angular.module('main')
 .factory('CharacterState', [
     function() {                    
         var characterState = {};
+        var running = false;
         
         function setContext(data) {
             characterState = data;
@@ -278,14 +288,24 @@ angular.module('main')
         function get() {
             return characterState;
         }
+        
+        function setRunning(isRunning) {
+            running = isRunning;
+        }
+        
+        function getRunning() {
+            return running;
+        }
 
         return {
             setContext: setContext,
-            get: get
+            get: get,
+            getRunning: getRunning,
+            setRunning: setRunning
         };
     }])
 
-.factory('CharacterSvc',['$http', 'RESOURCES', 'ErrorDialogSvc', '$q', function($http, RESOURCES, errorDialogSvc, $q) {    
+.factory('CharacterSvc',['$http', 'RESOURCES', 'ErrorDialogSvc', '$q', 'CharacterState', function($http, RESOURCES, errorDialogSvc, $q, characterState) {    
     var tokenAdminSvc={};
 
     tokenAdminSvc.createCharacter = function(characterClass, name) {
@@ -296,10 +316,11 @@ angular.module('main')
             });
     };
     
-    tokenAdminSvc.cloneCharacter = function(cloneId, characterClass, name) {
+    tokenAdminSvc.cloneCharacter = function(cloneId, characterClass, name, running) {
         return $http.put(RESOURCES.REST_BASE_URL + '/character/clone/' + cloneId + '?characterClass=' + characterClass + "&name=" + name)
             .catch(function(response) {
                 errorDialogSvc.showError(response);
+                characterState.setRunning(false);
                 return($q.reject(response));
             });
     };

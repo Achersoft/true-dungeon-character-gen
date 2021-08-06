@@ -191,6 +191,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicReference<TokenFullDetails> offHand = new AtomicReference<>();
             final AtomicReference<TokenFullDetails> rangeMainHand = new AtomicReference<>();
             final AtomicReference<TokenFullDetails> rangeOffHand = new AtomicReference<>();
+            final AtomicBoolean hasMedallionKeenness = new AtomicBoolean(false);
             final AtomicBoolean hasBarbRelic = new AtomicBoolean(false);
             final AtomicBoolean hasBarbLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasDruidRelic = new AtomicBoolean(false);
@@ -209,6 +210,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicInteger turnUndeadDamage = new AtomicInteger(0);
             final AtomicBoolean hasWizardRelic = new AtomicBoolean(false);
             final AtomicBoolean hasWizardLegendary = new AtomicBoolean(false);
+            final AtomicBoolean ignoreIncorporeal = new AtomicBoolean(false);
             final Set<CritType> critTypes = new HashSet<>();
 
             for (CharacterItem characterItem : characterDetails.getItems()) {
@@ -224,6 +226,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
                     if (characterItem.getItemId().equals("92c1ce81e876bc168949f61cdc1a9a33e7e52409"))
                         hasBarbRelic.set(true);
+                    else if (characterItem.getItemId().equals("9b9e86587d8776a706ab8dc01bc060fc2560da50") && characterItem.getSlotStatus() == SlotStatus.OK)
+                        hasMedallionKeenness.set(true);
                     else if (characterItem.getItemId().equals("0076ceef0f905dda175de13222ce34029a5873f2"))
                         hasBarbLegendary.set(true);
                     else if (characterItem.getItemId().equals("f2f2a4950f8e1a2415890a370b54efc1605b551a"))
@@ -261,6 +265,13 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     else if (characterItem.getItemId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3") ||
                              characterItem.getItemId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa"))
                         hasPrestigeClass.set(true);
+                    else if (characterItem.getItemId().equals("e3d537d7b1067df3a7f67d121d1394c26efd7937") ||
+                             characterItem.getItemId().equals("e8bd935fafdc20dec319a8e2e72dcfc06de30fda") ||
+                             characterItem.getItemId().equals("ba1439a19e276be50cce8d0ca3dbf03a39703b56") ||
+                             characterItem.getItemId().equals("1414e6288f8c8eed096ee123e11807e55dd73509") ||
+                             characterItem.getItemId().equals("37ee8d237352a5f557ace9c93d2405723bf778a5") ||
+                             characterItem.getItemId().equals("b1665d38410fa27957dc1d3b64f9b4e808e071a3"))
+                        ignoreIncorporeal.set(true);
                     else if (characterItem.getItemId().equals("1ec328d0a1f1144b23fdd400412553a00df1b7b0"))  //Acolyte Holy Symbol
                         turnUndeadDamage.set(1);
                     else if (characterItem.getItemId().equals("1a1f740907d508cff6ca662ef11a83ec6f184806"))  //Commander’s Holy Symbol
@@ -287,6 +298,12 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
             switch (characterDetails.getCharacterClass()) {
                 case ALL:
+                    if (ignoreIncorporeal.get()) {
+                        meleeDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
+                        meleeOffhandDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
+                        rangeDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
+                        rangeOffhandDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
+                    }
                     break;
                 case BARBARIAN:
                     if (hasBarbRelic.get() || hasBarbLegendary.get()) {
@@ -687,6 +704,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
                     break;
             }
+
+            if (hasMedallionKeenness.get() && mainHand.get() != null && mainHand.get().getCritMin() > 19)
+                mainHand.get().setCritMin(19);
 
             if (mainHand.get() != null && mainHand.get().getWeaponExplodeCondition() != null) {
                 final DamageModEffect damageModEffect = mainHand.get().getWeaponExplodeCondition().getDamageModEffect(characterDetails.getCharacterClass());
@@ -1443,11 +1463,13 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             break;
                         case RANGE_HIT:
                             stats.setRangeHit(stats.getRangeHit() + vtdBuffEffect.getModifier());
-                            stats.setRangeHitBenrow(stats.getRangeHitBenrow() + vtdBuffEffect.getModifier());
+                            if (buff.getBuff().getEffects().stream().noneMatch(be -> be.getStat() == Stat.BENROW_HIT))
+                                stats.setRangeHitBenrow(stats.getRangeHitBenrow() + vtdBuffEffect.getModifier());
                             break;
                         case RANGE_DMG:
                             stats.setRangeDmg(stats.getRangeDmg() + vtdBuffEffect.getModifier());
-                            stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + vtdBuffEffect.getModifier());
+                            if (buff.getBuff().getEffects().stream().noneMatch(be -> be.getStat() == Stat.BENROW_DMG))
+                                stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + vtdBuffEffect.getModifier());
                             break;
                         case RANGE_FIRE:
                             stats.setRangeFire(stats.isRangeFire() || vtdBuffEffect.getModifier() > 0);

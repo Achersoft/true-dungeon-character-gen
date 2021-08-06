@@ -10,5 +10,7 @@ public enum MonsterEffects {
     RANGE_OFFHAND_ON_20,
     PHASING_EPIC,
     COLD_PIERCE,
+    COLD_RESIST_50,
+    INCORPOREAL,
     SUBDUE;
 }

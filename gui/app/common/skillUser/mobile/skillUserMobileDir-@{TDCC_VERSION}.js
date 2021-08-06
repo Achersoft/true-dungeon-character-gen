@@ -257,7 +257,12 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                     scope.applyDr();
                     
                     if(scope.monster.monsterEffects) {
-                        if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
+                        if (scope.monster.monsterEffects.includes("INCORPOREAL")) {
+                            if (!scope.hasBuff()("Ignore Incorporeal") && (Math.floor(Math.random() * 2) === 0)) {
+                                scope.damage = 0;
+                                scope.damagePool = 0;
+                            }
+                        } else if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
                             scope.damage = 0;
                             scope.damagePool = 0;
                         } else if((scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE')  && scope.monster.monsterEffects.includes("PHASING_HARDCORE")) {
@@ -409,7 +414,12 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                     scope.applyDr();
                     
                     if(scope.monster.monsterEffects) {
-                        if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
+                        if (scope.monster.monsterEffects.includes("INCORPOREAL")) {
+                            if (!scope.hasBuff()("Ignore Incorporeal") && (Math.floor(Math.random() * 2) === 0)) {
+                                scope.damage = 0;
+                                scope.damagePool = 0;
+                            }
+                        } else if(scope.model.skillLevel === 'ZERO' && scope.monster.monsterEffects.includes("PHASING_NORMAL")) {
                             scope.damage = 0;
                             scope.damagePool = 0;
                         } else if((scope.model.skillLevel === 'ZERO' || scope.model.skillLevel === 'ONE')  && scope.monster.monsterEffects.includes("PHASING_HARDCORE")) {

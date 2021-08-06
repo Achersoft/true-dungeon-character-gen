@@ -16,6 +16,7 @@ public enum Buff {
     RAGE("Rage", "+4 damage with melee weapons", false, CharacterClass.BARBARIAN, false, Collections.singletonList(VtdBuffEffect.builder().stat(Stat.MELEE_DMG).modifier(4).build())),
     GREATER_RAGE("Greater Rage", "+6 damage with melee weapons", false, CharacterClass.BARBARIAN, false, Collections.singletonList(VtdBuffEffect.builder().stat(Stat.MELEE_DMG).modifier(6).build())),
     FURY("Fury", "Next slide will auto crit", false, CharacterClass.BARBARIAN, false, Collections.emptyList()),
+    IGNORE_INCORPOREAL("Ignore Incorporeal", "Ignore 50% miss chance", true, CharacterClass.ALL, false, Collections.emptyList()),
     SPELL_SURGE("Spell Surge", "Doubles the base damage of you next damage or healing spell", false, CharacterClass.DRUID, false, Collections.emptyList()),
     RIGHTEOUS_WRATH("Righteous Wrath", "+5 hit and +10 damage with next melee attach", false, CharacterClass.PALADIN, false, Arrays.asList(VtdBuffEffect.builder().stat(Stat.MELEE_HIT).modifier(5).build(), VtdBuffEffect.builder().stat(Stat.MELEE_DMG).modifier(10).build())),
     BOLSTER("Bolster", "+1 to AC", true, CharacterClass.ALL, false, Arrays.asList(VtdBuffEffect.builder().stat(Stat.MELEE_AC).modifier(1).build(), VtdBuffEffect.builder().stat(Stat.RANGE_AC).modifier(1).build())),

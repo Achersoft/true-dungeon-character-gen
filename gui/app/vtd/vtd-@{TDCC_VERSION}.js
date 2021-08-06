@@ -384,11 +384,23 @@ angular.module('main')
         } else if (offhandHitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_OFFHAND_ON_20")) {
             offhandHitRollOG = offhandHitRoll;
             offhandHitRoll = 1;
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+            if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                offhandHitRollOG = offhandHitRoll;
+                offhandHitRoll = 1;
+            }
         }
         
         if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
             hitRollOG = hitRoll;
             hitRoll = 1;
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+            if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
         }
         
         if (hitRoll === 1 && offhandHitRoll === 1)
@@ -534,8 +546,13 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bfire - monster.fire);
                     } 
-                } if (monster.cold !== 0 && +$scope.characterContext.stats.bcold) {
-                    if (monster.cold < 0) {
+                } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.bcold) {
+                    if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= Math.round((+$scope.characterContext.stats.bcold*.5));
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= Math.round((+$scope.characterContext.stats.bcold*.5));
+                    } else if (monster.cold < 0) {
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.bcold) ? -1*monster.cold : +$scope.characterContext.stats.bcold;
                         if (oDmgTotal > 0 && isOffDr)
@@ -695,8 +712,13 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                     } 
-                } if (monster.cold !== 0 && +$scope.characterContext.stats.mcold) {
-                    if (monster.cold < 0) {
+                } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
+                    if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= Math.round((+$scope.characterContext.stats.mcold*.5));
+                        if (oDmgTotal > 0)
+                            oDmgTotal -= Math.round((+$scope.characterContext.stats.mcold*.5));
+                    } else if (monster.cold < 0) {
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.mcold) ? -1*monster.cold : +$scope.characterContext.stats.mcold;
                         if (oDmgTotal > 0 && isOffDr)
@@ -948,13 +970,25 @@ angular.module('main')
         } else if (offhandHitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("RANGE_OFFHAND_ON_20")) {
             offhandHitRollOG = offhandHitRoll;
             offhandHitRoll = 1;
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+            if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && 
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                offhandHitRollOG = offhandHitRoll;
+                offhandHitRoll = 1;
+            }
         } else
             isOffhandAttack = true;
         
         if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("RANGE_MAIN_ON_20")) {
             hitRollOG = hitRoll;
             hitRoll = 1;
-        }      
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+            if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && 
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        }     
         
         if (hitRoll === 1 && offhandHitRoll === 1)
             vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":true,"roll":1,"mRoll":hitRollOG,"oRoll":offhandHitRollOG,"isOffhandAttack":isOffhandAttack});
@@ -1074,8 +1108,13 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rfire - monster.fire);
                 } 
-            } if (monster.cold !== 0 && +$scope.characterContext.stats.rcold) {
-                if (monster.cold < 0) {
+            } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.rcold) {
+                if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= Math.round((+$scope.characterContext.stats.rcold*.5));
+                    if (oDmgTotal > 0)
+                        oDmgTotal -= Math.round((+$scope.characterContext.stats.rcold*.5));
+                } else if (monster.cold < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.rcold) ? -1*monster.cold : +$scope.characterContext.stats.rcold;
                     if (oDmgTotal > 0 && isOffDr)
@@ -1300,7 +1339,13 @@ angular.module('main')
         if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
             hitRollOG = hitRoll;
             hitRoll = 1;
-        }  
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+            if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } 
         
         if (hitRoll === 1)
             vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":true,"roll":1,"mRoll":hitRollOG});
@@ -1352,7 +1397,9 @@ angular.module('main')
                 }
                 allFire = true;
             } else if ($scope.characterContext.poly.name === "Iktomi’s Shaper Necklace - Ice" || $scope.characterContext.poly.name === "Shaman’s Greater Necklace - Ice") {
-                if (monster.cold < 0) {
+                if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                    mDmgTotal = Math.round((mDmgTotal*.5));
+                } else if (monster.cold < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.cold < mDmgTotal) ? -1*monster.cold : mDmgTotal;
                 } else if (monster.cold - mDmgTotal >= 0) {
@@ -1396,8 +1443,11 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                     } 
-                } if (monster.cold !== 0 && +$scope.characterContext.stats.mcold) {
-                    if (monster.cold < 0) {
+                } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
+                    if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= Math.round((+$scope.characterContext.stats.mcold*.5));
+                    } else if (monster.cold < 0) {
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.mcold) ? -1*monster.cold : +$scope.characterContext.stats.mcold;
                     } else if (monster.cold - +$scope.characterContext.stats.mcold >= 0) {
@@ -1614,6 +1664,12 @@ angular.module('main')
         if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
             hitRollOG = hitRoll;
             hitRoll = 1;
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+            if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
         }  
  
         if (monster !== null && !monster.sneak) 
@@ -1704,8 +1760,11 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                 } 
-            } if (monster.cold !== 0 && +$scope.characterContext.stats.mcold) {
-                if (monster.cold < 0) {
+            } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
+                if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= Math.round((+$scope.characterContext.stats.mcold*.5));
+                } else if (monster.cold < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.mcold) ? -1*monster.cold : +$scope.characterContext.stats.mcold;
                 } else if (monster.cold - +$scope.characterContext.stats.mcold >= 0) {
@@ -1874,6 +1933,12 @@ angular.module('main')
         if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("RANGE_MAIN_ON_20")) {
             hitRollOG = hitRoll;
             hitRoll = 1;
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+            if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && 
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
         }  
         
         if (monster !== null && !monster.sneak) 
@@ -1944,8 +2009,11 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rfire - monster.fire);
                     } 
-                } if (monster.cold !== 0 && +$scope.characterContext.stats.rcold) {
-                    if (monster.cold < 0) {
+                } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.rcold) {
+                    if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                        if (mDmgTotal > 0)
+                            mDmgTotal -= Math.round((+$scope.characterContext.stats.rcold*.5));
+                    } else if (monster.cold < 0) {
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.rcold) ? -1*monster.cold : +$scope.characterContext.stats.rcold;
                     } else if (monster.cold - +$scope.characterContext.stats.rcold >= 0) {
@@ -2112,7 +2180,13 @@ angular.module('main')
         if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
             hitRollOG = hitRoll;
             hitRoll = 1;
-        }  
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+            if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } 
  
         if (hitRoll === 1)
             vtdHistory.add({"type":"ATTACK","sub":"MELEE_SUBDUAL","isMiss":true,"roll":1,"mRoll":hitRollOG});
@@ -2370,6 +2444,10 @@ angular.module('main')
                     if ($scope.isFurryThrow) {
                         if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("RANGE_MAIN_ON_20")) {
                             $scope.rollHit = 1;
+                        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+                            if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                                $scope.rollHit = 1;
+                            }
                         } else {
                             $scope.rollHit += $scope.characterContext.stats.rangeHitBenrow;
                             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
@@ -2414,7 +2492,11 @@ angular.module('main')
                             }
                         }
                     } else if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
-                            $scope.rollHit = 1;    
+                        $scope.rollHit = 1;    
+                    } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+                        if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                            $scope.rollHit = 1;
+                        }
                     } else {
                         $scope.rollHit += $scope.characterContext.stats.meleeHit;
                         if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
@@ -2473,6 +2555,10 @@ angular.module('main')
                 } else if ($scope.attackIndex === 1) {
                     if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("RANGE_MAIN_ON_20")) {
                         $scope.rollHit = 1;
+                    } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+                        if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                            $scope.rollHit = 1;
+                        }
                     } else {
                         $scope.rollHit += $scope.characterContext.stats.rangeHit;
                         if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD"))
@@ -2531,6 +2617,10 @@ angular.module('main')
                 } else if ($scope.attackIndex === 2) {
                     if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
                             $scope.rollHit = 1;    
+                    } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+                        if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                            $scope.rollHit = 1;
+                        }
                     } else {
                         $scope.rollHit += $scope.characterContext.stats.meleePolyHit;
                         if (!$scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "NO_DAMAGE_MOD"))
@@ -2571,6 +2661,10 @@ angular.module('main')
                 }  else if ($scope.attackIndex === 11) {
                     if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
                             $scope.rollHit = 1;    
+                    } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+                        if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                            $scope.rollHit = 1;
+                        }
                     } else {
                         $scope.rollHit += $scope.characterContext.stats.meleeHit;
                         $scope.rollDmg = $scope.characterContext.stats.meleeDmg;
@@ -2581,6 +2675,10 @@ angular.module('main')
                     if ($scope.sneakIndex === 0) {
                         if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
                             $scope.rollHit = 1;    
+                        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+                            if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                                $scope.rollHit = 1;
+                            }
                         } else {
                             $scope.rollHit += ($scope.characterContext.stats.meleeHit + $scope.characterContext.meleeSneakHit);
                             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
@@ -2662,6 +2760,10 @@ angular.module('main')
                     } else if ($scope.sneakIndex === 1 && $scope.characterContext.sneakAtRange) {
                         if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("RANGE_MAIN_ON_20")) {
                             $scope.rollHit = 1;    
+                        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+                            if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                                $scope.rollHit = 1;
+                            }
                         } else {
                             $scope.rollHit += ($scope.characterContext.stats.rangeHit + $scope.characterContext.rangeSneakHit);
                             if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD"))
@@ -2750,6 +2852,10 @@ angular.module('main')
                 if ($scope.isFurryThrow) {
                     if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("RANGE_MAIN_ON_20")) {
                         $scope.rollHit = 1;    
+                    } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+                        if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                            $scope.rollHit = 1;
+                        }
                     } else {
                         $scope.rollHitOff += Math.round($scope.characterContext.stats.rangeHit * .75);
                         if (!$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD"))
@@ -2795,7 +2901,11 @@ angular.module('main')
                     }
                 } else if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
                     $scope.rollHit = 1;    
-                } else {
+                } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+                    if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                        $scope.rollHit = 1;
+                    }
+                }else {
                     $scope.rollHitOff += Math.round($scope.characterContext.stats.meleeHit * .75);
                     if (!$scope.hasEffect($scope.characterContext.meleeOffhandDmgEffects, "NO_DAMAGE_MOD"))
                         $scope.rollDmgOff = $scope.characterContext.stats.meleeDmg;
@@ -2853,6 +2963,10 @@ angular.module('main')
             } else if ($scope.attackIndex === 1) {
                 if ($scope.rollHit !== 20 && monster.monsterEffects && monster.monsterEffects.includes("RANGE_MAIN_ON_20")) {
                     $scope.rollHit = 1;    
+                } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+                    if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                        $scope.rollHit = 1;
+                    }
                 } else {
                     $scope.rollHitOff += Math.round($scope.characterContext.stats.rangeHit * .75);
                     if (!$scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "NO_DAMAGE_MOD"))
@@ -2925,8 +3039,11 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.bfire - monster.fire);
                 } 
-            } if (monster.cold !== 0 && +$scope.characterContext.stats.bcold) {
-                if (monster.cold < 0) {
+            } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.bcold) {
+                if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= Math.round((+$scope.characterContext.stats.bcold*.5));
+                } else if (monster.cold < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.bcold) ? -1*monster.cold : +$scope.characterContext.stats.bcold;
                 } else if (monster.cold - +$scope.characterContext.stats.bcold >= 0) {
@@ -3030,8 +3147,11 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                 } 
-            } if (monster.cold !== 0 && +$scope.characterContext.stats.mcold) {
-                if (monster.cold < 0) {
+            } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
+                if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                    if (mDmgTotal > 0)
+                        mDmgTotal -= Math.round((+$scope.characterContext.stats.mcold*.5));
+                } else  if (monster.cold < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.mcold) ? -1*monster.cold : +$scope.characterContext.stats.mcold;
                 } else if (monster.cold - +$scope.characterContext.stats.mcold >= 0) {
@@ -3151,8 +3271,11 @@ angular.module('main')
                 if (mDmgTotal > 0 && isMainDr)
                     mDmgTotal -= (+$scope.characterContext.stats.rfire - monster.fire);
             } 
-        } if (monster.cold !== 0 && +$scope.characterContext.stats.rcold) {
-            if (monster.cold < 0) {
+        } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.rcold) {
+            if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                if (mDmgTotal > 0)
+                    mDmgTotal -= Math.round((+$scope.characterContext.stats.rcold*.5));
+            } else if (monster.cold < 0) {
                 if (mDmgTotal > 0 && isMainDr)
                     mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.rcold) ? -1*monster.cold : +$scope.characterContext.stats.rcold;
             } else if (monster.cold - +$scope.characterContext.stats.rcold >= 0) {
@@ -3277,7 +3400,9 @@ angular.module('main')
             }
             allFire = true;
         } else if ($scope.characterContext.poly.name === "Iktomi’s Shaper Necklace - Ice" || $scope.characterContext.poly.name === "Shaman’s Greater Necklace - Ice") {
-            if (monster.cold < 0) {
+            if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                mDmgTotal = Math.round((mDmgTotal*.5));
+            } else if (monster.cold < 0) {
                 if (mDmgTotal > 0 && isMainDr)
                     mDmgTotal += (-1*monster.cold < mDmgTotal) ? -1*monster.cold : mDmgTotal;
             } else if (monster.cold - mDmgTotal >= 0) {
@@ -3321,8 +3446,11 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                 } 
-            } if (monster.cold !== 0 && +$scope.characterContext.stats.mcold) {
-                if (monster.cold < 0) {
+            } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
+                if (monster.monsterEffects.includes("COLD_RESIST_50")) {
+                    if(mDmgTotal > 0)
+                        mDmgTotal -= Math.round((+$scope.characterContext.stats.mcold*.5));
+                } else if (monster.cold < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.cold < +$scope.characterContext.stats.mcold) ? -1*monster.cold : +$scope.characterContext.stats.mcold;
                 } else if (monster.cold - +$scope.characterContext.stats.mcold >= 0) {

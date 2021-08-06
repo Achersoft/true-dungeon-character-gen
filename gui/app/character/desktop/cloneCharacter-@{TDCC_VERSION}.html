@@ -30,9 +30,14 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-12 text-right" style="margin-top:15px;margin-bottom:15px">
-                <button class="btn btn-primary" ng-click="cloneCharacter()">
+                <button class="btn" ng-class="{'btn-default' : running(), 'btn-primary' : !running()}" ng-click="cloneCharacter()">
                     <span class="fa fa-save" ></span> Clone 
                 </button>
+            </div>
+        </div>
+        <div class="row" ng-if="running()">
+            <div class="text-center col-xs-12" style="margin-top: 10px; font-size: 36px">
+                <label style="font-size: 36px">Clone in progress please wait</label>
             </div>
         </div>
     </div>
