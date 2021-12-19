@@ -750,6 +750,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .name(characterDetails.getName())
                     .adventureId(aDefault.getId())
                     .adventureName(aDefault.getName())
+                    .rollerId(null)
                     .characterClass(characterDetails.getCharacterClass())
                     .stats(characterDetails.getStats())
                     .currentHealth(characterDetails.getStats().getHealth())
@@ -1319,6 +1320,16 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             vtdMapper.updateCharacter(vtdDetails);
         } else
             throw new InvalidDataException("Passcode does not match any known adventures.");
+
+        return calculateStats(id);
+    }
+
+    @Override
+    public VtdDetails setRollerId(String id, String rollerId) {
+        final VtdDetails vtdDetails = calculateStats(id);
+
+        vtdDetails.setRollerId(rollerId);
+        vtdMapper.updateCharacter(vtdDetails);
 
         return calculateStats(id);
     }

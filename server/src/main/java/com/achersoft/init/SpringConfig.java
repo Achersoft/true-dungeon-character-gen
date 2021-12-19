@@ -22,6 +22,8 @@ import com.achersoft.tdcc.token.admin.TokenAdminService;
 import com.achersoft.tdcc.token.admin.TokenAdminServiceImpl;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
+import com.achersoft.tdcc.vtd.VirtualTdRollerService;
+import com.achersoft.tdcc.vtd.VirtualTdRollerServiceImpl;
 import com.achersoft.tdcc.vtd.VirtualTdService;
 import com.achersoft.tdcc.vtd.VirtualTdServiceImpl;
 import com.achersoft.tdcc.vtd.admin.VirtualTdAdminService;
@@ -34,11 +36,23 @@ import com.achersoft.user.UserServiceImpl;
 import com.achersoft.user.persistence.UserMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.SecureRandom;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -50,9 +64,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.env.Environment;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableTransactionManagement
@@ -125,6 +142,9 @@ public class SpringConfig {
     public VirtualTdService virtualTdService() {
         return new VirtualTdServiceImpl();
     }
+
+    @Bean
+    public VirtualTdRollerService virtualTdRollerService() { return new VirtualTdRollerServiceImpl(); }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="System"> 
@@ -214,6 +234,30 @@ public class SpringConfig {
             .expireAfterAccess(12, TimeUnit.HOURS)
             .build();
     }
+/*
+    @Bean
+    public RestTemplate restTemplate() throws KeyStoreException {
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keyStore.load(new FileInputStream(new File(keyStoreFile)),
+                keyStorePassword.toCharArray());
+
+        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(
+                new SSLContextBuilder()
+                        .loadTrustMaterial(null, new TrustSelfSignedStrategy())
+                        .loadKeyMaterial(keyStore, keyStorePassword.toCharArray())
+                        .build(),
+                NoopHostnameVerifier.INSTANCE);
+
+        HttpClient httpClient = HttpClients.custom().setSSLSocketFactory(
+                socketFactory).build();
+
+        ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(
+                httpClient);
+
+        return new RestTemplate(requestFactory);
+    }
+
+ */
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="DTO Prototypes"> 

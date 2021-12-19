@@ -9,6 +9,7 @@ import com.achersoft.tdcc.party.PartyService;
 import com.achersoft.tdcc.party.dao.Party;
 import com.achersoft.tdcc.party.dao.PartyDetails;
 import com.achersoft.tdcc.party.dao.SelectableCharacters;
+import com.achersoft.tdcc.vtd.VirtualTdRollerService;
 import com.achersoft.tdcc.vtd.VirtualTdService;
 import com.achersoft.tdcc.vtd.dao.VtdDetails;
 import com.achersoft.tdcc.vtd.dto.BuffDTO;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class VtdRestService {
 
     private @Inject VirtualTdService virtualTdService;
+    private @Inject VirtualTdRollerService virtualTdRollerService;
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @GET
@@ -170,6 +172,18 @@ public class VtdRestService {
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @POST
+    @Path("/{id}/roller")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO setRollerId(@PathParam("id") String id,
+                                     @QueryParam("rollerId") String rollerId) throws Exception {
+        if (rollerId == null || rollerId.isEmpty())
+            throw new InvalidDataException("TD Adventure roller ID was empty");
+        return VtdDetailsDTO.fromDAO(virtualTdService.setRollerId(id, rollerId));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
     @Path("/{id}/{skillId}/use")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -273,5 +287,14 @@ public class VtdRestService {
     @Produces({MediaType.APPLICATION_JSON})
     public VtdDetailsDTO resetCharacter(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
         return VtdDetailsDTO.fromDAO(virtualTdService.resetCharacter(id));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
+    @Path("/td/roller")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public boolean sendRoll(@Valid @NotNull String roll) throws Exception {
+        return virtualTdRollerService.sendRoll(roll);
     }
 }

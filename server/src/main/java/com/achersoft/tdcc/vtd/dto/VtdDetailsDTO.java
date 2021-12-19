@@ -24,7 +24,9 @@ public class VtdDetailsDTO {
     public String id;
     public String name;
     public String adventureName;
+    public String rollerId;
     public CharacterClass characterClass;
+    public String rollerCharacterClass;
     public String characterClassString;
     public CharacterStats stats;
     public Integer currentHealth;
@@ -123,8 +125,10 @@ public class VtdDetailsDTO {
                 .id(dao.getCharacterId())
                 .name(dao.getName())
                 .adventureName(dao.getAdventureName())
+                .rollerId(dao.getRollerId())
                 .currentHealth(dao.getCurrentHealth())
                 .characterClass(dao.getCharacterClass())
+                .rollerCharacterClass(dao.getCharacterClass().getRollerText())
                 .characterClassString(dao.getCharacterClass().getDtoValue(dao.isPrestigeActive()))
                 .stats(dao.getStats())
                 .rollerDifficulty(dao.getRollerDifficulty())

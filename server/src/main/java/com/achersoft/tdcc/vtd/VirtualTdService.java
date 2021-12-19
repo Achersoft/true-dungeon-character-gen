@@ -34,6 +34,7 @@ public interface VirtualTdService {
     VtdDetails setPoly(String id, String polyId);
     VtdDetails setCompanion(String id, String polyId);
     VtdDetails setAdventure(String id, String passcode);
+    VtdDetails setRollerId(String id, String rollerId);
     VtdDetails resetCharacter(String id);
     List<CharacterName> deleteCharacter(String id);
     VtdDetails activatePrestigeClass(String id);

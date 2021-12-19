@@ -35,6 +35,11 @@ public class VtdMonster {
     private @Builder.Default int meleeDr = 0;
     private @Builder.Default int rangeDr = 0;
     private @Builder.Default int spellDr = 0;
+    private @Builder.Default int mAC = 0;
+    private @Builder.Default int rAC = 0;
+    private @Builder.Default int fort = 0;
+    private @Builder.Default int reflex = 0;
+    private @Builder.Default int will = 0;
 
     public static List<VtdMonster> fromRoom(List<VtdRoom> vtdRooms, Set<CritType> critTypes, int meleeWeaponHit, int meleeWeaponHitOff, int rangeWeaponHit, int rangeWeaponHitOff, boolean isRanger, boolean isLevel5) {
         if (vtdRooms == null)
@@ -160,6 +165,11 @@ public class VtdMonster {
                 .meleeDr(vtdRoom.getMeleeDr())
                 .rangeDr(vtdRoom.getRangeDr())
                 .spellDr(vtdRoom.getSpellDr())
+                .mAC(vtdRoom.getMAC())
+                .rAC(vtdRoom.getRAC())
+                .fort(vtdRoom.getFort())
+                .reflex(vtdRoom.getReflex())
+                .will(vtdRoom.getWill())
                 .build();
     }
 }

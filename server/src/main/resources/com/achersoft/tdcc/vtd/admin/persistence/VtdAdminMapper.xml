@@ -47,7 +47,12 @@
                                 poison,
                                 sacred,
                                 darkrift,
-                                acid)
+                                acid,
+                                mAC,
+                                rAC,
+                                fort,
+                                reflex,
+                                will)
                         VALUES (#{id},
                                 #{vtdId},
                                 #{room},
@@ -80,7 +85,12 @@
                                 #{poison},
                                 #{sacred},
                                 #{darkrift},
-                                #{acid})
+                                #{acid},
+                                #{mAC},
+                                #{rAC},
+                                #{fort},
+                                #{reflex},
+                                #{will})
     </insert>
 
     <select id="getAdventures" resultType="com.achersoft.tdcc.vtd.admin.dao.VtdSetting">
@@ -143,6 +153,11 @@
                 sacred,
                 darkrift,
                 acid,
+                mAC,
+                rAC,
+                fort,
+                reflex,
+                will,
                 u_dr 'universalDr',
                 m_dr 'meleeDr',
                 r_dr 'rangeDr',
@@ -186,6 +201,11 @@
                 sacred,
                 darkrift,
                 acid,
+                mAC,
+                rAC,
+                fort,
+                reflex,
+                will,
                 u_dr 'universalDr',
                 m_dr 'meleeDr',
                 r_dr 'rangeDr',
@@ -229,6 +249,11 @@
         sacred,
         darkrift,
         acid,
+        mAC,
+        rAC,
+        fort,
+        reflex,
+        will,
         u_dr 'universalDr',
         m_dr 'meleeDr',
         r_dr 'rangeDr',
@@ -279,7 +304,12 @@
             poison = #{poison},
             sacred = #{sacred},
             darkrift = #{darkrift},
-            acid = #{acid}
+            acid = #{acid},
+            mAC = #{mAC},
+            rAC = #{rAC},
+            fort = #{fort},
+            reflex = #{reflex},
+            will = #{will}
         WHERE id = #{id}
     </update>
     

@@ -52,4 +52,9 @@ public class VtdRoom {
     private @Builder.Default int meleeDr = 0;
     private @Builder.Default int rangeDr = 0;
     private @Builder.Default int spellDr = 0;
+    private @Builder.Default int mAC = 0;
+    private @Builder.Default int rAC = 0;
+    private @Builder.Default int fort = 0;
+    private @Builder.Default int reflex = 0;
+    private @Builder.Default int will = 0;
 }

@@ -25,6 +25,7 @@ public class VtdDetails {
     private String userId;
     private String adventureId;
     private String adventureName;
+    private String rollerId;
     private List<VtdMonster> monsters;
     private Date expires;
     private String name;

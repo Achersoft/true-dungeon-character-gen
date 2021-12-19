@@ -11,6 +11,7 @@
                                     name,
                                     adventureId,
                                     adventureName,
+                                    rollerId,
                                     critTypes,
                                     character_class,
                                     health,
@@ -79,6 +80,7 @@
                                     #{name},
                                     #{adventureId},
                                     #{adventureName},
+                                    #{rollerId},
                                     #{critTypes},
                                     #{characterClass},
                                     #{currentHealth},
@@ -504,6 +506,7 @@
                 name,
                 adventureId,
                 adventureName,
+                rollerId,
                 critTypes,
                 character_class 'characterClass',
                 health 'currentHealth',
@@ -577,6 +580,7 @@
                 name,
                 adventureId,
                 adventureName,
+                rollerId,
                 critTypes,
                 character_class 'characterClass',
                 health 'currentHealth',
@@ -651,6 +655,7 @@
                 name,
                 adventureId,
                 adventureName,
+                rollerId,
                 critTypes,
                 character_class 'characterClass',
                 health 'currentHealth',
@@ -1027,6 +1032,7 @@
             melee_poly_crit_min = #{meleePolyCritMin},
             adventureId = #{adventureId},
             adventureName = #{adventureName},
+            rollerId = #{rollerId},
             prestigeActive = #{prestigeActive}
         WHERE id = #{characterId}
     </insert>

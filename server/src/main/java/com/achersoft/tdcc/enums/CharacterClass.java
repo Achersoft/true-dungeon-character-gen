@@ -3,24 +3,26 @@ package com.achersoft.tdcc.enums;
 import lombok.Getter;
 
 public enum CharacterClass {
-    ALL("All"),
-    BARBARIAN("Barbarian"),
-    BARD("Bard"),
-    CLERIC("Cleric"),
-    DRUID("Druid"),
-    FIGHTER("Fighter"),
-    DWARF_FIGHTER("Dwarf Fighter"),
-    ELF_WIZARD("Elf Wizard"),
-    WIZARD("Wizard"),
-    MONK("Monk"),
-    PALADIN("Paladin"),
-    RANGER("Ranger"),
-    ROGUE("Rogue");
+    ALL("All", "ALL"),
+    BARBARIAN("Barbarian", "barbarian"),
+    BARD("Bard", "bard"),
+    CLERIC("Cleric", "cleric"),
+    DRUID("Druid", "druid"),
+    FIGHTER("Fighter", "fighter"),
+    DWARF_FIGHTER("Dwarf Fighter", "dwarf"),
+    ELF_WIZARD("Elf Wizard", "elf"),
+    WIZARD("Wizard", "wizard"),
+    MONK("Monk", "monk"),
+    PALADIN("Paladin", "paladin"),
+    RANGER("Ranger", "ranger"),
+    ROGUE("Rogue", "rogue");
 
     private @Getter final String displayText;
+    private @Getter final String rollerText;
 
-    CharacterClass(String displayText) {
+    CharacterClass(String displayText, String rollerText) {
         this.displayText = displayText;
+        this.rollerText = rollerText;
     }
 
     public String getDtoValue(boolean isPrestige) {
