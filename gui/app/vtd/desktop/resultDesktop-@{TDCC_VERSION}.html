@@ -8,6 +8,10 @@
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12" style="overflow-y:auto;height:360px;padding:0px">
          <div ng-if="resultIndex === 0">
+             <div class="text-center" ng-show="lastEvent.type === 'ROLLER'">
+                <h1><strong> {{lastEvent.sub}}</strong></h1>
+                <span style="font-size:30px">{{lastEvent.result}}</span>
+            </div>
             <div class="text-center" ng-show="lastEvent.type === 'INIT'">
                 <h1><strong>Initiative Roll</strong></h1>
                 <span style="font-size:72px">{{lastEvent.result}}({{lastEvent.roll}})</span>

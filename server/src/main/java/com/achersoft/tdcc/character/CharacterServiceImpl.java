@@ -1987,6 +1987,8 @@ public class CharacterServiceImpl implements CharacterService {
         final Set<ConditionalUse> metCondition = new HashSet<>();
         final List<Integer> meleeWeaponHit = new ArrayList<>();
         final List<Integer> rangeWeaponHit = new ArrayList<>();
+        AtomicBoolean hasSkullOfCavadar = new AtomicBoolean(false);
+        AtomicBoolean hasMysticOrb = new AtomicBoolean(false);
         AtomicBoolean hasFighterRelic = new AtomicBoolean(false);
         AtomicBoolean hasWonderEffect = new AtomicBoolean(false);
         AtomicBoolean hasBenrows = new AtomicBoolean(false);
@@ -2123,6 +2125,9 @@ public class CharacterServiceImpl implements CharacterService {
                     stats.setPsychicLevel(7);
             } else if(item.getTokenFullDetails().getName().contains("Skull of Cavadar")) {
                 stats.setPsychicLevel(7);
+                hasSkullOfCavadar.set(true);
+            } else if(item.getTokenFullDetails().getName().contains("Ioun Stone Mystic Orb")) {
+                hasMysticOrb.set(true);
             }
             if((item.getTokenFullDetails().getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") || item.getTokenFullDetails().getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2")) && sixLevelReward.get() == 0) {
                 sixLevelReward.set(1);
@@ -2249,6 +2254,11 @@ public class CharacterServiceImpl implements CharacterService {
                 stats.setRangeDmg(stats.getRangeDmg() + strBonus);
             } else
                 stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
+        }
+        if (hasMysticOrb.get() && hasSkullOfCavadar.get()) {
+            stats.setReflex(stats.getReflex() + 1);
+            stats.setWill(stats.getWill() + 1);
+            stats.setFort(stats.getFort() + 1);
         }
             
         int figurineCount = (int)characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FIGURINE).count();

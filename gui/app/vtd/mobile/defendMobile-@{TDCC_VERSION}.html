@@ -73,11 +73,11 @@
             </span>
         </center> 
         <div class="col-xs-12 col-sm-12" style="margin-top:15px;"></div>
-        <div class="col-xs-12 col-sm-12 text-center text-danger" style="font-size:30px" ng-show="rollSave === 1">
-            <strong>FAILED</strong> 
+        <div class="col-xs-12 col-sm-12 text-center text-danger" style="font-size:30px" ng-show="lastEvent.type === 'ROLLER'">
+            <strong>{{lastEvent.result}}</strong> 
         </div>
-        <div class="col-xs-12 text-center" ng-show="rollSave > 1" style="font-size: 24px">
-            <strong>Save:</strong> {{rollSave}}({{rollSaveNatural}})
+        <div class="col-xs-12 text-center" style="font-size: 24px" ng-show="lastEvent.type === 'SAVE'">
+            <strong>Save:</strong> {{lastEvent.save}}({{lastEvent.roll}})
         </div>
     </div>
     <div class="col-xs-12 text-center" ng-show="defendIndex === 2">

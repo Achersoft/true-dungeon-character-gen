@@ -47,7 +47,7 @@ angular.module('main')
     };
 }])
 
-.controller('VtdPlayDesktopCtrl', ['$scope', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', 'WarnDialogSvc', 'MonsterSelectorSvc', function ($scope, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, confirmDialogSvc, warnDialogSvc, monsterSelectorSvc) {
+.controller('VtdPlayDesktopCtrl', ['$scope', '$q', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', 'WarnDialogSvc', 'MonsterSelectorSvc', function ($scope, $q, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, confirmDialogSvc, warnDialogSvc, monsterSelectorSvc) {
     $scope.attackIndex = 0;
     $scope.skillIndex = 0;
     $scope.resultIndex = 0;
@@ -134,8 +134,13 @@ angular.module('main')
         
         if ($scope.characterContext.rollerId !== null) {
             vtdSvc.sendRoll('{"version":1,"slotId":"'+$scope.characterContext.rollerId+'","classId":"'+$scope.characterContext.rollerCharacterClass+'","eventType":"initiative_roll",' +
-                '"rolls":[{"dieResult":'+roll+',"modifiedResult":'+(roll+$scope.characterContext.stats.initiative+$scope.characterContext.initBonus)+'}]}').then(function(response) {
-                vtdHistory.add({"type":"INIT","sub":"INIT","roll":roll,"result":roll + $scope.characterContext.stats.initiative + $scope.characterContext.initBonus});
+                '"rolls":[{"dieResult":'+roll+',"modifiedResult":'+(roll+$scope.characterContext.stats.initiative+$scope.characterContext.initBonus)+'}]}').catch(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Initiative Roll","result":response.data.errors[0]});       
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
+                return($q.reject(response));
+            }).then(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Initiative Roll","result":"Initiative roll sent"});
                 $scope.history = vtdHistory.get();
                 $scope.lastEvent = vtdHistory.getLast();   
             });
@@ -178,13 +183,15 @@ angular.module('main')
         
         if ($scope.characterContext.rollerId !== null) {
             vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
-                ' "rolls": [{ "type": "reflex", "dieResult": ' + save + ', "modifiedResult": ' + saveMod + ', "isSuccess": ' + saved + ', "effect": "' + monsterEffect + '" }]}').then(function(result) {
-                if (save > 1)
-                    vtdHistory.add({"type":"SAVE","sub":"REFLEX","roll":save,"save":save+$scope.characterContext.stats.reflex});
-                else
-                    vtdHistory.add({"type":"SAVE","sub":"REFLEX","roll":save,"save":save});
+                ' "rolls": [{ "type": "reflex", "dieResult": ' + save + ', "modifiedResult": ' + saveMod + ', "isSuccess": ' + saved + ', "effect": "' + monsterEffect + '" }]}').catch(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Reflex Save","result":response.data.errors[0]});       
                 $scope.history = vtdHistory.get();
                 $scope.lastEvent = vtdHistory.getLast(); 
+                return($q.reject(response));
+            }).then(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Reflex Save","result":"Reflex save roll sent"});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();   
             });
         } else {
             if (save > 1)
@@ -228,13 +235,15 @@ angular.module('main')
         
         if ($scope.characterContext.rollerId !== null) {
             vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
-                ' "rolls": [{ "type": "fortitude", "dieResult": ' + save + ', "modifiedResult": ' + saveMod + ', "isSuccess": ' + saved + ', "effect": "' + monsterEffect + '" }]}').then(function(result) {
-                if (save > 1)
-                    vtdHistory.add({"type":"SAVE","sub":"FORT","roll":save,"save":save+$scope.characterContext.stats.fort});
-                else
-                    vtdHistory.add({"type":"SAVE","sub":"FORT","roll":save,"save":save});
+                ' "rolls": [{ "type": "fortitude", "dieResult": ' + save + ', "modifiedResult": ' + saveMod + ', "isSuccess": ' + saved + ', "effect": "' + monsterEffect + '" }]}').catch(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Fortitude Save","result":response.data.errors[0]});       
                 $scope.history = vtdHistory.get();
-                $scope.lastEvent = vtdHistory.getLast();  
+                $scope.lastEvent = vtdHistory.getLast(); 
+                return($q.reject(response));
+            }).then(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Fortitude Save","result":"Fortitude save roll sent"});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();   
             });
         } else {
             if (save > 1)
@@ -278,11 +287,13 @@ angular.module('main')
 
         if ($scope.characterContext.rollerId !== null) {
             vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
-                ' "rolls": [{ "type": "will", "dieResult": ' + save + ', "modifiedResult": ' + saveMod + ', "isSuccess": ' + saved + ', "effect": "' + monsterEffect + '" }]}').then(function(result) {
-                if (save > 1)
-                    vtdHistory.add({"type":"SAVE","sub":"WILL","roll":save,"save":save+$scope.characterContext.stats.will});
-                else
-                    vtdHistory.add({"type":"SAVE","sub":"WILL","roll":save,"save":save});
+                ' "rolls": [{ "type": "will", "dieResult": ' + save + ', "modifiedResult": ' + saveMod + ', "isSuccess": ' + saved + ', "effect": "' + monsterEffect + '" }]}').catch(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Will Save","result":response.data.errors[0]});       
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
+                return($q.reject(response));
+            }).then(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Will Save","result":"Will save roll sent"});
                 $scope.history = vtdHistory.get();
                 $scope.lastEvent = vtdHistory.getLast();   
             });
@@ -537,15 +548,25 @@ angular.module('main')
             if ($scope.characterContext.rollerId !== null) {
                 if (!('meleeOffhandHit' in $scope.characterContext.stats)) {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').then(function(result) {
-                        vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":true,"roll":1,"mRoll":hitRollOG,"oRoll":offhandHitRollOG});
+                        ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
                         $scope.history = vtdHistory.get();
-                        $scope.lastEvent = vtdHistory.getLast();              
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":"Melee attack roll sent"});
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast();   
                     });
                 } else {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }, { "type": "melee_off", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').then(function(result) {
-                        vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":true,"roll":1,"mRoll":hitRollOG,"oRoll":offhandHitRollOG});
+                        ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }, { "type": "melee_off", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":"Melee attack roll sent"});
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast();   
                     });
@@ -1078,17 +1099,13 @@ angular.module('main')
                 if ($scope.characterContext.rollerId !== null) {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
                         ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
-                        '{ "type": "melee_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ' }]}').then(function(result) {
-                        if (mDmgTotal === 0 && oDmgTotal === 0) {
-                            vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod,"oRoll":offhandHitRollMod});
-                        } else {
-                            vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
-                                "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
-                                "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"sWeaponExp":sDmgExp,"oWeaponExp":oDmgExp,"fire":$scope.characterContext.stats.bfire,
-                                "cold":$scope.characterContext.stats.bcold,"shock":$scope.characterContext.stats.bshock,"sonic":$scope.characterContext.stats.bsonic,
-                                "eldritch":$scope.characterContext.stats.beldritch,"poison":$scope.characterContext.stats.bpoison,"darkrift":$scope.characterContext.stats.bdarkrift,
-                                "sacred":$scope.characterContext.stats.bsacred,"force":$scope.characterContext.stats.bforce,"acid":$scope.characterContext.stats.bacid});
-                        }
+                        '{ "type": "melee_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ' }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Flurry Throw Attack","result":response.data.errors[0]});       
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Flurry Throw Attack","result":"Flurry throw attack roll sent"});
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast();   
                     });
@@ -1120,35 +1137,27 @@ angular.module('main')
                     if ('meleeOffhandHit' in $scope.characterContext.stats) {
                         vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
                             ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
-                            '{ "type": "melee_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ' }]}').then(function(result) {
-                            if (mDmgTotal === 0 && oDmgTotal === 0) {
-                                vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod,"oRoll":offhandHitRollMod});
-                            } else {
-                                vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
-                                    "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
-                                    "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"sWeaponExp":sDmgExp,"oWeaponExp":oDmgExp,"fire":$scope.characterContext.stats.mfire,
-                                    "cold":$scope.characterContext.stats.mcold,"shock":$scope.characterContext.stats.mshock,"sonic":$scope.characterContext.stats.msonic,
-                                    "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
-                                    "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid});
-                            }
+                            '{ "type": "melee_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ' }]}').catch(function(response) {
+                            vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
                             $scope.history = vtdHistory.get();
-                            $scope.lastEvent = vtdHistory.getLast();  
+                            $scope.lastEvent = vtdHistory.getLast(); 
+                            return($q.reject(response));
+                        }).then(function(response) {
+                            vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":"Melee attack roll sent"});
+                            $scope.history = vtdHistory.get();
+                            $scope.lastEvent = vtdHistory.getLast();   
                         });
                     } else {
                         vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                            ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').then(function(result) {
-                            if (mDmgTotal === 0 && oDmgTotal === 0) {
-                                vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod,"oRoll":offhandHitRollMod});
-                            } else {
-                                vtdHistory.add({"type":"ATTACK","sub":"MELEE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
-                                    "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
-                                    "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"sWeaponExp":sDmgExp,"oWeaponExp":oDmgExp,"fire":$scope.characterContext.stats.mfire,
-                                    "cold":$scope.characterContext.stats.mcold,"shock":$scope.characterContext.stats.mshock,"sonic":$scope.characterContext.stats.msonic,
-                                    "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
-                                    "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid});
-                            }
+                            ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').catch(function(response) {
+                            vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
                             $scope.history = vtdHistory.get();
-                            $scope.lastEvent = vtdHistory.getLast();  
+                            $scope.lastEvent = vtdHistory.getLast(); 
+                            return($q.reject(response));
+                        }).then(function(response) {
+                            vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":"Melee attack roll sent"});
+                            $scope.history = vtdHistory.get();
+                            $scope.lastEvent = vtdHistory.getLast();   
                         });
                     }
                 } else {
@@ -1224,20 +1233,36 @@ angular.module('main')
         }     
         
         if (hitRoll === 1 && offhandHitRoll === 1) {
-            vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":true,"roll":1,"mRoll":hitRollOG,"oRoll":offhandHitRollOG,"isOffhandAttack":isOffhandAttack});
-            
             if ($scope.characterContext.rollerId !== null) {
                 if (!('rangeOffhandHit' in $scope.characterContext.stats)) {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').then(function(result) {
-                        //console.log(result);
+                        ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":response.data.errors[0]});       
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":"Range attack roll sent"});
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast();   
                     });
                 } else {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }, { "type": "range_off", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').then(function(result) {
-                        //console.log(result);
+                        ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }, { "type": "range_off", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":response.data.errors[0]});       
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":"Range attack roll sent"});
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast();   
                     });
                 }
+            } else {
+                vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":true,"roll":1,"mRoll":hitRollOG,"oRoll":offhandHitRollOG,"isOffhandAttack":isOffhandAttack});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
             }
         } else {
             var hitRollMod = 1;
@@ -1553,35 +1578,48 @@ angular.module('main')
                 oCritDmg = 0;
             }
 
-            if (mDmgTotal === 0 && oDmgTotal === 0) {
-                vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod,"oRoll":offhandHitRollMod});
-            } else {
-                vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
-                    "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
-                    "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"oWeaponExp":oDmgExp,"fire":$scope.characterContext.stats.rfire,
-                    "cold":$scope.characterContext.stats.rcold,"shock":$scope.characterContext.stats.rshock,"sonic":$scope.characterContext.stats.rsonic,
-                    "eldritch":$scope.characterContext.stats.reldritch,"poison":$scope.characterContext.stats.rpoison,"darkrift":$scope.characterContext.stats.rdarkrift,
-                    "sacred":$scope.characterContext.stats.rsacred,"force":$scope.characterContext.stats.rforce,"acid":$scope.characterContext.stats.racid,"isOffhandAttack":isOffhandAttack});
-            }
-
             if ($scope.characterContext.rollerId !== null) {
                 if ('rangeOffhandHit' in $scope.characterContext.stats) {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
                         ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
-                        '{ "type": "range_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ' }]}').then(function(result) {
-                        //console.log(result);
+                        '{ "type": "range_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ' }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":response.data.errors[0]});       
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":"Range attack roll sent"});
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast();   
                     });
                 } else {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').then(function(result) {
-                        //console.log(result);
+                        ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":response.data.errors[0]});       
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":"Range attack roll sent"});
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast();   
                     });
                 }
+            } else {
+                if (mDmgTotal === 0 && oDmgTotal === 0) {
+                    vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod,"oRoll":offhandHitRollMod});
+                } else {
+                    vtdHistory.add({"type":"ATTACK","sub":"RANGE","isMiss":false,"isCrit":mCritDmg > 0 || oCritDmg > 0,"mRoll":hitRoll,"oRoll":offhandHitRoll,
+                        "mRollTotal":hitRollMod,"oRollTotal":offhandHitRollMod,"mWheel":mDmg,"oWheel":oDmg,"mDmg":mDmgTotal,"oDmg":oDmgTotal,"totalDmg":mDmgTotal+oDmgTotal,
+                        "mCrit":mCritDmg,"oCrit":oCritDmg,"critTotal":totalCrit,"mWeaponExp":mDmgExp,"oWeaponExp":oDmgExp,"fire":$scope.characterContext.stats.rfire,
+                        "cold":$scope.characterContext.stats.rcold,"shock":$scope.characterContext.stats.rshock,"sonic":$scope.characterContext.stats.rsonic,
+                        "eldritch":$scope.characterContext.stats.reldritch,"poison":$scope.characterContext.stats.rpoison,"darkrift":$scope.characterContext.stats.rdarkrift,
+                        "sacred":$scope.characterContext.stats.rsacred,"force":$scope.characterContext.stats.rforce,"acid":$scope.characterContext.stats.racid,"isOffhandAttack":isOffhandAttack});
+                }
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
             }
         }
-         
-        $scope.history = vtdHistory.get();
-        $scope.lastEvent = vtdHistory.getLast();  
     };
     
     $scope.rollToHitPoly =  function(monsterIndex) {        
@@ -1623,13 +1661,22 @@ angular.module('main')
         } 
         
         if (hitRoll === 1) {
-            vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":true,"roll":1,"mRoll":hitRollOG});
-            
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').then(function(result) {
-                    //console.log(result);
+                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Polymorph Attack","result":response.data.errors[0]});       
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                    return($q.reject(response));
+                }).then(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Polymorph Attack","result":"Polymorph attack roll sent"});
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast();   
                 });
+            } else {
+                vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":true,"roll":1,"mRoll":hitRollOG});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
             }
         } else {
             var hitRollMod = 1;
@@ -1851,40 +1898,46 @@ angular.module('main')
                 eleDmg = 0;
             }
 
-            if (mDmgTotal === 0) {
-                vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod});
-            } else {
-                if (allFire) {
-                    vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
-                        "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"fire":eleDmg}); 
-                } else if (allCold) {
-                    vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
-                        "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"cold":eleDmg}); 
-                } else if (allShock) {
-                    vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
-                        "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"shock":eleDmg}); 
-                } else if (allSonic) {
-                    vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
-                        "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"sonic":eleDmg}); 
-                } else {
-                    vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
-                        "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"fire":$scope.characterContext.stats.mfire,
-                        "cold":$scope.characterContext.stats.mcold,"shock":$scope.characterContext.stats.mshock,"sonic":$scope.characterContext.stats.msonic,
-                        "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
-                        "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid}); 
-                }
-            }
-
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').then(function(result) {
-                    //console.log(result);
+                    ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').catch(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Polymorph Attack","result":response.data.errors[0]});       
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                    return($q.reject(response));
+                }).then(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Polymorph Attack","result":"Polymorph attack roll sent"});
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast();   
                 });
+            } else {
+                if (mDmgTotal === 0) {
+                    vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod});
+                } else {
+                    if (allFire) {
+                        vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                            "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"fire":eleDmg}); 
+                    } else if (allCold) {
+                        vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                            "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"cold":eleDmg}); 
+                    } else if (allShock) {
+                        vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                            "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"shock":eleDmg}); 
+                    } else if (allSonic) {
+                        vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                            "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"sonic":eleDmg}); 
+                    } else {
+                        vtdHistory.add({"type":"ATTACK","sub":"POLY","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                            "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"fire":$scope.characterContext.stats.mfire,
+                            "cold":$scope.characterContext.stats.mcold,"shock":$scope.characterContext.stats.mshock,"sonic":$scope.characterContext.stats.msonic,
+                            "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
+                            "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid}); 
+                    }
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                }
             }
-        }
-         
-        $scope.history = vtdHistory.get();
-        $scope.lastEvent = vtdHistory.getLast();  
+        } 
     };
     
     $scope.rollToHitAnimalCompanion =  function(monsterIndex) {        
@@ -1971,23 +2024,41 @@ angular.module('main')
             }
         }  
  
-        if (monster !== null && !monster.sneak) { 
-            vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isImmune":true,"immuneText":"Your sneak attack failed to find any vulnerable weak spots"});
-            
+        if (monster !== null && !monster.sneak) {  
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').then(function(result) {
-                    //console.log(result);
+                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                    return($q.reject(response));
+                }).then(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":"Your sneak attack failed to find any vulnerable weak spots"});
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast();   
                 });
+            } else {
+                vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isImmune":true,"immuneText":"Your sneak attack failed to find any vulnerable weak spots"});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();
             }
         } else if (hitRoll === 1) {
-            vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isImmune":false,"isMiss":true,"roll":1,"mRoll":hitRollOG});
-            
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').then(function(result) {
-                    //console.log(result);
+                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                    return($q.reject(response));
+                }).then(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":"Sneak attack roll sent"});
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast();   
                 });
+            } else {
+                vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isImmune":false,"isMiss":true,"roll":1,"mRoll":hitRollOG});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();
             }
         } else {
             var hitRollMod = 1;
@@ -2214,26 +2285,32 @@ angular.module('main')
                 mCritDmg = 0;
             }
 
-            if (mDmgTotal === 0) {
-                vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod});
-            } else {
-                vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isImmune":false,"isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
-                    "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"sWeaponExp":sDmgExp,"fire":$scope.characterContext.stats.mfire,
-                    "cold":$scope.characterContext.stats.mcold,"shock":$scope.characterContext.stats.mshock,"sonic":$scope.characterContext.stats.msonic,
-                    "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
-                    "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid});
-            }
-
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').then(function(result) {
-                    //console.log(result);
+                    ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').catch(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                    return($q.reject(response));
+                }).then(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":"Sneak attack roll sent"});
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast();   
                 });
+            } else {
+                if (mDmgTotal === 0) {
+                    vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod});
+                } else {
+                    vtdHistory.add({"type":"ATTACK","sub":"MELEE_SNEAK","isImmune":false,"isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                        "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"sWeaponExp":sDmgExp,"fire":$scope.characterContext.stats.mfire,
+                        "cold":$scope.characterContext.stats.mcold,"shock":$scope.characterContext.stats.mshock,"sonic":$scope.characterContext.stats.msonic,
+                        "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
+                        "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid});
+                }
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();  
             }
         }
-         
-        $scope.history = vtdHistory.get();
-        $scope.lastEvent = vtdHistory.getLast();  
     };
     
     $scope.rollToHitSneakRange =  function(monsterIndex) {        
@@ -2270,22 +2347,40 @@ angular.module('main')
         }  
         
         if (monster !== null && !monster.sneak) {
-            vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isImmune":true,"immuneText":"Your sneak attack failed to find any vulnerable weak spots"});
-            
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').then(function(result) {
-                    //console.log(result);
+                    ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                    return($q.reject(response));
+                }).then(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":"Your sneak attack failed to find any vulnerable weak spots"});
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast();   
                 });
+            } else {
+                vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isImmune":true,"immuneText":"Your sneak attack failed to find any vulnerable weak spots"});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();
             }
         } else if (hitRoll === 1) {
-            vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isImmune":false,"isMiss":true,"roll":1,"mRoll":hitRollOG});
-            
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').then(function(result) {
-                    //console.log(result);
+                    ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                    return($q.reject(response));
+                }).then(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":"Sneak attack roll sent"});
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast();   
                 });
+            } else {
+                vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isImmune":false,"isMiss":true,"roll":1,"mRoll":hitRollOG});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();
             }
         } else {
             var hitRollMod = 1;
@@ -2491,26 +2586,32 @@ angular.module('main')
                 mCritDmg = 0;
             }
 
-            if (mDmgTotal === 0) {
-                vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod});
-            } else {
-                vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isImmune":false,"isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
-                    "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"fire":$scope.characterContext.stats.rfire,
-                    "cold":$scope.characterContext.stats.rcold,"shock":$scope.characterContext.stats.rshock,"sonic":$scope.characterContext.stats.rsonic,
-                    "eldritch":$scope.characterContext.stats.reldritch,"poison":$scope.characterContext.stats.rpoison,"darkrift":$scope.characterContext.stats.rdarkrift,
-                    "sacred":$scope.characterContext.stats.rsacred,"force":$scope.characterContext.stats.rforce,"acid":$scope.characterContext.stats.racid});
-            }
-
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').then(function(result) {
-                    //console.log(result);
+                    ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').catch(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                    return($q.reject(response));
+                }).then(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":"Sneak attack roll sent"});
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast();   
                 });
+            } else {
+                if (mDmgTotal === 0) {
+                    vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isMiss":true,"roll":hitRollMod,"mRoll":hitRollMod});
+                } else {
+                    vtdHistory.add({"type":"ATTACK","sub":"RANGE_SNEAK","isImmune":false,"isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                        "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"fire":$scope.characterContext.stats.rfire,
+                        "cold":$scope.characterContext.stats.rcold,"shock":$scope.characterContext.stats.rshock,"sonic":$scope.characterContext.stats.rsonic,
+                        "eldritch":$scope.characterContext.stats.reldritch,"poison":$scope.characterContext.stats.rpoison,"darkrift":$scope.characterContext.stats.rdarkrift,
+                        "sacred":$scope.characterContext.stats.rsacred,"force":$scope.characterContext.stats.rforce,"acid":$scope.characterContext.stats.racid});
+                }
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
             }
-        }
-         
-        $scope.history = vtdHistory.get();
-        $scope.lastEvent = vtdHistory.getLast();  
+        } 
     };
     
     $scope.rollToHitSubdual =  function(monsterIndex) {        
@@ -2582,7 +2683,7 @@ angular.module('main')
     };
 }])
 
-.controller('VtdPlayCtrl', ['$scope', 'VtdSvc', 'VtdState', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', 'MonsterSelectorSvc', function ($scope, vtdSvc, vtdState, RESOURCES, $routeParams, $route, confirmDialogSvc, monsterSelectorSvc) {
+.controller('VtdPlayCtrl', ['$scope', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'ConfirmDialogSvc', 'MonsterSelectorSvc', function ($scope, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, confirmDialogSvc, monsterSelectorSvc) {
     $scope.defaultRoller = [11,12,13,14,15,16,17,18,19,20];
     $scope.hardRoller = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,11,12,13,14,15,16,17,18,19,20];
     $scope.harderRoller = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
@@ -2617,6 +2718,8 @@ angular.module('main')
     $scope.healAmount = 0;
     $scope.isFurryThrow = false;
     $scope.characterContext = vtdState.get();
+    $scope.history = vtdHistory.get();
+    $scope.lastEvent = vtdHistory.getLast();
 
     vtdSvc.getCharacter($routeParams.characterId).then(function(result) {
         vtdState.setContext(result.data);
@@ -3911,36 +4014,166 @@ angular.module('main')
     };
     
     $scope.rollToSave =  function() {
-        $scope.rollSaveNatural = $scope.harderRoller[$scope.getRandomInt($scope.harderRoller.length)];
-        $scope.rollSave = $scope.rollSaveNatural;
+        if ($scope.saveIndex === 0) {
+            $scope.rollFort(); 
+        } else if ($scope.saveIndex === 1) {
+            $scope.rollReflex(); 
+        } else if ($scope.saveIndex === 2) {
+            $scope.rollWill();           
+        }                     
+    };
+    
+    $scope.rollReflex =  function(monsterIndex) {
+        var save = $scope.getRandomInt(20) + 1;
+        var saveMod = (save > 1) ? (save + $scope.characterContext.stats.reflex) : 1;
+        var monsterSave = null;
+        var monsterEffect = "missed";
         
-        if ($scope.rollSave !== 1) {
-            if ($scope.saveIndex === 0) {
-                $scope.rollSave += $scope.characterContext.stats.fort;
-                if ($scope.characterContext.rollerId !== null) {
-                    vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
-                        ' "rolls": [{ "type": "fortitude", "dieResult": ' + $scope.rollSaveNatural + ', "modifiedResult": ' + $scope.rollSave + ' }]}').then(function(result) {
-                        //console.log(result);
-                    });
-                } 
-            } else if ($scope.saveIndex === 1) {
-                $scope.rollSave += $scope.characterContext.stats.reflex;
-                if ($scope.characterContext.rollerId !== null) {
-                    vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
-                        ' "rolls": [{ "type": "reflex", "dieResult": ' + $scope.rollSaveNatural + ', "modifiedResult": ' + $scope.rollSave + ' }]}').then(function(result) {
-                        //console.log(result);
-                    });
-                } 
-            } else if ($scope.saveIndex === 2) {
-                $scope.rollSave += $scope.characterContext.stats.will;
-                if ($scope.characterContext.rollerId !== null) {
-                    vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
-                        ' "rolls": [{ "type": "will", "dieResult": ' + $scope.rollSaveNatural + ', "modifiedResult": ' + $scope.rollSave + ' }]}').then(function(result) {
-                        //console.log(result);
-                    });
-                }             
-            }
+        if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
+            monsterSave = 0;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollReflex(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monsterSave = monsterIndex.reflex;
+            monsterEffect = monsterIndex.reflexEffect;
+        } else {
+            monsterSave = $scope.characterContext.monsters[0].reflex;
+            monsterEffect = $scope.characterContext.monsters[0].reflexEffect;
+        }
+        
+        if (monsterEffect === undefined || monsterEffect === null)
+            monsterEffect = "missed";
+        
+        var saved = (saveMod >= monsterSave) ? true : false;
+
+        if (saved)
+            monsterEffect = "";
+        
+        if ($scope.characterContext.rollerId !== null) {
+            vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
+                ' "rolls": [{ "type": "reflex", "dieResult": ' + save + ', "modifiedResult": ' + saveMod + ', "isSuccess": ' + saved + ', "effect": "' + monsterEffect + '" }]}').catch(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Reflex Save","result":response.data.errors[0]});       
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
+                return($q.reject(response));
+            }).then(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Reflex Save","result":"Reflex save roll sent"});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();   
+            });
+        } else {
+            if (save > 1)
+                vtdHistory.add({"type":"SAVE","sub":"REFLEX","roll":save,"save":save+$scope.characterContext.stats.reflex});
+            else
+                vtdHistory.add({"type":"SAVE","sub":"REFLEX","roll":save,"save":save});
+            $scope.history = vtdHistory.get();
+            $scope.lastEvent = vtdHistory.getLast(); 
         }                         
+    };
+    
+    $scope.rollFort =  function(monsterIndex) {
+        var save = $scope.getRandomInt(20) + 1;
+        var saveMod = (save > 1) ? (save + $scope.characterContext.stats.fort) : 1;
+        var monsterSave = null;
+        var monsterEffect = "missed";
+        
+        if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
+            monsterSave = 0;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollFort(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monsterSave = monsterIndex.fort;
+            monsterEffect = monsterIndex.fortEffect;
+        } else {
+            monsterSave = $scope.characterContext.monsters[0].fort;
+            monsterEffect = $scope.characterContext.monsters[0].fortEffect;
+        }
+        
+        if (monsterEffect === undefined || monsterEffect === null)
+            monsterEffect = "missed";
+        
+        var saved = (saveMod >= monsterSave) ? true : false;
+
+        if (saved)
+            monsterEffect = "";
+        
+        if ($scope.characterContext.rollerId !== null) {
+            vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
+                ' "rolls": [{ "type": "fortitude", "dieResult": ' + save + ', "modifiedResult": ' + saveMod + ', "isSuccess": ' + saved + ', "effect": "' + monsterEffect + '" }]}').catch(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Fortitude Save","result":response.data.errors[0]});       
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
+                return($q.reject(response));
+            }).then(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Fortitude Save","result":"Fortitude save roll sent"});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();   
+            });
+        } else {
+            if (save > 1)
+                vtdHistory.add({"type":"SAVE","sub":"FORT","roll":save,"save":save+$scope.characterContext.stats.fort});
+            else
+                vtdHistory.add({"type":"SAVE","sub":"FORT","roll":save,"save":save});
+            $scope.history = vtdHistory.get();
+            $scope.lastEvent = vtdHistory.getLast();  
+        }                    
+    };
+    
+    $scope.rollWill =  function(monsterIndex) {
+        var save = $scope.getRandomInt(20) + 1;
+        var saveMod = (save > 1) ? (save + $scope.characterContext.stats.will) : 1;
+        var monsterSave = null;
+        var monsterEffect = "missed";
+        
+        if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
+            monsterSave = 0;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollWill(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monsterSave = monsterIndex.will;
+            monsterEffect = monsterIndex.willEffect;
+        } else {
+            monsterSave = $scope.characterContext.monsters[0].will;
+            monsterEffect = $scope.characterContext.monsters[0].willEffect;
+        }
+        
+        if (monsterEffect === undefined || monsterEffect === null)
+            monsterEffect = "missed";
+        
+        var saved = (saveMod >= monsterSave) ? true : false;
+
+        if (saved)
+            monsterEffect = "";
+
+        if ($scope.characterContext.rollerId !== null) {
+            vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
+                ' "rolls": [{ "type": "will", "dieResult": ' + save + ', "modifiedResult": ' + saveMod + ', "isSuccess": ' + saved + ', "effect": "' + monsterEffect + '" }]}').catch(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Will Save","result":response.data.errors[0]});       
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
+                return($q.reject(response));
+            }).then(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Will Save","result":"Will save roll sent"});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();   
+            });
+        } else {
+            if (save > 1)
+                vtdHistory.add({"type":"SAVE","sub":"WILL","roll":save,"save":save+$scope.characterContext.stats.will});
+            else
+                vtdHistory.add({"type":"SAVE","sub":"WILL","roll":save,"save":save});
+            $scope.history = vtdHistory.get();
+            $scope.lastEvent = vtdHistory.getLast();   
+        }                  
     };
     
     $scope.hasEffect = function(list, effect) {
@@ -4385,12 +4618,7 @@ angular.module('main')
     
     tokenAdminSvc.sendRoll = function(roll) {
        // roll = '{"version":1,"slotId":"ABCDEF","classId":"bard","eventType":"attack_roll","rolls":[{"type":"melee_main","dieResult":17,"modifiedResult":21,"isSuccess":true,"damage":17}]}';
-        return $http.post('https://us-central1-tdroller-1ac5a.cloudfunctions.net/roll', roll).catch(function(response) {
-            if (response.status === 400) {
-                warnDialogSvc.showMessage("Error sending roll", response.data.errors[0]);
-            }
-            return($q.reject(response));
-        });
+        return $http.post('https://us-central1-tdroller-1ac5a.cloudfunctions.net/roll', roll);
     };
     
     return tokenAdminSvc;
