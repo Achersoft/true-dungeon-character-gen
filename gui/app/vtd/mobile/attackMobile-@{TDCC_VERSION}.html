@@ -214,105 +214,104 @@
                 </span>
             </center> 
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHit > 1" style="padding:0px;font-size:24px;margin-top:15px">
-            <strong>Initiative:</strong> {{rollHit}}({{rollHitNatural}})
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size:24px;margin-top:15px" ng-show="lastEvent.type === 'INIT'">
+            <strong>Initiative:</strong> {{lastEvent.result}}({{lastEvent.roll}})
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center text-info" style="padding:0px;font-size:24px;margin-top:15px" ng-show="lastEvent.type === 'ROLLER'">
+            <strong>{{lastEvent.result}}</strong> 
         </div>
     </div>
     <div ng-show="attackIndex !== 3">
-        <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:15px;padding:0px">
-            <div ng-if="(characterContext.characterClass === 'MONK' || characterContext.characterClass === 'RANGER') && ((attackIndex === 0 && characterContext.meleeOffhandDmgRange && characterContext.meleeOffhandDmgRange.length > 0) || (attackIndex === 1 && characterContext.rangeOffhandDmgRange && characterContext.rangeOffhandDmgRange.length > 0))">
-                <div class="col-xs-4 col-sm-4 col-md-4 text-center" style="padding:0px">
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHit >= 1" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:10px">
-                        <u>Hit(M):</u>
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;padding-top:20px">
+            <center>
+                <span ng-click="rollToHit()">  
+                    <img src="images/d20.png" alt="" style="padding:0px;height:100px"/>
+                </span>
+            </center> 
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center text-info" style="padding:0px;font-size:24px;margin-top:15px" ng-show="lastEvent.type === 'ROLLER'">
+            <strong>{{lastEvent.result}}</strong> 
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12" ng-show="lastEvent.type === 'ATTACK'">
+            <div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:15px;padding:0px" ng-show="lastEvent.isMiss !== true">
+                <div ng-if="(characterContext.characterClass === 'MONK' || characterContext.characterClass === 'RANGER') && ((attackIndex === 0 && characterContext.meleeOffhandDmgRange && characterContext.meleeOffhandDmgRange.length > 0) || (attackIndex === 1 && characterContext.rangeOffhandDmgRange && characterContext.rangeOffhandDmgRange.length > 0))">
+                    <div class="col-xs-6 col-sm-6 col-md-6 text-center" style="padding:0px">
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:10px">
+                            <u>Hit(M):</u>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 20px;">
+                            {{lastEvent.mRollTotal}}({{lastEvent.mRoll}})
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:5px">
+                            <u>Hit(O):</u>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 20px;">
+                            {{lastEvent.oRollTotal}}({{lastEvent.oRoll}})
+                        </div>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHit >= 1" style="padding:0px;font-size: 20px;">
-                        {{rollHit}}({{rollHitNatural}})
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHitOff >= 1" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:5px">
-                        <u>Hit(O):</u>
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHitOff >= 1" style="padding:0px;font-size: 20px;">
-                        {{rollHitOff}}({{rollHitNaturalOff}})
+                    <div class="col-xs-6 col-sm-6 col-md-6 text-center" style="padding:0px">
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:10px">
+                            <u>Dmg(M):</u>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 20px;">
+                            {{lastEvent.mDmg}}({{lastEvent.mWheel}}) 
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:5px">
+                            <u>Dmg(O):</u>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 20px;">
+                            {{lastEvent.oDmg}}({{lastEvent.oWheel}}) 
+                        </div>
                     </div>
                 </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 text-center" style="padding:0px;padding-top:20px">
-                    <center>
-                        <span ng-click="rollToHit()">  
-                            <img src="images/d20.png" alt="" style="padding:0px;height:100px"/>
-                        </span>
-                    </center> 
-                </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 text-center" style="padding:0px">
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHit >= 1" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:10px">
-                        <u>Dmg(M):</u>
+                <div ng-if="attackIndex === 11 || !(characterContext.characterClass === 'MONK' || characterContext.characterClass === 'RANGER') || (attackIndex === 0 && (characterContext.meleeOffhandDmgRange === null || characterContext.meleeOffhandDmgRange.length === 0)) || (attackIndex === 1 && (characterContext.rangeOffhandDmgRange === null || characterContext.rangeOffhandDmgRange.length === 0))">
+                    <div class="col-xs-6 col-sm-6 col-md-6 text-center" style="padding:0px">
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:20px">
+                            <u>Hit:</u>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 20px;">
+                            {{lastEvent.mRollTotal}}({{lastEvent.mRoll}})
+                        </div>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHit >= 1" style="padding:0px;font-size: 20px;">
-                        {{rollDmg}}({{rollDmgNatural}}) 
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHitOff >= 1" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:5px">
-                        <u>Dmg(O):</u>
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHitOff >= 1" style="padding:0px;font-size: 20px;">
-                        {{rollDmgOff}}({{rollDmgNaturalOff}}) 
+                    <div class="col-xs-6 col-sm-6 col-md-6 text-center" style="padding:0px">
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:20px">
+                            <u>Dmg:</u>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="padding:0px;font-size: 20px;">
+                            {{lastEvent.mDmg}}({{lastEvent.mWheel}}) 
+                        </div>
                     </div>
                 </div>
             </div>
-            <div ng-if="attackIndex === 11 || !(characterContext.characterClass === 'MONK' || characterContext.characterClass === 'RANGER') || (attackIndex === 0 && (characterContext.meleeOffhandDmgRange === null || characterContext.meleeOffhandDmgRange.length === 0)) || (attackIndex === 1 && (characterContext.rangeOffhandDmgRange === null || characterContext.rangeOffhandDmgRange.length === 0))">
-                <div class="col-xs-4 col-sm-4 col-md-4 text-center" style="padding:0px">
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHit >= 1" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:20px">
-                        <u>Hit:</u>
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHit >= 1" style="padding:0px;font-size: 20px;">
-                        {{rollHit}}({{rollHitNatural}})
-                    </div>
+            <div class="col-xs-12 col-sm-12" style="margin-top:7px;"></div>
+            <div class="col-xs-12 col-sm-12 text-center text-danger" style="font-size:30px" ng-show="lastEvent.isMiss === true">
+                <strong>Miss</strong> 
+            </div>
+            <div class="col-xs-12 text-center" ng-if="lastEvent.isCrit === true">
+                <div class="col-xs-12 text-center text-success" style="margin-top:10px">
+                    <h3 style="margin:0px"><strong>Critical!!!</strong></h3>
                 </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 text-center" style="padding:0px">
-                    <center>
-                        <span ng-click="rollToHit()">  
-                            <img src="images/d20.png" alt="" style="padding:0px;height:100px"/>
-                        </span>
-                    </center> 
+                <div class="col-xs-12 text-center" style="margin-top:10px" ng-if="lastEvent.mCrit > 0">
+                    <h3 style="margin:0px"><strong>Mainhand Critical: {{lastEvent.mCrit}}</strong></h3>
                 </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 text-center" style="padding:0px">
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHit >= 1" style="padding:0px;font-size: 22px;font-weight: bold;padding-top:20px">
-                        <u>Dmg:</u>
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center" ng-show="rollHit >= 1" style="padding:0px;font-size: 20px;">
-                        {{rollDmg}}({{rollDmgNatural}}) 
-                    </div>
+                <div class="col-xs-12 text-center" style="margin-top:10px" ng-if="lastEvent.oCrit > 0">
+                    <h3 style="margin:0px"><strong>Offhand Critical: {{lastEvent.oCrit}}</strong></h3>
+                </div>
+                <div class="col-xs-12 text-center" style="margin-top:10px">
+                    <h3 style="margin:0px"><strong>Critical Total: {{lastEvent.critTotal}}</strong></h3>
                 </div>
             </div>
-        </div>
-        <div class="col-xs-12 col-sm-12" style="margin-top:7px;"></div>
-        <div class="col-xs-12 col-sm-12 text-center text-success" style="font-size:30px" ng-show="critDmg > 0 || critDmgOff > 0">
-            <strong>Critical!!!</strong> 
-        </div>
-        <div class="col-xs-12 col-sm-12 text-center text-danger" style="font-size:30px" ng-show="rollHit === 1 && rollHitOff < 2">
-            <strong>Miss</strong> 
-        </div>
-        <div class="col-xs-12 col-sm-12 text-center" ng-if="!(characterContext.characterClass === 'MONK' || characterContext.characterClass === 'RANGER') && rollHit > 1" style="margin-top:7px;font-size: 24px">
-            <div class="col-xs-12 col-sm-12 text-center" ng-show="critDmg > 0">
-                <strong>Critical Damage:</strong> {{critDmg}}
+            <div class="col-xs-12 text-center" style="margin-top:12px" ng-if="lastEvent.isCrit === false">
+                <h3 style="margin:0px"><strong>Total Damage: {{lastEvent.totalDmg}}</strong></h3>
             </div>
-            <div class="col-xs-12 col-sm-12 text-center" ng-show="rollDmgExplosionText !== null">
-                <strong>Weapon Effect:</strong> {{rollDmgExplosionText}}
+            <div class="col-xs-12 text-center" style="margin-top:15px" ng-if="lastEvent.mWeaponExp !== null">
+                <h3 style="margin:0px">{{lastEvent.mWeaponExp}}</h3>
             </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 text-center" ng-if="(characterContext.characterClass === 'MONK' || characterContext.characterClass === 'RANGER') && (rollHit > 1 || rollHitOff > 1)" style="margin-top:7px;font-size: 24px">
-            <div class="col-xs-12 col-sm-12 text-center">
-                <strong>Total Damage:</strong> {{totalDmg}}
-            </div> 
-            <div class="col-xs-12 col-sm-12 text-center" ng-show="critDmg > 0 || critDmgOff > 0">
-                <strong>Total Crit Damage:</strong> {{totalCritDmg}}
-            </div> 
-            <div class="col-xs-12 col-sm-12 text-center" ng-show="critDmg > 0">
-                <strong>Crit Damage(M):</strong> {{critDmg}}
-            </div> 
-            <div class="col-xs-12 col-sm-12 text-center" ng-show="critDmgOff > 0">
-                <strong>Crit Damage(O):</strong> {{critDmgOff}}
-            </div> 
-            <div class="col-xs-12 col-sm-12 text-center" ng-show="rollDmgExplosionText !== null">
-                <strong>Weapon Effect:</strong> {{rollDmgExplosionText}}
+            <div class="col-xs-12 text-center" style="margin-top:15px" ng-if="lastEvent.sWeaponExp !== null">
+                <h3 style="margin:0px">{{lastEvent.sWeaponExp}}</h3>
+            </div>
+            <div class="col-xs-12 text-center" style="margin-top:15px" ng-if="lastEvent.oWeaponExp !== null">
+                <h3 style="margin:0px">{{lastEvent.oWeaponExp}}</h3>
             </div>
         </div>
     </div>
