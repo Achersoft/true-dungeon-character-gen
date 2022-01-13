@@ -1701,13 +1701,17 @@ public class CharacterServiceImpl implements CharacterService {
         viperCount += characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && item.getItemId().equals("bd21afd63114346decea5fc899ff697106e99429")).map(CharacterItem::getName).distinct().count();
         // Lucky Set
         long luckyCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("lucky")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Silver elf Set
+        long silverElfCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("silver elf")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Deadshot set
+        long deadshotCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().endsWith("of the deadshot")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Arcane Set
         long arcaneCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && (a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane belt") ||
                 a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane bracelets") || a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane earcuff"))).count();
         
         // First check if we need to boost character level
         // Charm of Heroism, Medallion of Heroism, Ring of Heroism, Eldrich Set, Kubu’s Coin of Coincidence, Smackdown’s Charm of Comraderie
-        if(levelBoost || levelItem || eldrichCount >= 2 || mightCount >= 3 || charmingCount >= 3 || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
+        if(levelBoost || levelItem || eldrichCount >= 2 || mightCount >= 3 || charmingCount >= 3 || deadshotCount >= 3 || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
                 itemsMap.containsKey("2f1cfd3d3dbdd218f5cd5bd3935851b7acba5a9c") || itemsMap.containsKey("f44d007c35b18b83e85a1ee183cda08180030012") || itemsMap.containsKey("c289cd1accbbcc7af656de459c157bdc40dbaf45")) {
             characterDetails.setStats(mapper.getStartingStats(characterDetails.getCharacterClass(), 5));
             characterDetails.getStats().setCharacterId(characterDetails.getId());
@@ -1722,7 +1726,11 @@ public class CharacterServiceImpl implements CharacterService {
         // Lucky Set
         if (luckyCount >= 2)
             characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 5);
-        
+
+        // Silver Elf Set
+        if (silverElfCount >= 3)
+            characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("You are immune to underwater hindrances (Silver Elf Set).").build());
+
         // Arcane set
         if (arcaneCount == 3)
             characterDetails.getNotes().add(CharacterNote.builder().oncePerGame(true).note("The first 0th, 1st or 2nd level spell you casts is not marked off your character card.").build());
@@ -1987,6 +1995,7 @@ public class CharacterServiceImpl implements CharacterService {
         final Set<ConditionalUse> metCondition = new HashSet<>();
         final List<Integer> meleeWeaponHit = new ArrayList<>();
         final List<Integer> rangeWeaponHit = new ArrayList<>();
+        AtomicBoolean mysticStaff = new AtomicBoolean(false);
         AtomicBoolean hasSkullOfCavadar = new AtomicBoolean(false);
         AtomicBoolean hasMysticOrb = new AtomicBoolean(false);
         AtomicBoolean hasFighterRelic = new AtomicBoolean(false);
@@ -2000,6 +2009,7 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicInteger sixLevelReward = new AtomicInteger(0);
         AtomicInteger mightyRanged = new AtomicInteger(0);
         AtomicInteger additionalTreasureTokens = new AtomicInteger(0);
+        AtomicInteger additionalHavocRings = new AtomicInteger(0);
         AtomicInteger iounStoneCount = new AtomicInteger(0);
         AtomicInteger meleeShieldAc = new AtomicInteger(0);
         AtomicInteger meleeShieldStr = new AtomicInteger(0);
@@ -2008,12 +2018,6 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicReference<String> sheildId = new AtomicReference<>("");
 
         itemDetailsMap.values().stream().filter((item) -> item.getItem().getItemId()!=null).forEach((item) -> {
-            if(item.getTokenFullDetails().getId().equals("5e9d4e09f933a6e2a09ecd875f762683baaa09c8") && canSemiLichCharm.get())
-                hasSemiLichCharm.set(true);
-            if(item.getTokenFullDetails().getId().equals("1ee980321b7b26f523b7b5e10b6a2856400d1a67"))
-                hasBenrows.set(true);
-            if(item.getTokenFullDetails().getName().equals("Amulet of Noble Might") || item.getTokenFullDetails().getName().equals("Viv’s Amulet of Noble Might"))
-                hasFighterRelic.set(true);
             if (item.getTokenFullDetails().isWonderEffect()) {
                 if (hasWonderEffect.get()) {
                     metCondition.add(ConditionalUse.NOT_WITH_OTHER_WONDER);
@@ -2024,10 +2028,20 @@ public class CharacterServiceImpl implements CharacterService {
 
             if(item.getTokenFullDetails().getId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
                 metCondition.add(ConditionalUse.NOT_WITH_ROSP);
+            else if(item.getTokenFullDetails().getId().equals("5e9d4e09f933a6e2a09ecd875f762683baaa09c8") && canSemiLichCharm.get())
+                hasSemiLichCharm.set(true);
+            else if(item.getTokenFullDetails().getId().equals("1ee980321b7b26f523b7b5e10b6a2856400d1a67"))
+                hasBenrows.set(true);
+            else if(item.getTokenFullDetails().getName().equals("Amulet of Noble Might") || item.getTokenFullDetails().getName().equals("Viv’s Amulet of Noble Might"))
+                hasFighterRelic.set(true);
+            else if(item.getTokenFullDetails().getName().startsWith("Mystic Staff"))
+                mysticStaff.set(true);
             else if(item.getTokenFullDetails().getId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa")) {
                 metCondition.add(ConditionalUse.NOT_WITH_SOC);
                 hasSemiLichCharm.set(false);
                 canSemiLichCharm.set(false);
+            } else if(item.getTokenFullDetails().getId().equals("5953c6d97cf694aa577f954898d267b8a13e1d88")) {
+                metCondition.add(ConditionalUse.NOT_WITH_ROSS);
             } else if(item.getTokenFullDetails().getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
                 metCondition.add(ConditionalUse.NOT_WITH_COA);
             else if(item.getTokenFullDetails().getId().equals("63cc231ebcbb18e23c9979ba26b38f3ff9f21d92"))
@@ -2038,6 +2052,9 @@ public class CharacterServiceImpl implements CharacterService {
                 if (item.getTokenFullDetails().getRarity().isHigherThanUlraRare() || additionalTreasureTokens.get() > 1)
                     metCondition.add(ConditionalUse.ONE_OTHER_UR_TREASURE);
             }
+            else if (item.getTokenFullDetails().getName().toLowerCase().contains("ring of havoc"))
+                if (additionalHavocRings.addAndGet(1) > 1)
+                    metCondition.add(ConditionalUse.NO_OTHER_HAVOC);
             else if (item.getItem().getSlot() == Slot.MAINHAND || item.getItem().getSlot() == Slot.OFFHAND) {
                 if (item.getTokenFullDetails().isOneHanded())
                     metCondition.add(ConditionalUse.WEAPON_1H);
@@ -2196,7 +2213,10 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setMeleeDmg(stats.getMeleeDmg() + stats.getStrBonus());
         stats.setMeleePolyHit(stats.getMeleePolyHit() + stats.getMeleeHit());
         stats.setMeleePolyDmg(stats.getMeleePolyDmg() + stats.getMeleeDmg());
-        stats.setRangeHit(stats.getRangeHit() + stats.getDexBonus());
+        if (mysticStaff.get())
+            stats.setRangeHit(stats.getRangeHit() + Math.max(stats.getIntelBonus(), stats.getWisBonus()));
+        else
+            stats.setRangeHit(stats.getRangeHit() + stats.getDexBonus());
         stats.setMeleeAC(stats.getMeleeAC() + stats.getDexBonus());
         stats.setRangeAC(stats.getRangeAC() + stats.getDexBonus());
         stats.setFort(stats.getFort() + stats.getConBonus());
@@ -2337,6 +2357,16 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NOT_WITH_SOC)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with the Skull of Cavadar.");
+                        failedConditions.add(token);
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(token.getSlot(), stats, td, notes, false, false);
+                    }   break;
+                case NOT_WITH_ROSS:
+                    if(metCondition.contains(ConditionalUse.NOT_WITH_ROSS)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with the Ring od Spell Storing.");
                         failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
@@ -2522,6 +2552,16 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.NO_OTHER_TREASURE)) {
                         token.setSlotStatus(SlotStatus.INVALID);
                         token.setStatusText(token.getName() + " cannot be used with any other treasure enchancing token.");
+                        failedConditions.add(token);
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(token.getSlot(), stats, td, notes, false, false);
+                    }   break;
+                case NO_OTHER_HAVOC:
+                    if(metCondition.contains(ConditionalUse.NO_OTHER_HAVOC)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with any other Rings of Havoc.");
                         failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);

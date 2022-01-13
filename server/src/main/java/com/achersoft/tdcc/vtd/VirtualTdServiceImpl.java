@@ -192,6 +192,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicReference<TokenFullDetails> rangeMainHand = new AtomicReference<>();
             final AtomicReference<TokenFullDetails> rangeOffHand = new AtomicReference<>();
             final AtomicBoolean hasMedallionKeenness = new AtomicBoolean(false);
+            final AtomicBoolean hasAmuletOfAiming = new AtomicBoolean(false);
             final AtomicBoolean hasBarbRelic = new AtomicBoolean(false);
             final AtomicBoolean hasBarbLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasDruidRelic = new AtomicBoolean(false);
@@ -228,6 +229,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasBarbRelic.set(true);
                     else if (characterItem.getItemId().equals("9b9e86587d8776a706ab8dc01bc060fc2560da50") && characterItem.getSlotStatus() == SlotStatus.OK)
                         hasMedallionKeenness.set(true);
+                    else if (characterItem.getName().toLowerCase().equals("amulet of aiming"))
+                        hasAmuletOfAiming.set(true);
                     else if (characterItem.getItemId().equals("0076ceef0f905dda175de13222ce34029a5873f2"))
                         hasBarbLegendary.set(true);
                     else if (characterItem.getItemId().equals("f2f2a4950f8e1a2415890a370b54efc1605b551a"))
@@ -291,7 +294,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         critTypes.add(CritType.ELEMENTAL);
                     else if (characterItem.getItemId().equals("99561249745b26c94a83e3e45be1acb4ef44cad2"))
                         critTypes.add(CritType.PLANT);
-                    else if (characterItem.getItemId().equals("2bc4f9b17575f86929e7c3e06656c0c3c79a6812") || userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase("af42ca02-434b-4f9a-aa58-8d2e7000ee68"))
+                    else if (characterItem.getItemId().equals("2bc4f9b17575f86929e7c3e06656c0c3c79a6812") || characterItem.getName().toLowerCase().equals("bead of guided strike") || userPrincipalProvider.getUserPrincipal().getSub().equalsIgnoreCase("af42ca02-434b-4f9a-aa58-8d2e7000ee68"))
                         critTypes.add(CritType.ANY);
                 }
             }
@@ -706,6 +709,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             }
 
             if (hasMedallionKeenness.get() && mainHand.get() != null && mainHand.get().getCritMin() > 19)
+                mainHand.get().setCritMin(19);
+
+            if (hasAmuletOfAiming.get() && mainHand.get().getCritMin() > 19)
                 mainHand.get().setCritMin(19);
 
             if (mainHand.get() != null && mainHand.get().getWeaponExplodeCondition() != null) {
@@ -1382,7 +1388,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
         vtdDetails.setMonsters(VtdMonster.fromRoom(vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber()), critTypes, vtdDetails.getMeleeMainHit(), vtdDetails.getMeleeOffhandHit(), vtdDetails.getRangeMainHit(), vtdDetails.getRangeOffhandHit(), vtdDetails.getCharacterClass() == CharacterClass.RANGER, vtdDetails.getStats().getLevel() == 5));
 
-        applyBuffsToStats(vtdDetails.getBuffs(), vtdDetails.getStats(), vtdDetails.isMightyWeapon());
+        applyBuffsToStats(vtdDetails.getBuffs(), vtdDetails.getStats(), vtdDetails);
 
         vtdDetails.getStats().setHealth(vtdDetails.getStats().getHealth() + vtdDetails.getHealthBonus());
 
@@ -1404,9 +1410,18 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         return vtdDetails;
     }
 
-    private void applyBuffsToStats(List<VtdBuff> buffs, CharacterStats stats, boolean isMighty) {
+    private void applyBuffsToStats(List<VtdBuff> buffs, CharacterStats stats, VtdDetails vtdDetails) {
+        boolean mysticStaff = vtdDetails.getItems().stream().filter(item -> item != null && item.getName() != null && item.getName().startsWith("Mystic Staff")).count() > 1;
+
         if (buffs != null) {
+            boolean earcuffOfTheShanty = vtdDetails.getItems().stream().filter(item -> item != null && item.getName() != null && item.getItemId().equals("4925fc0848bdd8ac48f29d69b498da6504dfbb3a")).count() > 1;
+
             buffs.forEach(buff -> {
+                if (earcuffOfTheShanty && buff.isBardsong()) {
+                    stats.setMeleeSonic(true);
+                    stats.setMSonic(stats.getMSonic() + 2);
+                }
+
                 buff.getBuff().getEffects().forEach(vtdBuffEffect -> {
                     switch (vtdBuffEffect.getStat()) {
                         case STR:
@@ -1617,12 +1632,22 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         int dexDiff = ((stats.getDex()-10 > 0)?(stats.getDex()-10)/2:(stats.getDex()-11)/2) - stats.getDexBonus();
         int conDiff = ((stats.getCon()-10 > 0)?(stats.getCon()-10)/2:(stats.getCon()-11)/2) - stats.getConBonus();
         int wisDiff = ((stats.getWis()-10 > 0)?(stats.getWis()-10)/2:(stats.getWis()-11)/2) - stats.getWisBonus();
+        int intelDiff = ((stats.getIntel()-10 > 0)?(stats.getIntel()-10)/2:(stats.getIntel()-11)/2) - stats.getIntelBonus();
 
         stats.setMeleeHit(stats.getMeleeHit() + strDiff);
         stats.setMeleeDmg(stats.getMeleeDmg() + strDiff);
         stats.setMeleePolyHit(stats.getMeleePolyHit() + strDiff);
         stats.setMeleePolyDmg(stats.getMeleePolyDmg() + strDiff);
         stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + strDiff);
+
+        if (mysticStaff) {
+            if (stats.getIntelBonus() > stats.getWisBonus())
+                stats.setRangeHit(stats.getRangeHit() + intelDiff);
+            else
+                stats.setRangeHit(stats.getRangeHit() + wisDiff);
+        } else
+            stats.setRangeHit(stats.getRangeHit() + dexDiff);
+
         stats.setRangeHit(stats.getRangeHit() + dexDiff);
         stats.setRangeHitBenrow(stats.getRangeHitBenrow() + dexDiff);
         stats.setMeleeAC(stats.getMeleeAC() + dexDiff);
@@ -1632,7 +1657,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         stats.setReflex(stats.getReflex() + dexDiff);
         stats.setWill(stats.getWill() + wisDiff);
 
-        if(isMighty)
+        if(vtdDetails.isMightyWeapon())
             stats.setRangeDmg(stats.getRangeDmg() + strDiff);
 
         stats.setStrBonus((stats.getStr()-10 > 0)?(stats.getStr()-10)/2:(stats.getStr()-11)/2);
