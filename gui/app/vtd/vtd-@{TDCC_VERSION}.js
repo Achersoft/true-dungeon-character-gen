@@ -2815,6 +2815,7 @@ angular.module('main')
     $scope.defendIndex = 0;
     $scope.saveIndex = 0;
     $scope.damageIndex = 0;
+    $scope.resultIndex = 0;
     $scope.difficultyIndex = 0;
     $scope.damageModifierIndex = 0;
     $scope.rollHit = 0;
@@ -2996,29 +2997,55 @@ angular.module('main')
         } 
     };
     
-    $scope.rollToHitMelee =  function(monsterIndex) {        
+    $scope.rollToHitMelee =  function(monsterIndex, status) {        
         var hitRoll = 1;
         var hitRollOG = 1;
         var offhandHitRoll = 1;
         var offhandHitRollOG = 1;
         var monster = null;
+        var flankUsed = false;
+        var statusEffect = status === undefined ? '' :  status;
+        
+        $scope.resultIndex = 0;
+        
+        var buff = $scope.hasBuff("Flank");
+        if (buff !== null) {
+            $scope.removeBuff(buff);
+            var flankUsed = true;
+            statusEffect = 'flank buff';
+        }
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
-            hitRoll = $scope.getRandomInt(20) + 1;
-            offhandHitRoll = $scope.getRandomInt(20) + 1;
+            if (flankUsed) {
+                hitRoll = Math.max(($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1));
+                offhandHitRoll = Math.max(($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1));
+            } else {
+                hitRoll = $scope.getRandomInt(20) + 1;
+                offhandHitRoll = $scope.getRandomInt(20) + 1;
+            }
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
             monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
-                $scope.rollToHitMelee(index);
+                $scope.rollToHitMelee(index, '');
             });
             return;
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
             monster = monsterIndex;
-            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
-            offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            if (flankUsed) {
+                hitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
+                offhandHitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
+            } else {
+                hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+                offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            }
         } else {
             monster = $scope.characterContext.monsters[0];
-            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
-            offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            if (flankUsed) {
+                hitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
+                offhandHitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
+            } else {
+                hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+                offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            }
         }
         
         if (!('meleeOffhandHit' in $scope.characterContext.stats)) {
@@ -3044,12 +3071,18 @@ angular.module('main')
                 hitRoll = 1;
             }
         }
-              
+
         if (hitRoll === 1 && offhandHitRoll === 1) {
             if ($scope.characterContext.rollerId !== null) {
                 if (!('meleeOffhandHit' in $scope.characterContext.stats)) {
+                    var buff = $scope.hasBuff("WS Reroll");
+                    if (buff !== null && status !== 'ws reroll') {
+                        $scope.removeBuff(buff);
+                        $scope.rollToHitMelee(monsterIndex, 'ws reroll');
+                    }
+                    
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                        ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0, "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast(); 
@@ -3061,7 +3094,7 @@ angular.module('main')
                     });
                 } else {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }, { "type": "melee_off", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                        ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }, { "type": "melee_off", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0, "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast(); 
@@ -3368,7 +3401,15 @@ angular.module('main')
                         oDmgTotal -= monster.meleeDr;
                 }
                 if (monster.fire !== 0 && +$scope.characterContext.stats.mfire) {
-                    if (monster.fire < 0) {
+                    if (monster.monsterEffects.includes("FIRE_HEAL")) {
+                        if (mDmgTotal > 0) {
+                            mDmgTotal -= +$scope.characterContext.stats.mfire;
+                            mDmgTotal -= +$scope.characterContext.stats.mfire;
+                        } if (oDmgTotal > 0 && isOffDr) {
+                            oDmgTotal -= +$scope.characterContext.stats.mfire;
+                            oDmgTotal -= +$scope.characterContext.stats.mfire;
+                        }
+                    } else if (monster.fire < 0) {
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.mfire) ? -1*monster.fire : +$scope.characterContext.stats.mfire;
                         if (oDmgTotal > 0 && isOffDr)
@@ -3600,7 +3641,7 @@ angular.module('main')
                 if ($scope.characterContext.rollerId !== null) {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
                         ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
-                        '{ "type": "melee_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ' }]}').catch(function(response) {
+                        '{ "type": "melee_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Flurry Throw Attack","result":response.data.errors[0]});       
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast(); 
@@ -3626,6 +3667,12 @@ angular.module('main')
                 }
             } else {
                 if (monster.mac > hitRollMod) {
+                    var buff = $scope.hasBuff("WS Reroll");
+                    if (buff !== null && status !== 'ws reroll') {
+                        $scope.removeBuff(buff);
+                        $scope.rollToHitMelee(monsterIndex, 'ws reroll');
+                    }
+        
                     mDmgTotal = 0;
                     mCritDmg = 0;
                 }
@@ -3637,8 +3684,8 @@ angular.module('main')
                 if ($scope.characterContext.rollerId !== null) {
                     if ('meleeOffhandHit' in $scope.characterContext.stats) {
                         vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                            ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
-                            '{ "type": "melee_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ' }]}').catch(function(response) {
+                            ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (monster.mac <= hitRollMod) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
+                            '{ "type": "melee_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (monster.mac <= offhandHitRollMod) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                             vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
                             $scope.history = vtdHistory.get();
                             $scope.lastEvent = vtdHistory.getLast(); 
@@ -3650,7 +3697,7 @@ angular.module('main')
                         });
                     } else {
                         vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                            ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').catch(function(response) {
+                            ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (monster.mac <= hitRollMod) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                             vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
                             $scope.history = vtdHistory.get();
                             $scope.lastEvent = vtdHistory.getLast(); 
@@ -3687,10 +3734,26 @@ angular.module('main')
         var monster = null;
         var isOffhandAttack = false;
         var isCompanion = ($scope.characterContext.meleeAnimalCompanionDmgRange && $scope.characterContext.meleeAnimalCompanionDmgRange.length > 0);
-
+        var flankUsed = false;
+        var statusEffect = '';
+        
+        $scope.resultIndex = 0;
+        
+        var buff = $scope.hasBuff("Flank");
+        if (buff !== null) {
+            $scope.removeBuff(buff);
+            var flankUsed = true;
+            statusEffect = 'flank buff';
+        }
+        
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
-            hitRoll = $scope.getRandomInt(20) + 1;
-            offhandHitRoll = $scope.getRandomInt(20) + 1;
+            if (flankUsed) {
+                hitRoll = Math.max($scope.getRandomInt(20) + 1, $scope.getRandomInt(20) + 1, $scope.getRandomInt(20) + 1);
+                offhandHitRoll = Math.max($scope.getRandomInt(20) + 1, $scope.getRandomInt(20) + 1, $scope.getRandomInt(20) + 1);
+            } else {
+                hitRoll = $scope.getRandomInt(20) + 1;
+                offhandHitRoll = $scope.getRandomInt(20) + 1;
+            }
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
             monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
                 $scope.rollToHitRange(index);
@@ -3698,12 +3761,24 @@ angular.module('main')
             return;
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
             monster = monsterIndex;
-            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
-            offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            
+            if (flankUsed) {
+                hitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
+                offhandHitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
+            } else {
+                hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+                offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            }
         } else {
             monster = $scope.characterContext.monsters[0];
-            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
-            offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            
+            if (flankUsed) {
+                hitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
+                offhandHitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
+            } else {
+                hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+                offhandHitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)]; 
+            }
         }
         
         if (!('rangeOffhandHit' in $scope.characterContext.stats) && !isCompanion) {
@@ -3735,7 +3810,7 @@ angular.module('main')
             if ($scope.characterContext.rollerId !== null) {
                 if (!('rangeOffhandHit' in $scope.characterContext.stats)) {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                        ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":response.data.errors[0]});       
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast(); 
@@ -3747,7 +3822,7 @@ angular.module('main')
                     });
                 } else {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }, { "type": "range_off", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                        ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }, { "type": "range_off", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":response.data.errors[0]});       
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast(); 
@@ -3863,7 +3938,15 @@ angular.module('main')
                     oDmgTotal -= monster.rangeDr;
             }
             if (monster.fire !== 0 && +$scope.characterContext.stats.rfire) {
-                if (monster.fire < 0) {
+                if (monster.monsterEffects.includes("FIRE_HEAL")) {
+                    if (mDmgTotal > 0) {
+                        mDmgTotal -= +$scope.characterContext.stats.rfire;
+                        mDmgTotal -= +$scope.characterContext.stats.rfire;
+                    } if (oDmgTotal > 0 && isOffDr) {
+                        oDmgTotal -= +$scope.characterContext.stats.rfire;
+                        oDmgTotal -= +$scope.characterContext.stats.rfire;
+                    }
+                } else if (monster.fire < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.rfire) ? -1*monster.fire : +$scope.characterContext.stats.rfire;
                     if (oDmgTotal > 0 && isOffDr)
@@ -4080,8 +4163,8 @@ angular.module('main')
             if ($scope.characterContext.rollerId !== null) {
                 if ('rangeOffhandHit' in $scope.characterContext.stats) {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
-                        '{ "type": "range_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ' }]}').catch(function(response) {
+                        ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (monster.rac <= hitRollMod) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
+                        '{ "type": "range_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (monster.rac <= offhandHitRollMod) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":response.data.errors[0]});       
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast(); 
@@ -4093,7 +4176,7 @@ angular.module('main')
                     });
                 } else {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').catch(function(response) {
+                        ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (monster.rac <= hitRollMod) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Range Attack","result":response.data.errors[0]});       
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast(); 
@@ -4131,8 +4214,24 @@ angular.module('main')
             return;
         }
         
+        var flankUsed = false;
+        var statusEffect = '';
+        
+        $scope.resultIndex = 0;
+        
+        var buff = $scope.hasBuff("Flank");
+        if (buff !== null) {
+            $scope.removeBuff(buff);
+            var flankUsed = true;
+            statusEffect = 'flank buff';
+        }
+        
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
-            hitRoll = $scope.getRandomInt(20) + 1;
+            if (flankUsed) {
+                hitRoll = Math.max($scope.getRandomInt(20) + 1, $scope.getRandomInt(20) + 1, $scope.getRandomInt(20) + 1);
+            } else {
+                hitRoll = $scope.getRandomInt(20) + 1;
+            }
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
             monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
                 $scope.rollToHitPoly(index);
@@ -4140,10 +4239,18 @@ angular.module('main')
             return;
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
             monster = monsterIndex;
-            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            if (flankUsed) {
+                hitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
+            } else {
+                hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            }
         } else {
             monster = $scope.characterContext.monsters[0];
-            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            if (flankUsed) {
+                hitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
+            } else {
+                hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+            }
         }
         
         if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
@@ -4160,7 +4267,7 @@ angular.module('main')
         if (hitRoll === 1) {
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                     vtdHistory.add({"type":"ROLLER","sub":"Polymorph Attack","result":response.data.errors[0]});       
                     $scope.history = vtdHistory.get();
                     $scope.lastEvent = vtdHistory.getLast(); 
@@ -4212,7 +4319,11 @@ angular.module('main')
             var allShock = false;
             var allSonic = false;
             if ($scope.characterContext.poly.name === "Iktomi’s Shaper Necklace - Fire" || $scope.characterContext.poly.name === "Shaman’s Greater Necklace - Fire") {
-                if (monster.fire < 0) {
+                if (monster.monsterEffects.includes("FIRE_HEAL")) {
+                    if (mDmgTotal > 0) {
+                        mDmgTotal = -1 * mDmgTotal;
+                    }
+                } else if (monster.fire < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.fire < mDmgTotal) ? -1*monster.fire : mDmgTotal;
                 } else if (monster.fire - mDmgTotal >= 0) {
@@ -4259,7 +4370,12 @@ angular.module('main')
                 allSonic = true;
             } else {
                 if (monster.fire !== 0 && +$scope.characterContext.stats.mfire) {
-                    if (monster.fire < 0) {
+                    if (monster.monsterEffects.includes("FIRE_HEAL")) {
+                        if (mDmgTotal > 0) {
+                            mDmgTotal -= +$scope.characterContext.stats.mfire;
+                            mDmgTotal -= +$scope.characterContext.stats.mfire;
+                        }
+                    } else if (monster.fire < 0) {
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.mfire) ? -1*monster.fire : +$scope.characterContext.stats.mfire;
                     } else if (monster.fire - +$scope.characterContext.stats.mfire >= 0) {
@@ -4363,7 +4479,7 @@ angular.module('main')
                 }
             }
             
-            if (mDmgTotal < 0)
+            if (mDmgTotal < 0 && !monster.monsterEffects.includes("FIRE_HEAL"))
                 mDmgTotal = 0;
 
             var eleDmg = mDmg + rollDmg;
@@ -4397,7 +4513,7 @@ angular.module('main')
 
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').catch(function(response) {
+                    ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (monster.mac <= hitRollMod) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                     vtdHistory.add({"type":"ROLLER","sub":"Polymorph Attack","result":response.data.errors[0]});       
                     $scope.history = vtdHistory.get();
                     $scope.lastEvent = vtdHistory.getLast(); 
@@ -4490,6 +4606,9 @@ angular.module('main')
         var hitRoll = 1;
         var hitRollOG = 1;
         var monster = null;
+        var statusEffect = 'sneak dmg';
+        
+        $scope.resultIndex = 0;
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             hitRoll = $scope.getRandomInt(20) + 1;
@@ -4520,7 +4639,7 @@ angular.module('main')
         if (monster !== null && !monster.sneak) {  
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                     vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
                     $scope.history = vtdHistory.get();
                     $scope.lastEvent = vtdHistory.getLast(); 
@@ -4538,7 +4657,7 @@ angular.module('main')
         } else if (hitRoll === 1) {
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                    ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                     vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
                     $scope.history = vtdHistory.get();
                     $scope.lastEvent = vtdHistory.getLast(); 
@@ -4627,7 +4746,12 @@ angular.module('main')
             }
             
             if (monster.fire !== 0 && +$scope.characterContext.stats.mfire) {
-                if (monster.fire < 0) {
+                if (monster.monsterEffects.includes("FIRE_HEAL")) {
+                    if (mDmgTotal > 0) {
+                        mDmgTotal -= +$scope.characterContext.stats.mfire;
+                        mDmgTotal -= +$scope.characterContext.stats.mfire;
+                    }
+                } else if (monster.fire < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.mfire) ? -1*monster.fire : +$scope.characterContext.stats.mfire;
                 } else if (monster.fire - +$scope.characterContext.stats.mfire >= 0) {
@@ -4780,7 +4904,7 @@ angular.module('main')
 
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').catch(function(response) {
+                    ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (monster.mac <= hitRollMod) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                     vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
                     $scope.history = vtdHistory.get();
                     $scope.lastEvent = vtdHistory.getLast(); 
@@ -4810,6 +4934,14 @@ angular.module('main')
         var hitRoll = 1;
         var hitRollOG = 1;
         var monster = null;
+        var statusEffect = 'sneak dmg';
+        
+        $scope.resultIndex = 0;
+        
+        var buff = $scope.hasBuff("Flank");
+        if (buff !== null) {
+            $scope.removeBuff(buff);
+        }
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             hitRoll = $scope.getRandomInt(20) + 1;
@@ -4840,7 +4972,7 @@ angular.module('main')
         if (monster !== null && !monster.sneak) {
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                    ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                     vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
                     $scope.history = vtdHistory.get();
                     $scope.lastEvent = vtdHistory.getLast(); 
@@ -4858,7 +4990,7 @@ angular.module('main')
         } else if (hitRoll === 1) {
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0 }]}').catch(function(response) {
+                    ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                     vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
                     $scope.history = vtdHistory.get();
                     $scope.lastEvent = vtdHistory.getLast(); 
@@ -4927,7 +5059,12 @@ angular.module('main')
                 }
             
                 if (monster.fire !== 0 && +$scope.characterContext.stats.rfire) {
-                    if (monster.fire < 0) {
+                    if (monster.monsterEffects.includes("FIRE_HEAL")) {
+                        if (mDmgTotal > 0) {
+                            mDmgTotal -= +$scope.characterContext.stats.rfire;
+                            mDmgTotal -= +$scope.characterContext.stats.rfire;
+                        }
+                    } else if (monster.fire < 0) {
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal += (-1*monster.fire < +$scope.characterContext.stats.rfire) ? -1*monster.fire : +$scope.characterContext.stats.rfire;
                     } else if (monster.fire - +$scope.characterContext.stats.rfire >= 0) {
@@ -5079,7 +5216,7 @@ angular.module('main')
 
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                    ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }]}').catch(function(response) {
+                    ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (monster.rac <= hitRollMod) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                     vtdHistory.add({"type":"ROLLER","sub":"Sneak Attack","result":response.data.errors[0]});       
                     $scope.history = vtdHistory.get();
                     $scope.lastEvent = vtdHistory.getLast(); 
@@ -5103,6 +5240,74 @@ angular.module('main')
                 $scope.lastEvent = vtdHistory.getLast(); 
             }
         } 
+    };
+    
+    $scope.rollToHitSubdual =  function(monsterIndex) {        
+        var hitRoll = 1;
+        var hitRollOG = 1;
+        var monster = null;
+        
+        $scope.resultIndex = 0;
+        
+        if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
+            hitRoll = $scope.getRandomInt(20) + 1;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
+            monsterSelectorSvc.selectMonster($scope.characterContext.monsters, function(index) {
+                $scope.rollToHitSubdual(index);
+            });
+            return;
+        } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
+            monster = monsterIndex;
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+        } else {
+            monster = $scope.characterContext.monsters[0];
+            hitRoll = monster.roller[$scope.getRandomInt(monster.roller.length)];
+        }
+        
+        if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
+            hitRollOG = hitRoll;
+            hitRoll = 1;
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
+            if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } 
+ 
+        if (hitRoll === 1)
+            vtdHistory.add({"type":"ATTACK","sub":"MELEE_SUBDUAL","isMiss":true,"roll":1,"mRoll":hitRollOG});
+        else {
+            var hitRollMod = 1;
+            var rollDmg = 0;
+            var mDmg = 1;
+            var mDmgExp = null;
+            var sDmgExp = null;
+            var mCritDmg = 0;
+
+            if (hitRoll > 1)
+                hitRollMod = hitRoll + $scope.characterContext.stats.meleeHit;
+            if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD"))
+                rollDmg =  $scope.characterContext.stats.meleeDmg;
+    
+            var mDmgTotal = 0;
+            if (hitRoll > 1)
+                mDmgTotal = mDmg + rollDmg;
+            else
+                mDmg = 0;
+    
+            if (mDmgTotal < 0)
+                mDmgTotal = 0;
+
+            vtdHistory.add({"type":"ATTACK","sub":"MELEE_SUBDUAL","isMiss":false,"isCrit":mCritDmg > 0,"mRoll":hitRoll,"mRollTotal":hitRollMod,
+                "mWheel":mDmg,"mDmg":mDmgTotal,"totalDmg":mDmgTotal,"mCrit":mCritDmg,"critTotal":mCritDmg,"mWeaponExp":mDmgExp,"sWeaponExp":sDmgExp,"fire":$scope.characterContext.stats.mfire,
+                "cold":$scope.characterContext.stats.mcold,"shock":$scope.characterContext.stats.mshock,"sonic":$scope.characterContext.stats.msonic,
+                "eldritch":$scope.characterContext.stats.meldritch,"poison":$scope.characterContext.stats.mpoison,"darkrift":$scope.characterContext.stats.mdarkrift,
+                "sacred":$scope.characterContext.stats.msacred,"force":$scope.characterContext.stats.mforce,"acid":$scope.characterContext.stats.macid});
+        }
+         
+        $scope.history = vtdHistory.get();
+        $scope.lastEvent = vtdHistory.getLast();  
     };
     
     $scope.rollToHit =  function(monsterIndex) {
