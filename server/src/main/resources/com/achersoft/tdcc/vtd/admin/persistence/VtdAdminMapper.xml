@@ -51,8 +51,11 @@
                                 mAC,
                                 rAC,
                                 fort,
+                                fortEffect,
                                 reflex,
-                                will)
+                                reflexEffect,
+                                will,
+                                willEffect)
                         VALUES (#{id},
                                 #{vtdId},
                                 #{room},
@@ -89,8 +92,11 @@
                                 #{mAC},
                                 #{rAC},
                                 #{fort},
+                                #{fortEffect},
                                 #{reflex},
-                                #{will})
+                                #{reflexEffect},
+                                #{will},
+                                #{willEffect})
     </insert>
 
     <select id="getAdventures" resultType="com.achersoft.tdcc.vtd.admin.dao.VtdSetting">
@@ -156,8 +162,11 @@
                 mAC,
                 rAC,
                 fort,
+                fortEffect,
                 reflex,
+                reflexEffect,
                 will,
+                willEffect,
                 u_dr 'universalDr',
                 m_dr 'meleeDr',
                 r_dr 'rangeDr',
@@ -204,8 +213,11 @@
                 mAC,
                 rAC,
                 fort,
+                fortEffect,
                 reflex,
+                reflexEffect,
                 will,
+                willEffect,
                 u_dr 'universalDr',
                 m_dr 'meleeDr',
                 r_dr 'rangeDr',
@@ -252,8 +264,11 @@
         mAC,
         rAC,
         fort,
+        fortEffect,
         reflex,
+        reflexEffect,
         will,
+        willEffect,
         u_dr 'universalDr',
         m_dr 'meleeDr',
         r_dr 'rangeDr',
@@ -309,7 +324,10 @@
             rAC = #{rAC},
             fort = #{fort},
             reflex = #{reflex},
-            will = #{will}
+            will = #{will},
+            fortEffect = #{fortEffect},
+            reflexEffect = #{reflexEffect},
+            willEffect = #{willEffect}
         WHERE id = #{id}
     </update>
     

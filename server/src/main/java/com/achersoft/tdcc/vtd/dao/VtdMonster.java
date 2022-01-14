@@ -38,8 +38,11 @@ public class VtdMonster {
     private @Builder.Default int mAC = 0;
     private @Builder.Default int rAC = 0;
     private @Builder.Default int fort = 0;
+    private @Builder.Default String fortEffect = "missed";
     private @Builder.Default int reflex = 0;
+    private @Builder.Default String reflexEffect = "missed";
     private @Builder.Default int will = 0;
+    private @Builder.Default String willEffect = "missed";
 
     public static List<VtdMonster> fromRoom(List<VtdRoom> vtdRooms, Set<CritType> critTypes, int meleeWeaponHit, int meleeWeaponHitOff, int rangeWeaponHit, int rangeWeaponHitOff, boolean isRanger, boolean isLevel5) {
         if (vtdRooms == null)
@@ -168,8 +171,11 @@ public class VtdMonster {
                 .mAC(vtdRoom.getMAC())
                 .rAC(vtdRoom.getRAC())
                 .fort(vtdRoom.getFort())
+                .fortEffect(vtdRoom.getFortEffect())
                 .reflex(vtdRoom.getReflex())
+                .reflexEffect(vtdRoom.getReflexEffect())
                 .will(vtdRoom.getWill())
+                .willEffect(vtdRoom.getWillEffect())
                 .build();
     }
 }

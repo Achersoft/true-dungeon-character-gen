@@ -445,6 +445,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     builder.polys(polyList);
                     break;
                 case FIGHTER:
+                    if (characterDetails.getStats().getLevel() == 5) {
+                        addBuff(id, Buff.FIGHTER_REROLL);
+                    }
                     break;
                 case DWARF_FIGHTER:
                     if (activatePrestige) {
@@ -1170,6 +1173,10 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
         vtdMapper.updateCharacter(vtdDetails);
         vtdMapper.resetCharacterBuffs(id);
+
+        if (vtdDetails.getCharacterClass() == CharacterClass.FIGHTER && vtdDetails.getStats().getLevel() == 5) {
+            addBuff(id, Buff.FIGHTER_REROLL);
+        }
 
         return calculateStats(id);
     }

@@ -2026,36 +2026,37 @@ public class CharacterServiceImpl implements CharacterService {
                 }
             }
 
-            if(item.getTokenFullDetails().getId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
+            if (item.getTokenFullDetails().getId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3"))
                 metCondition.add(ConditionalUse.NOT_WITH_ROSP);
-            else if(item.getTokenFullDetails().getId().equals("5e9d4e09f933a6e2a09ecd875f762683baaa09c8") && canSemiLichCharm.get())
+            else if (item.getTokenFullDetails().getId().equals("5e9d4e09f933a6e2a09ecd875f762683baaa09c8") && canSemiLichCharm.get())
                 hasSemiLichCharm.set(true);
-            else if(item.getTokenFullDetails().getId().equals("1ee980321b7b26f523b7b5e10b6a2856400d1a67"))
+            else if (item.getTokenFullDetails().getId().equals("1ee980321b7b26f523b7b5e10b6a2856400d1a67"))
                 hasBenrows.set(true);
-            else if(item.getTokenFullDetails().getName().equals("Amulet of Noble Might") || item.getTokenFullDetails().getName().equals("Viv’s Amulet of Noble Might"))
+            else if (item.getTokenFullDetails().getName().equals("Amulet of Noble Might") || item.getTokenFullDetails().getName().equals("Viv’s Amulet of Noble Might"))
                 hasFighterRelic.set(true);
-            else if(item.getTokenFullDetails().getName().startsWith("Mystic Staff"))
+            else if (item.getTokenFullDetails().getName().startsWith("Mystic Staff"))
                 mysticStaff.set(true);
-            else if(item.getTokenFullDetails().getId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa")) {
+            else if (item.getTokenFullDetails().getId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa")) {
                 metCondition.add(ConditionalUse.NOT_WITH_SOC);
                 hasSemiLichCharm.set(false);
                 canSemiLichCharm.set(false);
-            } else if(item.getTokenFullDetails().getId().equals("5953c6d97cf694aa577f954898d267b8a13e1d88")) {
+            } else if (item.getTokenFullDetails().getId().equals("5953c6d97cf694aa577f954898d267b8a13e1d88")) {
                 metCondition.add(ConditionalUse.NOT_WITH_ROSS);
-            } else if(item.getTokenFullDetails().getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
+            } else if (item.getTokenFullDetails().getId().equals("0448ddb1214a3f5c03af24653383d507fa0ea85c"))
                 metCondition.add(ConditionalUse.NOT_WITH_COA);
-            else if(item.getTokenFullDetails().getId().equals("63cc231ebcbb18e23c9979ba26b38f3ff9f21d92"))
+            else if (item.getTokenFullDetails().getId().equals("63cc231ebcbb18e23c9979ba26b38f3ff9f21d92"))
                 metCondition.add(ConditionalUse.NOT_WITH_COS_COA);
-            else if(item.getTokenFullDetails().getTreasureMin() > 0 && item.getTokenFullDetails().getRarity() != Rarity.ARTIFACT && !item.getTokenFullDetails().getName().equals("Charm of Treasure Boosting")) {
-                if(additionalTreasureTokens.addAndGet(1) > 1)
+            else if (item.getTokenFullDetails().getTreasureMin() > 0 && item.getTokenFullDetails().getRarity() != Rarity.ARTIFACT && !item.getTokenFullDetails().getName().equals("Charm of Treasure Boosting")) {
+                if (additionalTreasureTokens.addAndGet(1) > 1)
                     metCondition.add(ConditionalUse.NO_OTHER_TREASURE);
                 if (item.getTokenFullDetails().getRarity().isHigherThanUlraRare() || additionalTreasureTokens.get() > 1)
                     metCondition.add(ConditionalUse.ONE_OTHER_UR_TREASURE);
-            }
-            else if (item.getTokenFullDetails().getName().toLowerCase().contains("ring of havoc"))
+            } else if (item.getTokenFullDetails().getName().toLowerCase().contains("ring of havoc")) {
                 if (additionalHavocRings.addAndGet(1) > 1)
                     metCondition.add(ConditionalUse.NO_OTHER_HAVOC);
-            else if (item.getItem().getSlot() == Slot.MAINHAND || item.getItem().getSlot() == Slot.OFFHAND) {
+            }
+
+            if (item.getItem().getSlot() == Slot.MAINHAND || item.getItem().getSlot() == Slot.OFFHAND) {
                 if (item.getTokenFullDetails().isOneHanded())
                     metCondition.add(ConditionalUse.WEAPON_1H);
                 if (item.getTokenFullDetails().isTwoHanded())

@@ -12,5 +12,6 @@ public enum MonsterEffects {
     COLD_PIERCE,
     COLD_RESIST_50,
     INCORPOREAL,
-    SUBDUE;
+    SUBDUE,
+    FIRE_HEAL;
 }
