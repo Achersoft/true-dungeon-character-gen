@@ -178,7 +178,9 @@ public class VtdRestService {
     public VtdDetailsDTO setRollerId(@PathParam("id") String id,
                                      @QueryParam("rollerId") String rollerId) throws Exception {
         if (rollerId == null || rollerId.isEmpty())
-            throw new InvalidDataException("TD Adventure roller ID was empty");
+            rollerId = null;
+        else if (rollerId.length() != 6)
+            throw new InvalidDataException("Roller ID must be 6 characters long");
         return VtdDetailsDTO.fromDAO(virtualTdService.setRollerId(id, rollerId));
     }
 
