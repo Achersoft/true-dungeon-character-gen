@@ -446,7 +446,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     break;
                 case FIGHTER:
                     if (characterDetails.getStats().getLevel() == 5) {
-                        addBuff(id, Buff.FIGHTER_REROLL);
+                        vtdMapper.addCharacterBuff(VtdBuff.builder().characterId(id).bardsong(false).buff(Buff.FIGHTER_REROLL).build());
                     }
                     break;
                 case DWARF_FIGHTER:

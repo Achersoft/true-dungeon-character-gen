@@ -1136,8 +1136,8 @@ angular.module('main')
                                              
                 if ($scope.characterContext.rollerId !== null) {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
-                        '{ "type": "melee_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
+                        ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
+                        '{ "type": "range_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Flurry Throw Attack","result":response.data.errors[0]});       
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast(); 
@@ -3640,8 +3640,8 @@ angular.module('main')
                                              
                 if ($scope.characterContext.rollerId !== null) {
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
-                        ' "rolls": [{ "type": "melee_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
-                        '{ "type": "melee_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
+                        ' "rolls": [{ "type": "range_main", "dieResult": ' + hitRoll + ', "modifiedResult": ' + hitRollMod + ', "isSuccess": ' + (mDmgTotal > 0) + ', "damage": ' + ((mCritDmg > 0) ? mCritDmg : mDmgTotal) + ' }, ' + 
+                        '{ "type": "range_off", "dieResult": ' + offhandHitRoll + ', "modifiedResult": ' + offhandHitRollMod + ', "isSuccess": ' + (oDmgTotal > 0) + ', "damage": ' + ((oCritDmg > 0) ? oCritDmg : oDmgTotal) + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Flurry Throw Attack","result":response.data.errors[0]});       
                         $scope.history = vtdHistory.get();
                         $scope.lastEvent = vtdHistory.getLast(); 

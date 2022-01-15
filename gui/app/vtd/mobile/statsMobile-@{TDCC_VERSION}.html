@@ -137,6 +137,44 @@
         <span ng-if="characterContext.stats.rangeDarkrift">Darkrift</span>
         <span ng-if="characterContext.stats.rangeSacred">Sacred</span>
     </div>
+    <div ng-if="characterContext.stats.rangeDmgBenrow && characterContext.stats.rangeDmgBenrow > 0">
+        <div class="col-xs-12">
+            <h4 style="border-bottom:1pt solid black;"><strong>Range Benrow's</strong></h4>
+        </div>
+        <div class="col-xs-12">
+            <div class="table-responsive" style="border:none;margin-bottom:0px">          
+                <table class="table">
+                    <thead>
+                        <tr>
+                          <th>Hit</th>
+                          <th>Damage</th>
+                          <th>AC</th>
+                          <th>Missile AC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>{{characterContext.stats.rangeHitBenrow}}</td>
+                          <td>{{characterContext.stats.rangeDmgBenrow}}</td>
+                          <td>{{characterContext.stats.rangeAC}}</td>
+                          <td>{{characterContext.stats.rangeMissileAC}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-xs-12" ng-if="characterContext.stats.rangeFireBenrow||characterContext.stats.rangeColdBenrow||characterContext.stats.rangeShockBenrow||characterContext.stats.rangeSonicBenrow||characterContext.stats.rangeEldritchBenrow||characterContext.stats.rangePoisonBenrow||characterContext.stats.rangeDarkriftBenrow||characterContext.stats.rangeSacredBenrow" style="margin-bottom:10px">
+            Types: 
+            <span ng-if="characterContext.stats.rangeFireBenrow">Fire</span>
+            <span ng-if="characterContext.stats.rangeColdBenrow">Cold</span>
+            <span ng-if="characterContext.stats.rangeShockBenrow">Shock</span>
+            <span ng-if="characterContext.stats.rangeSonicBenrow">Sonic</span>
+            <span ng-if="characterContext.stats.rangeEldritchBenrow">Eldritch</span>
+            <span ng-if="characterContext.stats.rangePoisonBenrow">Poison</span>
+            <span ng-if="characterContext.stats.rangeDarkriftBenrow">Darkrift</span>
+            <span ng-if="characterContext.stats.rangeSacredBenrow">Sacred</span>
+        </div>
+    </div>
     <div class="col-xs-12">
         <h4 style="border-bottom:1pt solid black;"><strong>Spell</strong></h4>
     </div>
