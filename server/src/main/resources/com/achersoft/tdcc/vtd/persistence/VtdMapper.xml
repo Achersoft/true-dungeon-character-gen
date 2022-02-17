@@ -207,6 +207,33 @@
                                 #{acidBonus})
     </insert>
 
+    <insert id="queueCharacterSkill">
+        INSERT INTO vtd_queue_skills
+        (id,
+        skillId,
+        skillName,
+        selfTarget,
+        selfHeal,
+        madEvoker,
+        lohNumber,
+        inGameEffect,
+        markUse,
+        ignoreUse,
+        damage)
+        VALUES
+        (#{id},
+        #{skillId},
+        #{skillName},
+        #{selfTarget},
+        #{selfHeal},
+        #{madEvoker},
+        #{lohNumber},
+        #{inGameEffect},
+        #{markUse},
+        #{ignoreUse},
+        #{damage})
+    </insert>
+
     <insert id="addCharacterStats">
         INSERT INTO vtd_stats (id,
         base_str,
@@ -827,6 +854,22 @@
         ORDER BY name
     </select>
 
+    <select id="getQueuedSkills" resultType="com.achersoft.tdcc.vtd.dao.QueuedSkill">
+        SELECT id,
+        skillId,
+        skillName,
+        selfTarget,
+        selfHeal,
+        madEvoker,
+        lohNumber,
+        inGameEffect,
+        markUse,
+        ignoreUse,
+        damage
+        FROM vtd_queue_skills
+        WHERE id = #{id}
+    </select>
+
     <select id="getCharacterStats" resultType="com.achersoft.tdcc.character.dao.CharacterStats">
         SELECT id 'characterId',
         base_str 'baseStr',
@@ -1043,6 +1086,10 @@
     
     <delete id="deleteCharacterSkills">
         DELETE FROM vtd_skills WHERE character_id = #{id}
+    </delete>
+
+    <delete id="deleteQueuedSkills">
+        DELETE FROM vtd_queue_skills WHERE id = #{id}
     </delete>
 
     <delete id="deleteCharacterStats">

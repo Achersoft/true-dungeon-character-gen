@@ -46,6 +46,7 @@ public class VtdDetails {
     private List<CharacterNote> notes;
     private List<CharacterItem> items;
     private List<CharacterSkill> characterSkills;
+    private List<QueuedSkill> queuedSkills;
     private List<VtdBuff> buffs;
     private List<VtdDebuff> debuffs;
     private List<VtdPoly> polys;
@@ -97,4 +98,5 @@ public class VtdDetails {
     private boolean mightyWeapon;
     private boolean prestigeAvailable;
     private boolean prestigeActive;
+    private int totalDamageLastSpell;
 }

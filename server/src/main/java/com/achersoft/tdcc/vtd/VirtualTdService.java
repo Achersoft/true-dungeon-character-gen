@@ -23,6 +23,8 @@ public interface VirtualTdService {
     VtdDetails setBonusCharmCabal(String id, int bonus);
     VtdDetails modifyHealth(String id, int health);
     VtdDetails useSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect, boolean markUse, boolean ignoreUse);
+    VtdDetails queueSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect, boolean markUse, boolean ignoreUse, int damage);
+    VtdDetails execSkillQueue(String id);
     VtdDetails unuseSkill(String id, String skillId);
     VtdDetails addBuff(String id, Buff buff);
     VtdDetails addDebuff(String id, Debuff debuff);
@@ -36,6 +38,7 @@ public interface VirtualTdService {
     VtdDetails setAdventure(String id, String passcode);
     VtdDetails setRollerId(String id, String rollerId);
     VtdDetails resetCharacter(String id);
+    VtdDetails deleteQueuedSkills(String id);
     List<CharacterName> deleteCharacter(String id);
     VtdDetails activatePrestigeClass(String id);
 }

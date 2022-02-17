@@ -441,6 +441,20 @@ angular.module('main')
         });
     };
     
+    $scope.queueSkill =  function(skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse) {
+        vtdSvc.queueSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
+    $scope.execSkillQueue =  function() {
+        vtdSvc.execSkillQueue($scope.characterContext.id).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
     $scope.useSkill = function(skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse) {
         vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
             vtdState.setContext(result.data);
@@ -512,7 +526,7 @@ angular.module('main')
         }
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
-            if (flankUsed) {
+            if (flankUsed || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "SMACK_WEAPON")) {
                 hitRoll = Math.max(($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1));
                 offhandHitRoll = Math.max(($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1));
             } else {
@@ -526,7 +540,7 @@ angular.module('main')
             return;
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
             monster = monsterIndex;
-            if (flankUsed) {
+            if (flankUsed || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "SMACK_WEAPON")) {
                 hitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
                 offhandHitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
             } else {
@@ -535,7 +549,7 @@ angular.module('main')
             }
         } else {
             monster = $scope.characterContext.monsters[0];
-            if (flankUsed) {
+            if (flankUsed || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "SMACK_WEAPON")) {
                 hitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
                 offhandHitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
             } else {
@@ -1083,14 +1097,14 @@ angular.module('main')
                         mCritDmg = mDmgTotal * 2;
                 }
                 var buff = $scope.hasBuff("Fury");
-                if (buff !== null) 
+                if (buff !== null) {
+                    mCritDmg = mCritDmg + mDmgTotal;
                     $scope.removeBuff(buff);
+                }
             } else if ($scope.hasBuff("Fury")) {
                 var buff = $scope.hasBuff("Fury");
                 if (buff !== null) {
-                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
-                        mCritDmg = mDmgTotal * 3;
-                    else
+                    if (monster.critical)
                         mCritDmg = mDmgTotal * 2;
                     
                     $scope.removeBuff(buff);
@@ -3016,7 +3030,7 @@ angular.module('main')
         }
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
-            if (flankUsed) {
+            if (flankUsed || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "SMACK_WEAPON")) {
                 hitRoll = Math.max(($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1));
                 offhandHitRoll = Math.max(($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1));
             } else {
@@ -3030,7 +3044,7 @@ angular.module('main')
             return;
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex !== undefined) {
             monster = monsterIndex;
-            if (flankUsed) {
+            if (flankUsed || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "SMACK_WEAPON")) {
                 hitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
                 offhandHitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
             } else {
@@ -3039,7 +3053,7 @@ angular.module('main')
             }
         } else {
             monster = $scope.characterContext.monsters[0];
-            if (flankUsed) {
+            if (flankUsed || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "SMACK_WEAPON")) {
                 hitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
                 offhandHitRoll = Math.max(monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)], monster.roller[$scope.getRandomInt(monster.roller.length)]);
             } else {
@@ -3587,14 +3601,14 @@ angular.module('main')
                         mCritDmg = mDmgTotal * 2;
                 }
                 var buff = $scope.hasBuff("Fury");
-                if (buff !== null) 
+                if (buff !== null) {
+                    mCritDmg = mCritDmg + mDmgTotal;
                     $scope.removeBuff(buff);
+                }
             } else if ($scope.hasBuff("Fury")) {
                 var buff = $scope.hasBuff("Fury");
                 if (buff !== null) {
-                    if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT"))
-                        mCritDmg = mDmgTotal * 3;
-                    else
+                    if (monster.critical)
                         mCritDmg = mDmgTotal * 2;
                     
                     $scope.removeBuff(buff);
@@ -6177,6 +6191,20 @@ angular.module('main')
         });
     };
     
+    $scope.queueSkill =  function(skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse) {
+        vtdSvc.queueSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
+    $scope.execSkillQueue =  function() {
+        vtdSvc.execSkillQueue($scope.characterContext.id).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
+        });
+    };
+    
     $scope.useSkill =  function(skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse) {
         vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
             vtdState.setContext(result.data);
@@ -6374,6 +6402,22 @@ angular.module('main')
     
     tokenAdminSvc.setCompanion = function(id, polyId) {
         return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/companion/' + polyId).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.queueSkill = function(id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse) {
+        if (inGameEffect === null)
+            inGameEffect = 'NONE';
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/' + skillId + '/queue/?selfTarget=' + selfTarget + '&selfHeal=' + selfHeal + '&madEvoker=' + madEvoker + '&lohNumber=' + lohNumber + '&inGameEffect=' + inGameEffect + '&markUse=' + markUse + '&ignoreUse=' + ignoreUse).catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.execSkillQueue =  function(id) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/use/queue/').catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });

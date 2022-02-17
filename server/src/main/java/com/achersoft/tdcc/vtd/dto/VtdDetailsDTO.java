@@ -4,10 +4,7 @@ import com.achersoft.tdcc.character.dao.CharacterStats;
 import com.achersoft.tdcc.character.dto.CharacterDetailsDTO;
 import com.achersoft.tdcc.enums.*;
 import com.achersoft.tdcc.vtd.admin.dao.VtdRoom;
-import com.achersoft.tdcc.vtd.dao.CharacterSkill;
-import com.achersoft.tdcc.vtd.dao.VtdDetails;
-import com.achersoft.tdcc.vtd.dao.VtdMonster;
-import com.achersoft.tdcc.vtd.dao.VtdPoly;
+import com.achersoft.tdcc.vtd.dao.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,6 +47,7 @@ public class VtdDetailsDTO {
     public List<CharacterSkill> twoSkills;
     public List<CharacterSkill> threeSkills;
     public List<CharacterSkill> fourSkills;
+    public List<QueuedSkill> queuedSkills;
     public List<BuffDTO> buffs;
     public List<BuffDTO> availableBuffs;
     public List<BuffDTO> availableBardsong;
@@ -105,6 +103,7 @@ public class VtdDetailsDTO {
     public boolean mightyWeapon;
     public boolean prestigeAvailable;
     public boolean prestigeActive;
+    public int totalDamageLastSpell;
     public VtdItemsDTO items;
     
     public static VtdDetailsDTO fromDAO(VtdDetails dao) {
@@ -201,6 +200,8 @@ public class VtdDetailsDTO {
                 .archMagePower(dao.isArchMagePower())
                 .prestigeAvailable(dao.isPrestigeAvailable())
                 .prestigeActive(dao.isPrestigeActive())
+                .queuedSkills(dao.getQueuedSkills())
+                .totalDamageLastSpell(dao.getTotalDamageLastSpell())
                 .items(VtdItemsDTO.fromDAO(dao.getItems()))
                 .build();
 

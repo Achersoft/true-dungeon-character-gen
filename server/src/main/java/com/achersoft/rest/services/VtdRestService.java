@@ -186,6 +186,33 @@ public class VtdRestService {
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
     @POST
+    @Path("/{id}/{skillId}/queue")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO queueSkill(@PathParam("id") String id,
+                                    @PathParam("skillId") String skillId,
+                                    @QueryParam("selfTarget") boolean selfTarget,
+                                    @QueryParam("selfHeal") int selfHeal,
+                                    @QueryParam("madEvoker") boolean madEvoker,
+                                    @QueryParam("lohNumber") int lohNumber,
+                                    @QueryParam("inGameEffect") InGameEffect inGameEffect,
+                                    @QueryParam("markUse") boolean markUse,
+                                    @QueryParam("ignoreUse") boolean ignoreUse,
+                                    @QueryParam("damage") int damage) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.queueSkill(id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse, damage));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
+    @Path("/{id}/queue")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO queueSkill(@PathParam("id") String id) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.execSkillQueue(id));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @POST
     @Path("/{id}/{skillId}/use")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
@@ -289,6 +316,14 @@ public class VtdRestService {
     @Produces({MediaType.APPLICATION_JSON})
     public VtdDetailsDTO resetCharacter(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
         return VtdDetailsDTO.fromDAO(virtualTdService.resetCharacter(id));
+    }
+
+    @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})
+    @DELETE
+    @Path("/{id}/queue")
+    @Produces({MediaType.APPLICATION_JSON})
+    public VtdDetailsDTO deleteQueuedSkills(@PathParam("id") @NotNull @NotEmpty String id) throws Exception {
+        return VtdDetailsDTO.fromDAO(virtualTdService.deleteQueuedSkills(id));
     }
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})

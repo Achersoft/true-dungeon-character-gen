@@ -12,6 +12,7 @@ import java.util.List;
 public interface VtdMapper {
     public void addCharacter(VtdDetails vtdDetails);
     public void addCharacterSkill(CharacterSkill characterSkill);
+    public void queueCharacterSkill(QueuedSkill queuedSkill);
     public void addCharacterStats(CharacterStats characterStats);
     public void addCharacterBuff(VtdBuff vtdBuff);
     public void addCharacterDebuff(VtdDebuff vtdDebuff);
@@ -26,6 +27,7 @@ public interface VtdMapper {
     public List<VtdDebuff> getCharacterDebuffs(@Param("characterId") String characterId);
     public List<VtdPoly> getCharacterPolys(@Param("characterId") String characterId);
     public CharacterStats getCharacterStats(@Param("id") String id);
+    public List<QueuedSkill> getQueuedSkills(@Param("id") String id);
     public boolean buffExists(@Param("characterId") String characterId, @Param("buff") Buff buff);
     public void updateCharacterDr(CharacterStats characterStats);
     public void updateCharacter(VtdDetails vtdDetails);
@@ -33,6 +35,7 @@ public interface VtdMapper {
     public void updateCharacterPoly(VtdPoly poly);
     public void deleteCharacter(@Param("id") String id);
     public void deleteCharacterSkills(@Param("id") String id);
+    public void deleteQueuedSkills(@Param("id") String id);
     public void deleteCharacterStats(@Param("id") String id);
     public void deleteCharacterBuffs(@Param("id") String id);
     public void deleteCharacterPolys(@Param("id") String id);
