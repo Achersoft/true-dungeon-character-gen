@@ -408,6 +408,19 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
                     if (hasShamansBelt.get()) {
                         final TokenFullDetails belt = tokenAdminMapper.getTokenDetails("e604ae878baea5348138a4b22180b74a34c6ecce");
+                        belt.setName("Shaman’s Belt - Air");
+                        polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
+                                belt, false));
+                        belt.setName("Shaman’s Belt - Earth");
+                        polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
+                                belt, false));
+                        belt.setName("Shaman’s Belt - Fire");
+                        polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
+                                belt, false));
+                        belt.setName("Shaman’s Belt - Ice");
                         polyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
                                 (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
                                 belt, false));
@@ -502,9 +515,18 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
                     if (hasShamansBelt.get()) {
                         final TokenFullDetails belt = tokenAdminMapper.getTokenDetails("e604ae878baea5348138a4b22180b74a34c6ecce");
+                        belt.setName("Shaman’s Belt - Air");
                         elfPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
-                                (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                belt, false));
+                                20, new ArrayList<>(), belt, false));
+                        belt.setName("Shaman’s Belt - Earth");
+                        elfPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                20, new ArrayList<>(), belt, false));
+                        belt.setName("Shaman’s Belt - Fire");
+                        elfPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                20, new ArrayList<>(), belt, false));
+                        belt.setName("Shaman’s Belt - Ice");
+                        elfPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                20, new ArrayList<>(), belt, false));
                     }
 
                     vtdMapper.addPolys(elfPolyList);
@@ -541,9 +563,18 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
                     if (hasShamansBelt.get()) {
                         final TokenFullDetails belt = tokenAdminMapper.getTokenDetails("e604ae878baea5348138a4b22180b74a34c6ecce");
+                        belt.setName("Shaman’s Belt - Air");
                         wizardPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
-                                (characterDetails.getStats().getLevel() == 5) ? 19 : 20, new ArrayList<>(),
-                                belt, false));
+                                20, new ArrayList<>(), belt, false));
+                        belt.setName("Shaman’s Belt - Earth");
+                        wizardPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                20, new ArrayList<>(), belt, false));
+                        belt.setName("Shaman’s Belt - Fire");
+                        wizardPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                20, new ArrayList<>(), belt, false));
+                        belt.setName("Shaman’s Belt - Ice");
+                        wizardPolyList.add(VtdPoly.fromToken(characterDetails.getId(), characterDetails.getCharacterClass(),
+                                20, new ArrayList<>(), belt, false));
                     }
 
                     vtdMapper.addPolys(wizardPolyList);
@@ -1372,6 +1403,30 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
                             if (characterStats.getDrCold() >= 10) {
                                 characterStats.setDrCold(characterStats.getDrCold() - 10);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Shaman’s Belt - Air")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrShock() >= 5) {
+                                characterStats.setDrShock(characterStats.getDrShock() - 5);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Shaman’s Belt - Earth")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrSonic() >= 5) {
+                                characterStats.setDrSonic(characterStats.getDrSonic() - 5);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Shaman’s Belt - Fire")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrFire() >= 5) {
+                                characterStats.setDrFire(characterStats.getDrFire() - 5);
+                                vtdMapper.updateCharacterDr(characterStats);
+                            }
+                        } else if (characterPoly.getName().equals("Shaman’s Belt - Ice")) {
+                            final CharacterStats characterStats = vtdMapper.getCharacterStats(id);
+                            if (characterStats.getDrCold() >= 5) {
+                                characterStats.setDrCold(characterStats.getDrCold() - 5);
                                 vtdMapper.updateCharacterDr(characterStats);
                             }
                         }

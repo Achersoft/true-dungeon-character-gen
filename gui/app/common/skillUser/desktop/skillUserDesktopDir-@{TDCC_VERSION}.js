@@ -22,6 +22,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
             scope.skillCheckIndex = 3;
             scope.hitRoll = 0;
             scope.hitRollNatural = 0;
+            scope.hitSuccess = true;
             scope.damage = 0;
             scope.damagePool = 0;
             scope.healPool = 0;
@@ -43,6 +44,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                 scope.loh15Index = 0;
                 scope.hitRoll = 0;
                 scope.hitRollNatural = 0;
+                scope.hitSuccess = true;
                 scope.damage = 0;
                 scope.damagePool = 0;
                 scope.healPool = 0;
@@ -263,7 +265,8 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
 
                     scope.hitRollNatural = scope.roll()(scope.monster);
                     scope.hitRoll = scope.hitRollNatural + scope.characterContext.stats.rangeHit;
-                    
+                    scope.hitSuccess =  scope.hitRoll >= 15;
+                            
                     if (scope.madEvokerIndex === 1) {
                         madEvoker = true;
                         totalDamage += dmg;
@@ -420,6 +423,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
 
                     scope.hitRollNatural = scope.roll()(scope.monster);
                     scope.hitRoll = scope.hitRollNatural + scope.characterContext.stats.rangeHit;
+                    scope.hitSuccess =  scope.hitRoll >= 15;
                     
                     if (scope.madEvokerIndex === 1) {
                         madEvoker = true;
@@ -546,7 +550,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
             };
             
             scope.markSkill = function() {
-                scope.useAbility()(scope.model.id, false, 0, false, 0, null, true, true);
+                scope.useAbility()(scope.model.id, false, 0, false, 0, null, true, true, true, 0, 0, 0, false);
                 scope.closeModal();
             }; 
             
@@ -556,8 +560,12 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                 if (scope.castSequenceIndex === 1 && (scope.characterContext.characterClass === 'WIZARD' || scope.characterContext.characterClass === 'ELF_WIZARD')) {
                     scope.closeModal();
                 } else {
-                    scope.useAbility()(scope.model.id, selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse, false);
-                    scope.spellCast = true;
+                    scope.useAbility()(scope.model.id, selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse, false, scope.hitSuccess, scope.hitRollNatural, scope.hitRoll, scope.damage + scope.damagePool, false);
+                    
+                    if (scope.characterContext.rollerId !== null) 
+                        scope.closeModal();
+                    else
+                        scope.spellCast = true;
                 }
             };
             
@@ -699,6 +707,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                 scope.loh15Index = 0;
                 scope.hitRoll = 0;
                 scope.hitRollNatural = 0;
+                scope.hitSuccess = true;
                 scope.damage = 0;
                 scope.damagePool = 0;
                 scope.secondaryTargetIndex = 0;

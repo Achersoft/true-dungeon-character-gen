@@ -1,4 +1,4 @@
-angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal', function(characterSvc, $uibModal){
+angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal', '$timeout', function(characterSvc, $uibModal, $timeout){
     return {
         restrict:'E',
         scope:{
@@ -15,12 +15,14 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             scope.itemSelection = {};
             scope.targetIndex = 0;
             scope.madEvokerIndex = 0;
+            scope.castSequenceIndex = 0;
             scope.loh10Index = 0;
             scope.loh15Index = 0;
             scope.secondaryTargetIndex = 0;
-            scope.skillCheckIndex = 0;
+            scope.skillCheckIndex = 3;
             scope.hitRoll = 0;
             scope.hitRollNatural = 0;
+            scope.hitSuccess = true;
             scope.damage = 0;
             scope.damagePool = 0;
             scope.healPool = 0;
@@ -29,20 +31,26 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             scope.lohUseAmount = 1;
             scope.spellCast = false;
             scope.healError = false;
+            scope.skillCheck = false;
+            scope.skillCheckSrc = '';
+            scope.skillCheckAnswer = '';
+            scope.skillCheckOptions = [];
             scope.modalInstance = null;
             
             scope.openModal = function(isChecked) {
                 scope.targetIndex = 0;
                 scope.madEvokerIndex = 0;
+                scope.castSequenceIndex = 0;
                 scope.loh10Index = 0;
                 scope.loh15Index = 0;
                 scope.hitRoll = 0;
                 scope.hitRollNatural = 0;
+                scope.hitSuccess = true;
                 scope.damage = 0;
                 scope.damagePool = 0;
                 scope.healPool = 0;
                 scope.secondaryTargetIndex = 0;
-                scope.skillCheckIndex = 0;
+                scope.skillCheckIndex = 3;
                 scope.primaryHealAmount = 0;
                 scope.seconaryHealAmount = 0;
                 scope.lohUseAmount = 1;
@@ -50,6 +58,10 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                 scope.healError = false;
                 scope.monster = scope.characterContext.monsters[0];
                 scope.magePowers = false;
+                scope.skillCheck = false;
+                scope.skillCheckSrc = '';
+                scope.skillCheckAnswer = '';
+                scope.skillCheckOptions = [];
                 scope.element = -1;
                 scope.conserve = 0;
                 scope.fork = 0;
@@ -69,6 +81,8 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                 } else {
                     if (scope.characterContext.magePower || scope.characterContext.archMagePower)
                         scope.magePowers = true;
+                    else if (scope.model.minEffect !== scope.model.maxEffect)
+                        scope.initSkillCheck();
                     
                     scope.modalInstance = $uibModal.open({
                         ariaLabelledBy: 'modal-title',
@@ -238,6 +252,7 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
 
                     scope.hitRollNatural = scope.roll()();
                     scope.hitRoll = scope.hitRollNatural + scope.characterContext.stats.rangeHit;
+                    scope.hitSuccess =  scope.hitRoll >= 15;
                     
                     if (scope.madEvokerIndex === 1) {
                         madEvoker = true;
@@ -395,6 +410,7 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
 
                     scope.hitRollNatural = scope.roll()();
                     scope.hitRoll = scope.hitRollNatural + scope.characterContext.stats.rangeHit;
+                    scope.hitSuccess =  scope.hitRoll >= 15;
                     
                     if (scope.madEvokerIndex === 1) {
                         madEvoker = true;
@@ -521,15 +537,23 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             };
             
             scope.markSkill = function() {
-                scope.useAbility()(scope.model.id, false, 0, false, 0, null, true, true);
+                scope.useAbility()(scope.model.id, false, 0, false, 0, null, true, true, true, 0, 0, 0, false);
                 scope.closeModal();
             }; 
             
             scope.spellCastSucess = function(selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse) {
                 if (scope.conserve === 1)
                     markUse = false;
-                scope.useAbility()(scope.model.id, selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse, false);
-                scope.spellCast = true;
+                if (scope.castSequenceIndex === 1 && (scope.characterContext.characterClass === 'WIZARD' || scope.characterContext.characterClass === 'ELF_WIZARD')) {
+                    scope.closeModal();
+                } else {
+                    scope.useAbility()(scope.model.id, selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse, false, scope.hitSuccess, scope.hitRollNatural, scope.hitRoll, scope.damage + scope.damagePool, false);
+                    
+                    if (scope.characterContext.rollerId !== null) 
+                        scope.closeModal();
+                    else
+                        scope.spellCast = true;
+                }
             };
             
             scope.unuseSkill = function() {
@@ -561,7 +585,105 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             };
             
             scope.continueCast = function() {
+                scope.initSkillCheck();
                 scope.magePowers = false;
+            };
+            
+            scope.tryAnswer = function(answer) {
+                if (scope.skillCheckIndex === 3) {
+                    if (scope.skillCheckAnswer === answer)
+                        scope.skillCheckIndex = 0;
+                    else
+                        scope.skillCheckIndex = 1;
+  
+                    scope.skillCheckSrc = scope.skillCheckSrc.replace('_ask', '');
+
+                    $timeout(function(){
+                        scope.skillCheck = false;
+                    },2000);
+                }
+            };
+            
+            scope.initSkillCheck = function() {
+                if (scope.model.minEffect === scope.model.maxEffect)
+                    return;
+                
+                if (scope.characterContext.characterClass === 'WIZARD' || scope.characterContext.characterClass === 'ELF_WIZARD') {
+                    var wizardQuestions = [ { src: 'images/wizard1_ask.png' , answer: 'Mixology'}, { src: 'images/wizard2_ask.png' , answer: 'Tempology'}, 
+                        { src: 'images/wizard3_ask.png' , answer: 'Planalogy'}, { src: 'images/wizard4_ask.png' , answer: 'Herbology'}, { src: 'images/wizard5_ask.png' , answer: 'Artificery'},
+                        { src: 'images/wizard6_ask.png' , answer: 'Necromancy'}, { src: 'images/wizard7_ask.png' , answer: 'Dracology'}, { src: 'images/wizard8_ask.png' , answer: 'Illusion'},
+                        { src: 'images/wizard9_ask.png' , answer: 'Enchantment'}, { src: 'images/wizard10_ask.png' , answer: 'Transmutation'}, { src: 'images/wizard11_ask.png' , answer: 'Evocation'},
+                        { src: 'images/wizard12_ask.png' , answer: 'Divination'}, { src: 'images/wizard13_ask.png' , answer: 'Abjuration'}, { src: 'images/wizard14_ask.png' , answer: 'Conjuration'}];
+                    var wizardOptions = [ 'Mixology', 'Tempology', 'Planalogy', 'Herbology', 'Artificery', 'Necromancy', 'Dracology', 'Illusion', 'Enchantment', 'Transmutation', 
+                        'Evocation', 'Divination', 'Abjuration', 'Conjuration' ];
+                    var randomElement = wizardQuestions[Math.floor(Math.random() * wizardQuestions.length)];
+                    
+                    scope.skillCheckSrc = randomElement.src;    
+                    scope.skillCheckAnswer = randomElement.answer;
+                    scope.skillCheckOptions = wizardOptions.sort(() => .5 - Math.random()).slice(0,6);
+                    
+                    if (!scope.skillCheckOptions.includes(scope.skillCheckAnswer)) {
+                        scope.skillCheckOptions.pop();
+                        scope.skillCheckOptions.push(scope.skillCheckAnswer);
+                    }
+                } else if (scope.characterContext.characterClass === 'DRUID') {
+                    var druidQuestions = [ { src: 'images/Druid1_ask.png' , answer: 'Chipmunk'}, { src: 'images/Druid2_ask.png' , answer: 'Centaur'}, 
+                        { src: 'images/Druid3_ask.png' , answer: 'Black Rat'}, { src: 'images/Druid4_ask.png' , answer: 'Bison'}, { src: 'images/Druid5_ask.png' , answer: 'Bear'},
+                        { src: 'images/Druid6_ask.png' , answer: 'Vorpal Bunny'}, { src: 'images/Druid7_ask.png' , answer: 'Red Deer'}, { src: 'images/Druid8_ask.png' , answer: 'Otter'},
+                        { src: 'images/Druid9_ask.png' , answer: 'Muskrat'}, { src: 'images/Druid10_ask.png' , answer: 'Lamia'}, { src: 'images/Druid11_ask.png' , answer: 'Harpy'},
+                        { src: 'images/Druid12_ask.png' , answer: 'Dire Rat'}];
+                    var druidOptions = [ 'Chipmunk', 'Centaur', 'Black Rat', 'Bison', 'Bear', 'Vorpal Bunny', 'Red Deer', 'Otter', 'Muskrat', 'Lamia', 
+                        'Harpy', 'Dire Rat' ];
+                    var randomElement = druidQuestions[Math.floor(Math.random() * druidQuestions.length)];
+                    
+                    scope.skillCheckSrc = randomElement.src;    
+                    scope.skillCheckAnswer = randomElement.answer;
+                    scope.skillCheckOptions = druidOptions.sort(() => .5 - Math.random()).slice(0,6);
+                    
+                    if (!scope.skillCheckOptions.includes(scope.skillCheckAnswer)) {
+                        scope.skillCheckOptions.pop();
+                        scope.skillCheckOptions.push(scope.skillCheckAnswer);
+                    }
+                } else if (scope.characterContext.characterClass === 'CLERIC') {
+                    var clericQuestions = [ { src: 'images/cleric1_ask.png' , answer: 'Yeelab'}, { src: 'images/cleric2_ask.png' , answer: 'Grimnor'}, 
+                        { src: 'images/cleric3_ask.png' , answer: 'Avalava'}, { src: 'images/cleric4_ask.png' , answer: 'Cresno'}, { src: 'images/cleric5_ask.png' , answer: 'Pion'},
+                        { src: 'images/cleric6_ask.png' , answer: 'Selton'}, { src: 'images/cleric7_ask.png' , answer: 'Candar'}, { src: 'images/cleric8_ask.png' , answer: 'Dyedar'},
+                        { src: 'images/cleric9_ask.png' , answer: 'Cavoc'}, { src: 'images/cleric10_ask.png' , answer: 'Balot'}, { src: 'images/cleric11_ask.png' , answer: 'Lazlo'},
+                        { src: 'images/cleric12_ask.png' , answer: 'Gazal'}];
+                    var clericOptions = [ 'Yeelab', 'Grimnor', 'Avalava', 'Cresno', 'Pion', 'Selton', 'Candar', 'Dyedar', 'Cavoc', 'Balot', 
+                        'Lazlo', 'Gazal' ];
+                    var randomElement = clericQuestions[Math.floor(Math.random() * clericQuestions.length)];
+                    
+                    scope.skillCheckSrc = randomElement.src;    
+                    scope.skillCheckAnswer = randomElement.answer;
+                    scope.skillCheckOptions = clericOptions.sort(() => .5 - Math.random()).slice(0,6);
+                    
+                    if (!scope.skillCheckOptions.includes(scope.skillCheckAnswer)) {
+                        scope.skillCheckOptions.pop();
+                        scope.skillCheckOptions.push(scope.skillCheckAnswer);
+                    }
+                } else if (scope.characterContext.characterClass === 'BARD') {
+                    var BardQuestions = [ { src: 'images/Bard1_ask.png' , answer: 'Justice'}, { src: 'images/Bard2_ask.png' , answer: 'Friendship'}, 
+                        { src: 'images/Bard3_ask.png' , answer: 'Wit'}, { src: 'images/Bard4_ask.png' , answer: 'Truthfulness'}, { src: 'images/Bard5_ask.png' , answer: 'Friendliness'},
+                        { src: 'images/Bard6_ask.png' , answer: 'Equanmity'}, { src: 'images/Bard7_ask.png' , answer: 'Honor'}, { src: 'images/Bard8_ask.png' , answer: 'Pride'},
+                        { src: 'images/Bard9_ask.png' , answer: 'Magnificence'}, { src: 'images/Bard10_ask.png' , answer: 'Liberality'}, { src: 'images/Bard11_ask.png' , answer: 'Temperance'},
+                        { src: 'images/Bard12_ask.png' , answer: 'Courage'}];
+                    var BardOptions = [ 'Justice', 'Friendship', 'Wit', 'Truthfulness', 'Friendliness', 'Equanmity', 'Honor', 'Pride', 'Magnificence', 'Liberality', 
+                        'Temperance', 'Courage' ];
+                    var randomElement = BardQuestions[Math.floor(Math.random() * BardQuestions.length)];
+                    
+                    scope.skillCheckSrc = randomElement.src;    
+                    scope.skillCheckAnswer = randomElement.answer;
+                    scope.skillCheckOptions = BardOptions.sort(() => .5 - Math.random()).slice(0,6);
+                    
+                    if (!scope.skillCheckOptions.includes(scope.skillCheckAnswer)) {
+                        scope.skillCheckOptions.pop();
+                        scope.skillCheckOptions.push(scope.skillCheckAnswer);
+                    }
+                }
+                
+                scope.skillCheck = true;
+
             };
             
             scope.closeModal = function() {
@@ -587,6 +709,28 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                 scope.fork = 0;
                 scope.intensify = 0;
                 scope.sharpen = 0;
+                scope.targetIndex = 0;
+                scope.madEvokerIndex = 0;
+                scope.castSequenceIndex = 0;
+                scope.loh10Index = 0;
+                scope.loh15Index = 0;
+                scope.secondaryTargetIndex = 0;
+                scope.skillCheckIndex = 3;
+                scope.hitRoll = 0;
+                scope.hitRollNatural = 0;
+                scope.hitSuccess = true;
+                scope.damage = 0;
+                scope.damagePool = 0;
+                scope.healPool = 0;
+                scope.primaryHealAmount = 0;
+                scope.seconaryHealAmount = 0;
+                scope.lohUseAmount = 1;
+                scope.spellCast = false;
+                scope.healError = false;
+                scope.skillCheck = false;
+                scope.skillCheckSrc = '';
+                scope.skillCheckAnswer = '';
+                scope.skillCheckOptions = [];
             };
         },
         templateUrl:'common/skillUser/mobile/skillUserMobileTemplate-@{TDCC_VERSION}.html'

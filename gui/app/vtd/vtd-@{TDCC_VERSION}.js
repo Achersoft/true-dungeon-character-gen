@@ -441,13 +441,6 @@ angular.module('main')
         });
     };
     
-    $scope.queueSkill =  function(skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse) {
-        vtdSvc.queueSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
-            vtdState.setContext(result.data);
-            $scope.characterContext = vtdState.get();
-        });
-    };
-    
     $scope.execSkillQueue =  function() {
         vtdSvc.execSkillQueue($scope.characterContext.id).then(function(result) {
             vtdState.setContext(result.data);
@@ -455,11 +448,41 @@ angular.module('main')
         });
     };
     
-    $scope.useSkill = function(skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse) {
-        vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
-            vtdState.setContext(result.data);
-            $scope.characterContext = vtdState.get();
-        });
+    $scope.useSkill = function(skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse, isSuccess, die, modifiedDie, damage, isQueue) {
+        if (isQueue) {
+            vtdSvc.queueSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse, damage).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });  
+        } else {
+            if ($scope.characterContext.rollerId !== null && damage > -1) {
+                if (isSuccess && die === 0) {
+                    die = 1;
+                    modifiedDie = 1;
+                }
+                vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
+                        ' "rolls": [{ "type": "spell", "dieResult": ' + die + ', "modifiedResult": ' + modifiedDie + ', "isSuccess": ' + isSuccess + ', "damage": ' + damage + ' }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Spell","result":response.data.errors[0]});       
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Spell","result":"Spell attack roll sent"});
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast();   
+                        vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
+                            vtdState.setContext(result.data);
+                            $scope.characterContext = vtdState.get();
+                        });
+                    });
+                
+            } else {
+                vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
+                    vtdState.setContext(result.data);
+                    $scope.characterContext = vtdState.get();
+                });
+            }
+        }
     };
     
     $scope.unuseSkill = function(skilId) {
@@ -2821,7 +2844,7 @@ angular.module('main')
     };
 }])
 
-.controller('VtdPlayCtrl', ['$scope', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'WarnDialogSvc', 'ConfirmDialogSvc', 'MonsterSelectorSvc', function ($scope, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, warnDialogSvc, confirmDialogSvc, monsterSelectorSvc) {
+.controller('VtdPlayCtrl', ['$scope', '$q', 'VtdSvc', 'VtdState', 'VtdHistory', 'RESOURCES', '$routeParams', '$route', 'WarnDialogSvc', 'ConfirmDialogSvc', 'MonsterSelectorSvc', function ($scope, $q, vtdSvc, vtdState, vtdHistory, RESOURCES, $routeParams, $route, warnDialogSvc, confirmDialogSvc, monsterSelectorSvc) {
     $scope.tabIndex = 0;
     $scope.rollerIndex = 0;
     $scope.sneakIndex = 0;
@@ -6205,11 +6228,49 @@ angular.module('main')
         });
     };
     
-    $scope.useSkill =  function(skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse) {
-        vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
+    $scope.execSkillQueue =  function() {
+        vtdSvc.execSkillQueue($scope.characterContext.id).then(function(result) {
             vtdState.setContext(result.data);
             $scope.characterContext = vtdState.get();
         });
+    };
+    
+    $scope.useSkill = function(skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse, isSuccess, die, modifiedDie, damage, isQueue) {
+        if (isQueue) {
+            vtdSvc.queueSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse, damage).then(function(result) {
+                vtdState.setContext(result.data);
+                $scope.characterContext = vtdState.get();
+            });  
+        } else {
+            if ($scope.characterContext.rollerId !== null && damage > -1) {
+                if (isSuccess && die === 0) {
+                    die = 1;
+                    modifiedDie = 1;
+                }
+                vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
+                        ' "rolls": [{ "type": "spell", "dieResult": ' + die + ', "modifiedResult": ' + modifiedDie + ', "isSuccess": ' + isSuccess + ', "damage": ' + damage + ' }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Spell","result":response.data.errors[0]});       
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        alert(response.data.errors[0]);
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Spell","result":"Spell attack roll sent"});
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast();   
+                        vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
+                            vtdState.setContext(result.data);
+                            $scope.characterContext = vtdState.get();
+                        });
+                    });
+                
+            } else {
+                vtdSvc.useSkill($scope.characterContext.id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse).then(function(result) {
+                    vtdState.setContext(result.data);
+                    $scope.characterContext = vtdState.get();
+                });
+            }
+        }
     };
     
     $scope.unuseSkill =  function(skilId) {
@@ -6407,10 +6468,10 @@ angular.module('main')
         });
     };
     
-    tokenAdminSvc.queueSkill = function(id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse) {
+    tokenAdminSvc.queueSkill = function(id, skillId, selfTarget, selfHeal, madEvoker, lohNumber, inGameEffect, markUse, ignoreUse, damage) {
         if (inGameEffect === null)
             inGameEffect = 'NONE';
-        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/' + skillId + '/queue/?selfTarget=' + selfTarget + '&selfHeal=' + selfHeal + '&madEvoker=' + madEvoker + '&lohNumber=' + lohNumber + '&inGameEffect=' + inGameEffect + '&markUse=' + markUse + '&ignoreUse=' + ignoreUse).catch(function(response) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/' + skillId + '/queue/?selfTarget=' + selfTarget + '&selfHeal=' + selfHeal + '&madEvoker=' + madEvoker + '&lohNumber=' + lohNumber + '&inGameEffect=' + inGameEffect + '&markUse=' + markUse + '&ignoreUse=' + ignoreUse + '&damage=' + damage).catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });

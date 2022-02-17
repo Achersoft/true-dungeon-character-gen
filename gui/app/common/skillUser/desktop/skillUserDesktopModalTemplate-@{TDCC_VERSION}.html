@@ -97,15 +97,7 @@
                 <span class="col-xs-6 col-md-6 btn" ng-class="madEvokerIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setMadEvokerIndex(1)">Yes </span> 
             </div> 
         </div>
-        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="(characterContext.characterClass === 'WIZARD' || characterContext.characterClass === 'ELF_WIZARD')">
-            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
-                Add to casting sequence?:
-            </div>
-            <div class="col-xs-12 col-md-12 text-center">
-                <span class="col-xs-6 col-md-6 btn" ng-class="castSequenceIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setCastSequenceIndex(0)">No </span> 
-                <span class="col-xs-6 col-md-6 btn" ng-class="castSequenceIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setCastSequenceIndex(1)">Yes </span> 
-            </div> 
-        </div>
+
         <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="model.skillTarget === 'ANY'">
             <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
                 Spell Target:

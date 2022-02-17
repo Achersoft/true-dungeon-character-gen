@@ -58,16 +58,18 @@
            </div> 
         </div>
     </div>
-    <div ng-show="spellCast === false && magePowers === false">
-        <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="model.minEffect !== model.maxEffect">
-            <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
-                Skill Check:
-            </div>
-            <div class="col-xs-12 col-md-12 text-center">
-                <span class="col-xs-6 col-md-6 btn" ng-class="skillCheckIndex === 0 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillCheckIndex(0)">Pass </span> 
-                <span class="col-xs-6 col-md-6 btn" ng-class="skillCheckIndex === 1 ? 'btn-info' : 'btn-default'" style="margin:0px;padding:0px;line-height:30px;" ng-click="setSkillCheckIndex(1)">Failed </span> 
-            </div> 
+    <div ng-show="spellCast === false && magePowers === false && skillCheck === true">
+        <h4 class="modal-title text-center" style="margin-top:15px;color: rgb(255, 255, 255">Skill Check</h4>
+        
+        <img ng-src="{{skillCheckSrc}}" style="display: block;margin-left: auto;margin-right: auto;width: 50%;height: 250px; width: 250px"/>
+        
+        <div style="width: 100%">
+            <span class="btn btn-default" style="width:45%;margin:2.5%" ng-click="tryAnswer(checkOption);" ng-repeat-start="checkOption in skillCheckOptions" ng-repeat-end="">
+                {{checkOption}}
+            </span>
         </div>
+    </div>
+    <div ng-show="spellCast === false  && magePowers === false && skillCheck === false">
         <div class="col-xs-12 col-md-12" style="margin-top:12px;padding-left:15px;padding-right:15px" ng-show="model.name === 'Lay on Hands' && characterContext.effects.includes('PLUS_10_LOH')">
             <div class="col-xs-12 col-md-12 text-left" style="margin-bottom:2px;color: rgb(255, 255, 255)">
                 Use one per game +10 healing?:
