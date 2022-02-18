@@ -493,7 +493,7 @@ angular.module('main')
     };
     
     $scope.activateBuff = function(buff) {
-        vtdSvc.addBuff($scope.characterContext.id, buff.id).then(function(result) {
+        vtdSvc.addBuff($scope.characterContext.id, buff.id, buff.level).then(function(result) {
             vtdState.setContext(result.data);
             $scope.characterContext = vtdState.get();
         });
@@ -6280,8 +6280,8 @@ angular.module('main')
         });
     };
     
-    $scope.activateBuff =  function(buff) {
-        vtdSvc.addBuff($scope.characterContext.id, buff.id).then(function(result) {
+    $scope.activateBuff = function(buff) {
+        vtdSvc.addBuff($scope.characterContext.id, buff.id, buff.level).then(function(result) {
             vtdState.setContext(result.data);
             $scope.characterContext = vtdState.get();
         });
@@ -6500,11 +6500,18 @@ angular.module('main')
         });
     };
     
-    tokenAdminSvc.addBuff = function(id, buff) {
-        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/buff/?buff=' + buff).catch(function(response) {
-            errorDialogSvc.showError(response);
-            return($q.reject(response));
-        });
+    tokenAdminSvc.addBuff = function(id, buff, level) {
+        if (level === undefined || level === null) {
+            return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/buff/?buff=' + buff).catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+        } else {
+            return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/buff/?buff=' + buff + '&level=' + level).catch(function(response) {
+                errorDialogSvc.showError(response);
+                return($q.reject(response));
+            });
+        }
     };
     
     tokenAdminSvc.addDebuff = function(id, debuff) {

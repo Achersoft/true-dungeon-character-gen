@@ -26,7 +26,7 @@ public interface VirtualTdService {
     VtdDetails queueSkill(String id, String skillId, boolean selfTarget, int selfHeal, boolean madEvoker, int lohNumber, InGameEffect inGameEffect, boolean markUse, boolean ignoreUse, int damage);
     VtdDetails execSkillQueue(String id);
     VtdDetails unuseSkill(String id, String skillId);
-    VtdDetails addBuff(String id, Buff buff);
+    VtdDetails addBuff(String id, Buff buff, int level);
     VtdDetails addDebuff(String id, Debuff debuff);
     VtdDetails removeBuff(String id, Buff buff);
     VtdDetails removeDebuff(String id, Debuff debuff);

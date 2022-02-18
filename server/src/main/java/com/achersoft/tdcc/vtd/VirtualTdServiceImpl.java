@@ -1022,7 +1022,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
         if (!ignoreUse) {
             if (skill.getSkillType() == SkillType.BUFF && (skill.getSkillTarget() == SkillTarget.SELF || skill.getSkillTarget() == SkillTarget.PARTY || (skill.getSkillTarget() == SkillTarget.ANY && selfTarget))) {
-                return addBuff(id, Buff.getBuff(skill.getName()));
+                return addBuff(id, Buff.getBuff(skill.getName()), 0);
             } else if (skill.getSkillType() == SkillType.HEAL && selfTarget && selfHeal > 0) {
                 final VtdDetails vtdDetails = calculateStats(id);
 
@@ -1125,7 +1125,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
             if (!queuedSkill.isIgnoreUse()) {
                 if (skillMap.get(queuedSkill.getSkillId()).getSkillType() == SkillType.BUFF && (skillMap.get(queuedSkill.getSkillId()).getSkillTarget() == SkillTarget.SELF || skillMap.get(queuedSkill.getSkillId()).getSkillTarget() == SkillTarget.PARTY || (skillMap.get(queuedSkill.getSkillId()).getSkillTarget() == SkillTarget.ANY && queuedSkill.isSelfTarget()))) {
-                    return addBuff(id, Buff.getBuff(skillMap.get(queuedSkill.getSkillId()).getName()));
+                    return addBuff(id, Buff.getBuff(skillMap.get(queuedSkill.getSkillId()).getName()), 0);
                 } else if (skillMap.get(queuedSkill.getSkillId()).getSkillType() == SkillType.HEAL && queuedSkill.isSelfTarget() && queuedSkill.getSelfHeal() > 0) {
                     vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + queuedSkill.getSelfHeal());
                     if (vtdDetails.getCurrentHealth() > (vtdDetails.getStats().getHealth()))
@@ -1192,9 +1192,14 @@ public class VirtualTdServiceImpl implements VirtualTdService {
     }
 
     @Override
-    public VtdDetails addBuff(String id, Buff buff) {
-        if (buff != null && !vtdMapper.buffExists(id, buff)) {
-            vtdMapper.addCharacterBuff(VtdBuff.builder().characterId(id).bardsong(buff.isBardsong()).buff(buff).build());
+    public VtdDetails addBuff(String id, Buff buff, int level) {
+        if (buff != null) {
+            final boolean buffExists = vtdMapper.buffExists(id, buff);
+            if (!buffExists || (level > 0 && buff.isCanBeLeveled())) {
+                if (buffExists)
+                    vtdMapper.deleteCharacterBuff(id, buff);
+                vtdMapper.addCharacterBuff(VtdBuff.builder().characterId(id).bardsong(buff.isBardsong()).buff(buff).level(level).build());
+            }
         }
 
         return calculateStats(id);
@@ -1340,7 +1345,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
         vtdMapper.deleteQueuedSkills(id);
 
         if (vtdDetails.getCharacterClass() == CharacterClass.FIGHTER && vtdDetails.getStats().getLevel() == 5) {
-            addBuff(id, Buff.FIGHTER_REROLL);
+            addBuff(id, Buff.FIGHTER_REROLL, 0);
         }
 
         return calculateStats(id);
@@ -1657,16 +1662,28 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             stats.setRegen(stats.getRegen() + vtdBuffEffect.getModifier());
                             break;
                         case MELEE_HIT:
-                            stats.setMeleeHit(stats.getMeleeHit() + vtdBuffEffect.getModifier());
+                            if (buff.getBuff().isCanBeLeveled())
+                                stats.setMeleeHit(stats.getMeleeHit() + buff.getLevel());
+                            else
+                                stats.setMeleeHit(stats.getMeleeHit() + vtdBuffEffect.getModifier());
                             break;
                         case MELEE_DMG:
-                            stats.setMeleeDmg(stats.getMeleeDmg() + vtdBuffEffect.getModifier());
+                            if (buff.getBuff().isCanBeLeveled())
+                                stats.setMeleeDmg(stats.getMeleeDmg() + buff.getLevel());
+                            else
+                                stats.setMeleeDmg(stats.getMeleeDmg() + vtdBuffEffect.getModifier());
                             break;
                         case MELEE_POLY_HIT:
-                            stats.setMeleePolyHit(stats.getMeleePolyHit() + vtdBuffEffect.getModifier());
+                            if (buff.getBuff().isCanBeLeveled())
+                                stats.setMeleePolyHit(stats.getMeleePolyHit() + buff.getLevel());
+                            else
+                                stats.setMeleePolyHit(stats.getMeleePolyHit() + vtdBuffEffect.getModifier());
                             break;
                         case MELEE_POLY_DMG:
-                            stats.setMeleePolyDmg(stats.getMeleePolyDmg() + vtdBuffEffect.getModifier());
+                            if (buff.getBuff().isCanBeLeveled())
+                                stats.setMeleePolyDmg(stats.getMeleePolyDmg() + buff.getLevel());
+                            else
+                                stats.setMeleePolyDmg(stats.getMeleePolyDmg() + vtdBuffEffect.getModifier());
                             break;
                         case MELEE_FIRE:
                             stats.setMeleeFire(stats.isMeleeFire() || vtdBuffEffect.getModifier() > 0);
@@ -1696,14 +1713,22 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             stats.setMeleeAC(stats.getMeleeAC() + vtdBuffEffect.getModifier());
                             break;
                         case RANGE_HIT:
-                            stats.setRangeHit(stats.getRangeHit() + vtdBuffEffect.getModifier());
-                            if (buff.getBuff().getEffects().stream().noneMatch(be -> be.getStat() == Stat.BENROW_HIT))
-                                stats.setRangeHitBenrow(stats.getRangeHitBenrow() + vtdBuffEffect.getModifier());
+                            if (buff.getBuff().isCanBeLeveled())
+                                stats.setRangeHit(stats.getRangeHit() + buff.getLevel());
+                            else {
+                                stats.setRangeHit(stats.getRangeHit() + vtdBuffEffect.getModifier());
+                                if (buff.getBuff().getEffects().stream().noneMatch(be -> be.getStat() == Stat.BENROW_HIT))
+                                    stats.setRangeHitBenrow(stats.getRangeHitBenrow() + vtdBuffEffect.getModifier());
+                            }
                             break;
                         case RANGE_DMG:
-                            stats.setRangeDmg(stats.getRangeDmg() + vtdBuffEffect.getModifier());
-                            if (buff.getBuff().getEffects().stream().noneMatch(be -> be.getStat() == Stat.BENROW_DMG))
-                                stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + vtdBuffEffect.getModifier());
+                            if (buff.getBuff().isCanBeLeveled())
+                                stats.setRangeDmg(stats.getRangeDmg() + buff.getLevel());
+                            else {
+                                stats.setRangeDmg(stats.getRangeDmg() + vtdBuffEffect.getModifier());
+                                if (buff.getBuff().getEffects().stream().noneMatch(be -> be.getStat() == Stat.BENROW_DMG))
+                                    stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + vtdBuffEffect.getModifier());
+                            }
                             break;
                         case RANGE_FIRE:
                             stats.setRangeFire(stats.isRangeFire() || vtdBuffEffect.getModifier() > 0);
@@ -1826,10 +1851,16 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             stats.setDrForce(stats.getDrFire() + vtdBuffEffect.getModifier());
                             break;
                         case BENROW_HIT:
-                            stats.setRangeHitBenrow(stats.getRangeHitBenrow() + vtdBuffEffect.getModifier());
+                            if (buff.getBuff().isCanBeLeveled())
+                                stats.setRangeHitBenrow(stats.getRangeHitBenrow() + buff.getLevel());
+                            else
+                                stats.setRangeHitBenrow(stats.getRangeHitBenrow() + vtdBuffEffect.getModifier());
                             break;
                         case BENROW_DMG:
-                            stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + vtdBuffEffect.getModifier());
+                            if (buff.getBuff().isCanBeLeveled())
+                                stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + buff.getLevel());
+                            else
+                                stats.setRangeDmgBenrow(stats.getRangeDmgBenrow() + vtdBuffEffect.getModifier());
                             break;
                     }
                 });

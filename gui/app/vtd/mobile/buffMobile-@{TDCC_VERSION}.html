@@ -69,7 +69,10 @@
                             </button>
                         </td>
                         <td>{{buff.name}}</td>
-                        <td>{{buff.displayText}}</td>
+                        <td ng-if="!buff.canBeLevel">{{buff.displayText}}</td>
+                        <td ng-if="buff.canBeLevel">      
+                            <input class="form-control" type="number" ng-model="buff.level" />
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -93,7 +96,8 @@
                             </button>
                         </td>
                         <td>{{buff.name}}</td>
-                        <td>{{buff.displayText}}</td>
+                        <td ng-if="buff.bardsong === false && !buff.canBeLevel">{{buff.displayText}}</td>
+                            <td ng-if="buff.bardsong === false && buff.canBeLevel">{{buff.level}}</td>
                     </tr>
                 </tbody>
             </table>

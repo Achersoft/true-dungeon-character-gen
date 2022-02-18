@@ -15,4 +15,5 @@ public class VtdBuff {
     private String characterId;
     private boolean bardsong;
     private Buff buff;
+    private int level;
 }

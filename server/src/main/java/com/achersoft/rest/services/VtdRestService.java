@@ -244,10 +244,13 @@ public class VtdRestService {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public VtdDetailsDTO addBuff(@PathParam("id") String id,
-                                 @QueryParam("buff") Buff buff) throws Exception {
+                                 @QueryParam("buff") Buff buff,
+                                 @QueryParam("level") Integer level) throws Exception {
         if (buff == null)
             throw new InvalidDataException("Buff was null");
-        return VtdDetailsDTO.fromDAO(virtualTdService.addBuff(id, buff));
+        if (level == null)
+            level = 0;
+        return VtdDetailsDTO.fromDAO(virtualTdService.addBuff(id, buff, level));
     }
 
     @RequiresPrivilege({Privilege.ADMIN, Privilege.SYSTEM_USER})

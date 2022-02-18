@@ -250,7 +250,7 @@ public class VtdDetailsDTO {
         build.setAvailableBardsong(Buff.getBardsongBuff().stream().map(BuffDTO::fromDAO).collect(Collectors.toList()));
 
         if (dao.getBuffs() != null) {
-            build.setBuffs(dao.getBuffs().stream().map(vtdBuff -> BuffDTO.fromDAO(vtdBuff.getBuff())).collect(Collectors.toList()));
+            build.setBuffs(dao.getBuffs().stream().map(BuffDTO::fromDAO).collect(Collectors.toList()));
             build.getAvailableBuffs().removeAll(build.getBuffs());
 
             if (build.getBuffs().stream().filter(BuffDTO::isBardsong).count() > 0)

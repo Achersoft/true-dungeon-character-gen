@@ -482,10 +482,12 @@
     <insert id="addCharacterBuff">
         INSERT INTO vtd_buffs (character_id,
                                is_bardsong,
-                               buff)
+                               buff,
+                               level)
                        VALUES (#{characterId},
                                #{bardsong},
-                               #{buff})
+                               #{buff},
+                               #{level})
     </insert>
 
     <insert id="addCharacterDebuff">
@@ -999,7 +1001,8 @@
     <select id="getCharacterBuffs" resultType="com.achersoft.tdcc.vtd.dao.VtdBuff">
         SELECT character_id 'characterId',
                is_bardsong 'bardsong',
-               buff
+               buff,
+               level
           FROM vtd_buffs
          WHERE character_id = #{characterId}
     </select>
