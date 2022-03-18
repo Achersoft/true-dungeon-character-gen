@@ -98,5 +98,6 @@ public class VtdDetails {
     private boolean mightyWeapon;
     private boolean prestigeAvailable;
     private boolean prestigeActive;
+    private boolean questers;
     private int totalDamageLastSpell;
 }

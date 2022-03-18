@@ -103,6 +103,7 @@ public class VtdDetailsDTO {
     public boolean mightyWeapon;
     public boolean prestigeAvailable;
     public boolean prestigeActive;
+    public boolean questers;
     public int totalDamageLastSpell;
     public VtdItemsDTO items;
     
@@ -200,6 +201,7 @@ public class VtdDetailsDTO {
                 .archMagePower(dao.isArchMagePower())
                 .prestigeAvailable(dao.isPrestigeAvailable())
                 .prestigeActive(dao.isPrestigeActive())
+                .questers(dao.isQuesters())
                 .queuedSkills(dao.getQueuedSkills())
                 .totalDamageLastSpell(dao.getTotalDamageLastSpell())
                 .items(VtdItemsDTO.fromDAO(dao.getItems()))

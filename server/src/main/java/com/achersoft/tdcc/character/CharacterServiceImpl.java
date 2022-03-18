@@ -1705,6 +1705,8 @@ public class CharacterServiceImpl implements CharacterService {
         long silverElfCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("silver elf")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Deadshot set
         long deadshotCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().endsWith("of the deadshot")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Death Knight set
+        long deathKnightCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().endsWith("death knight")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Arcane Set
         long arcaneCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && (a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane belt") ||
                 a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane bracelets") || a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane earcuff"))).count();
@@ -1726,6 +1728,12 @@ public class CharacterServiceImpl implements CharacterService {
         // Lucky Set
         if (luckyCount >= 2)
             characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 5);
+
+        // Death Knight Set
+        if (deathKnightCount >= 3) {
+            characterDetails.getStats().setRetDmg(characterDetails.getStats().getRetDmg() + 4);
+            characterDetails.getStats().setRetDarkrift(true);
+        }
 
         // Silver Elf Set
         if (silverElfCount >= 3)

@@ -216,6 +216,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasWizardRelic = new AtomicBoolean(false);
             final AtomicBoolean hasWizardLegendary = new AtomicBoolean(false);
             final AtomicBoolean ignoreIncorporeal = new AtomicBoolean(false);
+            final AtomicBoolean hasQuestors = new AtomicBoolean(false);
+            final AtomicBoolean crownOfElements = new AtomicBoolean(false);
             final Set<CritType> critTypes = new HashSet<>();
 
             for (CharacterItem characterItem : characterDetails.getItems()) {
@@ -241,6 +243,10 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasBarbLegendary.set(true);
                     else if (characterItem.getItemId().equals("f2f2a4950f8e1a2415890a370b54efc1605b551a"))
                         charmShadowShot.set(true);
+                    else if (characterItem.getItemId().equals("9b9e067d380d1da6b5ab050687ed72b18085e341"))
+                        hasQuestors.set(true);
+                    else if (characterItem.getItemId().equals("406e73fa9919a8557b5ab4ab0d12ad74eacbb9cf"))
+                        crownOfElements.set(true);
                     else if (characterItem.getItemId().equals("18c97b7dc056aaf9e15a1b14f59c86fc18de0c27"))
                         madEvoker.set(true);
                     else if (characterItem.getItemId().equals("c36cb79000e553702d24d216e5fe1997185e704c"))
@@ -791,6 +797,9 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                 vtdMapper.addCharacterDebuff(vtdDebuff);
             });
 
+            if (crownOfElements.get())
+                builder.swapElements(true);
+
             vtdDetails = builder
                     .characterId(characterDetails.getId())
                     .characterOrigId(origId)
@@ -812,6 +821,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .rangeOffhandHit(rangeOffhandHit)
                     .prestigeAvailable(hasPrestigeClass.get())
                     .prestigeActive(activatePrestige)
+                    .questers(hasQuestors.get())
                     .critTypes(String.join(",", critTypes.stream().map(Enum::name).collect(Collectors.toList())))
                     .monsters(VtdMonster.fromRoom(roomsByNumber, critTypes, meleeMainHit, meleeOffhandHit, rangeMainHit, rangeOffhandHit, characterDetails.getCharacterClass() == CharacterClass.RANGER, characterDetails.getStats().getLevel() == 5))
                     .availableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())))

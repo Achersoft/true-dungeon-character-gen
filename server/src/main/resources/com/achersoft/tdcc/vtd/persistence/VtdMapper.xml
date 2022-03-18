@@ -72,7 +72,8 @@
                                     arch_mage_power,
                                     mighty_weapon,
                                     prestigeAvailable,
-                                    prestigeActive)
+                                    prestigeActive,
+                                    questers)
                             VALUES (#{characterId},
                                     #{characterOrigId},
                                     #{userId},
@@ -141,7 +142,8 @@
                                     #{archMagePower},
                                     #{mightyWeapon},
                                     #{prestigeAvailable},
-                                    #{prestigeActive})
+                                    #{prestigeActive},
+                                    #{questers})
     </insert>
 
     <insert id="addCharacterSkill">
@@ -596,7 +598,8 @@
                 arch_mage_power 'archMagePower',
                 mighty_weapon 'mightyWeapon',
                 prestigeAvailable,
-                prestigeActive
+                prestigeActive,
+                questers
           FROM vtd_character
          WHERE id = #{id}
     </select>
@@ -670,7 +673,8 @@
                 arch_mage_power 'archMagePower',
                 mighty_weapon 'mightyWeapon',
                 prestigeAvailable,
-                prestigeActive
+                prestigeActive,
+                questers
         FROM vtd_character
         WHERE user_id = #{userId}
           AND name = #{name}
@@ -745,7 +749,8 @@
                 arch_mage_power 'archMagePower',
                 mighty_weapon 'mightyWeapon',
                 prestigeAvailable,
-                prestigeActive
+                prestigeActive,
+                questers
         FROM vtd_character
         WHERE user_id = #{userId}
     </select>
@@ -1079,7 +1084,8 @@
             adventureId = #{adventureId},
             adventureName = #{adventureName},
             rollerId = #{rollerId},
-            prestigeActive = #{prestigeActive}
+            prestigeActive = #{prestigeActive},
+            questers = #{questers}
         WHERE id = #{characterId}
     </insert>
     

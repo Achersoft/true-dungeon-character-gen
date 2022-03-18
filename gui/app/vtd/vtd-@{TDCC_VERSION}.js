@@ -154,6 +154,12 @@ angular.module('main')
     $scope.rollReflex =  function(monsterIndex) {
         $scope.resultIndex = 0;
         var save = $scope.getRandomInt(20) + 1;
+        var questers = false;
+        
+        if (save === 1 && $scope.characterContext.questors) {
+            save = $scope.getRandomInt(20) + 1;
+            questers = true;
+        }
         var saveMod = (save > 1) ? (save + $scope.characterContext.stats.reflex) : 1;
         var monsterSave = null;
         var monsterEffect = "missed";
@@ -178,8 +184,11 @@ angular.module('main')
         
         var saved = (saveMod >= monsterSave) ? true : false;
 
-        if (saved)
+        if (saved) {
             monsterEffect = "";
+            if (questers)
+                monsterEffect = "quester";
+        }
         
         if ($scope.characterContext.rollerId !== null) {
             vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
@@ -206,6 +215,12 @@ angular.module('main')
     $scope.rollFort =  function(monsterIndex) {
         $scope.resultIndex = 0;
         var save = $scope.getRandomInt(20) + 1;
+        var questers = false;
+        
+        if (save === 1 && $scope.characterContext.questors) {
+            save = $scope.getRandomInt(20) + 1;
+            questers = true;
+        }
         var saveMod = (save > 1) ? (save + $scope.characterContext.stats.fort) : 1;
         var monsterSave = null;
         var monsterEffect = "missed";
@@ -230,8 +245,11 @@ angular.module('main')
         
         var saved = (saveMod >= monsterSave) ? true : false;
 
-        if (saved)
+        if (saved) {
             monsterEffect = "";
+            if (questers)
+                monsterEffect = "quester";
+        }
         
         if ($scope.characterContext.rollerId !== null) {
             vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
@@ -258,6 +276,12 @@ angular.module('main')
     $scope.rollWill =  function(monsterIndex) {
         $scope.resultIndex = 0;
         var save = $scope.getRandomInt(20) + 1;
+        var questers = false;
+        
+        if (save === 1 && $scope.characterContext.questors) {
+            save = $scope.getRandomInt(20) + 1;
+            questers = true;
+        }
         var saveMod = (save > 1) ? (save + $scope.characterContext.stats.will) : 1;
         var monsterSave = null;
         var monsterEffect = "missed";
@@ -282,8 +306,11 @@ angular.module('main')
         
         var saved = (saveMod >= monsterSave) ? true : false;
 
-        if (saved)
+        if (saved) {
             monsterEffect = "";
+            if (questers)
+                monsterEffect = "quester";
+        }
 
         if ($scope.characterContext.rollerId !== null) {
             vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
@@ -538,6 +565,7 @@ angular.module('main')
         var monster = null;
         var flankUsed = false;
         var statusEffect = status === undefined ? '' :  status;
+        var offHandStatusEffect = '';
         
         $scope.resultIndex = 0;
         
@@ -5921,6 +5949,12 @@ angular.module('main')
     
     $scope.rollReflex =  function(monsterIndex) {
         var save = $scope.getRandomInt(20) + 1;
+        var questers = false;
+        
+        if (save === 1 && $scope.characterContext.questors) {
+            save = $scope.getRandomInt(20) + 1;
+            questers = true;
+        }
         var saveMod = (save > 1) ? (save + $scope.characterContext.stats.reflex) : 1;
         var monsterSave = null;
         var monsterEffect = "missed";
@@ -5945,8 +5979,11 @@ angular.module('main')
         
         var saved = (saveMod >= monsterSave) ? true : false;
 
-        if (saved)
+        if (saved) {
             monsterEffect = "";
+            if (questers)
+                monsterEffect = "quester";
+        }
         
         if ($scope.characterContext.rollerId !== null) {
             vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
@@ -5972,10 +6009,17 @@ angular.module('main')
     
     $scope.rollFort =  function(monsterIndex) {
         var save = $scope.getRandomInt(20) + 1;
+        var questers = false;
+        
+        if (save === 1 && $scope.characterContext.questors) {
+            save = $scope.getRandomInt(20) + 1;
+            questers = true;
+        }
+        
         var saveMod = (save > 1) ? (save + $scope.characterContext.stats.fort) : 1;
         var monsterSave = null;
         var monsterEffect = "missed";
-        
+
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             monsterSave = 0;
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
@@ -5996,8 +6040,11 @@ angular.module('main')
         
         var saved = (saveMod >= monsterSave) ? true : false;
 
-        if (saved)
+        if (saved) {
             monsterEffect = "";
+            if (questers)
+                monsterEffect = "quester";
+        }
         
         if ($scope.characterContext.rollerId !== null) {
             vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
@@ -6023,6 +6070,13 @@ angular.module('main')
     
     $scope.rollWill =  function(monsterIndex) {
         var save = $scope.getRandomInt(20) + 1;
+        var questers = false;
+        
+        if (save === 1 && $scope.characterContext.questors) {
+            save = $scope.getRandomInt(20) + 1;
+            questers = true;
+        }
+        
         var saveMod = (save > 1) ? (save + $scope.characterContext.stats.will) : 1;
         var monsterSave = null;
         var monsterEffect = "missed";
@@ -6047,8 +6101,11 @@ angular.module('main')
         
         var saved = (saveMod >= monsterSave) ? true : false;
 
-        if (saved)
+        if (saved) {
             monsterEffect = "";
+            if (questers)
+                monsterEffect = "quester";
+        }
 
         if ($scope.characterContext.rollerId !== null) {
             vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "save_roll", ' +
