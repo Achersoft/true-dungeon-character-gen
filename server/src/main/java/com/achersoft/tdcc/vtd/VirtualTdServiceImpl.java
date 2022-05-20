@@ -714,12 +714,16 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                                 meleeSneakHit += 1;
                                 rangeSneakHit += 1;
                             } else if (characterItem.getName().equalsIgnoreCase("Lenses of Agility")) {
-                                isSneakAtRange = true;
+                                if (rangeMainHand.get() != null && rangeMainHand.get().getName().toLowerCase().contains("bow"))
+                                    isSneakAtRange = true;
                             } else if (characterItem.getName().equalsIgnoreCase("Lenses of Vital Insight")) {
                                 isSneakAtRange = true;
                             } else if (characterItem.getName().equalsIgnoreCase("Necklace of the Sneak")) {
                                 meleeSneakCritMin = 19;
                                 rangeSneakCritMin = 19;
+                            } else if (characterItem.getName().equalsIgnoreCase("Nightshade’s +2 Throwing Dagger")) {
+                                isSneakCanCrit = true;
+                                isSneakAtRange = true;
                             } else if (characterItem.getName().equalsIgnoreCase("Nightshade’s +2 Short Sword")) {
                                 isSneakCanCrit = true;
                             } else if (characterItem.getName().equalsIgnoreCase("Shoes of Sneaking")) {
@@ -1095,8 +1099,11 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
         final List<QueuedSkill> queuedSkills = vtdMapper.getQueuedSkills(id);
 
-        if (queuedSkills == null || queuedSkills.isEmpty())
+        if (queuedSkills == null || queuedSkills.isEmpty()) {
+            vtdDetails.setTotalDamageLastSpell(0);
+            vtdMapper.updateCharacter(vtdDetails);
             return calculateStats(id);
+        }
 
         final Map<String, CharacterSkill> skillMap = new HashMap<>();
         final Map<SkillLevel, Integer> skillUseMap = new HashMap<>();

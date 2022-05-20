@@ -73,7 +73,8 @@
                                     mighty_weapon,
                                     prestigeAvailable,
                                     prestigeActive,
-                                    questers)
+                                    questers,
+                                    totalDamageLastSpell)
                             VALUES (#{characterId},
                                     #{characterOrigId},
                                     #{userId},
@@ -143,7 +144,8 @@
                                     #{mightyWeapon},
                                     #{prestigeAvailable},
                                     #{prestigeActive},
-                                    #{questers})
+                                    #{questers},
+                                    #{totalDamageLastSpell})
     </insert>
 
     <insert id="addCharacterSkill">
@@ -599,7 +601,8 @@
                 mighty_weapon 'mightyWeapon',
                 prestigeAvailable,
                 prestigeActive,
-                questers
+                questers,
+                totalDamageLastSpell
           FROM vtd_character
          WHERE id = #{id}
     </select>
@@ -674,7 +677,8 @@
                 mighty_weapon 'mightyWeapon',
                 prestigeAvailable,
                 prestigeActive,
-                questers
+                questers,
+                totalDamageLastSpell
         FROM vtd_character
         WHERE user_id = #{userId}
           AND name = #{name}
@@ -750,7 +754,8 @@
                 mighty_weapon 'mightyWeapon',
                 prestigeAvailable,
                 prestigeActive,
-                questers
+                questers,
+                totalDamageLastSpell
         FROM vtd_character
         WHERE user_id = #{userId}
     </select>
@@ -1085,7 +1090,8 @@
             adventureName = #{adventureName},
             rollerId = #{rollerId},
             prestigeActive = #{prestigeActive},
-            questers = #{questers}
+            questers = #{questers},
+            totalDamageLastSpell = #{totalDamageLastSpell}
         WHERE id = #{characterId}
     </insert>
     

@@ -112,6 +112,10 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                  scope.madEvokerIndex = index;
             };
             
+            scope.setCastSequenceIndex = function(index) {
+                 scope.castSequenceIndex = index;
+            };
+            
             scope.setLoH10Index = function(index) {
                  scope.loh10Index = index;
             };
@@ -544,8 +548,13 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             scope.spellCastSucess = function(selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse) {
                 if (scope.conserve === 1)
                     markUse = false;
-                if (scope.castSequenceIndex === 1 && (scope.characterContext.characterClass === 'WIZARD' || scope.characterContext.characterClass === 'ELF_WIZARD')) {
-                    scope.closeModal();
+                if (scope.castSequenceIndex === 1 && (scope.characterContext.characterClass === 'DRUID' || scope.characterContext.characterClass === 'WIZARD' || scope.characterContext.characterClass === 'ELF_WIZARD')) {
+                    var totalDamageSent = -1;
+                    if (scope.model.skillType === 'DAMAGE_RANGE_AC_15' || scope.model.skillType === 'DAMAGE')
+                        totalDamageSent = scope.damage + scope.damagePool;
+                    scope.useAbility()(scope.model.id, selfTarget, healAmount, madEvoker, lohNumber, inGameEffect, markUse, false, scope.hitSuccess, scope.hitRollNatural, scope.hitRoll, totalDamageSent, true);
+                   
+                    scope.closeModal()
                 } else {
                     var totalDamageSent = -1;
                     if (scope.model.skillType === 'DAMAGE_RANGE_AC_15' || scope.model.skillType === 'DAMAGE')

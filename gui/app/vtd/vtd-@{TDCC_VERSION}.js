@@ -472,6 +472,53 @@ angular.module('main')
         vtdSvc.execSkillQueue($scope.characterContext.id).then(function(result) {
             vtdState.setContext(result.data);
             $scope.characterContext = vtdState.get();
+            
+            if ($scope.characterContext.rollerId !== null) {
+                vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
+                        ' "rolls": [{ "type": "spell", "dieResult": ' + 1 + ', "modifiedResult": ' + 1 + ', "isSuccess": ' + true + ', "damage": ' + $scope.characterContext.totalDamageLastSpell + ' }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Spell","result":response.data.errors[0]});       
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Spell","result":"Spell attack roll sent for " + $scope.characterContext.totalDamageLastSpell});
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast();   
+                    });
+                
+            } else {
+                vtdHistory.add({"type":"ROLLER","sub":"Spell","result":"Spell attack total " + $scope.characterContext.totalDamageLastSpell});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();   
+            }
+        });
+    };
+    
+    $scope.resendSkillQueue =  function() {
+        if ($scope.characterContext.rollerId !== null) {
+            vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
+                    ' "rolls": [{ "type": "spell", "dieResult": ' + 1 + ', "modifiedResult": ' + 1 + ', "isSuccess": ' + true + ', "damage": ' + $scope.characterContext.totalDamageLastSpell + ' }]}').catch(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Spell","result":response.data.errors[0]});       
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                    return($q.reject(response));
+                }).then(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Spell","result":"Spell attack roll sent for " + $scope.characterContext.totalDamageLastSpell});
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast();   
+                });
+
+        } else {
+            vtdHistory.add({"type":"ROLLER","sub":"Spell","result":"Spell attack total " + $scope.characterContext.totalDamageLastSpell});
+            $scope.history = vtdHistory.get();
+            $scope.lastEvent = vtdHistory.getLast();   
+        }
+    };
+    
+    $scope.deleteQueuedSkills =  function() {
+        vtdSvc.deleteQueuedSkills($scope.characterContext.id).then(function(result) {
+            vtdState.setContext(result.data);
+            $scope.characterContext = vtdState.get();
         });
     };
     
@@ -572,8 +619,14 @@ angular.module('main')
         var buff = $scope.hasBuff("Flank");
         if (buff !== null) {
             $scope.removeBuff(buff);
-            var flankUsed = true;
+            flankUsed = true;
             statusEffect = 'flank buff';
+        }
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
         }
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
@@ -634,14 +687,13 @@ angular.module('main')
         }
 
         if (hitRoll === 1 && offhandHitRoll === 1) {
+            var buff = $scope.hasBuff("WS Reroll");
+            if (buff !== null && status !== 'ws reroll') {
+                $scope.removeBuff(buff);
+                $scope.rollToHitMelee(monsterIndex, 'ws reroll');
+            }
             if ($scope.characterContext.rollerId !== null) {
                 if (!('meleeOffhandHit' in $scope.characterContext.stats)) {
-                    var buff = $scope.hasBuff("WS Reroll");
-                    if (buff !== null && status !== 'ws reroll') {
-                        $scope.removeBuff(buff);
-                        $scope.rollToHitMelee(monsterIndex, 'ws reroll');
-                    }
-                    
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
                         ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0, "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
@@ -713,7 +765,7 @@ angular.module('main')
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
                     else if ($scope.characterContext.meleeWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
-                    else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
                     else if ($scope.characterContext.meleeWeaponExplodeEffect === "MISFIRE") {
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
@@ -731,7 +783,7 @@ angular.module('main')
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
                     else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
-                    else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
                     else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "MISFIRE") {
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
@@ -753,7 +805,7 @@ angular.module('main')
                         oDmgExp = $scope.characterContext.meleeOffhandWeaponExplodeText;
                     else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         oDmgExp = $scope.characterContext.meleeOffhandWeaponExplodeText;
-                    else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         oDmgExp = $scope.characterContext.meleeOffhandWeaponExplodeText;
                     else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "MISFIRE") {
                         oDmgExp = $scope.characterContext.meleeOffhandWeaponExplodeText;
@@ -1135,7 +1187,7 @@ angular.module('main')
             if (oDmgTotal < 0)
                 oDmgTotal = 0;
             
-            if (monster.critical && hitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
+            if ((monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
                 if (hitRoll === 20) {
                     if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
                         mCritDmg = mDmgTotal * 3;
@@ -1155,14 +1207,14 @@ angular.module('main')
             } else if ($scope.hasBuff("Fury")) {
                 var buff = $scope.hasBuff("Fury");
                 if (buff !== null) {
-                    if (monster.critical)
+                    if ((monster.critical || critImmuneUsed))
                         mCritDmg = mDmgTotal * 2;
                     
                     $scope.removeBuff(buff);
                 }
             }
             
-            if (monster.critical && offhandHitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_OFFHAND_ON_20")) {
+            if ((monster.critical || critImmuneUsed) && offhandHitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_OFFHAND_ON_20")) {
                 if (offhandHitRoll === 20) {
                     if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
                         oCritDmg = oDmgTotal * 3;
@@ -1307,6 +1359,13 @@ angular.module('main')
             statusEffect = 'flank buff';
         }
         
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
+        }
+        
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             if (flankUsed) {
                 hitRoll = Math.max($scope.getRandomInt(20) + 1, $scope.getRandomInt(20) + 1, $scope.getRandomInt(20) + 1);
@@ -1433,7 +1492,7 @@ angular.module('main')
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
                     else if ($scope.characterContext.rangeWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
-                    else if ($scope.characterContext.rangeWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.rangeWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
                     else if ($scope.characterContext.rangeWeaponExplodeEffect === "MISFIRE") {
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
@@ -1455,7 +1514,7 @@ angular.module('main')
                         oDmgExp = $scope.characterContext.rangeOffhandWeaponExplodeText;
                     else if ($scope.characterContext.rangeOffhandWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         oDmgExp = $scope.characterContext.rangeOffhandWeaponExplodeText;
-                    else if ($scope.characterContext.rangeOffhandWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.rangeOffhandWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         oDmgExp = $scope.characterContext.rangeOffhandWeaponExplodeText;
                     else if ($scope.characterContext.rangeOffhandWeaponExplodeEffect === "MISFIRE") {
                         oDmgExp = $scope.characterContext.rangeOffhandWeaponExplodeText;
@@ -1671,7 +1730,7 @@ angular.module('main')
             if (oDmgTotal < 0)
                 oDmgTotal = 0;
             
-            if (monster.critical && hitRoll >= $scope.characterContext.rangeCritMin && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_MAIN_ON_20")) {
+            if ((monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.rangeCritMin && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_MAIN_ON_20")) {
                 if (hitRoll === 20) {
                     if ($scope.hasEffect($scope.characterContext.rangeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.rangeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.rangeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
                         mCritDmg = mDmgTotal * 3;
@@ -1685,7 +1744,7 @@ angular.module('main')
                 }
             }
             
-            if (monster.critical && offhandHitRoll >= $scope.characterContext.rangeCritMin && !$scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_OFFHAND_ON_20")) {
+            if ((monster.critical || critImmuneUsed) && offhandHitRoll >= $scope.characterContext.rangeCritMin && !$scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_OFFHAND_ON_20")) {
                 if (offhandHitRoll === 20) {
                     if ($scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
                         oCritDmg = oDmgTotal * 3;
@@ -1785,6 +1844,13 @@ angular.module('main')
             $scope.removeBuff(buff);
             var flankUsed = true;
             statusEffect = 'flank buff';
+        }
+        
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
         }
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
@@ -2046,7 +2112,7 @@ angular.module('main')
             var eleDmg = mDmg + rollDmg;
             if (mDmgTotal > eleDmg)
                 eleDmg = mDmgTotal;
-            if (monster.critical && hitRoll >= $scope.characterContext.meleePolyCritMin && !$scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
+            if ((monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleePolyCritMin && !$scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
                 if (hitRoll === 20) {
                     if ($scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20"))) {
                         mCritDmg = mDmgTotal * 3;
@@ -2169,6 +2235,13 @@ angular.module('main')
         var monster = null;
         var statusEffect = 'sneak dmg';
         
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
+        }
+        
         $scope.resultIndex = 0;
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
@@ -2197,7 +2270,7 @@ angular.module('main')
             }
         }  
  
-        if (monster !== null && !monster.sneak) {  
+        if (monster !== null && !monster.sneak && !critImmuneUsed) {  
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
                     ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
@@ -2255,7 +2328,7 @@ angular.module('main')
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
                     else if ($scope.characterContext.meleeWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
-                    else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
                     else if ($scope.characterContext.meleeWeaponExplodeEffect === "MISFIRE") {
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
@@ -2273,7 +2346,7 @@ angular.module('main')
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
                     else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
-                    else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
                     else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "MISFIRE") {
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
@@ -2419,7 +2492,7 @@ angular.module('main')
                 mDmgTotal = 0;
             
             if (hitRoll > 1) {
-                if (monster.critical && hitRoll >= $scope.characterContext.meleeSneakCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
+                if ((monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeSneakCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
                     if ($scope.characterContext.sneakCanCrit) {
                         if ($scope.characterContext.stats.level === 5)
                             mDmgTotal += 20;
@@ -2499,9 +2572,23 @@ angular.module('main')
         
         $scope.resultIndex = 0;
         
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
+        }
+        
         var buff = $scope.hasBuff("Flank");
         if (buff !== null) {
             $scope.removeBuff(buff);
+        }
+        
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
         }
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
@@ -2530,7 +2617,7 @@ angular.module('main')
             }
         }  
         
-        if (monster !== null && !monster.sneak) {
+        if (monster !== null && !monster.sneak && !critImmuneUsed) {
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
                     ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
@@ -2587,7 +2674,7 @@ angular.module('main')
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
                     else if ($scope.characterContext.rangeWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
-                    else if ($scope.characterContext.rangeWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.rangeWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
                     else if ($scope.characterContext.rangeWeaponExplodeEffect === "MISFIRE") {
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
@@ -2731,7 +2818,7 @@ angular.module('main')
                 if (mDmgTotal < 0)
                     mDmgTotal = 0;
                 
-                if (monster.critical && hitRoll >= $scope.characterContext.rangeSneakCritMin && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_MAIN_ON_20")) {
+                if ((monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.rangeSneakCritMin && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_MAIN_ON_20")) {
                     if ($scope.characterContext.sneakCanCrit) {
                         if ($scope.characterContext.stats.level === 5)
                             mDmgTotal += 20;
@@ -3080,6 +3167,13 @@ angular.module('main')
             statusEffect = 'flank buff';
         }
         
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
+        }
+        
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             if (flankUsed || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "SMACK_WEAPON")) {
                 hitRoll = Math.max(($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1), ($scope.getRandomInt(20) + 1));
@@ -3138,14 +3232,14 @@ angular.module('main')
         }
 
         if (hitRoll === 1 && offhandHitRoll === 1) {
+            var buff = $scope.hasBuff("WS Reroll");
+            if (buff !== null && status !== 'ws reroll') {
+                $scope.removeBuff(buff);
+                $scope.rollToHitMelee(monsterIndex, 'ws reroll');
+            }
+                    
             if ($scope.characterContext.rollerId !== null) {
                 if (!('meleeOffhandHit' in $scope.characterContext.stats)) {
-                    var buff = $scope.hasBuff("WS Reroll");
-                    if (buff !== null && status !== 'ws reroll') {
-                        $scope.removeBuff(buff);
-                        $scope.rollToHitMelee(monsterIndex, 'ws reroll');
-                    }
-                    
                     vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
                         ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0, "effect": "' + statusEffect + '" }]}').catch(function(response) {
                         vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
@@ -3217,7 +3311,7 @@ angular.module('main')
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
                     else if ($scope.characterContext.meleeWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
-                    else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
                     else if ($scope.characterContext.meleeWeaponExplodeEffect === "MISFIRE") {
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
@@ -3235,7 +3329,7 @@ angular.module('main')
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
                     else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
-                    else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
                     else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "MISFIRE") {
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
@@ -3257,7 +3351,7 @@ angular.module('main')
                         oDmgExp = $scope.characterContext.meleeOffhandWeaponExplodeText;
                     else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         oDmgExp = $scope.characterContext.meleeOffhandWeaponExplodeText;
-                    else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         oDmgExp = $scope.characterContext.meleeOffhandWeaponExplodeText;
                     else if ($scope.characterContext.meleeOffhandWeaponExplodeEffect === "MISFIRE") {
                         oDmgExp = $scope.characterContext.meleeOffhandWeaponExplodeText;
@@ -3639,7 +3733,7 @@ angular.module('main')
             if (oDmgTotal < 0)
                 oDmgTotal = 0;
             
-            if (monster.critical && hitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
+            if ((monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
                 if (hitRoll === 20) {
                     if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
                         mCritDmg = mDmgTotal * 3;
@@ -3659,14 +3753,14 @@ angular.module('main')
             } else if ($scope.hasBuff("Fury")) {
                 var buff = $scope.hasBuff("Fury");
                 if (buff !== null) {
-                    if (monster.critical)
+                    if ((monster.critical || critImmuneUsed))
                         mCritDmg = mDmgTotal * 2;
                     
                     $scope.removeBuff(buff);
                 }
             }
             
-            if (monster.critical && offhandHitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_OFFHAND_ON_20")) {
+            if ((monster.critical || critImmuneUsed) && offhandHitRoll >= $scope.characterContext.meleeCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_OFFHAND_ON_20")) {
                 if (offhandHitRoll === 20) {
                     if ($scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
                         oCritDmg = oDmgTotal * 3;
@@ -3811,6 +3905,13 @@ angular.module('main')
             statusEffect = 'flank buff';
         }
         
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
+        }
+        
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             if (flankUsed) {
                 hitRoll = Math.max($scope.getRandomInt(20) + 1, $scope.getRandomInt(20) + 1, $scope.getRandomInt(20) + 1);
@@ -3937,7 +4038,7 @@ angular.module('main')
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
                     else if ($scope.characterContext.rangeWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
-                    else if ($scope.characterContext.rangeWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.rangeWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
                     else if ($scope.characterContext.rangeWeaponExplodeEffect === "MISFIRE") {
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
@@ -3959,7 +4060,7 @@ angular.module('main')
                         oDmgExp = $scope.characterContext.rangeOffhandWeaponExplodeText;
                     else if ($scope.characterContext.rangeOffhandWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         oDmgExp = $scope.characterContext.rangeOffhandWeaponExplodeText;
-                    else if ($scope.characterContext.rangeOffhandWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.rangeOffhandWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         oDmgExp = $scope.characterContext.rangeOffhandWeaponExplodeText;
                     else if ($scope.characterContext.rangeOffhandWeaponExplodeEffect === "MISFIRE") {
                         oDmgExp = $scope.characterContext.rangeOffhandWeaponExplodeText;
@@ -4175,7 +4276,7 @@ angular.module('main')
             if (oDmgTotal < 0)
                 oDmgTotal = 0;
             
-            if (monster.critical && hitRoll >= $scope.characterContext.rangeCritMin && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_MAIN_ON_20")) {
+            if ((monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.rangeCritMin && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_MAIN_ON_20")) {
                 if (hitRoll === 20) {
                     if ($scope.hasEffect($scope.characterContext.rangeDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.rangeDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.rangeDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
                         mCritDmg = mDmgTotal * 3;
@@ -4189,7 +4290,7 @@ angular.module('main')
                 }
             }
             
-            if (monster.critical && offhandHitRoll >= $scope.characterContext.rangeCritMin && !$scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_OFFHAND_ON_20")) {
+            if ((monster.critical || critImmuneUsed) && offhandHitRoll >= $scope.characterContext.rangeCritMin && !$scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_OFFHAND_ON_20")) {
                 if (offhandHitRoll === 20) {
                     if ($scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.rangeOffhandDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20")))
                         oCritDmg = oDmgTotal * 3;
@@ -4289,6 +4390,13 @@ angular.module('main')
             $scope.removeBuff(buff);
             var flankUsed = true;
             statusEffect = 'flank buff';
+        }
+        
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
         }
         
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
@@ -4550,7 +4658,7 @@ angular.module('main')
             var eleDmg = mDmg + rollDmg;
             if (mDmgTotal > eleDmg)
                 eleDmg = mDmgTotal;
-            if (monster.critical && hitRoll >= $scope.characterContext.meleePolyCritMin && !$scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
+            if ((monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleePolyCritMin && !$scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
                 if (hitRoll === 20) {
                     if ($scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "TRIPPLE_CRIT_ON_20") || $scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "TRIPPLE_CRIT") || ($scope.firstSlide && $scope.hasEffect($scope.characterContext.meleePolyDmgEffects, "TRIPPLE_CRIT_ON_FIRST_20"))) {
                         mCritDmg = mDmgTotal * 3;
@@ -4675,6 +4783,13 @@ angular.module('main')
         
         $scope.resultIndex = 0;
         
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
+        }
+        
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             hitRoll = $scope.getRandomInt(20) + 1;
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
@@ -4701,7 +4816,7 @@ angular.module('main')
             }
         }  
  
-        if (monster !== null && !monster.sneak) {  
+        if (monster !== null && !monster.sneak && !critImmuneUsed) {  
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
                     ' "rolls": [{ "type": "melee_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
@@ -4759,7 +4874,7 @@ angular.module('main')
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
                     else if ($scope.characterContext.meleeWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
-                    else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.meleeWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
                     else if ($scope.characterContext.meleeWeaponExplodeEffect === "MISFIRE") {
                         mDmgExp = $scope.characterContext.meleeWeaponExplodeText;
@@ -4777,7 +4892,7 @@ angular.module('main')
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
                     else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
-                    else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
                     else if ($scope.characterContext.meleeWeaponSecondaryExplodeEffect === "MISFIRE") {
                         sDmgExp = $scope.characterContext.meleeWeaponSecondaryExplodeText;
@@ -4923,7 +5038,7 @@ angular.module('main')
                 mDmgTotal = 0;
             
             if (hitRoll > 1) {
-                if (monster.critical && hitRoll >= $scope.characterContext.meleeSneakCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
+                if ((monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeSneakCritMin && !$scope.hasEffect($scope.characterContext.meleeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "MELEE_MAIN_ON_20")) {
                     if ($scope.characterContext.sneakCanCrit) {
                         if ($scope.characterContext.stats.level === 5)
                             mDmgTotal += 20;
@@ -5008,6 +5123,13 @@ angular.module('main')
             $scope.removeBuff(buff);
         }
         
+        var critImmuneUsed = false;
+        var buff2 = $scope.hasBuff("Ignore Sneak & Crit Immune");
+        if (buff2 !== null) {
+            $scope.removeBuff(buff2);
+            critImmuneUsed = true;
+        }
+        
         if ($scope.characterContext.monsters === null || $scope.characterContext.monsters.length === 0) {
             hitRoll = $scope.getRandomInt(20) + 1;
         } else if ($scope.characterContext.monsters.length > 1 && monsterIndex === undefined) {
@@ -5034,7 +5156,7 @@ angular.module('main')
             }
         }  
         
-        if (monster !== null && !monster.sneak) {
+        if (monster !== null && !monster.sneak && !critImmuneUsed) {
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
                     ' "rolls": [{ "type": "range_main", "dieResult": 1, "modifiedResult": 1, "isSuccess": false, "damage": 0' + ', "effect": "' + statusEffect + '" }]}').catch(function(response) {
@@ -5091,7 +5213,7 @@ angular.module('main')
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
                     else if ($scope.characterContext.rangeWeaponExplodeEffect === "NATURAL_20" && hitRoll === 20)
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
-                    else if ($scope.characterContext.rangeWeaponExplodeEffect === "CRIT" && monster.critical && hitRoll >= $scope.characterContext.meleeCritMin)
+                    else if ($scope.characterContext.rangeWeaponExplodeEffect === "CRIT" && (monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.meleeCritMin)
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
                     else if ($scope.characterContext.rangeWeaponExplodeEffect === "MISFIRE") {
                         mDmgExp = $scope.characterContext.rangeWeaponExplodeText;
@@ -5235,7 +5357,7 @@ angular.module('main')
                 if (mDmgTotal < 0)
                     mDmgTotal = 0;
                 
-                if (monster.critical && hitRoll >= $scope.characterContext.rangeSneakCritMin && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_MAIN_ON_20")) {
+                if ((monster.critical || critImmuneUsed) && hitRoll >= $scope.characterContext.rangeSneakCritMin && !$scope.hasEffect($scope.characterContext.rangeDmgEffects, "NO_DAMAGE_MOD") && !$scope.hasEffect(monster.monsterEffects, "RANGE_MAIN_ON_20")) {
                     if ($scope.characterContext.sneakCanCrit) {
                         if ($scope.characterContext.stats.level === 5)
                             mDmgTotal += 20;
@@ -6282,11 +6404,51 @@ angular.module('main')
         vtdSvc.execSkillQueue($scope.characterContext.id).then(function(result) {
             vtdState.setContext(result.data);
             $scope.characterContext = vtdState.get();
+            
+            if ($scope.characterContext.rollerId !== null) {
+                vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
+                        ' "rolls": [{ "type": "spell", "dieResult": ' + 1 + ', "modifiedResult": ' + 1 + ', "isSuccess": ' + true + ', "damage": ' + $scope.characterContext.totalDamageLastSpell + ' }]}').catch(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Spell","result":response.data.errors[0]});       
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast(); 
+                        return($q.reject(response));
+                    }).then(function(response) {
+                        vtdHistory.add({"type":"ROLLER","sub":"Spell","result":"Spell attack roll sent for " + $scope.characterContext.totalDamageLastSpell});
+                        $scope.history = vtdHistory.get();
+                        $scope.lastEvent = vtdHistory.getLast();   
+                    });
+                
+            } else {
+                vtdHistory.add({"type":"ROLLER","sub":"Spell","result":"Spell attack total " + $scope.characterContext.totalDamageLastSpell});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();   
+            }
         });
     };
     
-    $scope.execSkillQueue =  function() {
-        vtdSvc.execSkillQueue($scope.characterContext.id).then(function(result) {
+    $scope.resendSkillQueue =  function() {
+        if ($scope.characterContext.rollerId !== null) {
+            vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
+                    ' "rolls": [{ "type": "spell", "dieResult": ' + 1 + ', "modifiedResult": ' + 1 + ', "isSuccess": ' + true + ', "damage": ' + $scope.characterContext.totalDamageLastSpell + ' }]}').catch(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Spell","result":response.data.errors[0]});       
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast(); 
+                    return($q.reject(response));
+                }).then(function(response) {
+                    vtdHistory.add({"type":"ROLLER","sub":"Spell","result":"Spell attack roll sent for " + $scope.characterContext.totalDamageLastSpell});
+                    $scope.history = vtdHistory.get();
+                    $scope.lastEvent = vtdHistory.getLast();   
+                });
+
+        } else {
+            vtdHistory.add({"type":"ROLLER","sub":"Spell","result":"Spell attack total " + $scope.characterContext.totalDamageLastSpell});
+            $scope.history = vtdHistory.get();
+            $scope.lastEvent = vtdHistory.getLast();   
+        }
+    };
+    
+    $scope.deleteQueuedSkills =  function() {
+        vtdSvc.deleteQueuedSkills($scope.characterContext.id).then(function(result) {
             vtdState.setContext(result.data);
             $scope.characterContext = vtdState.get();
         });
@@ -6535,7 +6697,14 @@ angular.module('main')
     };
     
     tokenAdminSvc.execSkillQueue =  function(id) {
-        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/use/queue/').catch(function(response) {
+        return $http.post(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/queue/').catch(function(response) {
+            errorDialogSvc.showError(response);
+            return($q.reject(response));
+        });
+    };
+    
+    tokenAdminSvc.deleteQueuedSkills =  function(id) {
+        return $http.delete(RESOURCES.REST_BASE_URL + '/vtd/' + id + '/queue/').catch(function(response) {
             errorDialogSvc.showError(response);
             return($q.reject(response));
         });
