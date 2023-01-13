@@ -208,6 +208,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasPaladinLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasMonkRelic = new AtomicBoolean(false);
             final AtomicBoolean hasMonkLegendary = new AtomicBoolean(false);
+            final AtomicBoolean hasFighterLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasShamansBelt = new AtomicBoolean(false);
             final AtomicBoolean hasRangerLegendary = new AtomicBoolean(false);
             final AtomicBoolean hasPrestigeClass = new AtomicBoolean(false);
@@ -237,6 +238,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         hasMedallionKeenness.set(true);
                     else if (characterItem.getName().toLowerCase().equals("amulet of aiming"))
                         hasAmuletOfAiming.set(true);
+                    else if (characterItem.getName().equals("Viv’s Amulet of Noble Might"))
+                        hasFighterLegendary.set(true);
                     else if (characterItem.getItemId().equals("8f0d04e682e039be8833596cb3661c7f4ce4e55a"))
                         meleeDmgEffects.add(DamageModEffect.SMACK_WEAPON);
                     else if (characterItem.getItemId().equals("0076ceef0f905dda175de13222ce34029a5873f2"))
@@ -476,6 +479,10 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     if (characterDetails.getStats().getLevel() == 5) {
                         vtdMapper.addCharacterBuff(VtdBuff.builder().characterId(id).bardsong(false).buff(Buff.FIGHTER_REROLL).build());
                     }
+                    if (hasFighterLegendary.get() && mainHand.get().isOneHanded()) {
+                        if (mainHand.get().getCritMin() > 19)
+                            mainHand.get().setCritMin(19);
+                    }
                     break;
                 case DWARF_FIGHTER:
                     if (activatePrestige) {
@@ -488,6 +495,10 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         meleeOffhandDmgEffects.add(DamageModEffect.TRIPPLE_CRIT_ON_20);
                         rangeDmgEffects.add(DamageModEffect.TRIPPLE_CRIT_ON_20);
                         rangeOffhandDmgEffects.add(DamageModEffect.TRIPPLE_CRIT_ON_20);
+                    }
+                    if (hasFighterLegendary.get() && mainHand.get().isOneHanded()) {
+                        if (mainHand.get().getCritMin() > 19)
+                            mainHand.get().setCritMin(19);
                     }
                     break;
                 case ELF_WIZARD:

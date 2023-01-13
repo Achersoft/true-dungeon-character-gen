@@ -1706,10 +1706,11 @@ public class CharacterServiceImpl implements CharacterService {
         // Deadshot set
         long deadshotCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().endsWith("of the deadshot")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Death Knight set
-        long deathKnightCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().endsWith("death knight")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        long deathKnightCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("death knight")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Arcane Set
         long arcaneCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && (a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane belt") ||
-                a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane bracelets") || a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane earcuff"))).count();
+                a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane bracelets") || a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane charm") ||
+                a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane earcuff"))).count();
         
         // First check if we need to boost character level
         // Charm of Heroism, Medallion of Heroism, Ring of Heroism, Eldrich Set, Kubu’s Coin of Coincidence, Smackdown’s Charm of Comraderie
@@ -2007,6 +2008,7 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicBoolean hasSkullOfCavadar = new AtomicBoolean(false);
         AtomicBoolean hasMysticOrb = new AtomicBoolean(false);
         AtomicBoolean hasFighterRelic = new AtomicBoolean(false);
+        AtomicBoolean hasFighterLegendary = new AtomicBoolean(false);
         AtomicBoolean hasWonderEffect = new AtomicBoolean(false);
         AtomicBoolean hasBenrows = new AtomicBoolean(false);
         AtomicBoolean canSemiLichCharm = new AtomicBoolean(true);
@@ -2040,9 +2042,12 @@ public class CharacterServiceImpl implements CharacterService {
                 hasSemiLichCharm.set(true);
             else if (item.getTokenFullDetails().getId().equals("1ee980321b7b26f523b7b5e10b6a2856400d1a67"))
                 hasBenrows.set(true);
-            else if (item.getTokenFullDetails().getName().equals("Amulet of Noble Might") || item.getTokenFullDetails().getName().equals("Viv’s Amulet of Noble Might"))
+            else if (item.getTokenFullDetails().getName().equals("Amulet of Noble Might"))
                 hasFighterRelic.set(true);
-            else if (item.getTokenFullDetails().getName().startsWith("Mystic Staff"))
+            else if (item.getTokenFullDetails().getName().equals("Viv’s Amulet of Noble Might")) {
+                hasFighterRelic.set(true);
+                hasFighterLegendary.set(true);
+            } else if (item.getTokenFullDetails().getName().startsWith("Mystic Staff"))
                 mysticStaff.set(true);
             else if (item.getTokenFullDetails().getId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa")) {
                 metCondition.add(ConditionalUse.NOT_WITH_SOC);
