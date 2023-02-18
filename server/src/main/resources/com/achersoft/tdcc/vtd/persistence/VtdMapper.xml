@@ -74,6 +74,7 @@
                                     prestigeAvailable,
                                     prestigeActive,
                                     questers,
+                                    ringOfSavant,
                                     totalDamageLastSpell)
                             VALUES (#{characterId},
                                     #{characterOrigId},
@@ -145,6 +146,7 @@
                                     #{prestigeAvailable},
                                     #{prestigeActive},
                                     #{questers},
+                                    #{ringOfSavant},
                                     #{totalDamageLastSpell})
     </insert>
 
@@ -602,6 +604,7 @@
                 prestigeAvailable,
                 prestigeActive,
                 questers,
+                ringOfSavant,
                 totalDamageLastSpell
           FROM vtd_character
          WHERE id = #{id}
@@ -678,6 +681,7 @@
                 prestigeAvailable,
                 prestigeActive,
                 questers,
+                ringOfSavant,
                 totalDamageLastSpell
         FROM vtd_character
         WHERE user_id = #{userId}
@@ -755,6 +759,7 @@
                 prestigeAvailable,
                 prestigeActive,
                 questers,
+                ringOfSavant,
                 totalDamageLastSpell
         FROM vtd_character
         WHERE user_id = #{userId}
@@ -1091,6 +1096,7 @@
             rollerId = #{rollerId},
             prestigeActive = #{prestigeActive},
             questers = #{questers},
+            ringOfSavant = #{ringOfSavant},
             totalDamageLastSpell = #{totalDamageLastSpell}
         WHERE id = #{characterId}
     </insert>

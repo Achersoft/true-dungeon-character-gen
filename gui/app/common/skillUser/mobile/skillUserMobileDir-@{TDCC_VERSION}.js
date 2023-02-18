@@ -125,6 +125,7 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
             };
             
             scope.useSkill = function(primaryAmount, seconaryHealAmount, lohAmount, markUse) {
+                var isSavant = scope.characterContext.ringOfSavant;
                 if (scope.model.skillType === 'HEAL') {
                     if (scope.model.name === 'Lay on Hands') {
                         if (lohAmount < 1)
@@ -154,12 +155,14 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                             scope.spellCastSucess(selfHeal > 0, selfHeal, false, lohAmount, null, markUse);
                         }
                     } else {
-                        var totalHeal = scope.characterContext.stats.spellHeal + ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);
+                        var totalHeal = scope.characterContext.stats.spellHeal + ((scope.skillCheckIndex === 0)?((isSavant)?scope.model.maxEffect+5:scope.model.maxEffect):scope.model.minEffect);
                         
                         if (scope.hasBuff()("Spell Surge")) {
-                            if(scope.skillCheckIndex === 0)
+                            if(scope.skillCheckIndex === 0) {
                                 totalHeal += scope.model.maxEffect;
-                            else
+                                if (isSavant)
+                                    totalHeal += 5;
+                            } else
                                totalHeal += scope.model.minEffect; 
                         }
 
@@ -186,10 +189,10 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                                 scope.spellCastSucess(selfHeal > 0, selfHeal, false, 0, null, markUse);
                             }
                         } else {
-                            scope.primaryHealAmount = (scope.model.aoe) ? ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect) : totalHeal;
+                            scope.primaryHealAmount = (scope.model.aoe) ? ((scope.skillCheckIndex === 0)?((isSavant)?scope.model.maxEffect+5:scope.model.maxEffect):scope.model.minEffect) : totalHeal;
                             scope.seconaryHealAmount = 0;
                             var selfHeal = 0;
-                            scope.healPool = (scope.model.aoe) ? (scope.hasBuff()("Spell Surge")) ? scope.characterContext.stats.spellHeal + ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect) : scope.characterContext.stats.spellHeal : 0;
+                            scope.healPool = (scope.model.aoe) ? (scope.hasBuff()("Spell Surge")) ? scope.characterContext.stats.spellHeal + ((scope.skillCheckIndex === 0)?((isSavant)?scope.model.maxEffect+5:scope.model.maxEffect):scope.model.minEffect) : scope.characterContext.stats.spellHeal : 0;
 
                             if (scope.targetIndex === 1 || scope.model.skillTarget === 'PARTY') {
                                 selfHeal = scope.primaryHealAmount;
@@ -204,7 +207,7 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                         }
                     }
                 } else if (scope.model.skillType === 'DAMAGE') {
-                    var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
+                    var dmg = ((scope.skillCheckIndex === 0)?((isSavant)?scope.model.maxEffect+5:scope.model.maxEffect):scope.model.minEffect);   
                     var totalDamage = (scope.model.aoe) ? dmg : scope.characterContext.stats.spellDmg + dmg;
                     var madEvoker = false;
                     scope.damagePool = (scope.model.aoe) ? scope.characterContext.stats.spellDmg : 0;
@@ -250,7 +253,7 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
 
                     scope.spellCastSucess(false, 0, madEvoker, 0, null, markUse);
                 } else if (scope.model.skillType === 'DAMAGE_RANGE_AC_15') {
-                    var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
+                    var dmg = ((scope.skillCheckIndex === 0)?((isSavant)?scope.model.maxEffect+5:scope.model.maxEffect):scope.model.minEffect);   
                     var totalDamage = scope.characterContext.stats.spellDmg + dmg;
                     var madEvoker = false;
 
@@ -277,7 +280,12 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                     
                     if(scope.monster.monsterEffects) {
                         if (scope.monster.monsterEffects.includes("INCORPOREAL")) {
-                            if (!scope.hasBuff()("Ignore Incorporeal") && (Math.floor(Math.random() * 2) === 0)) {
+                            if (!scope.hasBuff()("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2) === 0)) {
+                                scope.damage = 0;
+                                scope.damagePool = 0;
+                            }
+                        } else if (scope.monster.monsterEffects.includes("MISS_50")) {
+                            if (!scope.hasBuff()("Ignore Miss") && (Math.floor((Math.random()+.25) * 2) === 0)) {
                                 scope.damage = 0;
                                 scope.damagePool = 0;
                             }
@@ -435,7 +443,12 @@ angular.module('main').directive('skillUserMobile',['CharacterSvc', '$uibModal',
                     
                     if(scope.monster.monsterEffects) {
                         if (scope.monster.monsterEffects.includes("INCORPOREAL")) {
-                            if (!scope.hasBuff()("Ignore Incorporeal") && (Math.floor(Math.random() * 2) === 0)) {
+                            if (!scope.hasBuff()("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2) === 0)) {
+                                scope.damage = 0;
+                                scope.damagePool = 0;
+                            }
+                        } else if (scope.monster.monsterEffects.includes("MISS_50")) {
+                            if (!scope.hasBuff()("Ignore Miss") && (Math.floor((Math.random()+.25) * 2) === 0)) {
                                 scope.damage = 0;
                                 scope.damagePool = 0;
                             }

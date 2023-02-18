@@ -218,6 +218,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasWizardLegendary = new AtomicBoolean(false);
             final AtomicBoolean ignoreIncorporeal = new AtomicBoolean(false);
             final AtomicBoolean hasQuestors = new AtomicBoolean(false);
+            final AtomicBoolean hasRingOfSavant = new AtomicBoolean(false);
             final AtomicBoolean crownOfElements = new AtomicBoolean(false);
             final Set<CritType> critTypes = new HashSet<>();
 
@@ -248,6 +249,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                         charmShadowShot.set(true);
                     else if (characterItem.getItemId().equals("9b9e067d380d1da6b5ab050687ed72b18085e341"))
                         hasQuestors.set(true);
+                    else if (characterItem.getItemId().equals("fc4721f5fc6455d5a9704e93c7ce56fb5952d0fe"))
+                        hasRingOfSavant.set(true);
                     else if (characterItem.getItemId().equals("406e73fa9919a8557b5ab4ab0d12ad74eacbb9cf"))
                         crownOfElements.set(true);
                     else if (characterItem.getItemId().equals("18c97b7dc056aaf9e15a1b14f59c86fc18de0c27"))
@@ -837,6 +840,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .prestigeAvailable(hasPrestigeClass.get())
                     .prestigeActive(activatePrestige)
                     .questers(hasQuestors.get())
+                    .ringOfSavant(hasRingOfSavant.get())
                     .critTypes(String.join(",", critTypes.stream().map(Enum::name).collect(Collectors.toList())))
                     .monsters(VtdMonster.fromRoom(roomsByNumber, critTypes, meleeMainHit, meleeOffhandHit, rangeMainHit, rangeOffhandHit, characterDetails.getCharacterClass() == CharacterClass.RANGER, characterDetails.getStats().getLevel() == 5))
                     .availableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())))

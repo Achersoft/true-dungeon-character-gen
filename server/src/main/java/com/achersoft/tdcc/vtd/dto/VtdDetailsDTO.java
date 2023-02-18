@@ -104,6 +104,7 @@ public class VtdDetailsDTO {
     public boolean prestigeAvailable;
     public boolean prestigeActive;
     public boolean questers;
+    public boolean ringOfSavant;
     public int totalDamageLastSpell;
     public VtdItemsDTO items;
     
@@ -202,6 +203,7 @@ public class VtdDetailsDTO {
                 .prestigeAvailable(dao.isPrestigeAvailable())
                 .prestigeActive(dao.isPrestigeActive())
                 .questers(dao.isQuesters())
+                .ringOfSavant(dao.isRingOfSavant())
                 .queuedSkills(dao.getQueuedSkills())
                 .totalDamageLastSpell(dao.getTotalDamageLastSpell())
                 .items(VtdItemsDTO.fromDAO(dao.getItems()))

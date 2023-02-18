@@ -99,5 +99,6 @@ public class VtdDetails {
     private boolean prestigeAvailable;
     private boolean prestigeActive;
     private boolean questers;
+    private boolean ringOfSavant;
     private int totalDamageLastSpell;
 }

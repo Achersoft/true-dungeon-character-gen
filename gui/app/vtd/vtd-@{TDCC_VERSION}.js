@@ -669,22 +669,32 @@ angular.module('main')
             offhandHitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 offhandHitRollOG = offhandHitRoll;
                 offhandHitRoll = 1;
             }
-        }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                offhandHitRollOG = offhandHitRoll;
+                offhandHitRoll = 1;
+            }
+        } 
         
         if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
             hitRollOG = hitRoll;
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
-        }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } 
 
         if (hitRoll === 1 && offhandHitRoll === 1) {
             var buff = $scope.hasBuff("WS Reroll");
@@ -1408,7 +1418,12 @@ angular.module('main')
             offhandHitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                offhandHitRollOG = offhandHitRoll;
+                offhandHitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 offhandHitRollOG = offhandHitRoll;
                 offhandHitRoll = 1;
             }
@@ -1420,7 +1435,12 @@ angular.module('main')
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
@@ -1885,12 +1905,17 @@ angular.module('main')
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
         } 
-        
+       
         if (hitRoll === 1) {
             if ($scope.characterContext.rollerId !== null) {
                 vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
@@ -2264,7 +2289,12 @@ angular.module('main')
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
@@ -2611,7 +2641,12 @@ angular.module('main')
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
@@ -2917,7 +2952,12 @@ angular.module('main')
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
@@ -3214,22 +3254,32 @@ angular.module('main')
             offhandHitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 offhandHitRollOG = offhandHitRoll;
                 offhandHitRoll = 1;
             }
-        }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                offhandHitRollOG = offhandHitRoll;
+                offhandHitRoll = 1;
+            }
+        } 
         
         if (hitRoll !== 20 && monster.monsterEffects && monster.monsterEffects.includes("MELEE_MAIN_ON_20")) {
             hitRollOG = hitRoll;
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
-        }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } 
 
         if (hitRoll === 1 && offhandHitRoll === 1) {
             var buff = $scope.hasBuff("WS Reroll");
@@ -3954,7 +4004,12 @@ angular.module('main')
             offhandHitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                offhandHitRollOG = offhandHitRoll;
+                offhandHitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 offhandHitRollOG = offhandHitRoll;
                 offhandHitRoll = 1;
             }
@@ -3966,7 +4021,12 @@ angular.module('main')
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
@@ -4431,7 +4491,12 @@ angular.module('main')
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
@@ -4810,7 +4875,12 @@ angular.module('main')
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
@@ -5150,11 +5220,16 @@ angular.module('main')
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.rangeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
-        }  
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        }   
         
         if (monster !== null && !monster.sneak && !critImmuneUsed) {
             if ($scope.characterContext.rollerId !== null) {
@@ -5456,7 +5531,12 @@ angular.module('main')
             hitRoll = 1;
         } else if (monster.monsterEffects && monster.monsterEffects.includes("INCORPOREAL")) {
             if (!$scope.hasEffect($scope.characterContext.meleeDmgEffects, "IGNORE_INCORPOREAL") && 
-                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor(Math.random() * 2)) === 0) {
+                    !$scope.hasBuff("Ignore Incorporeal") && (Math.floor((Math.random()+.25) * 2)) === 0) {
+                hitRollOG = hitRoll;
+                hitRoll = 1;
+            }
+        } else if (monster.monsterEffects && monster.monsterEffects.includes("MISS_50")) {
+            if (!$scope.hasBuff("Ignore Miss") && (Math.floor((Math.random()+.25) * 2)) === 0) {
                 hitRollOG = hitRoll;
                 hitRoll = 1;
             }
