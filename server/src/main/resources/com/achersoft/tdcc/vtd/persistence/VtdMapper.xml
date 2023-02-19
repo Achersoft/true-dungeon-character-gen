@@ -1102,7 +1102,7 @@
             prestigeActive = #{prestigeActive},
             questers = #{questers},
             ringOfSavant = #{ringOfSavant},
-            my = #{ignoreIncorporeal},
+            ignoreIncorporeal = #{ignoreIncorporeal},
             totalDamageLastSpell = #{totalDamageLastSpell}
         WHERE id = #{characterId}
     </insert>
