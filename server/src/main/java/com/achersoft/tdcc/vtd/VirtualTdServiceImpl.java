@@ -323,8 +323,11 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
             switch (characterDetails.getCharacterClass()) {
                 case ALL:
-                    if (ignoreIncorporealMainHand.get()) {
+                    if (ignoreIncorporealMainHand.get() && mainHand.get().getName().equalsIgnoreCase("+1 Mithral Long Sword")) {
                         meleeDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
+                    }
+                    if (ignoreIncorporealMainHand.get() && offHand.get().getName().equalsIgnoreCase("+1 Mithral Long Sword")) {
+                        meleeOffhandDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
                     }
                     break;
                 case BARBARIAN:
