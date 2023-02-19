@@ -75,6 +75,7 @@
                                     prestigeActive,
                                     questers,
                                     ringOfSavant,
+                                    ignoreIncorporeal,
                                     totalDamageLastSpell)
                             VALUES (#{characterId},
                                     #{characterOrigId},
@@ -147,6 +148,7 @@
                                     #{prestigeActive},
                                     #{questers},
                                     #{ringOfSavant},
+                                    #{ignoreIncorporeal},
                                     #{totalDamageLastSpell})
     </insert>
 
@@ -605,6 +607,7 @@
                 prestigeActive,
                 questers,
                 ringOfSavant,
+                ignoreIncorporeal,
                 totalDamageLastSpell
           FROM vtd_character
          WHERE id = #{id}
@@ -682,6 +685,7 @@
                 prestigeActive,
                 questers,
                 ringOfSavant,
+                ignoreIncorporeal,
                 totalDamageLastSpell
         FROM vtd_character
         WHERE user_id = #{userId}
@@ -760,6 +764,7 @@
                 prestigeActive,
                 questers,
                 ringOfSavant,
+                ignoreIncorporeal,
                 totalDamageLastSpell
         FROM vtd_character
         WHERE user_id = #{userId}
@@ -1097,6 +1102,7 @@
             prestigeActive = #{prestigeActive},
             questers = #{questers},
             ringOfSavant = #{ringOfSavant},
+            my = #{ignoreIncorporeal},
             totalDamageLastSpell = #{totalDamageLastSpell}
         WHERE id = #{characterId}
     </insert>

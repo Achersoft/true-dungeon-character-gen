@@ -217,6 +217,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasWizardRelic = new AtomicBoolean(false);
             final AtomicBoolean hasWizardLegendary = new AtomicBoolean(false);
             final AtomicBoolean ignoreIncorporeal = new AtomicBoolean(false);
+            final AtomicBoolean ignoreIncorporealMainHand = new AtomicBoolean(false);
             final AtomicBoolean hasQuestors = new AtomicBoolean(false);
             final AtomicBoolean hasRingOfSavant = new AtomicBoolean(false);
             final AtomicBoolean crownOfElements = new AtomicBoolean(false);
@@ -286,12 +287,15 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     else if (characterItem.getItemId().equals("5b4d906cca80b7f2cd719133d4ff6822c435f5c3") ||
                              characterItem.getItemId().equals("958f1c96f2e1072f0488513bde34e65553b1ebaa"))
                         hasPrestigeClass.set(true);
-                    else if (characterItem.getItemId().equals("e3d537d7b1067df3a7f67d121d1394c26efd7937") ||
-                             characterItem.getItemId().equals("e8bd935fafdc20dec319a8e2e72dcfc06de30fda") ||
-                             characterItem.getItemId().equals("ba1439a19e276be50cce8d0ca3dbf03a39703b56") ||
-                             characterItem.getItemId().equals("1414e6288f8c8eed096ee123e11807e55dd73509") ||
-                             characterItem.getItemId().equals("37ee8d237352a5f557ace9c93d2405723bf778a5") ||
-                             characterItem.getItemId().equals("b1665d38410fa27957dc1d3b64f9b4e808e071a3"))
+                    else if (characterItem.getName().equalsIgnoreCase("+1 Mithral Long Sword"))
+                        ignoreIncorporealMainHand.set(true);
+                    else if (characterItem.getName().equalsIgnoreCase("Amulet of Plane Shifting") ||
+                            characterItem.getName().equalsIgnoreCase("Bead Whole Vision") ||
+                            characterItem.getName().equalsIgnoreCase("Goggles of Ethereal Vision") ||
+                            characterItem.getName().equalsIgnoreCase("Lenses of the Fae") ||
+                            characterItem.getName().equalsIgnoreCase("Ring of Soulsight") ||
+                            characterItem.getName().equalsIgnoreCase("Spirit Runestone") ||
+                            characterItem.getName().equalsIgnoreCase("Stalker’s Ring"))
                         ignoreIncorporeal.set(true);
                     else if (characterItem.getItemId().equals("1ec328d0a1f1144b23fdd400412553a00df1b7b0"))  //Acolyte Holy Symbol
                         turnUndeadDamage.set(1);
@@ -319,11 +323,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
             switch (characterDetails.getCharacterClass()) {
                 case ALL:
-                    if (ignoreIncorporeal.get()) {
+                    if (ignoreIncorporealMainHand.get()) {
                         meleeDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
-                        meleeOffhandDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
-                        rangeDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
-                        rangeOffhandDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
                     }
                     break;
                 case BARBARIAN:
@@ -841,6 +842,7 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .prestigeActive(activatePrestige)
                     .questers(hasQuestors.get())
                     .ringOfSavant(hasRingOfSavant.get())
+                    .ignoreIncorporeal(ignoreIncorporeal.get())
                     .critTypes(String.join(",", critTypes.stream().map(Enum::name).collect(Collectors.toList())))
                     .monsters(VtdMonster.fromRoom(roomsByNumber, critTypes, meleeMainHit, meleeOffhandHit, rangeMainHit, rangeOffhandHit, characterDetails.getCharacterClass() == CharacterClass.RANGER, characterDetails.getStats().getLevel() == 5))
                     .availableEffects(String.join(",", inGameEffects.stream().map(Enum::name).collect(Collectors.toList())))
@@ -1378,6 +1380,10 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
         if (vtdDetails.getCharacterClass() == CharacterClass.FIGHTER && vtdDetails.getStats().getLevel() == 5) {
             addBuff(id, Buff.FIGHTER_REROLL, 0);
+        }
+
+        if (vtdDetails.isIgnoreIncorporeal()) {
+            addBuff(id, Buff.IGNORE_INCORPOREAL, 0);
         }
 
         return calculateStats(id);

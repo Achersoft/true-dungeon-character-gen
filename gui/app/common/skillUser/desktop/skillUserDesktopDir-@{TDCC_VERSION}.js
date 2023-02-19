@@ -169,8 +169,6 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                         if (scope.hasBuff()("Spell Surge")) {
                             if(scope.skillCheckIndex === 0) {
                                 totalHeal += scope.model.maxEffect;
-                                if (isSavant)
-                                    totalHeal +=5;
                             } else
                                totalHeal += scope.model.minEffect; 
                         }
@@ -201,7 +199,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                             scope.primaryHealAmount = (scope.model.aoe) ? ((scope.skillCheckIndex === 0)?((isSavant)?scope.model.maxEffect+5:scope.model.maxEffect):scope.model.minEffect) : totalHeal;
                             scope.seconaryHealAmount = 0;
                             var selfHeal = 0;
-                            scope.healPool = (scope.model.aoe) ? (scope.hasBuff()("Spell Surge")) ? scope.characterContext.stats.spellHeal + ((scope.skillCheckIndex === 0)?((isSavant)?scope.model.maxEffect+5:scope.model.maxEffect):scope.model.minEffect) : scope.characterContext.stats.spellHeal : 0;
+                            scope.healPool = (scope.model.aoe) ? (scope.hasBuff()("Spell Surge")) ? scope.characterContext.stats.spellHeal + ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect) : scope.characterContext.stats.spellHeal : 0;
 
                             if (scope.targetIndex === 1 || scope.model.skillTarget === 'PARTY') {
                                 selfHeal = scope.primaryHealAmount;
@@ -216,7 +214,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                         }
                     }
                 } else if (scope.model.skillType === 'DAMAGE') {
-                    var dmg = ((scope.skillCheckIndex === 0)?((isSavant)?scope.model.maxEffect+5:scope.model.maxEffect):scope.model.minEffect);   
+                    var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
                     var totalDamage = (scope.model.aoe) ? dmg : scope.characterContext.stats.spellDmg + dmg;
                     var madEvoker = false;
                     scope.damagePool = (scope.model.aoe) ? scope.characterContext.stats.spellDmg : 0;
@@ -234,6 +232,9 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                         totalDamage += dmg;
                         scope.removeBuff()(buff);
                     }
+                    
+                    if (scope.skillCheckIndex === 0 && isSavant)
+                        totalDamage += 5;
                     
                     scope.damage = totalDamage;
                     
@@ -262,7 +263,7 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     
                     scope.spellCastSucess(false, 0, madEvoker, 0, null, markUse);
                 } else if (scope.model.skillType === 'DAMAGE_RANGE_AC_15') {
-                    var dmg = ((scope.skillCheckIndex === 0)?((isSavant)?scope.model.maxEffect+5:scope.model.maxEffect):scope.model.minEffect);   
+                    var dmg = ((scope.skillCheckIndex === 0)?scope.model.maxEffect:scope.model.minEffect);   
                     var totalDamage = scope.characterContext.stats.spellDmg + dmg;
                     var madEvoker = false;
 
@@ -282,6 +283,9 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                     } else if (scope.sharpen === 1 && scope.hitRollNatural >= 18) {
                         totalDamage = totalDamage*2;
                     }
+                    
+                    if (scope.skillCheckIndex === 0 && isSavant)
+                        totalDamage += 5;
                     
                     scope.damage = totalDamage;
                     

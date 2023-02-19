@@ -100,5 +100,6 @@ public class VtdDetails {
     private boolean prestigeActive;
     private boolean questers;
     private boolean ringOfSavant;
+    private boolean ignoreIncorporeal;
     private int totalDamageLastSpell;
 }
