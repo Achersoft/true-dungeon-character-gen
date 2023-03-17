@@ -316,6 +316,8 @@ public class CharacterServiceImpl implements CharacterService {
                 fields.setField("drPoison", Integer.toString(character.getStats().getDrPoison()));
                 fields.setField("drDarkrift", Integer.toString(character.getStats().getDrDarkrift()));
                 fields.setField("drSacred", Integer.toString(character.getStats().getDrSacred()));
+                fields.setField("drForce", Integer.toString(character.getStats().getDrForce()));
+                fields.setField("drAcid", Integer.toString(character.getStats().getDrAcid()));
                 
                 fields.setField("treasureMin", Integer.toString(character.getStats().getTreasureMin()));
                 fields.setField("treasureMax", Integer.toString(character.getStats().getTreasureMax()));
@@ -726,7 +728,7 @@ public class CharacterServiceImpl implements CharacterService {
             characterHtml.append("(max ").append(character.getStats().getHealth()+9).append(" with Charm of Synergy)");
         characterHtml.append("\n\n");
         characterHtml.append("[b]Damage Reduction:[/b]").append("\n");
-        characterHtml.append("[table][tr][td]Melee[/td][td]Range[/td][td]Spell[/td][td]Fire[/td][td]Cold[/td][td]Shock[/td][td]Sonic[/td][td]Eldritch[/td][td]Poison[/td][td]Darkrift[/td][td]Sacred[/td][/tr]");
+        characterHtml.append("[table][tr][td]Melee[/td][td]Range[/td][td]Spell[/td][td]Fire[/td][td]Cold[/td][td]Shock[/td][td]Sonic[/td][td]Eldritch[/td][td]Poison[/td][td]Darkrift[/td][td]Sacred[/td][td]Force[/td][td]Acid[/td][/tr]");
         characterHtml.append("[tr]");
         characterHtml.append("[td]").append(character.getStats().getDrMelee()).append("[/td]");
         characterHtml.append("[td]").append(character.getStats().getDrRange()).append("[/td]");
@@ -739,6 +741,8 @@ public class CharacterServiceImpl implements CharacterService {
         characterHtml.append("[td]").append(character.getStats().getDrPoison()).append("[/td]");
         characterHtml.append("[td]").append(character.getStats().getDrDarkrift()).append("[/td]");
         characterHtml.append("[td]").append(character.getStats().getDrSacred()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrForce()).append("[/td]");
+        characterHtml.append("[td]").append(character.getStats().getDrAcid()).append("[/td]");
         characterHtml.append("[/tr][/table]\n\n");
         
         final StringBuilder meleeMainhand = new StringBuilder();
@@ -2932,6 +2936,8 @@ public class CharacterServiceImpl implements CharacterService {
         stats.setDrPoison(stats.getDrPoison() + td.getDrPoison());
         stats.setDrDarkrift(stats.getDrDarkrift() + td.getDrDarkrift());
         stats.setDrSacred(stats.getDrSacred() + td.getDrSacred());
+        stats.setDrForce(stats.getDrForce() + td.getDrForce());
+        stats.setDrAcid(stats.getDrAcid() + td.getDrAcid());
         stats.setMFire(stats.getMFire() + td.getMFire());
         stats.setMCold(stats.getMCold() + td.getMCold());
         stats.setMShock(stats.getMShock() + td.getMShock());

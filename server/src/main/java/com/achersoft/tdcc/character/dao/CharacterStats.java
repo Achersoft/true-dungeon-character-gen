@@ -102,6 +102,7 @@ public class CharacterStats {
     private int drDarkrift = 0;
     private int drSacred = 0;
     private int drForce = 0;
+    private int drAcid = 0;
     private int mFire = 0;
     private int mCold = 0;
     private int mShock = 0;

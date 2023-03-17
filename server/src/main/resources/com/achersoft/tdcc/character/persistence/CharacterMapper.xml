@@ -115,6 +115,8 @@
                                     drPoison,
                                     drDarkrift,
                                     drSacred,
+                                    drForce,
+                                    drAcid,
                                     mFire,
                                     mCold,
                                     mShock,
@@ -236,6 +238,8 @@
                                     #{drPoison},
                                     #{drDarkrift},
                                     #{drSacred},
+                                    #{drForce},
+                                    #{drAcid},
                                     #{mFire},
                                     #{mCold},
                                     #{mShock},
@@ -453,6 +457,8 @@
                 drPoison,
                 drDarkrift,
                 drSacred,
+                drForce,
+                drAcid,
                 mFire,
                 mCold,
                 mShock,
@@ -593,7 +599,9 @@
                 drEldritch,
                 drPoison,
                 drDarkrift,
-                drSacred
+                drSacred,
+                drForce,
+                drAcid
            FROM base_stats
         WHERE characterClass = #{characterClass}
           AND level = #{level}
@@ -691,6 +699,8 @@
             drPoison = #{drPoison},
             drDarkrift = #{drDarkrift},
             drSacred = #{drSacred},
+            drForce = #{drForce},
+            drAcid = #{drAcid},
             mFire = #{mFire},
             mCold = #{mCold},
             mShock = #{mShock},

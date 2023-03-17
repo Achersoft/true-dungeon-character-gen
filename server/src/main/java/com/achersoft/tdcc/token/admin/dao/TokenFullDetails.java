@@ -122,6 +122,7 @@ public class TokenFullDetails {
     private int drDarkrift;
     private int drSacred;
     private int drForce;
+    private int drAcid;
     private int headSlots;
     private int backSlots;
     private int stoneSlots;
