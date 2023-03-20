@@ -113,6 +113,7 @@ public class TokenFullDetailsDTO {
     public Integer drDarkrift;
     public Integer drSacred;
     public Integer drForce;
+    public Integer drAcid;
     public Integer headSlots;
     public Integer backSlots;
     public Integer stoneSlots;
@@ -246,6 +247,7 @@ public class TokenFullDetailsDTO {
                 .drDarkrift(tokenFullDetails.getDrDarkrift())
                 .drSacred(tokenFullDetails.getDrSacred())
                 .drForce(tokenFullDetails.getDrForce())
+                .drAcid(tokenFullDetails.getDrAcid())
                 .headSlots(tokenFullDetails.getHeadSlots())
                 .backSlots(tokenFullDetails.getBackSlots())
                 .charmSlots(tokenFullDetails.getCharmSlots())
@@ -418,6 +420,7 @@ public class TokenFullDetailsDTO {
                 .drDarkrift(drDarkrift)
                 .drSacred(drSacred)
                 .drForce(drForce)
+                .drAcid(drAcid)
                 .headSlots(headSlots)
                 .backSlots(backSlots)
                 .charmSlots(charmSlots)
