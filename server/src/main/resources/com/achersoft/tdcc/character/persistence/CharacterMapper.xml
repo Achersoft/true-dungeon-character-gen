@@ -499,6 +499,7 @@
                     ci.character_id 'characterId',
                     ci.max_rarity 'maxRarity',
                     t.name 'name',
+                    t.imgName 'imgName',
                     t.text 'text',
                     t.rarity 'rarity',
                     ci.slot 'slot',

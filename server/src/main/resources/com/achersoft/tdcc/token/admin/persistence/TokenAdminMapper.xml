@@ -6,6 +6,7 @@
     <insert id="addToken">
         INSERT INTO token ( id,
                             name,
+                            imgName,
                             text,
                             rarity,
                             slot,
@@ -23,6 +24,7 @@
                             rogue )
                    VALUES ( #{id},
                             #{name},
+                            #{imgName},
                             #{text},
                             #{rarity},
                             #{slot},
@@ -132,17 +134,6 @@
                                     dr_sacred,
                                     dr_force,
                                     dr_acid,
-                                    head_slots,
-                                    back_slots,
-                                    stone_slots,
-                                    charm_slots,
-                                    eye_slots,
-                                    figurine_slots,
-                                    rare_eye_slots,
-                                    rare_feet_slots,
-                                    rare_leg_slots,
-                                    rare_shirt_slots,
-                                    rare_waist_slots,
                                     conditional,
                                     always_in_effect,
                                     once_round,
@@ -260,17 +251,6 @@
                                     #{drSacred},
                                     #{drForce},
                                     #{drAcid},
-                                    #{headSlots},
-                                    #{backSlots},
-                                    #{stoneSlots},
-                                    #{charmSlots},
-                                    #{eyeSlots},
-                                    #{figurineSlots},
-                                    #{rareEyeSlots},
-                                    #{rareFeetSlots},
-                                    #{rareLegSlots},
-                                    #{rareShirtSlots},
-                                    #{rareWaistSlots},
                                     #{conditionalUse},
                                     #{alwaysInEffect},
                                     #{oncePerRound},
@@ -298,10 +278,34 @@
                                     #{rForce},
                                     #{rAcid});
     </insert>
-    
+
+    <insert id="addSlotModifier">
+        INSERT INTO token_slot_modifiers ( id, slot, rarity, modifier)
+        VALUES ( #{id}, #{slot}, #{rarity}, #{modifier});
+    </insert>
+
+    <update id="editSlotModifier">
+        UPDATE token_slot_modifiers SET
+        rarity = #{rarity},
+        modifier = #{modifier}
+        WHERE id = #{id}
+          AND slot = #{slot}
+    </update>
+
+    <delete id="deleteSlotModifier">
+        DELETE FROM token_slot_modifiers WHERE id = #{id}
+    </delete>
+
+    <select id="getSlotModifiers" resultType="com.achersoft.tdcc.token.admin.dao.SlotModifier">
+    SELECT id, slot, rarity, modifier
+        FROM token_slot_modifiers
+        WHERE id = #{id}
+    </select>
+
     <update id="editToken">      
         UPDATE token SET
             name = #{name},
+            imgName = #{imgName},
             text = #{text},
             rarity = #{rarity},
             slot = #{slot},
@@ -412,17 +416,6 @@
             dr_sacred = #{drSacred},
             dr_force = #{drForce},
             dr_acid = #{drAcid},
-            head_slots = #{headSlots},
-            back_slots = #{backSlots},
-            stone_slots = #{stoneSlots},
-            charm_slots = #{charmSlots},
-            eye_slots = #{eyeSlots},
-            figurine_slots = #{figurineSlots},
-            rare_eye_slots = #{rareEyeSlots},
-            rare_feet_slots = #{rareFeetSlots},
-            rare_leg_slots = #{rareLegSlots},
-            rare_shirt_slots = #{rareShirtSlots},
-            rare_waist_slots = #{rareWaistSlots},
             conditional = #{conditionalUse},
             always_in_effect = #{alwaysInEffect},
             once_round = #{oncePerRound},
@@ -460,6 +453,7 @@
                 td.explode_text 'weaponExplodeText',
                 td.crit_min 'critMin',
                 t.name 'name',
+                t.imgName 'imgName',
                 t.text 'text',
                 t.rarity 'rarity',
                 t.slot 'slot',
@@ -560,17 +554,6 @@
                 td.dr_sacred 'drSacred',
                 td.dr_force 'drForce',
                 td.dr_acid 'drAcid',
-                td.head_slots 'headSlots',
-                td.back_slots 'backSlots',
-                td.stone_slots 'stoneSlots',
-                td.charm_slots 'charmSlots',
-                td.eye_slots 'eyeSlots',
-                td.figurine_slots 'figurineSlots',
-                td.rare_eye_slots 'rareEyeSlots',
-                td.rare_feet_slots 'rareFeetSlots',
-                td.rare_leg_slots 'rareLegSlots',
-                td.rare_shirt_slots 'rareShirtSlots',
-                td.rare_waist_slots 'rareWaistSlots',
                 td.conditional 'conditionalUse',
                 td.always_in_effect 'alwaysInEffect',
                 td.once_round 'oncePerRound',
@@ -613,6 +596,7 @@
                 td.explode_text 'weaponExplodeText',
                 td.crit_min 'critMin',
                 t.name 'name',
+                t.imgName 'imgName',
                 t.text 'text',
                 t.rarity 'rarity',
                 t.slot 'slot',
@@ -713,17 +697,6 @@
                 td.dr_sacred 'drSacred',
                 td.dr_force 'drForce',
                 td.dr_acid 'drAcid',
-                td.head_slots 'headSlots',
-                td.back_slots 'backSlots',
-                td.stone_slots 'stoneSlots',
-                td.charm_slots 'charmSlots',
-                td.eye_slots 'eyeSlots',
-                td.figurine_slots 'figurineSlots',
-                td.rare_eye_slots 'rareEyeSlots',
-                td.rare_feet_slots 'rareFeetSlots',
-                td.rare_leg_slots 'rareLegSlots',
-                td.rare_shirt_slots 'rareShirtSlots',
-                td.rare_waist_slots 'rareWaistSlots',
                 td.conditional 'conditionalUse',
                 td.always_in_effect 'alwaysInEffect',
                 td.once_round 'oncePerRound',

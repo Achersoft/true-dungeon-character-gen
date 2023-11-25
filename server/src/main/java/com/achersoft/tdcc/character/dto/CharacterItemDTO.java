@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 @Builder
 @Data
@@ -31,7 +32,9 @@ public class CharacterItemDTO implements Comparable<CharacterItemDTO> {
         return CharacterItemDTO.builder()
                 .id(dao.getId())
                 .itemId(dao.getItemId())
-                .imgName(dao.getName().replaceAll("’","").replaceAll(",", "").replaceAll(":", "").replaceAll(" ","-"))
+                .imgName(StringUtils.isBlank(dao.getImgName()) ?
+                        dao.getName().replaceAll("’","").replaceAll(",", "").replaceAll(":", "").replaceAll(" ","-") + ".jpg" :
+                        dao.getImgName())
                 .characterId(dao.getCharacterId())
                 .name(dao.getName())
                 .text(dao.getText())

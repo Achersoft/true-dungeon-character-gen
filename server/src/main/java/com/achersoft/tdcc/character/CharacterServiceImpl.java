@@ -11,6 +11,7 @@ import com.achersoft.tdcc.enums.Slot;
 import com.achersoft.tdcc.enums.SlotStatus;
 import com.achersoft.tdcc.party.dao.SelectableCharacters;
 import com.achersoft.tdcc.party.persistence.PartyMapper;
+import com.achersoft.tdcc.token.admin.dao.SlotModifier;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
@@ -939,9 +940,11 @@ public class CharacterServiceImpl implements CharacterService {
 
         // Fill the map
         characterDetails.getItems().stream().filter((item) -> item.getItemId() != null).forEach((item) -> {
-            if (item.getItemId() != null && !item.getItemId().isEmpty())
-                itemDetailsMap.put(item.getId(), CharacterItemSet.builder().item(item).tokenFullDetails(tokenAdminMapper.getTokenDetails(item.getItemId())).build());
-            else
+            if (item.getItemId() != null && !item.getItemId().isEmpty()) {
+                final TokenFullDetails tokenDetails = tokenAdminMapper.getTokenDetails(item.getItemId());
+                tokenDetails.setSlotModifiers(tokenAdminMapper.getSlotModifiers(tokenDetails.getId()));
+                itemDetailsMap.put(item.getId(), CharacterItemSet.builder().item(item).tokenFullDetails(tokenDetails).build());
+            } else
                 itemDetailsMap.put(item.getId(), CharacterItemSet.builder().item(item).build());
         });
 
@@ -975,9 +978,11 @@ public class CharacterServiceImpl implements CharacterService {
 
         // Fill the map
         characterDetails.getItems().stream().filter((item) -> item.getItemId() != null).forEach((item) -> {
-            if (item.getItemId() != null && !item.getItemId().isEmpty())
-                itemDetailsMap.put(item.getId(), CharacterItemSet.builder().item(item).tokenFullDetails(tokenAdminMapper.getTokenDetails(item.getItemId())).build());
-            else
+            if (item.getItemId() != null && !item.getItemId().isEmpty()) {
+                final TokenFullDetails tokenDetails = tokenAdminMapper.getTokenDetails(item.getItemId());
+                tokenDetails.setSlotModifiers(tokenAdminMapper.getSlotModifiers(tokenDetails.getId()));
+                itemDetailsMap.put(item.getId(), CharacterItemSet.builder().item(item).tokenFullDetails(tokenDetails).build());
+            } else
                 itemDetailsMap.put(item.getId(), CharacterItemSet.builder().item(item).build());
         });
 
@@ -1082,580 +1087,102 @@ public class CharacterServiceImpl implements CharacterService {
     }
     
     private void checkSlotModItems(CharacterDetails characterDetails, Map<String, CharacterItemSet> itemDetailsMap) {
-        AtomicReference<Integer> headSlots = new AtomicReference<>(1);
-        AtomicReference<Integer> feetSlots = new AtomicReference<>(1);
-        AtomicReference<Integer> eyeSlots = new AtomicReference<>(1);
-        AtomicReference<Integer> backSlots = new AtomicReference<>(1);
-        AtomicReference<Integer> charmSlots = new AtomicReference<>(3);
-        AtomicReference<Integer> stoneSlots = new AtomicReference<>(5);
-        AtomicReference<Integer> legSlots = new AtomicReference<>(1);
-        AtomicReference<Integer> shirtSlots = new AtomicReference<>(1);
-        AtomicReference<Integer> waistSlots = new AtomicReference<>(1);
-        AtomicReference<Integer> rareEyeSlots = new AtomicReference<>(0);
-        AtomicReference<Integer> rareFeetSlots = new AtomicReference<>(0);
-        AtomicReference<Integer> rareLegSlots = new AtomicReference<>(0);
-        AtomicReference<Integer> rareShirtslots = new AtomicReference<>(0);
-        AtomicReference<Integer> rareWaistSlots = new AtomicReference<>(0);
+        final Map<Slot, TreeMap<Rarity, Integer>> slotMap = new HashMap<>();
+        final Map<Slot, Integer> slotTotals = new HashMap<>();
         AtomicReference<Boolean> threeRings = new AtomicReference<>(false);
         AtomicReference<Boolean> noRings = new AtomicReference<>(false);
+
+        for (Slot slot : Slot.values()) {
+            slotMap.put(slot, new TreeMap<>());
+            slotMap.get(slot).put(Rarity.ALL, slot.defaultSize);
+            slotTotals.put(slot, slot.defaultSize);
+        }
+
         itemDetailsMap.values().stream().filter(characterItemSet -> characterItemSet.getTokenFullDetails() != null).forEach(characterItemSet -> {
-            headSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getHeadSlots());
-            eyeSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getEyeSlots());
-            backSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getBackSlots());
-            charmSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getCharmSlots());
-            stoneSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getStoneSlots());
-            rareEyeSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareEyeSlots());
-            rareFeetSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareFeetSlots());
-            rareLegSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareLegSlots());
-            rareShirtslots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareShirtSlots());
-            rareWaistSlots.updateAndGet(v -> v + characterItemSet.getTokenFullDetails().getRareWaistSlots());
+            if (characterItemSet.getTokenFullDetails().getSlotModifiers() != null && !characterItemSet.getTokenFullDetails().getSlotModifiers().isEmpty()) {
+                for (SlotModifier slotModifier : characterItemSet.getTokenFullDetails().getSlotModifiers()) {
+                    if (slotMap.get(slotModifier.getSlot()).containsKey(slotModifier.getRarity())) {
+                        slotMap.get(slotModifier.getSlot()).replace(slotModifier.getRarity(),
+                                Math.max(0, slotMap.get(slotModifier.getSlot()).get(slotModifier.getRarity()) + slotModifier.getModifier()));
+                    } else {
+                        slotMap.get(slotModifier.getSlot()).put(slotModifier.getRarity(), slotModifier.getModifier());
+                    }
+                }
+            }
             threeRings.set(threeRings.get() || characterItemSet.getTokenFullDetails().isSetRingsThree());
             noRings.set(noRings.get() || characterItemSet.getTokenFullDetails().isNoRings());
         });
 
-        if (charmSlots.get() > 10)
-            charmSlots.set(10);
-        if (stoneSlots.get() > 9)
-            stoneSlots.set(9);
-
-        // Ring logic
-        final List<CharacterItem> fingers = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.FINGER).collect(Collectors.toList());
-        if (noRings.get()) {
-            fingers.forEach(finger -> {
-                characterDetails.getItems().remove(finger);
-                itemDetailsMap.remove(finger.getId());
-            });
-        } else {
-            int fingersToAdd = (threeRings.get() ? 3 : 2) - fingers.size();
-            int fingerIndex = threeRings.get() ? 2 : 1;
-
-            if (fingersToAdd < 0) {
-                fingers.stream().filter(characterItem -> characterItem.getIndex() > 1).forEach(characterItem -> {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                });
-            } else {
-                while (fingersToAdd > 0) {
-                    CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FINGER).index(fingerIndex).slotStatus(SlotStatus.OK).build();
-                    characterDetails.getItems().add(characterItem);
-                    itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                    fingersToAdd--;
-                    fingerIndex--;
-                }
-            }
-        }
-
-        // Bead Slot
-        final List<CharacterItem> beads = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.BEAD).collect(Collectors.toList());
-        if (beads.size() > 3) {
-            beads.stream().filter(characterItem -> characterItem.getIndex() >= 3).forEach(characterItem -> {
-                characterDetails.getItems().remove(characterItem);
-                itemDetailsMap.remove(characterItem.getId());
-            });
-        } else if (beads.size() < 3) {
-            int beadsToAdd = 3 - beads.size();
-            int beadIndex = 3 - 1;
-
-            while (beadsToAdd > 0) {
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.BEAD).index(beadIndex).slotStatus(SlotStatus.OK).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                beadsToAdd--;
-                beadIndex--;
-            }
-        }
-
-        // Head Slot
-        final List<CharacterItem> heads = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.HEAD).collect(Collectors.toList());
-        if (heads.size() > headSlots.get()) {
-            heads.stream().filter(characterItem -> characterItem.getIndex() >= headSlots.get()).forEach(characterItem -> {
-                characterDetails.getItems().remove(characterItem);
-                itemDetailsMap.remove(characterItem.getId());
-            });
-        } else if (heads.size() < headSlots.get()) {
-            int headsToAdd = headSlots.get() - heads.size();
-            int headIndex = headSlots.get() - 1;
-
-            while (headsToAdd > 0) {
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.HEAD).index(headIndex).slotStatus(SlotStatus.OK).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                headsToAdd--;
-                headIndex--;
-            }
-        }
-
-        // Eye Slot
-        final List<CharacterItem> eyes = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.EYES).collect(Collectors.toList());
-        final List<CharacterItem> rareEyes = eyes.stream().filter(i -> i.getMaxRarity() == Rarity.RARE).collect(Collectors.toList());
-        final List<CharacterItem> normEyes = eyes.stream().filter(i -> i.getMaxRarity() == Rarity.ALL || i.getMaxRarity() == null).collect(Collectors.toList());
-        if (normEyes.size() > eyeSlots.get()) {
-            AtomicInteger eyesToRemove = new AtomicInteger(normEyes.size() - eyeSlots.get());
-            normEyes.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
-                if (eyesToRemove.getAndDecrement() > 0) {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                }
-            });
-        } else if (normEyes.size() < eyeSlots.get()) {
-            int eyesToAdd = eyeSlots.get() - normEyes.size();
-            int eyeIndex = eyes.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
-
-            while (eyesToAdd > 0) {
-                eyeIndex++;
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.EYES).index(eyeIndex).slotStatus(SlotStatus.OK).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                eyesToAdd--;
-            }
-        }
-        if (rareEyes.size() > rareEyeSlots.get()) {
-            AtomicInteger eyesToRemove = new AtomicInteger(rareEyes.size() - rareEyeSlots.get());
-            rareEyes.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
-                if (eyesToRemove.getAndDecrement() > 0) {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                }
-            });
-        } else if (rareEyes.size() < rareEyeSlots.get()) {
-            int eyesToAdd = rareEyeSlots.get() - rareEyes.size();
-            int eyeIndex = eyes.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
-
-            while (eyesToAdd > 0) {
-                eyeIndex++;
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.EYES).index(eyeIndex).slotStatus(SlotStatus.OK).maxRarity(Rarity.RARE).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                eyesToAdd--;
-            }
-        }
-
-        // Back Slot
-        final List<CharacterItem> backs = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.BACK).collect(Collectors.toList());
-        if (backs.size() > backSlots.get()) {
-            backs.stream().filter(characterItem -> characterItem.getIndex() >= backSlots.get()).forEach(characterItem -> {
-                characterDetails.getItems().remove(characterItem);
-                itemDetailsMap.remove(characterItem.getId());
-            });
-        } else if (backs.size() < backSlots.get()) {
-            int backsToAdd = backSlots.get() - backs.size();
-            int backIndex = backSlots.get() - 1;
-
-            while (backsToAdd > 0) {
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.BACK).index(backIndex).slotStatus(SlotStatus.OK).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                backsToAdd--;
-                backIndex--;
-            }
-        }
-
-        // Charm Slot
-        final List<CharacterItem> charms = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.CHARM).collect(Collectors.toList());
-        if (charms.size() > charmSlots.get()) {
-            charms.stream().filter(characterItem -> characterItem.getIndex() >= charmSlots.get()).forEach(characterItem -> {
-                characterDetails.getItems().remove(characterItem);
-                itemDetailsMap.remove(characterItem.getId());
-            });
-        } else if (charms.size() < charmSlots.get()) {
-            int charmsToAdd = charmSlots.get() - charms.size();
-            int charmIndex = charmSlots.get() - 1;
-
-            while (charmsToAdd > 0) {
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(charmIndex).slotStatus(SlotStatus.OK).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                charmsToAdd--;
-                charmIndex--;
-            }
-        }
-
-        // Stone Slot
-        final List<CharacterItem> stones = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.IOUNSTONE).collect(Collectors.toList());
-        if (stones.size() > stoneSlots.get()) {
-            stones.stream().filter(characterItem -> characterItem.getIndex() >= stoneSlots.get()).forEach(characterItem -> {
-                characterDetails.getItems().remove(characterItem);
-                itemDetailsMap.remove(characterItem.getId());
-            });
-        } else if (stones.size() < stoneSlots.get()) {
-            int stonesToAdd = stoneSlots.get() - stones.size();
-            int stoneIndex = stoneSlots.get() - 1;
-
-            while (stonesToAdd > 0) {
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(stoneIndex).slotStatus(SlotStatus.OK).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                stonesToAdd--;
-                stoneIndex--;
-            }
-        }
-
-        // Feet Slot
-        final List<CharacterItem> feet = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.FEET).collect(Collectors.toList());
-        final List<CharacterItem> rareFeet = feet.stream().filter(i -> i.getMaxRarity() == Rarity.RARE).collect(Collectors.toList());
-        final List<CharacterItem> normFeet = feet.stream().filter(i -> i.getMaxRarity() == Rarity.ALL || i.getMaxRarity() == null).collect(Collectors.toList());
-        if (normFeet.size() > feetSlots.get()) {
-            AtomicInteger feetToRemove = new AtomicInteger(normFeet.size() - feetSlots.get());
-            normFeet.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
-                if (feetToRemove.getAndDecrement() > 0) {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                }
-            });
-        } else if (normFeet.size() < feetSlots.get()) {
-            int feetToAdd = feetSlots.get() - normFeet.size();
-            int feetIndex = feet.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
-
-            while (feetToAdd > 0) {
-                feetIndex++;
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FEET).index(feetIndex).slotStatus(SlotStatus.OK).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                feetToAdd--;
-            }
-        }
-        if (rareFeet.size() > rareFeetSlots.get()) {
-            AtomicInteger feetToRemove = new AtomicInteger(rareFeet.size() - rareFeetSlots.get());
-            rareFeet.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
-                if (feetToRemove.getAndDecrement() > 0) {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                }
-            });
-        } else if (rareFeet.size() < rareFeetSlots.get()) {
-            int feetToAdd = rareFeetSlots.get() - rareFeet.size();
-            int feetIndex = feet.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
-
-            while (feetToAdd > 0) {
-                feetIndex++;
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FEET).index(feetIndex).slotStatus(SlotStatus.OK).maxRarity(Rarity.RARE).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                feetToAdd--;
-            }
-        }
-
-        // Leg Slot
-        final List<CharacterItem> legs = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.LEGS).collect(Collectors.toList());
-        final List<CharacterItem> rareLegs = legs.stream().filter(i -> i.getMaxRarity() == Rarity.RARE).collect(Collectors.toList());
-        final List<CharacterItem> normLegs = legs.stream().filter(i -> i.getMaxRarity() == Rarity.ALL || i.getMaxRarity() == null).collect(Collectors.toList());
-        if (normLegs.size() > legSlots.get()) {
-            AtomicInteger legsToRemove = new AtomicInteger(normLegs.size() - legSlots.get());
-            normLegs.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
-                if (legsToRemove.getAndDecrement() > 0) {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                }
-            });
-        } else if (normLegs.size() < legSlots.get()) {
-            int legsToAdd = legSlots.get() - normLegs.size();
-            int legsIndex = legs.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
-
-            while (legsToAdd > 0) {
-                legsIndex++;
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.LEGS).index(legsIndex).slotStatus(SlotStatus.OK).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                legsToAdd--;
-            }
-        }
-        if (rareLegs.size() > rareLegSlots.get()) {
-            AtomicInteger legsToRemove = new AtomicInteger(rareLegs.size() - rareLegSlots.get());
-            rareLegs.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
-                if (legsToRemove.getAndDecrement() > 0) {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                }
-            });
-        } else if (rareLegs.size() < rareLegSlots.get()) {
-            int legsToAdd = rareLegSlots.get() - rareLegs.size();
-            int legsIndex = legs.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
-
-            while (legsToAdd > 0) {
-                legsIndex++;
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.LEGS).index(legsIndex).slotStatus(SlotStatus.OK).maxRarity(Rarity.RARE).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                legsToAdd--;
-            }
-        }
-
-        // shirt Slot
-        final List<CharacterItem> shirts = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.SHIRT).collect(Collectors.toList());
-        final List<CharacterItem> rareShirts = shirts.stream().filter(i -> i.getMaxRarity() == Rarity.RARE).collect(Collectors.toList());
-        final List<CharacterItem> normShirts = shirts.stream().filter(i -> i.getMaxRarity() == Rarity.ALL || i.getMaxRarity() == null).collect(Collectors.toList());
-        if (normShirts.size() > shirtSlots.get()) {
-            AtomicInteger shirtsToRemove = new AtomicInteger(normShirts.size() - shirtSlots.get());
-            normShirts.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
-                if (shirtsToRemove.getAndDecrement() > 0) {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                }
-            });
-        } else if (normShirts.size() < shirtSlots.get()) {
-            int shirtsToAdd = shirtSlots.get() - normShirts.size();
-            int shirtsIndex = shirts.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
-
-            while (shirtsToAdd > 0) {
-                shirtsIndex++;
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.SHIRT).index(shirtsIndex).slotStatus(SlotStatus.OK).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                shirtsToAdd--;
-            }
-        }
-        if (rareShirts.size() > rareShirtslots.get()) {
-            AtomicInteger shirtsToRemove = new AtomicInteger(rareShirts.size() - rareShirtslots.get());
-            rareShirts.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
-                if (shirtsToRemove.getAndDecrement() > 0) {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                }
-            });
-        } else if (rareShirts.size() < rareShirtslots.get()) {
-            int shirtsToAdd = rareShirtslots.get() - rareShirts.size();
-            int shirtsIndex = shirts.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
-
-            while (shirtsToAdd > 0) {
-                shirtsIndex++;
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.SHIRT).index(shirtsIndex).slotStatus(SlotStatus.OK).maxRarity(Rarity.RARE).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                shirtsToAdd--;
-            }
-        }
-
-        // Waist Slot
-        final List<CharacterItem> waists = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.WAIST).collect(Collectors.toList());
-        final List<CharacterItem> rareWaists = waists.stream().filter(i -> i.getMaxRarity() == Rarity.RARE).collect(Collectors.toList());
-        final List<CharacterItem> normWaists = waists.stream().filter(i -> i.getMaxRarity() == Rarity.ALL || i.getMaxRarity() == null).collect(Collectors.toList());
-        if (normWaists.size() > waistSlots.get()) {
-            AtomicInteger waistsToRemove = new AtomicInteger(normWaists.size() - waistSlots.get());
-            normWaists.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
-                if (waistsToRemove.getAndDecrement() > 0) {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                }
-            });
-        } else if (normWaists.size() < waistSlots.get()) {
-            int waistsToAdd = waistSlots.get() - normWaists.size();
-            int waistsIndex = waists.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
-
-            while (waistsToAdd > 0) {
-                waistsIndex++;
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.WAIST).index(waistsIndex).slotStatus(SlotStatus.OK).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                waistsToAdd--;
-            }
-        }
-        if (rareWaists.size() > rareWaistSlots.get()) {
-            AtomicInteger waistsToRemove = new AtomicInteger(rareWaists.size() - rareWaistSlots.get());
-            rareWaists.stream().sorted((o1, o2) -> Integer.compare(o2.getIndex(), o1.getIndex())).forEach(characterItem -> {
-                if (waistsToRemove.getAndDecrement() > 0) {
-                    characterDetails.getItems().remove(characterItem);
-                    itemDetailsMap.remove(characterItem.getId());
-                }
-            });
-        } else if (rareWaists.size() < rareWaistSlots.get()) {
-            int waistsToAdd = rareWaistSlots.get() - rareWaists.size();
-            int waistsIndex = waists.stream().map(CharacterItem::getIndex).max(Integer::compare).orElse(-1);
-
-            while (waistsToAdd > 0) {
-                waistsIndex++;
-                CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.WAIST).index(waistsIndex).slotStatus(SlotStatus.OK).maxRarity(Rarity.RARE).build();
-                characterDetails.getItems().add(characterItem);
-                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                waistsToAdd--;
-            }
-        }
-
-        // Check Runestone Fitting Base
-        final List<CharacterItem> runes = characterDetails.getItems().stream().filter((i) -> i.getSlot() == Slot.RUNESTONE).collect(Collectors.toList());
-        int runeCount = (int) characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RUNESTONE).count();
-        int fittingBaseCount = (int)characterDetails.getItems().stream().filter((item) -> (item.getItemId()!=null&&item.getItemId().equals("b3079a85fd23a441af7de7dfd794d6ece2760313"))).count();
-        switch (fittingBaseCount) {
-            case 2:
-                int runesToAdd = 3 - runeCount;
-                int runeIndex = 2;
-        
-                while (runesToAdd > 0) {
-                    CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(runeIndex).slotStatus(SlotStatus.OK).build();
-                    characterDetails.getItems().add(characterItem);
-                    itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                    runesToAdd--;
-                    runeIndex--;
-                }
-                break;
-            case 1:
-                runesToAdd = 2 - runeCount;
-                runeIndex = 1;
-
-                if (runesToAdd < 0) {
-                    runes.stream().filter(characterItem -> characterItem.getIndex() > 1).forEach(characterItem -> {
-                        characterDetails.getItems().remove(characterItem);
-                        itemDetailsMap.remove(characterItem.getId());
-                    });
+        for (Slot slot : Slot.values()) {
+            int total = slotMap.get(slot).keySet().stream().map(key ->
+                    slotMap.get(slot).get(key)).reduce(0, Integer::sum);
+            slotTotals.replace(slot, Math.min(total, 10));
+            if (total > 10 && slot != Slot.SLOTLESS) {
+                total -= slotMap.get(slot).get(Rarity.ALL);
+                if (total < 0) {
+                    slotMap.get(slot).clear();
+                    slotMap.get(slot).put(Rarity.ALL, 10);
                 } else {
-                    while (runesToAdd > 0) {
-                        CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(runeIndex).slotStatus(SlotStatus.OK).build();
-                        characterDetails.getItems().add(characterItem);
-                        itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                        runesToAdd--;
-                        runeIndex--;
+                    for (Rarity rarity : slotMap.get(slot).keySet()) {
+                        if (rarity != Rarity.ALL) {
+                            if (slotMap.get(slot).get(rarity) > total) {
+                                slotMap.get(slot).replace(rarity, total);
+                                total = 0;
+                            } else
+                                total -= slotMap.get(slot).get(rarity);
+                        }
                     }
                 }
-                break;
-            default:
-                runesToAdd = 1 - runeCount;
-                runeIndex = 0;
+            }
+        }
 
-                if (runesToAdd < 0) {
-                    runes.stream().filter(characterItem -> characterItem.getIndex() > 0).forEach(characterItem -> {
-                        characterDetails.getItems().remove(characterItem);
-                        itemDetailsMap.remove(characterItem.getId());
-                    });
-                } else {
-                    while (runesToAdd > 0) {
-                        CharacterItem characterItem = CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(runeIndex).slotStatus(SlotStatus.OK).build();
-                        characterDetails.getItems().add(characterItem);
-                        itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
-                        runesToAdd--;
-                        runeIndex--;
+        if (threeRings.get()) {
+            slotTotals.replace(Slot.FINGER, 3);
+            slotMap.get(Slot.FINGER).clear();
+            slotMap.get(Slot.FINGER).put(Rarity.ALL, 3);
+        }if (noRings.get()) {
+            slotTotals.replace(Slot.FINGER, 0);
+            slotMap.get(Slot.FINGER).clear();
+            slotMap.get(Slot.FINGER).put(Rarity.ALL, 0);
+        }
+
+        for (Slot slot : slotMap.keySet()) {
+            if (slot != Slot.SLOTLESS && slot != Slot.INSTRUMENT) {
+                final TreeSet<Integer> available = new TreeSet<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
+                List<CharacterItem> items = characterDetails.getItems().stream().filter(i -> i.getSlot() == slot)
+                        .peek(i -> available.remove(i.getIndex()))
+                        .sorted(Comparator.comparing(CharacterItem::getIndex)).collect(Collectors.toList());
+
+                if (slotTotals.get(slot) != items.size()) {
+                    for (Rarity rarity : slotMap.get(slot).keySet()) {
+                        final List<CharacterItem> itemList = items.stream().filter(i -> i.getMaxRarity() == rarity).collect(Collectors.toList());
+
+                        if (slotMap.get(slot).get(rarity) > itemList.size()) {
+                            for (int x = 0; x < slotMap.get(slot).get(rarity) - itemList.size(); x++) {
+                                CharacterItem characterItem = CharacterItem.builder()
+                                        .id(UUID.randomUUID().toString())
+                                        .characterId(characterDetails.getId())
+                                        .slot(slot)
+                                        .index(available.pollFirst())
+                                        .slotStatus(SlotStatus.OK)
+                                        .build();
+                                characterDetails.getItems().add(characterItem);
+                                itemDetailsMap.put(characterItem.getId(), CharacterItemSet.builder().item(characterItem).build());
+                            }
+                        } else if (slotMap.get(slot).get(rarity) < itemList.size()) {
+                            int rarityCount = 0;
+                            for (CharacterItem characterItem : itemList) {
+                                if (++rarityCount > slotMap.get(slot).get(rarity)) {
+                                    available.add(characterItem.getIndex());
+                                    characterDetails.getItems().remove(characterItem);
+                                    itemDetailsMap.remove(characterItem.getId());
+                                }
+                            }
+                        }
                     }
                 }
-                break;
-        }
-
-/*
-        final Map<String, CharacterItem> itemsMap = new HashMap();
-        characterDetails.getItems().stream().filter((item) -> item.getItemId()!=null).forEach((item) -> {
-            itemsMap.put(item.getItemId(), item);
-        });
-
-        // Check for Medalion of Heroism
-        long fingerCount = 0;
-        if(itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78"))
-            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER).collect(Collectors.toList()));
-        else if (itemsMap.containsKey("c289cd1accbbcc7af656de459c157bdc40dbaf45")) { //Ring of Fateful Heroism 
-            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER).collect(Collectors.toList()));
-            characterDetails.getItems().add(itemsMap.get("c289cd1accbbcc7af656de459c157bdc40dbaf45"));
-            fingerCount = 1;
-        } else {
-            fingerCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.FINGER).count();
-            if(fingerCount < 2) {
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> item.getSlot()!=Slot.FINGER).collect(Collectors.toList()));
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FINGER).index(0).slotStatus(SlotStatus.OK).build());
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FINGER).index(1).slotStatus(SlotStatus.OK).build());
-                fingerCount = 2;
             }
         }
-        
-        // Check for Hand of Glory & Gloves of Glory
-        if(itemsMap.containsKey("83f0fa64bcdfcdd374b83a6189d786471d8e4213") || itemsMap.containsKey("68ca031f95876ef5b3e9099894a7ffeb02a73142")) {
-            if(fingerCount == 2)
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.FINGER).index(2).slotStatus(SlotStatus.OK).build());
-        } else {
-            if(fingerCount > 2)
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.FINGER && item.getIndex() > 1)).collect(Collectors.toList()));
-        }
-        
-        // Check for Charm Braclets & Charm Necklace
-        long charmCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.CHARM).count();
-        if(itemsMap.containsKey("0f19e0a1be0f5494e71765590d86390d40f98177") || itemsMap.containsKey("572fb173c78ab1963747b00f22cc42a89c74b7b4")) {
-            if(itemsMap.containsKey("0f19e0a1be0f5494e71765590d86390d40f98177")) {
-                if(charmCount == 3) {
-                    charmCount = 5;
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(3).slotStatus(SlotStatus.OK).build());
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(4).slotStatus(SlotStatus.OK).build());
-                } else if(charmCount == 6) {
-                    charmCount = 8;
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(6).slotStatus(SlotStatus.OK).build());
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(7).slotStatus(SlotStatus.OK).build());
-                }
-            } else {
-                if(charmCount == 8) {
-                    charmCount = 6;
-                    characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.CHARM && item.getIndex() > 5)).collect(Collectors.toList()));
-                }
-            }
-            if(itemsMap.containsKey("572fb173c78ab1963747b00f22cc42a89c74b7b4")) {
-                if(charmCount == 3) {
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(3).slotStatus(SlotStatus.OK).build());
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(4).slotStatus(SlotStatus.OK).build());
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(5).slotStatus(SlotStatus.OK).build());
-                } else if(charmCount == 5) {
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(5).slotStatus(SlotStatus.OK).build());
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(6).slotStatus(SlotStatus.OK).build());
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.CHARM).index(7).slotStatus(SlotStatus.OK).build());
-                }
-            } else {
-                if(charmCount == 8) 
-                    characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.CHARM && item.getIndex() > 4)).collect(Collectors.toList()));
-            }
-        } else {
-            if(charmCount > 3) 
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.CHARM && item.getIndex() > 2)).collect(Collectors.toList()));
-        }
-        
-        // Check for Earcuff of Orbits
-        long iounCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.IOUNSTONE).count();
-        if(itemsMap.containsKey("a898af8cb818c2f1e56acd8ddb78f0de9d4901e0")) {
-            if (iounCount == 5) {
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(5).slotStatus(SlotStatus.OK).build());
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(6).slotStatus(SlotStatus.OK).build());
-            } else if (iounCount != 7) {
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 4)).collect(Collectors.toList()));
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(5).slotStatus(SlotStatus.OK).build());
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.IOUNSTONE).index(6).slotStatus(SlotStatus.OK).build());
-            }
-        } else if(iounCount > 5) {
-            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.IOUNSTONE && item.getIndex() > 4)).collect(Collectors.toList()));
-        }
-        
-        // Check for Eldritch Runestone
-        //if(itemsMap.containsKey("db0c53293948567ee17fe0715828ba3e380e3d75")) {}
-;
-        // Check for AoW
-        long headCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.HEAD).count();
-        if(itemsMap.containsKey("69174ff87b87325b034df0adc38d418859a11a09")) {
-            if(headCount == 1) 
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.HEAD).index(1).slotStatus(SlotStatus.OK).build());
-        } else if (headCount > 1) {
-            characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.HEAD && item.getIndex() > 0)).collect(Collectors.toList()));
-        }
-        
-        // Check for Charm of Brooching
-        long backCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.BACK).count();
-        if(characterDetails.getItems().stream().filter((item) -> (item.getItemId()!=null&&item.getItemId().equals("2ea75650daa8b7025cd7887c87ccd16f6a6ca369"))).count() > 0) {
-            if(backCount == 1)
-                characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.BACK).index(1).slotStatus(SlotStatus.OK).build());
-        } else {
-            if(backCount > 1)
-                characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.BACK && item.getIndex() > 0)).collect(Collectors.toList()));
-        }
-        
-        // Check Runestone Fitting Base
-        long runeCount = characterDetails.getItems().stream().filter((item) -> item.getSlot()==Slot.RUNESTONE).count();
-        int fittingBaseCount = (int)characterDetails.getItems().stream().filter((item) -> (item.getItemId()!=null&&item.getItemId().equals("b3079a85fd23a441af7de7dfd794d6ece2760313"))).count();
-        switch (fittingBaseCount) {
-            case 2:
-                if(runeCount == 2)
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(2).slotStatus(SlotStatus.OK).build());
-                break;
-            case 1:
-                if(runeCount > 2)
-                    characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.RUNESTONE && item.getIndex() > 1)).collect(Collectors.toList()));
-                else if(runeCount == 1)
-                    characterDetails.getItems().add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterDetails.getId()).slot(Slot.RUNESTONE).index(1).slotStatus(SlotStatus.OK).build());
-                break;
-            default:
-                if(runeCount > 1)
-                    characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.RUNESTONE && item.getIndex() > 0)).collect(Collectors.toList()));
-                break;
-        }
-
- */
     } 
     
     private void addSlotsForFullItems(CharacterDetails characterDetails) {
@@ -2212,8 +1739,8 @@ public class CharacterServiceImpl implements CharacterService {
                 }
             }
 
-            if (item.getTokenFullDetails().getFigurineSlots() > 0);
-                figurineSlots.getAndAdd(item.getTokenFullDetails().getFigurineSlots());
+           // if (item.getTokenFullDetails().getFigurineSlots() > 0);
+             //   figurineSlots.getAndAdd(item.getTokenFullDetails().getFigurineSlots());
         });
 
         // Check Conditionals 
@@ -2360,6 +1887,7 @@ public class CharacterServiceImpl implements CharacterService {
         final List<CharacterItem> failedConditions = new ArrayList<>();
         conditionalTokens.stream().filter(token -> retryTokens == null || retryTokens.contains(token)).forEach((token) -> {
             TokenFullDetails td = tokenAdminMapper.getTokenDetails(token.getItemId());
+            td.setSlotModifiers(tokenAdminMapper.getSlotModifiers(td.getId()));
             if(null != td.getConditionalUse()) switch (td.getConditionalUse()) {
                 case NOT_WITH_ROSP:
                     if(metCondition.contains(ConditionalUse.NOT_WITH_ROSP)) {

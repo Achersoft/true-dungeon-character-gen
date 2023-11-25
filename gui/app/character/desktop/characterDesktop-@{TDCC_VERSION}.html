@@ -46,6 +46,18 @@
                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
                 </div>
             </div>
+            <div style="display:flex;max-width:866px;margin-top:10px" ng-if="slotlessRow5.length > 0">
+                <div style="width:121px"></div>
+                <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow5 track by $index" ng-repeat-end>
+                   <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
+                </div>
+            </div>
+            <div style="display:flex;max-width:866px;margin-top:10px" ng-if="slotlessRow6.length > 0">
+                <div style="width:121px"></div>
+                <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow6 track by $index" ng-repeat-end>
+                   <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
+                </div>
+            </div>
             <div style="display:flex;max-width:866px;margin-top:2px" ng-repeat-start="slotlessError in slotlessErrors track by $index" ng-repeat-end>
                 <label class="error-text">{{slotlessError}}</label>
             </div>
@@ -225,6 +237,12 @@
                     </div>
                     <label class="text-left" style="font-size:28px;padding-left:5px;margin-top:8px">:Runestones</label>
                 </div>
+                <div style="display:flex;margin-top:10px">
+                    <div style="padding:0;width:70px" ng-repeat-start="safehold in characterContext.safeholds track by $index" ng-repeat-end>
+                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="left-bottom" set-token="setTokenSlot" unequip="unequipItem" model="safehold" label="Safehold"></token-selector>
+                    </div>
+                    <label class="text-left" style="font-size:28px;padding-left:5px;margin-top:8px">:Safehold</label>
+                </div>
             </div>
         </div>
         <center>
@@ -387,6 +405,11 @@
         <div ng-if="characterContext.runestones !== null && characterContext.runestones.length > 0">
             <div class="col-xs-12" style="padding:0" ng-repeat-start="runestone in characterContext.runestones track by $index" ng-repeat-end>
                 <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="runestone{{$index}}" model="runestone" label="Runestone"></item-desktop-selector>
+            </div>
+        </div>
+        <div ng-if="characterContext.safeholds !== null && characterContext.safeholds.length > 0">
+            <div class="col-xs-12" style="padding:0" ng-repeat-start="safehold in characterContext.safeholds track by $index" ng-repeat-end>
+                <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="safehold{{$index}}" model="safehold" label="Safehold"></item-desktop-selector>
             </div>
         </div>
         <center style="margin-bottom:15px">

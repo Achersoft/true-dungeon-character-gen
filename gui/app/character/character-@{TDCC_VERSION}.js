@@ -119,6 +119,9 @@ angular.module('main')
     $scope.slotlessRow1 = [];
     $scope.slotlessRow2 = [];
     $scope.slotlessRow3 = [];
+    $scope.slotlessRow4 = [];
+    $scope.slotlessRow5 = [];
+    $scope.slotlessRow6 = [];
     
     characterSvc.getCharacter($routeParams.characterId).then(function(result) {
         characterState.setContext(result.data);
@@ -179,6 +182,8 @@ angular.module('main')
         slotlessRow2 = [];
         slotlessRow3 = [];
         slotlessRow4 = [];
+        slotlessRow5 = [];
+        slotlessRow6 = [];
         
         if($scope.characterContext.slotless.length > 0) {
             $scope.characterContext.slotless.forEach(function(item, index) {
@@ -188,14 +193,20 @@ angular.module('main')
                     slotlessRow2.push(item);
                 if(index >= 20 && index < 30)
                     slotlessRow3.push(item);
-                if(index >= 30)
+                if(index >= 30 && index < 40)
                     slotlessRow4.push(item);
+                if(index >= 40 && index < 50)
+                    slotlessRow5.push(item);
+                if(index >= 50)
+                    slotlessRow6.push(item);
             });
             
             $scope.slotlessRow1 = slotlessRow1;
             $scope.slotlessRow2 = slotlessRow2;
             $scope.slotlessRow3 = slotlessRow3;
             $scope.slotlessRow4 = slotlessRow4;
+            $scope.slotlessRow5 = slotlessRow5;
+            $scope.slotlessRow6 = slotlessRow6;
         }
         
         if($scope.characterContext.rings.length > 0) {

@@ -1,5 +1,6 @@
 package com.achersoft.tdcc.token.admin;
 
+import com.achersoft.tdcc.token.admin.dao.SlotModifier;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import java.util.List;
@@ -17,12 +18,21 @@ public class TokenAdminServiceImpl implements TokenAdminService {
         token.setId(DigestUtils.sha1Hex(token.getName()));
         mapper.addToken(token);
         mapper.addTokenDetails(token);
+        if (token.getSlotModifiers() != null) {
+            for (SlotModifier slotModifier : token.getSlotModifiers())
+                mapper.addSlotModifier(slotModifier);
+        }
     }
     
     @Override
     public void editToken(TokenFullDetails token) {
         mapper.editToken(token);
         mapper.editTokenDetails(token);
+        mapper.deleteSlotModifier(token.getId());
+        if (token.getSlotModifiers() != null) {
+            for (SlotModifier slotModifier : token.getSlotModifiers())
+                mapper.addSlotModifier(slotModifier);
+        }
     }
     
     @Override

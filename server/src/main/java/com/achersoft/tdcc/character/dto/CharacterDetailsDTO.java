@@ -25,14 +25,13 @@ public class CharacterDetailsDTO {
     public CharacterStats stats;
     public Set<CharacterItemDTO> heads;
     public Set<CharacterItemDTO> eyes;
-    public CharacterItemDTO leftEar;
-    public CharacterItemDTO rightEar;
+    public Set<CharacterItemDTO> ears;
     public Set<CharacterItemDTO> bead;
-    public CharacterItemDTO neck;
+    public Set<CharacterItemDTO> necks;
+    public Set<CharacterItemDTO> torsos;
+    public Set<CharacterItemDTO> wrists;
+    public Set<CharacterItemDTO> hands;
     public CharacterItemDTO aow;
-    public CharacterItemDTO torso;
-    public CharacterItemDTO wrists;
-    public CharacterItemDTO hands;
     public CharacterItemDTO meleeMainhand;
     public CharacterItemDTO meleeOffhand;
     public Set<CharacterItemDTO> instruments;
@@ -43,13 +42,17 @@ public class CharacterDetailsDTO {
     public Set<CharacterItemDTO> waist;
     public Set<CharacterItemDTO> shirt;
     public Set<CharacterItemDTO> boots;
-    public CharacterItemDTO shins;
+    public Set<CharacterItemDTO> shins;
     public Set<CharacterItemDTO> legs;
     public Set<CharacterItemDTO> figurines;
     public Set<CharacterItemDTO> charms;
     public Set<CharacterItemDTO> iounStones;
     public Set<CharacterItemDTO> slotless;
     public Set<CharacterItemDTO> runestones;
+    public Set<CharacterItemDTO> safeholds;
+    public Set<CharacterItemDTO> hirelings;
+    public Set<CharacterItemDTO> underlings;
+    public Set<CharacterItemDTO> followers;
     public List<String> alwaysInEffect;
     public List<String> oncePerRound;
     public List<String>  oncePerRoom;
@@ -67,8 +70,15 @@ public class CharacterDetailsDTO {
                 .instruments(new TreeSet<>())
                 .heads(new TreeSet<>())
                 .eyes(new TreeSet<>())
+                .ears(new TreeSet<>())
+                .bead(new TreeSet<>())
+                .necks(new TreeSet<>())
+                .torsos(new TreeSet<>())
+                .wrists(new TreeSet<>())
+                .hands(new TreeSet<>())
                 .backs(new TreeSet<>())
                 .boots(new TreeSet<>())
+                .shins(new TreeSet<>())
                 .legs(new TreeSet<>())
                 .shirt(new TreeSet<>())
                 .waist(new TreeSet<>())
@@ -78,6 +88,10 @@ public class CharacterDetailsDTO {
                 .slotless(new TreeSet<>())
                 .figurines(new TreeSet<>())
                 .runestones(new TreeSet<>())
+                .safeholds(new TreeSet<>())
+                .hirelings(new TreeSet<>())
+                .underlings(new TreeSet<>())
+                .followers(new TreeSet<>())
                 .alwaysInEffect(new ArrayList<>())
                 .oncePerRound(new ArrayList<>())
                 .oncePerRoom(new ArrayList<>())
@@ -92,24 +106,20 @@ public class CharacterDetailsDTO {
                 build.heads.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.EYES)
                 build.eyes.add(CharacterItemDTO.fromDAO(item));
-            if(item.getSlot() == Slot.EAR) {
-               if(item.getIndex() == 0)  
-                   build.leftEar = CharacterItemDTO.fromDAO(item);
-               if(item.getIndex() == 1)  
-                   build.rightEar = CharacterItemDTO.fromDAO(item);
-            }
+            if(item.getSlot() == Slot.EAR)
+                build.ears.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.NECK)
-                build.neck = CharacterItemDTO.fromDAO(item);
+                build.necks.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.BEAD)
                 build.bead.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.AOW)
                 build.aow = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.TORSO)
-                build.torso = CharacterItemDTO.fromDAO(item);
+                build.torsos.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.WRIST)
-                build.wrists = CharacterItemDTO.fromDAO(item);
+                build.wrists.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.HANDS)
-                build.hands = CharacterItemDTO.fromDAO(item);
+                build.hands.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.MAINHAND)
                 build.meleeMainhand = CharacterItemDTO.fromDAO(item);
             if(item.getSlot() == Slot.OFFHAND)
@@ -131,7 +141,7 @@ public class CharacterDetailsDTO {
             if(item.getSlot() == Slot.FEET)
                 build.boots.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.SHINS)
-                build.shins = CharacterItemDTO.fromDAO(item);
+                build.shins.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.LEGS)
                 build.legs.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.FIGURINE)
@@ -144,6 +154,14 @@ public class CharacterDetailsDTO {
                 build.slotless.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.RUNESTONE)
                 build.runestones.add(CharacterItemDTO.fromDAO(item));
+            if(item.getSlot() == Slot.SAFEHOLD)
+                build.safeholds.add(CharacterItemDTO.fromDAO(item));
+            if(item.getSlot() == Slot.HIRELING)
+                build.hirelings.add(CharacterItemDTO.fromDAO(item));
+            if(item.getSlot() == Slot.UNDERLING)
+                build.underlings.add(CharacterItemDTO.fromDAO(item));
+            if(item.getSlot() == Slot.FOLLOWER)
+                build.followers.add(CharacterItemDTO.fromDAO(item));
         });
         
         if(dao.getNotes() != null) {

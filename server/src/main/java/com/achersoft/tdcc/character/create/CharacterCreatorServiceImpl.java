@@ -105,18 +105,9 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
                     continue;
 
                 final TokenFullDetails tokenDetails = tokenAdminMapper.getTokenDetails(item.getItemId());
+                tokenDetails.setSlotModifiers(tokenAdminMapper.getSlotModifiers(tokenDetails.getId()));
 
-                if (tokenDetails.getRareShirtSlots() > 0 ||
-                        tokenDetails.getRareWaistSlots() > 0 ||
-                        tokenDetails.getRareLegSlots() > 0 ||
-                        tokenDetails.getRareFeetSlots() > 0 ||
-                        tokenDetails.getRareEyeSlots() > 0 ||
-                        tokenDetails.getFigurineSlots() > 0 ||
-                        tokenDetails.getEyeSlots() > 0 ||
-                        tokenDetails.getBackSlots() > 0 ||
-                        tokenDetails.getCharmSlots() > 0 ||
-                        tokenDetails.getHeadSlots() > 0 ||
-                        tokenDetails.getStoneSlots() > 0) {
+                if (tokenDetails.getSlotModifiers() != null && !tokenDetails.getSlotModifiers().isEmpty()) {
                     CharacterItem charItem = characterDetails.get().getItems().stream().filter(i -> (i.getItemId()==null || i.getItemId().isEmpty()) && i.getSlot().equals(item.getSlot()))
                             .min(Comparator.comparing(CharacterItem::getIndex)).orElse(null);
                     if (charItem != null)
@@ -402,39 +393,11 @@ public class CharacterCreatorServiceImpl implements CharacterCreatorService {
     
     private List<CharacterItem> createDefaultItems(String characterId) {
         List<CharacterItem> items = new ArrayList();
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.HEAD).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.EYES).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.EAR).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.EAR).index(1).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.NECK).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.BEAD).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.TORSO).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.WRIST).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.HANDS).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.MAINHAND).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.RANGE_MAINHAND).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.RANGE_OFFHAND).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.BACK).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.FINGER).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.FINGER).index(1).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.FIGURINE).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.WAIST).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.SHIRT).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.FEET).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.LEGS).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.SHINS).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.CHARM).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.CHARM).index(1).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.CHARM).index(2).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.IOUNSTONE).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.IOUNSTONE).index(1).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.IOUNSTONE).index(2).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.IOUNSTONE).index(3).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.IOUNSTONE).index(4).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.SLOTLESS).index(0).slotStatus(SlotStatus.OK).build());
-        items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(Slot.RUNESTONE).index(0).slotStatus(SlotStatus.OK).build());
-        
+        for (Slot value : Slot.values()) {
+            for (int i=0; i<value.defaultSize; i++)
+                items.add(CharacterItem.builder().id(UUID.randomUUID().toString()).characterId(characterId).slot(value).index(i).slotStatus(SlotStatus.OK).build());
+        }
+
         return items;
     }
 }

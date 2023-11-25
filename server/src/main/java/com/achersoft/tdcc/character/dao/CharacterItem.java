@@ -19,6 +19,7 @@ public class CharacterItem implements Comparable<CharacterItem>{
     private String itemId;
     private String characterId;
     private String name;
+    private String imgName;
     private String text;
     private Slot slot;
     private int index;

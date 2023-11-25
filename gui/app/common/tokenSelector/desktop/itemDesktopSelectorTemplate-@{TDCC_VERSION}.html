@@ -3,7 +3,7 @@
         <label class="text-right" style="font-size:28px;margin-top:35px;width:225px" ng-class="{'error-text': model.slotStatus === 'INVALID'}">{{label}}:</label>
     </div>
     <div style="width:115px">
-        <img class="img-thumbnail img-responsive img-circle" ng-src="{{model.itemId === null && 'images/empty.jpg' || imgBaseURL+model.imgName+'.jpg'}}" alt="" width="115px" style="border:none" 
+        <img class="img-thumbnail img-responsive img-circle" ng-src="{{model.itemId === null && 'images/empty.jpg' || imgBaseURL+model.imgName}}" alt="" width="115px" style="border:none" 
              ng-class="{ 'common-token': model.rarity === 'COMMON', 'reward-token': model.rarity === 'PLAYER_REWARD', 'uncommon-token': model.rarity === 'UNCOMMON', 'rare-token': model.rarity === 'RARE', 'ultrarare-token': model.rarity === 'ULTRARARE', 'enhanced-token': model.rarity === 'ENHANCED', 'exalted-token': model.rarity === 'EXALTED', 'relic-token': model.rarity === 'RELIC', 'legendary-token': model.rarity === 'LEGENDARY', 'eldritch-token': model.rarity === 'ELDRITCH', 'premium-token': model.rarity === 'PREMIUM', 'artifact-token': model.rarity === 'ARTIFACT' }"> 
     </div>
     <div style="flex:1;margin-top:10px;">

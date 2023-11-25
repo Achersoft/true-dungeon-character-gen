@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Builder
 @Data
@@ -18,6 +20,7 @@ import java.util.List;
 public class TokenFullDetails {
     private String id;
     private String name;
+    private String imgName;
     private String text;
     private Rarity rarity;
     private Slot slot;
@@ -123,17 +126,7 @@ public class TokenFullDetails {
     private int drSacred;
     private int drForce;
     private int drAcid;
-    private int headSlots;
-    private int backSlots;
-    private int stoneSlots;
-    private int charmSlots;
-    private int eyeSlots;
-    private int figurineSlots;
-    private int rareEyeSlots;
-    private int rareFeetSlots;
-    private int rareLegSlots;
-    private int rareShirtSlots;
-    private int rareWaistSlots;
+    private Set<SlotModifier> slotModifiers;
     private ConditionalUse conditionalUse;
     private boolean alwaysInEffect;
     private boolean oncePerRound;

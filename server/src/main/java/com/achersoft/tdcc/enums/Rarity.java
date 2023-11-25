@@ -14,7 +14,8 @@ public enum Rarity {
     ELDRITCH("#165417"),
     PREMIUM("#3E7C3F"),
     ARTIFACT("blueviolet"),
-    PLAYER_REWARD("#c4c4c4");
+    PLAYER_REWARD("#c4c4c4"),
+    SAFEHOLD("#eaeaea");
     
     public final String htmlColor; 
     Rarity(String htmlColor) {

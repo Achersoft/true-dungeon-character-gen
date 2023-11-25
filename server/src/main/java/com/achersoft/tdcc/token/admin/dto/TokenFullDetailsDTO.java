@@ -1,10 +1,12 @@
 package com.achersoft.tdcc.token.admin.dto;
 
 import com.achersoft.tdcc.enums.*;
+import com.achersoft.tdcc.token.admin.dao.SlotModifier;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +22,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class TokenFullDetailsDTO {
     public String id;
     public @NotNull @NotEmpty String name;
+    public String imgName;
     public String text;
     public @NotNull Rarity rarity;
     public @NotNull Slot slot;
@@ -114,17 +117,7 @@ public class TokenFullDetailsDTO {
     public Integer drSacred;
     public Integer drForce;
     public Integer drAcid;
-    public Integer headSlots;
-    public Integer backSlots;
-    public Integer stoneSlots;
-    public Integer charmSlots;
-    public Integer eyeSlots;
-    public Integer figurineSlots;
-    public Integer rareEyeSlots;
-    public Integer rareFeetSlots;
-    public Integer rareLegSlots;
-    public Integer rareShirtSlots;
-    public Integer rareWaistSlots;
+    public Set<SlotModifier> slotModifiers;
     public ConditionalUse conditionalUse;
     public Boolean alwaysInEffect;
     public Boolean oncePerRound;
@@ -156,6 +149,7 @@ public class TokenFullDetailsDTO {
         TokenFullDetailsDTO build = TokenFullDetailsDTO.builder()
                 .id(tokenFullDetails.getId())
                 .name(tokenFullDetails.getName())
+                .imgName(tokenFullDetails.getImgName())
                 .text(tokenFullDetails.getText())
                 .rarity(tokenFullDetails.getRarity())
                 .slot(tokenFullDetails.getSlot())
@@ -248,17 +242,7 @@ public class TokenFullDetailsDTO {
                 .drSacred(tokenFullDetails.getDrSacred())
                 .drForce(tokenFullDetails.getDrForce())
                 .drAcid(tokenFullDetails.getDrAcid())
-                .headSlots(tokenFullDetails.getHeadSlots())
-                .backSlots(tokenFullDetails.getBackSlots())
-                .charmSlots(tokenFullDetails.getCharmSlots())
-                .stoneSlots(tokenFullDetails.getStoneSlots())
-                .eyeSlots(tokenFullDetails.getEyeSlots())
-                .figurineSlots(tokenFullDetails.getFigurineSlots())
-                .rareEyeSlots(tokenFullDetails.getRareEyeSlots())
-                .rareFeetSlots(tokenFullDetails.getRareFeetSlots())
-                .rareLegSlots(tokenFullDetails.getRareLegSlots())
-                .rareShirtSlots(tokenFullDetails.getRareShirtSlots())
-                .rareWaistSlots(tokenFullDetails.getRareWaistSlots())
+                .slotModifiers(tokenFullDetails.getSlotModifiers())
                 .conditionalUse(tokenFullDetails.getConditionalUse())
                 .alwaysInEffect(tokenFullDetails.isAlwaysInEffect())
                 .oncePerRound(tokenFullDetails.isOncePerRound())
@@ -329,6 +313,7 @@ public class TokenFullDetailsDTO {
         TokenFullDetails build = TokenFullDetails.builder()
                 .id(id)
                 .name(name)
+                .imgName(imgName)
                 .text(text)
                 .rarity(rarity)
                 .slot(slot)
@@ -421,17 +406,7 @@ public class TokenFullDetailsDTO {
                 .drSacred(drSacred)
                 .drForce(drForce)
                 .drAcid(drAcid)
-                .headSlots(headSlots)
-                .backSlots(backSlots)
-                .charmSlots(charmSlots)
-                .stoneSlots(stoneSlots)
-                .figurineSlots(figurineSlots)
-                .eyeSlots(eyeSlots)
-                .rareEyeSlots(this.getRareEyeSlots() == null ? 0 : this.getRareEyeSlots())
-                .rareFeetSlots(this.getRareFeetSlots() == null ? 0 : this.getRareFeetSlots())
-                .rareLegSlots(this.getRareLegSlots() == null ? 0 : this.getRareLegSlots())
-                .rareShirtSlots(this.getRareShirtSlots() == null ? 0 : this.getRareShirtSlots())
-                .rareWaistSlots(this.getRareWaistSlots() == null ? 0 : this.getRareWaistSlots())
+                .slotModifiers(slotModifiers)
                 .conditionalUse((conditionalUse != null)?conditionalUse:ConditionalUse.NONE)
                 .alwaysInEffect(alwaysInEffect)
                 .oncePerRound(oncePerRound)

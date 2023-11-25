@@ -22,6 +22,8 @@ import com.achersoft.tdcc.token.admin.TokenAdminService;
 import com.achersoft.tdcc.token.admin.TokenAdminServiceImpl;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import com.achersoft.tdcc.token.persistence.TokenMapper;
+import com.achersoft.tdcc.tokendb.TokenSyncService;
+import com.achersoft.tdcc.tokendb.TokenSyncServiceImpl;
 import com.achersoft.tdcc.vtd.VirtualTdRollerService;
 import com.achersoft.tdcc.vtd.VirtualTdRollerServiceImpl;
 import com.achersoft.tdcc.vtd.VirtualTdService;
@@ -93,6 +95,9 @@ public class SpringConfig {
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc="Services">
+    @Bean
+    public TokenSyncService tokenSyncService() { return new TokenSyncServiceImpl(); }
+
     @Bean
     public CharacterService characterService() {
         return new CharacterServiceImpl();

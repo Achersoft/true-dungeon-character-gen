@@ -1,8 +1,7 @@
-package com.achersoft.tdcc.token.dao;
+package com.achersoft.tdcc.token.admin.dao;
 
 import com.achersoft.tdcc.enums.Rarity;
 import com.achersoft.tdcc.enums.Slot;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,12 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor 
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Token {
+public class SlotModifier {
     private String id;
-    private String name;
-    private String imgName;
-    private String text;
-    private Rarity rarity;
     private Slot slot;
+    private Rarity rarity;
+    private int modifier;
 }

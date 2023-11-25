@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 @Builder
 @Data
@@ -25,7 +26,9 @@ public class TokenDTO {
     public static TokenDTO fromDAO(Token dao) {
         return TokenDTO.builder()
                 .id(dao.getId())
-                .imgName(dao.getName().replaceAll("’","").replaceAll(",", "").replaceAll(":", "").replaceAll(" ","-"))
+                .imgName(StringUtils.isBlank(dao.getImgName()) ?
+                        dao.getName().replaceAll("’","").replaceAll(",", "").replaceAll(":", "").replaceAll(" ","-") + ".jpg" :
+                        dao.getImgName())
                 .name(dao.getName())
                 .text(dao.getText())
                 .slot(dao.getSlot())

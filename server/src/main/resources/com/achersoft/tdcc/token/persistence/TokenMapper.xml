@@ -6,6 +6,7 @@
     <select id="getWeaponSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
          SELECT t.id,
                 t.name,
+                t.imgName,
                 t.text,
                 t.rarity,
                 t.slot
@@ -106,6 +107,7 @@
     <select id="getNonWeaponSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
          SELECT t.id,
                 t.name,
+                t.imgName,
                 t.text,
                 t.rarity,
                 t.slot
@@ -188,6 +190,7 @@
     <select id="getRunestoneSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
          SELECT t.id,
                 t.name,
+                t.imgName,
                 t.text,
                 t.rarity,
                 t.slot
@@ -236,6 +239,7 @@
     <select id="getAoWSlotItems" resultType="com.achersoft.tdcc.token.dao.Token"> 
          SELECT t.id,
                 t.name,
+                t.imgName,
                 t.text,
                 t.rarity,
                 t.slot
