@@ -282,6 +282,26 @@
                 </div>
             </div>
         </center>
+        <center>
+            <div ng-if="characterContext.hirelings !== null && characterContext.hirelings.length > 0" style="display:flex;max-width:750px;margin-top:0px;margin-bottom:15px;">
+                <label  style="font-size:28px;padding-left:5px;padding-right:27px;margin-top:8px">Hirelings:</label>
+                <div style="padding:0;width:70px" ng-repeat-start="hireling in characterContext.hirelings track by $index" ng-repeat-end>
+                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="hireling" label="Hirelings"></token-selector>
+                </div>
+            </div>
+            <div ng-if="characterContext.underlings !== null && characterContext.underlings.length > 0" style="display:flex;max-width:750px;margin-top:0px;margin-bottom:15px;">
+                <label  style="font-size:28px;padding-left:5px;margin-top:8px">Underlings:</label>
+                <div style="padding:0;width:70px" ng-repeat-start="underling in characterContext.underlings track by $index" ng-repeat-end>
+                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="underling" label="Underlings"></token-selector>
+                </div>
+            </div>
+            <div ng-if="characterContext.followers !== null && characterContext.followers.length > 0" style="display:flex;max-width:750px;margin-top:0px;margin-bottom:15px;">
+                <label  style="font-size:28px;padding-left:5px;padding-right:18px;margin-top:8px">Followers:</label>
+                <div style="padding:0;width:70px" ng-repeat-start="follower in characterContext.followers track by $index" ng-repeat-end>
+                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="follower" label="Followers"></token-selector>
+                </div>
+            </div>
+        </center>
         <center style="margin-bottom:15px">
             Token images are the property of True Adventures, LTD. and may only be used with the express written consent of True Adventures, LTD.
         </center>
