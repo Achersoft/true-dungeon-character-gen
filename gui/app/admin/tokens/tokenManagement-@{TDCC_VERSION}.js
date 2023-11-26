@@ -275,6 +275,19 @@ angular.module('main')
         $scope.search.conditionalUse = conditionalUse;
     };
     
+    $scope.addSlotModifier =  function(){
+        $scope.search.slotModifiers.push({
+                id: $scope.search.id,
+                slot: null,
+                rarity: null,
+                modifier: null});
+    };
+    
+     $scope.deleteSlotModifier =  function(slotMod){
+        $scope.search.slotModifiers.splice($scope.search.slotModifiers.indexOf(slotMod), 1);
+    };
+    
+    
     $scope.editToken = function(){
         if ($scope.search.damageRange !== null && $scope.search.damageRange === '')
             $scope.search.damageRange = null;

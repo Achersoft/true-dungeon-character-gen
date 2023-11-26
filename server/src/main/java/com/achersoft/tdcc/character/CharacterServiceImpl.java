@@ -1164,6 +1164,7 @@ public class CharacterServiceImpl implements CharacterService {
                                         .characterId(characterDetails.getId())
                                         .slot(slot)
                                         .index(available.pollFirst())
+                                        .maxRarity(rarity)
                                         .slotStatus(SlotStatus.OK)
                                         .build();
                                 characterDetails.getItems().add(characterItem);

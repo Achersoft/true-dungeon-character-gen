@@ -4,6 +4,7 @@ import com.achersoft.tdcc.token.admin.dao.SlotModifier;
 import com.achersoft.tdcc.token.admin.dao.TokenFullDetails;
 import com.achersoft.tdcc.token.admin.persistence.TokenAdminMapper;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,6 @@ public class TokenAdminServiceImpl implements TokenAdminService {
     
     @Override
     public List<TokenFullDetails> search(String name) {
-        return mapper.search(name);
+        return mapper.search(name).stream().peek(td -> td.setSlotModifiers(mapper.getSlotModifiers(td.getId()))).collect(Collectors.toList());
     }
 }
