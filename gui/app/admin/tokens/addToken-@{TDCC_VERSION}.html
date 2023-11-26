@@ -406,54 +406,31 @@
         </div>
     </div>  
     <hr>
-    <div class="row">
-        <div class="col-md-3">
-            <label>Head slots:</label>
-            <input type="number" class="form-control" ng-model="search.headSlots"/>
-        </div>
-        <div class="col-md-3">
-            <label>Back Slots:</label>
-            <input type="number" class="form-control" ng-model="search.backSlots"/>
-        </div>
-        <div class="col-md-3">
-            <label>Stone Slots:</label>
-            <input type="number" class="form-control" ng-model="search.stoneSlots"/>
-        </div>
-        <div class="col-md-3">
-            <label>charm Slots:</label>
-            <input type="number" class="form-control" ng-model="search.charmSlots"/>
-        </div>
+    <div class="row col-md-12 text-left">
+        <button class="btn btn-primary" ng-click="addSlotModifier()">
+            <span class="fa fa-save" ></span> Add Slot Modifier
+        </button>
     </div>
-    <div class="row">
-        <div class="col-md-3">
-            <label>Eye slots:</label>
-            <input type="number" class="form-control" ng-model="search.eyeSlots"/>
-        </div>
-        <div class="col-md-3">
-            <label>Figurine Slots:</label>
-            <input type="number" class="form-control" ng-model="search.figurineSlots"/>
-        </div>
-        <div class="col-md-3">
-            <label>Rare Eye slots:</label>
-            <input type="number" class="form-control" ng-model="search.rareEyeSlots"/>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-3">
-            <label>Rare Feet Slots:</label>
-            <input type="number" class="form-control" ng-model="search.rareFeetSlots"/>
-        </div>
-        <div class="col-md-3">
-            <label>Rare Leg Slots:</label>
-            <input type="number" class="form-control" ng-model="search.rareLegSlots"/>
-        </div>
-        <div class="col-md-3">
-            <label>Rare Shirt Slots:</label>
-            <input type="number" class="form-control" ng-model="search.rareShirtSlots"/>
-        </div>
-        <div class="col-md-3">
-            <label>Rare Waist Slots:</label>
-            <input type="number" class="form-control" ng-model="search.rareWaistSlots"/>
+    <div class="row col-md-12">
+        <div class="table-responsive" style="border:none;margin-top:10px">          
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Rarity</th>
+                        <th>Modifier</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="slotModifier in search.slotModifiers" ng-repeat-end>
+                        <td><input class="form-control" type="text" ng-model="slotModifier.slot"/></td>
+                        <td><input class="form-control" type="text" ng-model="slotModifier.rarity"/></td>
+                        <td><input type="number" class="form-control" ng-model="slotModifier.modifier"/></td>
+                        <td><a ng-click="deleteSlotModifier(slotModifier)" href=""><span class="fa fa-trash-o" style="font-size:14px;"></span></a></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <hr>

@@ -1094,8 +1094,14 @@ public class CharacterServiceImpl implements CharacterService {
 
         for (Slot slot : Slot.values()) {
             slotMap.put(slot, new TreeMap<>());
-            slotMap.get(slot).put(Rarity.ALL, slot.defaultSize);
             slotTotals.put(slot, slot.defaultSize);
+
+            for (Rarity rarity : Rarity.values()) {
+                if (rarity == Rarity.ALL)
+                    slotMap.get(slot).put(Rarity.ALL, slot.defaultSize);
+                else
+                    slotMap.get(slot).put(rarity, 0);
+            }
         }
 
         itemDetailsMap.values().stream().filter(characterItemSet -> characterItemSet.getTokenFullDetails() != null).forEach(characterItemSet -> {

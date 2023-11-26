@@ -145,10 +145,7 @@ angular.module('main')
                     drSacred: 0,
                     drForce: 0,
                     drAcid: 0,
-                    headSlots: 0,
-                    backSlots: 0,
-                    stoneSlots: 0,
-                    charmSlots: 0,
+                    slotModifiers: [],
                     alwaysInEffect: false,
                     oncePerRound: false,
                     oncePerRoom: false,
@@ -207,6 +204,18 @@ angular.module('main')
     
     $scope.toggleConditionalSelected =  function(conditionalUse){
         $scope.search.conditionalUse = conditionalUse;
+    };
+    
+    $scope.addSlotModifier =  function(){
+        $scope.search.slotModifiers.push({
+                id: null,
+                slot: null,
+                rarity: null,
+                modifier: null});
+    };
+    
+    $scope.deleteSlotModifier =  function(slotMod){
+        $scope.search.slotModifiers.splice($scope.search.slotModifiers.indexOf(slotMod), 1);
     };
     
     $scope.addToken = function(){
@@ -283,10 +292,9 @@ angular.module('main')
                 modifier: null});
     };
     
-     $scope.deleteSlotModifier =  function(slotMod){
+    $scope.deleteSlotModifier =  function(slotMod){
         $scope.search.slotModifiers.splice($scope.search.slotModifiers.indexOf(slotMod), 1);
     };
-    
     
     $scope.editToken = function(){
         if ($scope.search.damageRange !== null && $scope.search.damageRange === '')
@@ -431,17 +439,7 @@ angular.module('main')
                 drSacred: 0,
                 drForce: 0,
                 drAcid: 0,
-                headSlots: 0,
-                backSlots: 0,
-                stoneSlots: 0,
-                charmSlots: 0,
-                eyeSlots: 0,
-                figurineSlots: 0,
-                rareEyeSlots: 0,
-                rareFeetSlots: 0,
-                rareLegSlots: 0,
-                rareShirtSlots: 0,
-                rareWaistSlots: 0,
+                slotModifiers: [],
                 conditionalUse: 'NONE',
                 alwaysInEffect: false,
                 oncePerRound: false,
@@ -569,10 +567,7 @@ angular.module('main')
                     drSacred: 0,
                     drForce: 0,
                     drAcid: 0,
-                    headSlots: 0,
-                    backSlots: 0,
-                    stoneSlots: 0,
-                    charmSlots: 0,
+                    slotModifiers: [],
                     alwaysInEffect: false,
                     oncePerRound: false,
                     oncePerRoom: false,
@@ -682,10 +677,7 @@ angular.module('main')
                     drSacred: 0,
                     drForce: 0,
                     drAcid: 0,
-                    headSlots: 0,
-                    backSlots: 0,
-                    stoneSlots: 0,
-                    charmSlots: 0,
+                    slotModifiers: [],
                     alwaysInEffect: false,
                     oncePerRound: false,
                     oncePerRoom: false,

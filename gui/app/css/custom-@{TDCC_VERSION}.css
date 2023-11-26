@@ -199,6 +199,10 @@
     background-color:#c4c4c4;
 }
 
+.safehold-token {
+    background-color:#eaeaea;
+}
+
 .toggle-switch {
     min-width: 200px;
     border-color: lightgray;

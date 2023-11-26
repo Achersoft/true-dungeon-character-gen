@@ -20,8 +20,10 @@ public class TokenAdminServiceImpl implements TokenAdminService {
         mapper.addToken(token);
         mapper.addTokenDetails(token);
         if (token.getSlotModifiers() != null) {
-            for (SlotModifier slotModifier : token.getSlotModifiers())
+            for (SlotModifier slotModifier : token.getSlotModifiers()) {
+                slotModifier.setId(token.getId());
                 mapper.addSlotModifier(slotModifier);
+            }
         }
     }
     
@@ -31,8 +33,10 @@ public class TokenAdminServiceImpl implements TokenAdminService {
         mapper.editTokenDetails(token);
         mapper.deleteSlotModifier(token.getId());
         if (token.getSlotModifiers() != null) {
-            for (SlotModifier slotModifier : token.getSlotModifiers())
+            for (SlotModifier slotModifier : token.getSlotModifiers()) {
+                slotModifier.setId(token.getId());
                 mapper.addSlotModifier(slotModifier);
+            }
         }
     }
     
