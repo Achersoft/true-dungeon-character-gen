@@ -8,6 +8,7 @@ public enum ConditionalUse {
     DEXTERITY_20(false),
     INTELLECT_20(false),
     WISDOM_20(false),
+    WEAPON_2H_ANY(false),
     WEAPON_2H(false),
     WEAPON_1H(false),
     WEAPON_RANGED(false),
@@ -50,7 +51,8 @@ public enum ConditionalUse {
     GOBLIN_WEAPON(false),
     DWARF_WEAPON(false),
     PLUS_1_AC_GOBLIN_WEAPON(false),
-    LESS_THAN_10_HIT_MELEE(true);
+    LESS_THAN_10_HIT_MELEE(true),
+    DEX_TO_DMG_10(true);
 
     private @Getter final boolean post;
 
