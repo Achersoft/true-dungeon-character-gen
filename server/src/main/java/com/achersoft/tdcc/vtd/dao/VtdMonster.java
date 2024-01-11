@@ -31,6 +31,17 @@ public class VtdMonster {
     private @Builder.Default int sacred = 0;
     private @Builder.Default int darkrift = 0;
     private @Builder.Default int acid = 0;
+    private @Builder.Default int coldPercent = 1;
+    private @Builder.Default int firePercent = 1;
+    private @Builder.Default int shockPercent = 1;
+    private @Builder.Default int sonicPercent = 1;
+    private @Builder.Default int poisonPercent = 1;
+    private @Builder.Default int sacredPercent = 1;
+    private @Builder.Default int darkriftPercent = 1;
+    private @Builder.Default int acidPercent = 1;
+    private @Builder.Default int meleePercent = 1;
+    private @Builder.Default int rangePercent = 1;
+    private @Builder.Default int spellPercent = 1;
     private @Builder.Default int universalDr = 0;
     private @Builder.Default int meleeDr = 0;
     private @Builder.Default int rangeDr = 0;

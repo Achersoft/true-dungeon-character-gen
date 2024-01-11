@@ -874,6 +874,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bfire - monster.fire);
                     } 
+                } if (monster.firePercent !== 1 && +$scope.characterContext.stats.bfire) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.bfire) - +$scope.characterContext.stats.bfire);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.bfire) - +$scope.characterContext.stats.bfire);
                 } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.bcold) {
                     if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                         if (mDmgTotal > 0)
@@ -896,6 +901,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bcold - monster.cold);
                     } 
+                } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.bcold) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.bcold) - +$scope.characterContext.stats.bcold);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.bcold) - +$scope.characterContext.stats.bcold);
                 } if (monster.shock !== 0 && +$scope.characterContext.stats.bshock) {
                     if (monster.shock < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -913,6 +923,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bshock - monster.shock);
                     }  
+                } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.bshock) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.bshock) - +$scope.characterContext.stats.bshock);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.bshock) - +$scope.characterContext.stats.bshock);
                 } if (monster.sonic !== 0 && +$scope.characterContext.stats.bsonic) {
                     if (monster.sonic < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -930,6 +945,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bsonic - monster.sonic);
                     }
+                } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.bsonic) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.bsonic) - +$scope.characterContext.stats.bsonic);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.bsonic) - +$scope.characterContext.stats.bsonic);
                 } if (monster.poison !== 0 && +$scope.characterContext.stats.bpoison) {
                     if (monster.poison < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -947,6 +967,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bpoison - monster.poison);
                     }  
+                } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.bpoison) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.bpoison) - +$scope.characterContext.stats.bpoison);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.bpoison) - +$scope.characterContext.stats.bpoison);
                 } if (monster.darkrift !== 0 && +$scope.characterContext.stats.bdarkrift) {
                     if (monster.darkrift < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -964,6 +989,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bdarkrift - monster.darkrift);
                     }  
+                } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.bdarkrift) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.bdarkrift) - +$scope.characterContext.stats.bdarkrift);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.bdarkrift) - +$scope.characterContext.stats.bdarkrift);
                 } if (monster.sacred !== 0 && +$scope.characterContext.stats.bsacred) {
                     if (monster.sacred < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -981,6 +1011,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bsacred - monster.sacred);
                     }   
+                } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.bsacred) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.bsacred) - +$scope.characterContext.stats.bsacred);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.bsacred) - +$scope.characterContext.stats.bsacred);
                 } if (monster.force !== 0 && +$scope.characterContext.stats.bforce) {
                     if (monster.force < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -998,6 +1033,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bforce - monster.force);
                     }  
+                } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.bforce) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.bforce) - +$scope.characterContext.stats.bforce);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.bforce) - +$scope.characterContext.stats.bforce);
                 } if (monster.acid !== 0 && +$scope.characterContext.stats.bacid) {
                     if (monster.acid < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -1015,6 +1055,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bacid - monster.acid);
                     }  
+                } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.bacid) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.bacid) - +$scope.characterContext.stats.bacid);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.bacid) - +$scope.characterContext.stats.bacid);
                 }
             } else {
                 if (monster.meleeDr !==0) {
@@ -1048,6 +1093,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                     } 
+                } if (monster.firePercent !== 1 && +$scope.characterContext.stats.mfire) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.mfire) - +$scope.characterContext.stats.mfire);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.mfire) - +$scope.characterContext.stats.mfire);
                 } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
                     if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                         if (mDmgTotal > 0)
@@ -1070,6 +1120,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
                     } 
+                } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.mcold) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.mcold) - +$scope.characterContext.stats.mcold);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.mcold) - +$scope.characterContext.stats.mcold);
                 } if (monster.shock !== 0 && +$scope.characterContext.stats.mshock) {
                     if (monster.shock < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -1087,6 +1142,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
                     }  
+                } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.mshock) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.mshock) - +$scope.characterContext.stats.mshock);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.mshock) - +$scope.characterContext.stats.mshock);
                 } if (monster.sonic !== 0 && +$scope.characterContext.stats.msonic) {
                     if (monster.sonic < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -1104,6 +1164,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
                     }
+                } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.msonic) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.msonic) - +$scope.characterContext.stats.msonic);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.msonic) - +$scope.characterContext.stats.msonic);
                 } if (monster.poison !== 0 && +$scope.characterContext.stats.mpoison) {
                     if (monster.poison < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -1121,6 +1186,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
                     }  
+                } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.mpoison) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.mpoison) - +$scope.characterContext.stats.mpoison);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.mpoison) - +$scope.characterContext.stats.mpoison);
                 } if (monster.darkrift !== 0 && +$scope.characterContext.stats.mdarkrift) {
                     if (monster.darkrift < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -1138,6 +1208,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
                     }  
+                } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.mdarkrift) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.mdarkrift) - +$scope.characterContext.stats.mdarkrift);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.mdarkrift) - +$scope.characterContext.stats.mdarkrift);
                 } if (monster.sacred !== 0 && +$scope.characterContext.stats.msacred) {
                     if (monster.sacred < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -1155,6 +1230,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
                     }   
+                } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.msacred) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
                 } if (monster.force !== 0 && +$scope.characterContext.stats.mforce) {
                     if (monster.force < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -1172,6 +1252,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
                     }  
+                } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.mforce) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.mforce) - +$scope.characterContext.stats.mforce);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.mforce) - +$scope.characterContext.stats.mforce);
                 } if (monster.acid !== 0 && +$scope.characterContext.stats.macid) {
                     if (monster.acid < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -1189,6 +1274,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
                     }  
+                } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.macid) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.macid) - +$scope.characterContext.stats.macid);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.macid) - +$scope.characterContext.stats.macid);
                 }
             }
             
@@ -1602,6 +1692,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rfire - monster.fire);
                 } 
+            } if (monster.firePercent !== 1 && +$scope.characterContext.stats.rfire) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.rfire) - +$scope.characterContext.stats.rfire);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.rfire) - +$scope.characterContext.stats.rfire);
             } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.rcold) {
                 if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                     if (mDmgTotal > 0)
@@ -1624,6 +1719,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rcold - monster.cold);
                 } 
+            } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.rcold) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.rcold) - +$scope.characterContext.stats.rcold);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.rcold) - +$scope.characterContext.stats.rcold);
             } if (monster.shock !== 0 && +$scope.characterContext.stats.rshock) {
                 if (monster.shock < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -1641,6 +1741,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rshock - monster.shock);
                 }  
+            } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.rshock) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.rshock) - +$scope.characterContext.stats.rshock);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.rshock) - +$scope.characterContext.stats.rshock);
             } if (monster.sonic !== 0 && +$scope.characterContext.stats.rsonic) {
                 if (monster.sonic < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -1658,6 +1763,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rsonic - monster.sonic);
                 }
+            } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.rsonic) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.rsonic) - +$scope.characterContext.stats.rsonic);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.rsonic) - +$scope.characterContext.stats.rsonic);
             } if (monster.poison !== 0 && +$scope.characterContext.stats.rpoison) {
                 if (monster.poison < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -1675,6 +1785,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rpoison - monster.poison);
                 }  
+            } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.rpoison) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.rpoison) - +$scope.characterContext.stats.rpoison);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.rpoison) - +$scope.characterContext.stats.rpoison);
             } if (monster.darkrift !== 0 && +$scope.characterContext.stats.rdarkrift) {
                 if (monster.darkrift < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -1692,6 +1807,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rdarkrift - monster.darkrift);
                 }  
+            } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.rdarkrift) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.rdarkrift) - +$scope.characterContext.stats.rdarkrift);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.rdarkrift) - +$scope.characterContext.stats.rdarkrift);
             } if (monster.sacred !== 0 && +$scope.characterContext.stats.rsacred) {
                 if (monster.sacred < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -1709,6 +1829,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rsacred - monster.sacred);
                 }   
+            } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.rsacred) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.rsacred) - +$scope.characterContext.stats.rsacred);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.rsacred) - +$scope.characterContext.stats.rsacred);
             } if (monster.force !== 0 && +$scope.characterContext.stats.rforce) {
                 if (monster.force < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -1726,6 +1851,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rforce - monster.force);
                 }  
+            } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.rforce) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.rforce) - +$scope.characterContext.stats.rforce);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.rforce) - +$scope.characterContext.stats.rforce);
             } if (monster.acid !== 0 && +$scope.characterContext.stats.racid) {
                 if (monster.acid < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -1743,7 +1873,12 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.racid - monster.acid);
                 }  
-            }
+            } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.racid) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.racid) - +$scope.characterContext.stats.racid);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.racid) - +$scope.characterContext.stats.racid);
+            } 
             
             if (mDmgTotal < 0)
                 mDmgTotal = 0;
@@ -1975,6 +2110,9 @@ angular.module('main')
                     if (mDmgTotal > 0) {
                         mDmgTotal = -1 * mDmgTotal;
                     }
+                } else if (monster.firePercent !== 1) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal = Math.round(monster.firePercent * mDmgTotal);
                 } else if (monster.fire < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.fire < mDmgTotal) ? -1*monster.fire : mDmgTotal;
@@ -1984,10 +2122,14 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= monster.fire;
                 }
+                
                 allFire = true;
             } else if ($scope.characterContext.poly.name === "Iktomi’s Shaper Necklace - Ice" || $scope.characterContext.poly.name === "Shaman’s Greater Necklace - Ice") {
                 if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                     mDmgTotal = Math.round((mDmgTotal*.5));
+                } else if (monster.coldPercent !== 1) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal = Math.round(monster.coldPercent * mDmgTotal);
                 } else if (monster.cold < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.cold < mDmgTotal) ? -1*monster.cold : mDmgTotal;
@@ -1999,7 +2141,10 @@ angular.module('main')
                 }
                 allCold = true;
             } else if ($scope.characterContext.poly.name === "Iktomi’s Shaper Necklace - Air" || $scope.characterContext.poly.name === "Shaman’s Greater Necklace - Air") {
-                if (monster.shock < 0) {
+                if (monster.shockPercent !== 1) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal = Math.round(monster.shockPercent * mDmgTotal);
+                } else if (monster.shock < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.shock < mDmgTotal) ? -1*monster.shock : mDmgTotal;
                 } else if (monster.shock - mDmgTotal >= 0) {
@@ -2010,7 +2155,10 @@ angular.module('main')
                 }
                 allShock = true;
             } else if ($scope.characterContext.poly.name === "Iktomi’s Shaper Necklace - Earth" || $scope.characterContext.poly.name === "Shaman’s Greater Necklace - Earth") {
-                if (monster.sonic < 0) {
+                if (monster.sonicPercent !== 1) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal = Math.round(monster.sonicPercent * mDmgTotal);
+                } else if (monster.sonic < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.sonic < mDmgTotal) ? -1*monster.sonic : mDmgTotal;
                 } else if (monster.sonic - mDmgTotal >= 0) {
@@ -2037,6 +2185,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                     } 
+                } if (monster.firePercent !== 1 && +$scope.characterContext.stats.mfire) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.mfire) - +$scope.characterContext.stats.mfire);
                 } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
                     if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                         if (mDmgTotal > 0)
@@ -2051,6 +2202,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
                     } 
+                } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.mcold) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.mcold) - +$scope.characterContext.stats.mcold);
                 } if (monster.shock !== 0 && +$scope.characterContext.stats.mshock) {
                     if (monster.shock < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2062,6 +2216,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
                     }  
+                } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.mshock) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.mshock) - +$scope.characterContext.stats.mshock);
                 } if (monster.sonic !== 0 && +$scope.characterContext.stats.msonic) {
                     if (monster.sonic < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2073,6 +2230,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
                     }
+                } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.msonic) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.msonic) - +$scope.characterContext.stats.msonic);
                 } if (monster.poison !== 0 && +$scope.characterContext.stats.mpoison) {
                     if (monster.poison < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2084,6 +2244,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
                     }  
+                } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.mpoison) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.mpoison) - +$scope.characterContext.stats.mpoison);
                 } if (monster.darkrift !== 0 && +$scope.characterContext.stats.mdarkrift) {
                     if (monster.darkrift < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2095,6 +2258,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
                     }  
+                } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.mdarkrift) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.mdarkrift) - +$scope.characterContext.stats.mdarkrift);
                 } if (monster.sacred !== 0 && +$scope.characterContext.stats.msacred) {
                     if (monster.sacred < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2106,6 +2272,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
                     }   
+                } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.msacred) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
                 } if (monster.force !== 0 && +$scope.characterContext.stats.mforce) {
                     if (monster.force < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2117,6 +2286,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
                     }  
+                } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.mforce) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.mforce) - +$scope.characterContext.stats.mforce);
                 } if (monster.acid !== 0 && +$scope.characterContext.stats.macid) {
                     if (monster.acid < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2128,6 +2300,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
                     }  
+                } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.macid) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.macid) - +$scope.characterContext.stats.macid);
                 }
             }
             
@@ -2425,6 +2600,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                 } 
+            } if (monster.firePercent !== 1 && +$scope.characterContext.stats.mfire) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.mfire) - +$scope.characterContext.stats.mfire);
             } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
                 if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                     if (mDmgTotal > 0)
@@ -2439,6 +2617,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
                 } 
+            } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.mcold) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.mcold) - +$scope.characterContext.stats.mcold);
             } if (monster.shock !== 0 && +$scope.characterContext.stats.mshock) {
                 if (monster.shock < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -2450,6 +2631,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
                 }  
+            } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.mshock) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.mshock) - +$scope.characterContext.stats.mshock);
             } if (monster.sonic !== 0 && +$scope.characterContext.stats.msonic) {
                 if (monster.sonic < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -2461,6 +2645,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
                 }
+            } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.msonic) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.msonic) - +$scope.characterContext.stats.msonic);
             } if (monster.poison !== 0 && +$scope.characterContext.stats.mpoison) {
                 if (monster.poison < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -2472,6 +2659,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
                 }  
+            } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.mpoison) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.mpoison) - +$scope.characterContext.stats.mpoison);
             } if (monster.darkrift !== 0 && +$scope.characterContext.stats.mdarkrift) {
                 if (monster.darkrift < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -2483,6 +2673,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
                 }  
+            } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.mdarkrift) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.mdarkrift) - +$scope.characterContext.stats.mdarkrift);
             } if (monster.sacred !== 0 && +$scope.characterContext.stats.msacred) {
                 if (monster.sacred < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -2494,6 +2687,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
                 }   
+            } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.msacred) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
             } if (monster.force !== 0 && +$scope.characterContext.stats.mforce) {
                 if (monster.force < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -2505,6 +2701,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
                 }  
+            } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.mforce) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.mforce) - +$scope.characterContext.stats.mforce);
             } if (monster.acid !== 0 && +$scope.characterContext.stats.macid) {
                 if (monster.acid < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -2516,6 +2715,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
                 }  
+            } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.macid) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.macid) - +$scope.characterContext.stats.macid);
             }
             
             if (mDmgTotal < 0)
@@ -2757,6 +2959,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rfire - monster.fire);
                     } 
+                } if (monster.firePercent !== 1 && +$scope.characterContext.stats.rfire) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.rfire) - +$scope.characterContext.stats.rfire);
                 } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.rcold) {
                     if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                         if (mDmgTotal > 0)
@@ -2771,6 +2976,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rcold - monster.cold);
                     } 
+                } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.rcold) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.rcold) - +$scope.characterContext.stats.rcold);
                 } if (monster.shock !== 0 && +$scope.characterContext.stats.rshock) {
                     if (monster.shock < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2782,6 +2990,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rshock - monster.shock);
                     }  
+                } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.rshock) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.rshock) - +$scope.characterContext.stats.rshock);
                 } if (monster.sonic !== 0 && +$scope.characterContext.stats.rsonic) {
                     if (monster.sonic < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2793,6 +3004,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rsonic - monster.sonic);
                     }
+                } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.rsonic) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.rsonic) - +$scope.characterContext.stats.rsonic);
                 } if (monster.poison !== 0 && +$scope.characterContext.stats.rpoison) {
                     if (monster.poison < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2804,6 +3018,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rpoison - monster.poison);
                     }  
+                } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.rpoison) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.rpoison) - +$scope.characterContext.stats.rpoison);
                 } if (monster.darkrift !== 0 && +$scope.characterContext.stats.rdarkrift) {
                     if (monster.darkrift < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2815,6 +3032,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rdarkrift - monster.darkrift);
                     }  
+                } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.rdarkrift) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.rdarkrift) - +$scope.characterContext.stats.rdarkrift);
                 } if (monster.sacred !== 0 && +$scope.characterContext.stats.rsacred) {
                     if (monster.sacred < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2826,6 +3046,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rsacred - monster.sacred);
                     }   
+                } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.rsacred) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.rsacred) - +$scope.characterContext.stats.rsacred);
                 } if (monster.force !== 0 && +$scope.characterContext.stats.rforce) {
                     if (monster.force < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2837,6 +3060,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rforce - monster.force);
                     }  
+                } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.rforce) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.rforce) - +$scope.characterContext.stats.rforce);
                 } if (monster.acid !== 0 && +$scope.characterContext.stats.racid) {
                     if (monster.acid < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -2848,6 +3074,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.racid - monster.acid);
                     }  
+                } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.racid) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.racid) - +$scope.characterContext.stats.racid);
                 }
                 
                 if (mDmgTotal < 0)
@@ -3460,6 +3689,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bfire - monster.fire);
                     } 
+                } if (monster.firePercent !== 1 && +$scope.characterContext.stats.bfire) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.bfire) - +$scope.characterContext.stats.bfire);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.bfire) - +$scope.characterContext.stats.bfire);
                 } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.bcold) {
                     if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                         if (mDmgTotal > 0)
@@ -3482,6 +3716,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bcold - monster.cold);
                     } 
+                } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.bcold) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.bcold) - +$scope.characterContext.stats.bcold);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.bcold) - +$scope.characterContext.stats.bcold);
                 } if (monster.shock !== 0 && +$scope.characterContext.stats.bshock) {
                     if (monster.shock < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3499,6 +3738,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bshock - monster.shock);
                     }  
+                } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.bshock) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.bshock) - +$scope.characterContext.stats.bshock);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.bshock) - +$scope.characterContext.stats.bshock);
                 } if (monster.sonic !== 0 && +$scope.characterContext.stats.bsonic) {
                     if (monster.sonic < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3516,6 +3760,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bsonic - monster.sonic);
                     }
+                } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.bsonic) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.bsonic) - +$scope.characterContext.stats.bsonic);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.bsonic) - +$scope.characterContext.stats.bsonic);
                 } if (monster.poison !== 0 && +$scope.characterContext.stats.bpoison) {
                     if (monster.poison < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3533,6 +3782,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bpoison - monster.poison);
                     }  
+                } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.bpoison) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.bpoison) - +$scope.characterContext.stats.bpoison);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.bpoison) - +$scope.characterContext.stats.bpoison);
                 } if (monster.darkrift !== 0 && +$scope.characterContext.stats.bdarkrift) {
                     if (monster.darkrift < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3550,6 +3804,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bdarkrift - monster.darkrift);
                     }  
+                } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.bdarkrift) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.bdarkrift) - +$scope.characterContext.stats.bdarkrift);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.bdarkrift) - +$scope.characterContext.stats.bdarkrift);
                 } if (monster.sacred !== 0 && +$scope.characterContext.stats.bsacred) {
                     if (monster.sacred < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3567,6 +3826,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bsacred - monster.sacred);
                     }   
+                } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.bsacred) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.bsacred) - +$scope.characterContext.stats.bsacred);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.bsacred) - +$scope.characterContext.stats.bsacred);
                 } if (monster.force !== 0 && +$scope.characterContext.stats.bforce) {
                     if (monster.force < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3584,6 +3848,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bforce - monster.force);
                     }  
+                } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.bforce) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.bforce) - +$scope.characterContext.stats.bforce);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.bforce) - +$scope.characterContext.stats.bforce);
                 } if (monster.acid !== 0 && +$scope.characterContext.stats.bacid) {
                     if (monster.acid < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3601,6 +3870,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.bacid - monster.acid);
                     }  
+                } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.bacid) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.bacid) - +$scope.characterContext.stats.bacid);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.bacid) - +$scope.characterContext.stats.bacid);
                 }
             } else {
                 if (monster.meleeDr !==0) {
@@ -3609,6 +3883,7 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= monster.meleeDr;
                 }
+                
                 if (monster.fire !== 0 && +$scope.characterContext.stats.mfire) {
                     if (monster.monsterEffects.includes("FIRE_HEAL")) {
                         if (mDmgTotal > 0) {
@@ -3634,6 +3909,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                     } 
+                } if (monster.firePercent !== 1 && +$scope.characterContext.stats.mfire) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.mfire) - +$scope.characterContext.stats.mfire);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.mfire) - +$scope.characterContext.stats.mfire);
                 } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
                     if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                         if (mDmgTotal > 0)
@@ -3656,6 +3936,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
                     } 
+                } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.mcold) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.mcold) - +$scope.characterContext.stats.mcold);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.mcold) - +$scope.characterContext.stats.mcold);
                 } if (monster.shock !== 0 && +$scope.characterContext.stats.mshock) {
                     if (monster.shock < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3673,6 +3958,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
                     }  
+                } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.mshock) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.mshock) - +$scope.characterContext.stats.mshock);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.mshock) - +$scope.characterContext.stats.mshock);
                 } if (monster.sonic !== 0 && +$scope.characterContext.stats.msonic) {
                     if (monster.sonic < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3690,6 +3980,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
                     }
+                } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.msonic) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.msonic) - +$scope.characterContext.stats.msonic);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.msonic) - +$scope.characterContext.stats.msonic);
                 } if (monster.poison !== 0 && +$scope.characterContext.stats.mpoison) {
                     if (monster.poison < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3707,6 +4002,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
                     }  
+                } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.mpoison) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.mpoison) - +$scope.characterContext.stats.mpoison);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.mpoison) - +$scope.characterContext.stats.mpoison);
                 } if (monster.darkrift !== 0 && +$scope.characterContext.stats.mdarkrift) {
                     if (monster.darkrift < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3724,6 +4024,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
                     }  
+                } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.mdarkrift) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.mdarkrift) - +$scope.characterContext.stats.mdarkrift);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.mdarkrift) - +$scope.characterContext.stats.mdarkrift);
                 } if (monster.sacred !== 0 && +$scope.characterContext.stats.msacred) {
                     if (monster.sacred < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3741,6 +4046,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
                     }   
+                } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.msacred) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
                 } if (monster.force !== 0 && +$scope.characterContext.stats.mforce) {
                     if (monster.force < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3758,6 +4068,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
                     }  
+                } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.mforce) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.mforce) - +$scope.characterContext.stats.mforce);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.mforce) - +$scope.characterContext.stats.mforce);
                 } if (monster.acid !== 0 && +$scope.characterContext.stats.macid) {
                     if (monster.acid < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -3775,6 +4090,11 @@ angular.module('main')
                         if (oDmgTotal > 0 && isOffDr)
                             oDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
                     }  
+                } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.macid) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.macid) - +$scope.characterContext.stats.macid);
+                    if (oDmgTotal > 0 && isOffDr)
+                        oDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.macid) - +$scope.characterContext.stats.macid);
                 }
             }
             
@@ -4163,6 +4483,7 @@ angular.module('main')
                 if (oDmgTotal > 0 && isOffDr)
                     oDmgTotal -= monster.rangeDr;
             }
+            
             if (monster.fire !== 0 && +$scope.characterContext.stats.rfire) {
                 if (monster.monsterEffects.includes("FIRE_HEAL")) {
                     if (mDmgTotal > 0) {
@@ -4188,6 +4509,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rfire - monster.fire);
                 } 
+            } if (monster.firePercent !== 1 && +$scope.characterContext.stats.rfire) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.rfire) - +$scope.characterContext.stats.rfire);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.rfire) - +$scope.characterContext.stats.rfire);
             } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.rcold) {
                 if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                     if (mDmgTotal > 0)
@@ -4210,6 +4536,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rcold - monster.cold);
                 } 
+            } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.rcold) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.rcold) - +$scope.characterContext.stats.rcold);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.rcold) - +$scope.characterContext.stats.rcold);
             } if (monster.shock !== 0 && +$scope.characterContext.stats.rshock) {
                 if (monster.shock < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -4227,6 +4558,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rshock - monster.shock);
                 }  
+            } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.rshock) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.rshock) - +$scope.characterContext.stats.rshock);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.rshock) - +$scope.characterContext.stats.rshock);
             } if (monster.sonic !== 0 && +$scope.characterContext.stats.rsonic) {
                 if (monster.sonic < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -4244,6 +4580,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rsonic - monster.sonic);
                 }
+            } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.rsonic) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.rsonic) - +$scope.characterContext.stats.rsonic);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.rsonic) - +$scope.characterContext.stats.rsonic);
             } if (monster.poison !== 0 && +$scope.characterContext.stats.rpoison) {
                 if (monster.poison < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -4261,6 +4602,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rpoison - monster.poison);
                 }  
+            } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.rpoison) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.rpoison) - +$scope.characterContext.stats.rpoison);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.rpoison) - +$scope.characterContext.stats.rpoison);
             } if (monster.darkrift !== 0 && +$scope.characterContext.stats.rdarkrift) {
                 if (monster.darkrift < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -4278,6 +4624,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rdarkrift - monster.darkrift);
                 }  
+            } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.rdarkrift) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.rdarkrift) - +$scope.characterContext.stats.rdarkrift);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.rdarkrift) - +$scope.characterContext.stats.rdarkrift);
             } if (monster.sacred !== 0 && +$scope.characterContext.stats.rsacred) {
                 if (monster.sacred < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -4295,6 +4646,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rsacred - monster.sacred);
                 }   
+            } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.rsacred) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.rsacred) - +$scope.characterContext.stats.rsacred);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.rsacred) - +$scope.characterContext.stats.rsacred);
             } if (monster.force !== 0 && +$scope.characterContext.stats.rforce) {
                 if (monster.force < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -4312,6 +4668,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.rforce - monster.force);
                 }  
+            } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.rforce) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.rforce) - +$scope.characterContext.stats.rforce);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.rforce) - +$scope.characterContext.stats.rforce);
             } if (monster.acid !== 0 && +$scope.characterContext.stats.racid) {
                 if (monster.acid < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -4329,6 +4690,11 @@ angular.module('main')
                     if (oDmgTotal > 0 && isOffDr)
                         oDmgTotal -= (+$scope.characterContext.stats.racid - monster.acid);
                 }  
+            } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.racid) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.racid) - +$scope.characterContext.stats.racid);
+                if (oDmgTotal > 0 && isOffDr)
+                    mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.racid) - +$scope.characterContext.stats.racid);
             }
             
             if (mDmgTotal < 0)
@@ -4561,6 +4927,9 @@ angular.module('main')
                     if (mDmgTotal > 0) {
                         mDmgTotal = -1 * mDmgTotal;
                     }
+                } else if (monster.firePercent !== 1) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal = Math.round(monster.firePercent * mDmgTotal);
                 } else if (monster.fire < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.fire < mDmgTotal) ? -1*monster.fire : mDmgTotal;
@@ -4570,10 +4939,14 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= monster.fire;
                 }
+                
                 allFire = true;
             } else if ($scope.characterContext.poly.name === "Iktomi’s Shaper Necklace - Ice" || $scope.characterContext.poly.name === "Shaman’s Greater Necklace - Ice") {
                 if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                     mDmgTotal = Math.round((mDmgTotal*.5));
+                } else if (monster.coldPercent !== 1) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal = Math.round(monster.coldPercent * mDmgTotal);
                 } else if (monster.cold < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.cold < mDmgTotal) ? -1*monster.cold : mDmgTotal;
@@ -4585,7 +4958,10 @@ angular.module('main')
                 }
                 allCold = true;
             } else if ($scope.characterContext.poly.name === "Iktomi’s Shaper Necklace - Air" || $scope.characterContext.poly.name === "Shaman’s Greater Necklace - Air") {
-                if (monster.shock < 0) {
+                if (monster.shockPercent !== 1) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal = Math.round(monster.shockPercent * mDmgTotal);
+                } else if (monster.shock < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.shock < mDmgTotal) ? -1*monster.shock : mDmgTotal;
                 } else if (monster.shock - mDmgTotal >= 0) {
@@ -4596,7 +4972,10 @@ angular.module('main')
                 }
                 allShock = true;
             } else if ($scope.characterContext.poly.name === "Iktomi’s Shaper Necklace - Earth" || $scope.characterContext.poly.name === "Shaman’s Greater Necklace - Earth") {
-                if (monster.sonic < 0) {
+                if (monster.sonicPercent !== 1) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal = Math.round(monster.sonicPercent * mDmgTotal);
+                } else if (monster.sonic < 0) {
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal += (-1*monster.sonic < mDmgTotal) ? -1*monster.sonic : mDmgTotal;
                 } else if (monster.sonic - mDmgTotal >= 0) {
@@ -4623,6 +5002,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                     } 
+                } if (monster.firePercent !== 1 && +$scope.characterContext.stats.mfire) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.mfire) - +$scope.characterContext.stats.mfire);
                 } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
                     if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                         if (mDmgTotal > 0)
@@ -4637,6 +5019,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
                     } 
+                } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.mcold) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.mcold) - +$scope.characterContext.stats.mcold);
                 } if (monster.shock !== 0 && +$scope.characterContext.stats.mshock) {
                     if (monster.shock < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -4648,6 +5033,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
                     }  
+                } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.mshock) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.mshock) - +$scope.characterContext.stats.mshock);
                 } if (monster.sonic !== 0 && +$scope.characterContext.stats.msonic) {
                     if (monster.sonic < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -4659,6 +5047,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
                     }
+                } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.msonic) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.msonic) - +$scope.characterContext.stats.msonic);
                 } if (monster.poison !== 0 && +$scope.characterContext.stats.mpoison) {
                     if (monster.poison < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -4670,6 +5061,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
                     }  
+                } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.mpoison) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.mpoison) - +$scope.characterContext.stats.mpoison);
                 } if (monster.darkrift !== 0 && +$scope.characterContext.stats.mdarkrift) {
                     if (monster.darkrift < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -4681,6 +5075,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
                     }  
+                } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.mdarkrift) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.mdarkrift) - +$scope.characterContext.stats.mdarkrift);
                 } if (monster.sacred !== 0 && +$scope.characterContext.stats.msacred) {
                     if (monster.sacred < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -4692,6 +5089,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
                     }   
+                } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.msacred) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
                 } if (monster.force !== 0 && +$scope.characterContext.stats.mforce) {
                     if (monster.force < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -4703,6 +5103,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
                     }  
+                } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.mforce) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.mforce) - +$scope.characterContext.stats.mforce);
                 } if (monster.acid !== 0 && +$scope.characterContext.stats.macid) {
                     if (monster.acid < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -4714,6 +5117,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
                     }  
+                } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.macid) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.macid) - +$scope.characterContext.stats.macid);
                 }
             }
             
@@ -5011,6 +5417,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mfire - monster.fire);
                 } 
+            } if (monster.firePercent !== 1 && +$scope.characterContext.stats.mfire) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.mfire) - +$scope.characterContext.stats.mfire);
             } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.mcold) {
                 if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                     if (mDmgTotal > 0)
@@ -5025,6 +5434,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mcold - monster.cold);
                 } 
+            } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.mcold) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.mcold) - +$scope.characterContext.stats.mcold);
             } if (monster.shock !== 0 && +$scope.characterContext.stats.mshock) {
                 if (monster.shock < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -5036,6 +5448,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mshock - monster.shock);
                 }  
+            } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.mshock) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.mshock) - +$scope.characterContext.stats.mshock);
             } if (monster.sonic !== 0 && +$scope.characterContext.stats.msonic) {
                 if (monster.sonic < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -5047,6 +5462,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.msonic - monster.sonic);
                 }
+            } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.msonic) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.msonic) - +$scope.characterContext.stats.msonic);
             } if (monster.poison !== 0 && +$scope.characterContext.stats.mpoison) {
                 if (monster.poison < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -5058,6 +5476,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mpoison - monster.poison);
                 }  
+            } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.mpoison) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.mpoison) - +$scope.characterContext.stats.mpoison);
             } if (monster.darkrift !== 0 && +$scope.characterContext.stats.mdarkrift) {
                 if (monster.darkrift < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -5069,6 +5490,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mdarkrift - monster.darkrift);
                 }  
+            } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.mdarkrift) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.mdarkrift) - +$scope.characterContext.stats.mdarkrift);
             } if (monster.sacred !== 0 && +$scope.characterContext.stats.msacred) {
                 if (monster.sacred < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -5080,6 +5504,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.msacred - monster.sacred);
                 }   
+            } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.msacred) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
             } if (monster.force !== 0 && +$scope.characterContext.stats.mforce) {
                 if (monster.force < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -5091,6 +5518,9 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.mforce - monster.force);
                 }  
+            } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.mforce) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.mforce) - +$scope.characterContext.stats.mforce);
             } if (monster.acid !== 0 && +$scope.characterContext.stats.macid) {
                 if (monster.acid < 0) {
                     if (mDmgTotal > 0 && isMainDr)
@@ -5102,8 +5532,11 @@ angular.module('main')
                     if (mDmgTotal > 0 && isMainDr)
                         mDmgTotal -= (+$scope.characterContext.stats.macid - monster.acid);
                 }  
+            } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.macid) {
+                if (mDmgTotal > 0 && isMainDr)
+                    mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.macid) - +$scope.characterContext.stats.macid);
             }
-            
+           
             if (mDmgTotal < 0)
                 mDmgTotal = 0;
             
@@ -5319,7 +5752,7 @@ angular.module('main')
                    if (mDmgTotal > 0 && isMainDr)
                        mDmgTotal -= monster.rangeDr;
                 }
-            
+                
                 if (monster.fire !== 0 && +$scope.characterContext.stats.rfire) {
                     if (monster.monsterEffects.includes("FIRE_HEAL")) {
                         if (mDmgTotal > 0) {
@@ -5336,6 +5769,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rfire - monster.fire);
                     } 
+                } if (monster.firePercent !== 1 && +$scope.characterContext.stats.rfire) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.firePercent * +$scope.characterContext.stats.rfire) - +$scope.characterContext.stats.rfire);
                 } if ((monster.cold !== 0 || monster.monsterEffects.includes("COLD_RESIST_50")) && +$scope.characterContext.stats.rcold) {
                     if (monster.monsterEffects.includes("COLD_RESIST_50")) {
                         if (mDmgTotal > 0)
@@ -5350,6 +5786,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rcold - monster.cold);
                     } 
+                } if (monster.coldPercent !== 1 && +$scope.characterContext.stats.rcold) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.coldPercent * +$scope.characterContext.stats.rcold) - +$scope.characterContext.stats.rcold);
                 } if (monster.shock !== 0 && +$scope.characterContext.stats.rshock) {
                     if (monster.shock < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -5361,6 +5800,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rshock - monster.shock);
                     }  
+                } if (monster.shockPercent !== 1 && +$scope.characterContext.stats.rshock) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.shockPercent * +$scope.characterContext.stats.rshock) - +$scope.characterContext.stats.rshock);
                 } if (monster.sonic !== 0 && +$scope.characterContext.stats.rsonic) {
                     if (monster.sonic < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -5372,6 +5814,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rsonic - monster.sonic);
                     }
+                } if (monster.sonicPercent !== 1 && +$scope.characterContext.stats.rsonic) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sonicPercent * +$scope.characterContext.stats.rsonic) - +$scope.characterContext.stats.rsonic);
                 } if (monster.poison !== 0 && +$scope.characterContext.stats.rpoison) {
                     if (monster.poison < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -5383,6 +5828,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rpoison - monster.poison);
                     }  
+                } if (monster.poisonPercent !== 1 && +$scope.characterContext.stats.rpoison) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.poisonPercent * +$scope.characterContext.stats.rpoison) - +$scope.characterContext.stats.rpoison);
                 } if (monster.darkrift !== 0 && +$scope.characterContext.stats.rdarkrift) {
                     if (monster.darkrift < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -5394,6 +5842,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rdarkrift - monster.darkrift);
                     }  
+                } if (monster.darkriftPercent !== 1 && +$scope.characterContext.stats.rdarkrift) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.darkriftPercent * +$scope.characterContext.stats.rdarkrift) - +$scope.characterContext.stats.rdarkrift);
                 } if (monster.sacred !== 0 && +$scope.characterContext.stats.rsacred) {
                     if (monster.sacred < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -5405,6 +5856,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rsacred - monster.sacred);
                     }   
+                } if (monster.sacredPercent !== 1 && +$scope.characterContext.stats.rsacred) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.sacredPercent * +$scope.characterContext.stats.rsacred) - +$scope.characterContext.stats.rsacred);
                 } if (monster.force !== 0 && +$scope.characterContext.stats.rforce) {
                     if (monster.force < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -5416,6 +5870,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.rforce - monster.force);
                     }  
+                } if (monster.forcePercent !== 1 && +$scope.characterContext.stats.rforce) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.forcePercent * +$scope.characterContext.stats.rforce) - +$scope.characterContext.stats.rforce);
                 } if (monster.acid !== 0 && +$scope.characterContext.stats.racid) {
                     if (monster.acid < 0) {
                         if (mDmgTotal > 0 && isMainDr)
@@ -5427,6 +5884,9 @@ angular.module('main')
                         if (mDmgTotal > 0 && isMainDr)
                             mDmgTotal -= (+$scope.characterContext.stats.racid - monster.acid);
                     }  
+                } if (monster.acidPercent !== 1 && +$scope.characterContext.stats.racid) {
+                    if (mDmgTotal > 0 && isMainDr)
+                        mDmgTotal += (Math.round(monster.acidPercent * +$scope.characterContext.stats.racid) - +$scope.characterContext.stats.racid);
                 }
                 
                 if (mDmgTotal < 0)
