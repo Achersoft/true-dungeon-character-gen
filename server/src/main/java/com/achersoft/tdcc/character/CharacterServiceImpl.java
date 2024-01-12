@@ -1850,6 +1850,9 @@ public class CharacterServiceImpl implements CharacterService {
             }
         } else if (figurineCount > figurineNeeded)
             characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.FIGURINE && item.getIndex() > figurineNeeded-1)).collect(Collectors.toList()));
+
+        // Add the strength of shield back into the base stat to make folks happy about numbers but need to do it last
+        stats.setStr(stats.getStr()+meleeShieldStr.get());
     }
     
     private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails, List<Integer> meleeWeaponHit, List<Integer> rangeWeaponHit) {
