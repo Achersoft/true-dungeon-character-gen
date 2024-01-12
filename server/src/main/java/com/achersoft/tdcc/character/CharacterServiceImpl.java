@@ -1762,7 +1762,13 @@ public class CharacterServiceImpl implements CharacterService {
         // Check Conditionals 
         checkConditionals(conditionalTokens, metCondition, stats, characterDetails, meleeWeaponHit, rangeWeaponHit);
 
-        stats.setStrBonus((stats.getStr()+meleeShieldStr.get()-10 > 0)?(stats.getStr()+meleeShieldStr.get()-10)/2:(stats.getStr()+meleeShieldStr.get()-11)/2);
+        stats.setMeleeStr(stats.getStr()+meleeShieldStr.get());
+        stats.setRangeStr(stats.getStr()+rangeShieldStr.get());
+        stats.setStr(stats.getMeleeStr());
+        stats.setStrBonus((stats.getStr()-10 > 0)?(stats.getStr()-10)/2:(stats.getStr()-11)/2);
+        stats.setMeleeStrBonus(stats.getStrBonus());
+        stats.setRangeStrBonus((stats.getRangeStr()-10 > 0)?(stats.getRangeStr()-10)/2:(stats.getRangeStr()-11)/2);
+        stats.setStrBonus((stats.getStr()-10 > 0)?(stats.getStr()-10)/2:(stats.getStr()-11)/2);
         stats.setDexBonus((stats.getDex()-10 > 0)?(stats.getDex()-10)/2:(stats.getDex()-11)/2);
         stats.setConBonus((stats.getCon()-10 > 0)?(stats.getCon()-10)/2:(stats.getCon()-11)/2);
         stats.setIntelBonus((stats.getIntel()-10 > 0)?(stats.getIntel()-10)/2:(stats.getIntel()-11)/2);
@@ -1829,12 +1835,7 @@ public class CharacterServiceImpl implements CharacterService {
         if (hasSemiLichCharm.get()) 
             stats.setHealth(stats.getHealth() + stats.getPsychicLevel());
         if(mightyRanged.get() == 1) {
-            if (rangeShieldStr.get() > 0) {
-                int str = stats.getStr() + rangeShieldStr.get();
-                int strBonus = (str-10 > 0)?(str-10)/2:(str-11)/2;
-                stats.setRangeDmg(stats.getRangeDmg() + strBonus);
-            } else
-                stats.setRangeDmg(stats.getRangeDmg() + stats.getStrBonus());
+            stats.setRangeDmg(stats.getRangeDmg() + stats.getRangeStrBonus());
         }
         if (hasMysticOrb.get() && hasSkullOfCavadar.get()) {
             stats.setReflex(stats.getReflex() + 1);
@@ -1850,9 +1851,6 @@ public class CharacterServiceImpl implements CharacterService {
             }
         } else if (figurineCount > figurineNeeded)
             characterDetails.setItems(characterDetails.getItems().stream().filter((item) -> !(item.getSlot()==Slot.FIGURINE && item.getIndex() > figurineNeeded-1)).collect(Collectors.toList()));
-
-        // Add the strength of shield back into the base stat to make folks happy about numbers but need to do it last
-        stats.setStr(stats.getStr()+meleeShieldStr.get());
     }
     
     private void checkConditionals(List<CharacterItem> conditionalTokens, Set<ConditionalUse> metCondition, CharacterStats stats, CharacterDetails characterDetails, List<Integer> meleeWeaponHit, List<Integer> rangeWeaponHit) {

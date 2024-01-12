@@ -20,8 +20,10 @@
                                         <tr>
                                             <td><strong>STR</strong></td>
                                             <td>{{characterContext.stats.baseStr}}</td>
-                                            <td>{{characterContext.stats.str}}</td>
-                                            <td>{{characterContext.stats.strBonus}}</td>
+                                            <td ng-if="characterContext.stats.meleeStr === characterContext.stats.rangeStr">{{characterContext.stats.str}}</td>
+                                            <td ng-if="characterContext.stats.meleeStr !== characterContext.stats.rangeStr">{{characterContext.stats.meleeStr}}/{{characterContext.stats.rangeStr}}</td>
+                                            <td ng-if="characterContext.stats.meleeStrBonus === characterContext.stats.rangeStrBonus">{{characterContext.stats.strBonus}}</td>
+                                            <td ng-if="characterContext.stats.meleeStrBonus !== characterContext.stats.rangeStrBonus">{{characterContext.stats.meleeStrBonus}}/{{characterContext.stats.rangeStrBonus}}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>DEX</strong></td>

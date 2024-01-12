@@ -14,6 +14,10 @@ public class CharacterStats {
     private int baseStr = 0;
     private int str = 0;
     private int strBonus = 0;
+    private int meleeStr = 0;
+    private int rangeStr = 0;
+    private int meleeStrBonus = 0;
+    private int rangeStrBonus = 0;
     private int baseDex = 0;
     private int dex = 0;
     private int dexBonus = 0;
