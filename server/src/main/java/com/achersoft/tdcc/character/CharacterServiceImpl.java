@@ -1727,6 +1727,7 @@ public class CharacterServiceImpl implements CharacterService {
                         stats.setMeleeAC(stats.getMeleeAC()+ item.getTokenFullDetails().getMeleeAC());
                         meleeShieldAc.set(item.getTokenFullDetails().getMeleeAC());
                         meleeShieldStr.set(item.getTokenFullDetails().getStr());
+                        final int str = item.getTokenFullDetails().getStr();
                         item.getTokenFullDetails().setStr(0);
 
                         if (sheildId.get().isEmpty() || !sheildId.get().equals(item.getTokenFullDetails().getId()))
@@ -1734,12 +1735,15 @@ public class CharacterServiceImpl implements CharacterService {
 
                         if (sheildId.get().isEmpty())
                             sheildId.set(item.getTokenFullDetails().getId());
+
+                        item.getTokenFullDetails().setStr(str);
                     } else if (item.getItem().getSlot() == Slot.RANGE_OFFHAND) {
                         item.getItem().setSlotStatus(SlotStatus.OK);
                         item.getItem().setStatusText(null);
                         stats.setRangeAC(stats.getRangeAC() + item.getTokenFullDetails().getRangeAC());
                         stats.setRangeMissileAC(stats.getRangeMissileAC() + item.getTokenFullDetails().getRangeMissileAC());
                         rangeShieldStr.set(item.getTokenFullDetails().getStr());
+                        final int str = item.getTokenFullDetails().getStr();
                         item.getTokenFullDetails().setStr(0);
 
                         if (sheildId.get().isEmpty() || !sheildId.get().equals(item.getTokenFullDetails().getId()))
@@ -1747,6 +1751,8 @@ public class CharacterServiceImpl implements CharacterService {
 
                         if (sheildId.get().isEmpty())
                             sheildId.set(item.getTokenFullDetails().getId());
+
+                        item.getTokenFullDetails().setStr(str);
                     }
                 } else {
                     item.getItem().setSlotStatus(SlotStatus.OK);
