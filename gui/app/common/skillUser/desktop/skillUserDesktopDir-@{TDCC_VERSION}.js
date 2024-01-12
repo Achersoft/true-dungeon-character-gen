@@ -500,36 +500,78 @@ angular.module('main').directive('skillUserDesktop',['VtdSvc', 'MonsterSelectorS
                 var damageDelta = 0;
                 
                 if (scope.monster.rangeDr !== 0) {
-                    damageDelta += scope.monster.rangeDr;
+                    damageDelta -= scope.monster.rangeDr;
                 } if (scope.monster.universalDr !== 0) {
-                    damageDelta += scope.monster.universalDr;
-                } 
+                    damageDelta -= scope.monster.universalDr;
+                }  if (scope.monster.spellPercent !== 1.0) {
+                    scope.damage = Math.round(scope.monster.spellPercent * scope.damage);
+                    scope.damagePool = Math.round(scope.monster.spellPercent * scope.damagePool);
+                }
                 
                 if (scope.element !== -1) {
-                    if (scope.monster.fire !== 0 && scope.element === 1) {
-                        damageDelta += scope.monster.fire;
-                    } if (scope.monster.cold !== 0 && scope.element === 0) {
-                        damageDelta += scope.monster.cold;
-                    } if (scope.monster.shock !== 0 && scope.element === 2) {
-                        damageDelta += scope.monster.shock;
+                    if (scope.element === 1) {
+                        if (scope.monster.fire !== 0) {
+                            damageDelta += scope.monster.fire;
+                        } if (scope.monster.firePercent !== 1.0) {
+                            scope.damage = Math.round(scope.monster.firePercent * scope.damage);
+                            scope.damagePool = Math.round(scope.monster.firePercent * scope.damagePool);
+                        } 
+                    } if (scope.element === 0) {
+                        if (scope.monster.cold !== 0) {
+                            damageDelta += scope.monster.cold;
+                        } if (scope.monster.coldPercent !== 1.0) {
+                            scope.damage = Math.round(scope.monster.coldPercent * scope.damage);
+                            scope.damagePool = Math.round(scope.monster.coldPercent * scope.damagePool);
+                        }
+                    } if (scope.element === 2) {
+                        if (scope.monster.shock !== 0) {
+                            damageDelta += scope.monster.shock;
+                        } if (scope.monster.shockPercent !== 1.0) {
+                            scope.damage = Math.round(scope.monster.shockPercent * scope.damage);
+                            scope.damagePool = Math.round(scope.monster.shockPercent * scope.damagePool);
+                        }
                     }
                 } else {
                     if (scope.monster.fire !== 0 && scope.model.fire) {
                         damageDelta += scope.monster.fire;
+                    } if (scope.monster.firePercent !== 1.0 && scope.model.fire) {
+                        scope.damage = Math.round(scope.monster.firePercent * scope.damage);
+                        scope.damagePool = Math.round(scope.monster.firePercent * scope.damagePool);
                     } if (scope.monster.cold !== 0 && scope.model.cold) {
                         damageDelta += scope.monster.cold;
+                    } if (scope.monster.coldPercent !== 1.0 && scope.model.cold) {
+                        scope.damage = Math.round(scope.monster.coldPercent * scope.damage);
+                        scope.damagePool = Math.round(scope.monster.coldPercent * scope.damagePool);
                     } if (scope.monster.shock !== 0 && scope.model.shock) {
                         damageDelta += scope.monster.shock;
+                    } if (scope.monster.shockPercent !== 1.0 && scope.model.shock) {
+                        scope.damage = Math.round(scope.monster.shockPercent * scope.damage);
+                        scope.damagePool = Math.round(scope.monster.shockPercent * scope.damagePool);
                     } if (scope.monster.sonic !== 0 && scope.model.sonic) {
                         damageDelta += scope.monster.sonic;
+                    } if (scope.monster.sonicPercent !== 1.0 && scope.model.sonic) {
+                        scope.damage = Math.round(scope.monster.sonicPercent * scope.damage);
+                        scope.damagePool = Math.round(scope.monster.sonicPercent * scope.damagePool);
                     } if (scope.monster.poison !== 0 && scope.model.poison) {
                         damageDelta += scope.monster.poison;
+                    } if (scope.monster.poisonPercent !== 1.0 && scope.model.poison) {
+                        scope.damage = Math.round(scope.monster.poisonPercent * scope.damage);
+                        scope.damagePool = Math.round(scope.monster.poisonPercent * scope.damagePool);
                     } if (scope.monster.sacred !== 0 && scope.model.sacred) {
                         damageDelta += scope.monster.sacred;
+                    } if (scope.monster.sacredPercent !== 1.0 && scope.model.sacred) {
+                        scope.damage = Math.round(scope.monster.sacredPercent * scope.damage);
+                        scope.damagePool = Math.round(scope.monster.sacredPercent * scope.damagePool);
                     } if (scope.monster.darkrift !== 0 && scope.model.darkrift) {
                         damageDelta += scope.monster.darkrift;
+                    } if (scope.monster.darkriftPercent !== 1.0 && scope.model.darkrift) {
+                        scope.damage = Math.round(scope.monster.darkriftPercent * scope.damage);
+                        scope.damagePool = Math.round(scope.monster.darkriftPercent * scope.damagePool);
                     } if (scope.monster.acid !== 0 && scope.model.acid) {
                         damageDelta += scope.monster.acid;
+                    } if (scope.monster.acidPercent !== 1.0 && scope.model.acid) {
+                        scope.damage = Math.round(scope.monster.acidPercent * scope.damage);
+                        scope.damagePool = Math.round(scope.monster.acidPercent * scope.damagePool);
                     }
                 }
                 

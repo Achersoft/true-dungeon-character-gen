@@ -60,4 +60,15 @@ public class VtdRoom {
     private @Builder.Default String reflexEffect = "missed";
     private @Builder.Default int will = 0;
     private @Builder.Default String willEffect = "missed";
+    private @Builder.Default double coldPercent = 1.0;
+    private @Builder.Default double firePercent = 1.0;
+    private @Builder.Default double shockPercent = 1.0;
+    private @Builder.Default double sonicPercent = 1.0;
+    private @Builder.Default double poisonPercent = 1.0;
+    private @Builder.Default double sacredPercent = 1.0;
+    private @Builder.Default double darkriftPercent = 1.0;
+    private @Builder.Default double acidPercent = 1.0;
+    private @Builder.Default double meleePercent = 1.0;
+    private @Builder.Default double rangePercent = 1.0;
+    private @Builder.Default double spellPercent = 1.0;
 }

@@ -1249,6 +1249,8 @@ public class CharacterServiceImpl implements CharacterService {
         long deadshotCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().endsWith("of the deadshot")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Death Knight set
         long deathKnightCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("death knight")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Ancients set
+        long ancientsCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().endsWith("of the ancients")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Arcane Set
         long arcaneCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && (a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane belt") ||
                 a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane bracelets") || a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane charm") ||
@@ -1256,7 +1258,7 @@ public class CharacterServiceImpl implements CharacterService {
         
         // First check if we need to boost character level
         // Charm of Heroism, Medallion of Heroism, Ring of Heroism, Eldrich Set, Kubu’s Coin of Coincidence, Smackdown’s Charm of Comraderie
-        if(levelBoost || levelItem || eldrichCount >= 2 || mightCount >= 3 || charmingCount >= 3 || deadshotCount >= 3 || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
+        if(levelBoost || levelItem || eldrichCount >= 2 || mightCount >= 3 || charmingCount >= 3 || ancientsCount >= 3 || deadshotCount >= 3 || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
                 itemsMap.containsKey("2f1cfd3d3dbdd218f5cd5bd3935851b7acba5a9c") || itemsMap.containsKey("f44d007c35b18b83e85a1ee183cda08180030012") || itemsMap.containsKey("c289cd1accbbcc7af656de459c157bdc40dbaf45")) {
             characterDetails.setStats(mapper.getStartingStats(characterDetails.getCharacterClass(), 5));
             characterDetails.getStats().setCharacterId(characterDetails.getId());

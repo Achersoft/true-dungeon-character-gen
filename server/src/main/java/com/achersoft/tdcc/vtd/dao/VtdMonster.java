@@ -31,17 +31,17 @@ public class VtdMonster {
     private @Builder.Default int sacred = 0;
     private @Builder.Default int darkrift = 0;
     private @Builder.Default int acid = 0;
-    private @Builder.Default int coldPercent = 1;
-    private @Builder.Default int firePercent = 1;
-    private @Builder.Default int shockPercent = 1;
-    private @Builder.Default int sonicPercent = 1;
-    private @Builder.Default int poisonPercent = 1;
-    private @Builder.Default int sacredPercent = 1;
-    private @Builder.Default int darkriftPercent = 1;
-    private @Builder.Default int acidPercent = 1;
-    private @Builder.Default int meleePercent = 1;
-    private @Builder.Default int rangePercent = 1;
-    private @Builder.Default int spellPercent = 1;
+    private @Builder.Default double coldPercent = 1.0;
+    private @Builder.Default double firePercent = 1.0;
+    private @Builder.Default double shockPercent = 1.0;
+    private @Builder.Default double sonicPercent = 1.0;
+    private @Builder.Default double poisonPercent = 1.0;
+    private @Builder.Default double sacredPercent = 1.0;
+    private @Builder.Default double darkriftPercent = 1.0;
+    private @Builder.Default double acidPercent = 1.0;
+    private @Builder.Default double meleePercent = 1.0;
+    private @Builder.Default double rangePercent = 1.0;
+    private @Builder.Default double spellPercent = 1.0;
     private @Builder.Default int universalDr = 0;
     private @Builder.Default int meleeDr = 0;
     private @Builder.Default int rangeDr = 0;
@@ -187,6 +187,17 @@ public class VtdMonster {
                 .reflexEffect(vtdRoom.getReflexEffect())
                 .will(vtdRoom.getWill())
                 .willEffect(vtdRoom.getWillEffect())
+                .coldPercent(vtdRoom.getColdPercent())
+                .firePercent(vtdRoom.getFirePercent())
+                .shockPercent(vtdRoom.getShockPercent())
+                .sonicPercent(vtdRoom.getSonicPercent())
+                .poisonPercent(vtdRoom.getPoisonPercent())
+                .sacredPercent(vtdRoom.getSacredPercent())
+                .darkriftPercent(vtdRoom.getDarkriftPercent())
+                .acidPercent(vtdRoom.getAcidPercent())
+                .meleePercent(vtdRoom.getMeleePercent())
+                .rangePercent(vtdRoom.getRangePercent())
+                .spellPercent(vtdRoom.getSpellPercent())
                 .build();
     }
 }

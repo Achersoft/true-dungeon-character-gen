@@ -1346,6 +1346,13 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
         if (vtdDetails.getRoomNumber() < 7)
             vtdDetails.setRoomNumber(vtdDetails.getRoomNumber() + 1);
+        else {
+            try {
+                final List<VtdRoom> roomsByNumber = vtdAdminMapper.getRoomsByNumber(vtdDetails.getAdventureId(), vtdDetails.getRoomNumber() + 1);
+                if (roomsByNumber != null && !roomsByNumber.isEmpty())
+                    vtdDetails.setRoomNumber(vtdDetails.getRoomNumber() + 1);
+            } catch (Exception ignored) {}
+        }
 
         if (vtdDetails.getCurrentHealth() > 0) {
             vtdDetails.setCurrentHealth(vtdDetails.getCurrentHealth() + vtdDetails.getStats().getRegen());
