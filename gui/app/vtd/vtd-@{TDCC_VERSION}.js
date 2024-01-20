@@ -1039,7 +1039,7 @@ angular.module('main')
                     }   
                 } if (monster.sacredPercent !== 1.0 && +$scope.characterContext.stats.bsacred) {
                     if (mDmgTotal > 0 && isMainDr) {
-                        var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.bsacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) - (+$scope.characterContext.stats.bsacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) :
+                        var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.bsacred + +$scope.characterContext.mainSacredBonus + mDmg)) - (+$scope.characterContext.stats.bsacred + +$scope.characterContext.mainSacredBonus + mDmg)) :
                                 (Math.round(monster.sacredPercent * +$scope.characterContext.stats.bsacred) - +$scope.characterContext.stats.bsacred);
                         if (sacredMod > 0)
                             mDmgTotal += sacredMod;
@@ -1047,7 +1047,7 @@ angular.module('main')
                             mDmgTotalDR += Math.abs(sacredMod);
                     }
                     if (oDmgTotal > 0 && isOffDr) {
-                         var sacredMod = (+$scope.characterContext.offSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.bsacred + +$scope.characterContext.offSacredBonus + mRollDmg)) - (+$scope.characterContext.stats.bsacred + +$scope.characterContext.offSacredBonus + oRollDmg)) :
+                         var sacredMod = (+$scope.characterContext.offSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.bsacred + +$scope.characterContext.offSacredBonus + oDmg)) - (+$scope.characterContext.stats.bsacred + +$scope.characterContext.offSacredBonus + oDmg)) :
                                 (Math.round(monster.sacredPercent * +$scope.characterContext.stats.bsacred) - +$scope.characterContext.stats.bsacred);
                         if (sacredMod > 0)
                             oDmgTotal += sacredMod;
@@ -1315,15 +1315,16 @@ angular.module('main')
                     }   
                 } if (monster.sacredPercent !== 1.0 && +$scope.characterContext.stats.msacred) {
                     if (mDmgTotal > 0 && isMainDr) {
-                        var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) :
+                        var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mDmg)) :
                                 (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
+            
                         if (sacredMod > 0)
                             mDmgTotal += sacredMod;
                         else
                             mDmgTotalDR += Math.abs(sacredMod);
                     }
                     if (oDmgTotal > 0 && isOffDr) {
-                         var sacredMod = (+$scope.characterContext.offSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.offSacredBonus + mRollDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.offSacredBonus + oRollDmg)) :
+                         var sacredMod = (+$scope.characterContext.offSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.offSacredBonus + oDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.offSacredBonus + oDmg)) :
                                 (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
                         if (sacredMod > 0)
                             oDmgTotal += sacredMod;
@@ -2941,7 +2942,7 @@ angular.module('main')
                 }  
             } if (monster.sacredPercent !== 1.0 && +$scope.characterContext.stats.msacred) {
                if (mDmgTotal > 0 && isMainDr) {
-                    var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) :
+                    var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mDmg)) :
                             (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
                     if (sacredMod > 0)
                         mDmgTotal += sacredMod;
@@ -4149,7 +4150,7 @@ angular.module('main')
                     }   
                 } if (monster.sacredPercent !== 1.0 && +$scope.characterContext.stats.bsacred) {
                     if (mDmgTotal > 0 && isMainDr) {
-                        var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.bsacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) - (+$scope.characterContext.stats.bsacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) :
+                        var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.bsacred + +$scope.characterContext.mainSacredBonus + mDmg)) - (+$scope.characterContext.stats.bsacred + +$scope.characterContext.mainSacredBonus + mDmg)) :
                                 (Math.round(monster.sacredPercent * +$scope.characterContext.stats.bsacred) - +$scope.characterContext.stats.bsacred);
                         if (sacredMod > 0)
                             mDmgTotal += sacredMod;
@@ -4157,7 +4158,7 @@ angular.module('main')
                             mDmgTotalDR += Math.abs(sacredMod);
                     }
                     if (oDmgTotal > 0 && isOffDr) {
-                         var sacredMod = (+$scope.characterContext.offSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.bsacred + +$scope.characterContext.offSacredBonus + mRollDmg)) - (+$scope.characterContext.stats.bsacred + +$scope.characterContext.offSacredBonus + oRollDmg)) :
+                         var sacredMod = (+$scope.characterContext.offSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.bsacred + +$scope.characterContext.offSacredBonus + oDmg)) - (+$scope.characterContext.stats.bsacred + +$scope.characterContext.offSacredBonus + oDmg)) :
                                 (Math.round(monster.sacredPercent * +$scope.characterContext.stats.bsacred) - +$scope.characterContext.stats.bsacred);
                         if (sacredMod > 0)
                             oDmgTotal += sacredMod;
@@ -4425,7 +4426,7 @@ angular.module('main')
                     }   
                 } if (monster.sacredPercent !== 1.0 && +$scope.characterContext.stats.msacred) {
                     if (mDmgTotal > 0 && isMainDr) {
-                        var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) :
+                        var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mDmg)) :
                                 (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
                         if (sacredMod > 0)
                             mDmgTotal += sacredMod;
@@ -4433,7 +4434,7 @@ angular.module('main')
                             mDmgTotalDR += Math.abs(sacredMod);
                     }
                     if (oDmgTotal > 0 && isOffDr) {
-                         var sacredMod = (+$scope.characterContext.offSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.offSacredBonus + mRollDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.offSacredBonus + oRollDmg)) :
+                         var sacredMod = (+$scope.characterContext.offSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.offSacredBonus + mDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.offSacredBonus + oDmg)) :
                                 (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
                         if (sacredMod > 0)
                             oDmgTotal += sacredMod;
@@ -6051,7 +6052,7 @@ angular.module('main')
                 }  
             } if (monster.sacredPercent !== 1.0 && +$scope.characterContext.stats.msacred) {
                 if (mDmgTotal > 0 && isMainDr) {
-                    var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mRollDmg)) :
+                    var sacredMod = (+$scope.characterContext.mainSacredBonus > 0) ? (Math.round(monster.sacredPercent * (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mDmg)) - (+$scope.characterContext.stats.msacred + +$scope.characterContext.mainSacredBonus + mDmg)) :
                             (Math.round(monster.sacredPercent * +$scope.characterContext.stats.msacred) - +$scope.characterContext.stats.msacred);
                     if (sacredMod > 0)
                         mDmgTotal += sacredMod;
