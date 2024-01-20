@@ -221,6 +221,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
             final AtomicBoolean hasQuestors = new AtomicBoolean(false);
             final AtomicBoolean hasRingOfSavant = new AtomicBoolean(false);
             final AtomicBoolean crownOfElements = new AtomicBoolean(false);
+            final AtomicInteger mainSacredBonus = new AtomicInteger(0);
+            final AtomicInteger offSacredBonus = new AtomicInteger(0);
             final Set<CritType> critTypes = new HashSet<>();
 
             for (CharacterItem characterItem : characterDetails.getItems()) {
@@ -323,12 +325,6 @@ public class VirtualTdServiceImpl implements VirtualTdService {
 
             switch (characterDetails.getCharacterClass()) {
                 case ALL:
-                    if (ignoreIncorporealMainHand.get() && mainHand.get().getName().equalsIgnoreCase("+1 Mithral Long Sword")) {
-                        meleeDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
-                    }
-                    if (ignoreIncorporealMainHand.get() && offHand.get().getName().equalsIgnoreCase("+1 Mithral Long Sword")) {
-                        meleeOffhandDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
-                    }
                     break;
                 case BARBARIAN:
                     if (hasBarbRelic.get() || hasBarbLegendary.get()) {
@@ -779,6 +775,30 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     break;
             }
 
+            if (mainHand.get() != null && ignoreIncorporealMainHand.get() && mainHand.get().getName().equalsIgnoreCase("+1 Mithral Long Sword")) {
+                meleeDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
+            }
+            if (offHand.get() != null && ignoreIncorporealMainHand.get() && offHand.get().getName().equalsIgnoreCase("+1 Mithral Long Sword")) {
+                meleeOffhandDmgEffects.add(DamageModEffect.IGNORE_INCORPOREAL);
+            }
+
+            if (mainHand.get() != null && mainHand.get().getName().equalsIgnoreCase("+2 Sun Scimitar")) {
+                mainSacredBonus.set(characterDetails.getStats().getMeleeDmg() - characterDetails.getStats().getMFire() -
+                        characterDetails.getStats().getMCold() - characterDetails.getStats().getMShock() -
+                        characterDetails.getStats().getMSonic() - characterDetails.getStats().getMDarkrift() -
+                        characterDetails.getStats().getMSacred() - characterDetails.getStats().getMForce() -
+                        characterDetails.getStats().getMEldritch() - characterDetails.getStats().getMPoison() -
+                        characterDetails.getStats().getMAcid());
+            }
+            if (offHand.get() != null && offHand.get().getName().equalsIgnoreCase("+2 Sun Scimitar")) {
+                offSacredBonus.set(characterDetails.getStats().getMeleeDmg() - characterDetails.getStats().getMFire() -
+                        characterDetails.getStats().getMCold() - characterDetails.getStats().getMShock() -
+                        characterDetails.getStats().getMSonic() - characterDetails.getStats().getMDarkrift() -
+                        characterDetails.getStats().getMSacred() - characterDetails.getStats().getMForce() -
+                        characterDetails.getStats().getMEldritch() - characterDetails.getStats().getMPoison() -
+                        characterDetails.getStats().getMAcid());
+            }
+
             if (hasMedallionKeenness.get() && mainHand.get() != null && mainHand.get().getCritMin() > 19)
                 mainHand.get().setCritMin(19);
 
@@ -875,6 +895,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                     .meleeOffhandCritMin((offHand.get() != null) ? offHand.get().getCritMin() : 20)
                     .meleePolyCritMin(20)
                     .rangeCritMin((rangeMainHand.get() != null) ? rangeMainHand.get().getCritMin() : 20)
+                    .mainSacredBonus(mainSacredBonus.get())
+                    .offSacredBonus(offSacredBonus.get())
                     .build();
 
             vtdMapper.addCharacter(vtdDetails);

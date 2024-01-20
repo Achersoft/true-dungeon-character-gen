@@ -76,6 +76,8 @@
                                     questers,
                                     ringOfSavant,
                                     ignoreIncorporeal,
+                                    mainSacredBonus,
+                                    offSacredBonus,
                                     totalDamageLastSpell)
                             VALUES (#{characterId},
                                     #{characterOrigId},
@@ -149,6 +151,8 @@
                                     #{questers},
                                     #{ringOfSavant},
                                     #{ignoreIncorporeal},
+                                    #{mainSacredBonus},
+                                    #{offSacredBonus},
                                     #{totalDamageLastSpell})
     </insert>
 
@@ -620,6 +624,8 @@
                 questers,
                 ringOfSavant,
                 ignoreIncorporeal,
+                mainSacredBonus,
+                offSacredBonus,
                 totalDamageLastSpell
           FROM vtd_character
          WHERE id = #{id}
@@ -698,6 +704,8 @@
                 questers,
                 ringOfSavant,
                 ignoreIncorporeal,
+                mainSacredBonus,
+                offSacredBonus,
                 totalDamageLastSpell
         FROM vtd_character
         WHERE user_id = #{userId}
@@ -777,6 +785,8 @@
                 questers,
                 ringOfSavant,
                 ignoreIncorporeal,
+                mainSacredBonus,
+                offSacredBonus,
                 totalDamageLastSpell
         FROM vtd_character
         WHERE user_id = #{userId}

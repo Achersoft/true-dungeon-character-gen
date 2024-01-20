@@ -1157,7 +1157,7 @@ public class CharacterServiceImpl implements CharacterService {
         }
 
         for (Slot slot : slotMap.keySet()) {
-            if (slot != Slot.SLOTLESS && slot != Slot.INSTRUMENT) {
+            if (slot != Slot.SLOTLESS && slot != Slot.INSTRUMENT && slot != Slot.FIGURINE) {
                 final TreeSet<Integer> available = new TreeSet<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
                 List<CharacterItem> items = characterDetails.getItems().stream().filter(i -> i.getSlot() == slot)
                         .peek(i -> available.remove(i.getIndex()))
@@ -1761,8 +1761,13 @@ public class CharacterServiceImpl implements CharacterService {
                 }
             }
 
-           // if (item.getTokenFullDetails().getFigurineSlots() > 0);
-             //   figurineSlots.getAndAdd(item.getTokenFullDetails().getFigurineSlots());
+            if (item.getTokenFullDetails().getSlotModifiers() != null && !item.getTokenFullDetails().getSlotModifiers().isEmpty()) {
+                item.getTokenFullDetails().getSlotModifiers().forEach(slotModifier -> {
+                    if (slotModifier.getSlot() == Slot.FIGURINE) {
+                        figurineSlots.getAndAdd(slotModifier.getModifier());
+                    }
+                });
+            }
         });
 
         // Check Conditionals 

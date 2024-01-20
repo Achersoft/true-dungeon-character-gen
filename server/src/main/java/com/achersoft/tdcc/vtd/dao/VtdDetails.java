@@ -101,5 +101,7 @@ public class VtdDetails {
     private boolean questers;
     private boolean ringOfSavant;
     private boolean ignoreIncorporeal;
+    private int mainSacredBonus;
+    private int offSacredBonus;
     private int totalDamageLastSpell;
 }

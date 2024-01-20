@@ -105,6 +105,8 @@ public class VtdDetailsDTO {
     public boolean prestigeActive;
     public boolean questers;
     public boolean ringOfSavant;
+    public int mainSacredBonus;
+    public int offSacredBonus;
     public int totalDamageLastSpell;
     public VtdItemsDTO items;
     
@@ -207,6 +209,8 @@ public class VtdDetailsDTO {
                 .queuedSkills(dao.getQueuedSkills())
                 .totalDamageLastSpell(dao.getTotalDamageLastSpell())
                 .items(VtdItemsDTO.fromDAO(dao.getItems()))
+                .mainSacredBonus(dao.getMainSacredBonus())
+                .offSacredBonus(dao.getOffSacredBonus())
                 .build();
 
         if (dao.getCharacterSkills() != null) {

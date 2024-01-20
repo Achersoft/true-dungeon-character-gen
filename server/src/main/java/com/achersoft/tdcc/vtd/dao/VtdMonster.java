@@ -116,11 +116,16 @@ public class VtdMonster {
         }
 
         int bonusDamage = 0;
-        if (vtdRoom.getCritType() == CritType.UNDEAD && isRanger) {
-            if (isLevel5)
-                bonusDamage = 2;
-            else
-                bonusDamage = 1;
+        if (vtdRoom.getCritType() == CritType.UNDEAD) {
+            if (isRanger) {
+                if (isLevel5)
+                    bonusDamage = 2;
+                else
+                    bonusDamage = 1;
+            }
+            if (vtdRoom.getSacredPercent() == 1.0) {
+                vtdRoom.setSacredPercent(2.0);
+            }
         }
 
         List<MonsterEffects> monsterEffects = new ArrayList<>();
