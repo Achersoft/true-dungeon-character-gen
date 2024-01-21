@@ -26,8 +26,12 @@ public enum Rarity {
         return htmlColor;
     }
     
-    public boolean isHigherThanUlraRare() {
+    public boolean isHigherThanUltraRare() {
         return this.ordinal() > ULTRARARE.ordinal();
+    }
+
+    public boolean isHigherThanExalted() {
+        return this.ordinal() > EXALTED.ordinal();
     }
 }
 

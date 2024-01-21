@@ -1609,7 +1609,7 @@ public class CharacterServiceImpl implements CharacterService {
             else if (item.getTokenFullDetails().getTreasureMin() > 0 && item.getTokenFullDetails().getRarity() != Rarity.ARTIFACT && !item.getTokenFullDetails().getName().equals("Charm of Treasure Boosting")) {
                 if (additionalTreasureTokens.addAndGet(1) > 1)
                     metCondition.add(ConditionalUse.NO_OTHER_TREASURE);
-                if (item.getTokenFullDetails().getRarity().isHigherThanUlraRare() || additionalTreasureTokens.get() > 1)
+                if (item.getTokenFullDetails().getRarity().isHigherThanExalted() || additionalTreasureTokens.get() > 1)
                     metCondition.add(ConditionalUse.ONE_OTHER_UR_TREASURE);
             } else if (item.getTokenFullDetails().getName().toLowerCase().contains("ring of havoc")) {
                 if (additionalHavocRings.addAndGet(1) > 1)
@@ -2271,7 +2271,7 @@ public class CharacterServiceImpl implements CharacterService {
                 case ONE_OTHER_UR_TREASURE:
                     if(metCondition.contains(ConditionalUse.ONE_OTHER_UR_TREASURE)) {
                         token.setSlotStatus(SlotStatus.INVALID);
-                        token.setStatusText(token.getName() + " cannot be used with more than one other treasure enchancing token that is UR or lower.");
+                        token.setStatusText(token.getName() + " cannot be used with more than one other treasure enhancing token that is Exalted or lower.");
                         failedConditions.add(token);
                     } else {
                         token.setSlotStatus(SlotStatus.OK);
