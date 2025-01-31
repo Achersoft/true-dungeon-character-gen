@@ -22,37 +22,46 @@
             <div style="display:flex;max-width:866px;margin-top:2px" ng-repeat-start="charmError in charmErrors track by $index" ng-repeat-end>
                 <label class="error-text">{{charmError}}</label>
             </div>
-            <div style="display:flex;max-width:866px;margin-top:10px">
+            <div style="display:flex;max-width:866px;margin-top:10px;margin-left:45px">
+                <label class="text-right" ng-class="{'error-text': beadErrors !== null}" style="font-size:28px;padding-right:15px;margin-top:8px">Beads:</label>
+                <div style="padding:0;width:70px" ng-repeat-start="bead in characterContext.bead track by $index" ng-repeat-end>
+                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="charm{{$index}}" model="bead" label="Bead"></token-selector>
+                </div>
+            </div>
+            <div style="display:flex;max-width:866px;margin-top:2px" ng-repeat-start="beadError in charmErrors track by $index" ng-repeat-end>
+                <label class="error-text">{{beadError}}</label>
+            </div>
+            <div style="display:flex;max-width:866px;margin-top:10px;margin-left:5px">
                 <label class="text-right" ng-class="{'error-text': slotlessErrors !== null}" style="font-size:28px;padding-right:15px;margin-top:8px">Slotless:</label>
                 <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow1 track by $index" ng-repeat-end>
                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
                 </div>
             </div>
-            <div style="display:flex;max-width:866px;margin-top:10px" ng-if="slotlessRow2.length > 0">
+            <div style="display:flex;max-width:866px;margin-top:10px;margin-left:5px" ng-if="slotlessRow2.length > 0">
                 <div style="width:121px"></div>
                 <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow2 track by $index" ng-repeat-end>
                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
                 </div>
             </div>
-            <div style="display:flex;max-width:866px;margin-top:10px" ng-if="slotlessRow3.length > 0">
+            <div style="display:flex;max-width:866px;margin-top:10px;margin-left:5px" ng-if="slotlessRow3.length > 0">
                 <div style="width:121px"></div>
                 <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow3 track by $index" ng-repeat-end>
                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
                 </div>
             </div>
-            <div style="display:flex;max-width:866px;margin-top:10px" ng-if="slotlessRow4.length > 0">
+            <div style="display:flex;max-width:866px;margin-top:10px;margin-left:5px" ng-if="slotlessRow4.length > 0">
                 <div style="width:121px"></div>
                 <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow4 track by $index" ng-repeat-end>
                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
                 </div>
             </div>
-            <div style="display:flex;max-width:866px;margin-top:10px" ng-if="slotlessRow5.length > 0">
+            <div style="display:flex;max-width:866px;margin-top:10px;margin-left:5px" ng-if="slotlessRow5.length > 0">
                 <div style="width:121px"></div>
                 <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow5 track by $index" ng-repeat-end>
                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
                 </div>
             </div>
-            <div style="display:flex;max-width:866px;margin-top:10px" ng-if="slotlessRow6.length > 0">
+            <div style="display:flex;max-width:866px;margin-top:10px;margin-left:5px" ng-if="slotlessRow6.length > 0">
                 <div style="width:121px"></div>
                 <div style="padding:0;width:70px" ng-repeat-start="slotlessItem in slotlessRow6 track by $index" ng-repeat-end>
                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="bottom" set-token="setTokenSlot" unequip="unequipItem" element-id="slotlessItem{{$index}}" model="slotlessItem" label="Slotless"></token-selector>
@@ -74,12 +83,6 @@
                     <div style="width:20%;"></div>
                     <label style="min-width:210px;" class="error-text">{{headErrors}}</label>
                 </div>                
-                <div style="display:flex;margin-top:10px;min-width:250px;float:right">                    
-                    <label class="text-right" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Bead:</label>
-                    <div style="padding:0;padding-left:15px;margin-left:auto;margin-right:0" ng-repeat-start="bea in characterContext.bead track by $index" ng-repeat-end>
-                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right" set-token="setTokenSlot" unequip="unequipItem" model="bea" label="Bead"></token-selector>
-                    </div>
-                </div>
                 <div style="display:flex;margin-top:10px;min-width:250px;float:right">
                     <label class="text-right" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Wrists:</label>
                     <div style="padding:0;padding-left:15px;margin-left:auto;margin-right:0" ng-repeat-start="wrist in characterContext.wrists track by $index" ng-repeat-end>
@@ -130,6 +133,12 @@
                 <div style="display:flex;min-width:250px;float:right" ng-show="bootsErrors !== null">
                     <div style="width:20%;"></div>
                     <label style="min-width:210px;" class="error-text">{{bootsErrors}}</label>
+                </div>
+                <div style="display:flex;margin-top:10px;min-width:250px;float:right">
+                    <label class="text-right" style="min-width:150px;font-size:28px;padding-right:15px;margin-top:8px;margin-left:auto;margin-right:0">Mark:</label>
+                    <div style="padding:0;padding-left:15px;margin-left:auto;margin-right:0" ng-repeat-start="mark in characterContext.mark track by $index" ng-repeat-end>
+                        <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="right-bottom" set-token="setTokenSlot" unequip="unequipItem" model="mark" label="Mark"></token-selector>
+                    </div>
                 </div>
             </div>
             <div style="min-width:340px;width:50%">
@@ -283,6 +292,12 @@
             </div>
         </center>
         <center>
+            <div ng-if="characterContext.pets !== null && characterContext.pets.length > 0" style="display:flex;max-width:750px;margin-top:0px;margin-bottom:15px;">
+                <label  style="font-size:28px;padding-left:5px;padding-right:27px;margin-top:8px">Spiritual Pets:</label>
+                <div style="padding:0;width:70px" ng-repeat-start="pet in characterContext.pets track by $index" ng-repeat-end>
+                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="pet" label="Pets"></token-selector>
+                </div>
+            </div>
             <div ng-if="characterContext.hirelings !== null && characterContext.hirelings.length > 0" style="display:flex;max-width:750px;margin-top:0px;margin-bottom:15px;">
                 <label  style="font-size:28px;padding-left:5px;padding-right:27px;margin-top:8px">Hirelings:</label>
                 <div style="padding:0;width:70px" ng-repeat-start="hireling in characterContext.hirelings track by $index" ng-repeat-end>
@@ -299,6 +314,12 @@
                 <label  style="font-size:28px;padding-left:5px;padding-right:18px;margin-top:8px">Followers:</label>
                 <div style="padding:0;width:70px" ng-repeat-start="follower in characterContext.followers track by $index" ng-repeat-end>
                     <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="follower" label="Followers"></token-selector>
+                </div>
+            </div>
+            <div ng-if="characterContext.sidekicks !== null && characterContext.sidekicks.length > 0" style="display:flex;max-width:750px;margin-top:0px;margin-bottom:15px;">
+                <label  style="font-size:28px;padding-left:5px;padding-right:18px;margin-top:8px">Sidekicks:</label>
+                <div style="padding:0;width:70px" ng-repeat-start="sidekick in characterContext.sidekicks track by $index" ng-repeat-end>
+                    <token-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" placement="top" set-token="setTokenSlot" unequip="unequipItem" model="sidekick" label="Sidekicks"></token-selector>
                 </div>
             </div>
         </center>
@@ -318,6 +339,11 @@
         </div>
         <div class="col-xs-12" style="padding:0" ng-if="characterContext.rangedOffhand !== null">
             <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="rangedOffhand" model="characterContext.rangedOffhand" label="Range Offhand"></item-desktop-selector>
+        </div>
+        <div ng-if="characterContext.pets !== null && characterContext.pets.length > 0">
+            <div class="col-xs-12" style="padding:0" ng-repeat-start="pet in characterContext.pets track by $index" ng-repeat-end>
+                <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="pet{{$index}}" model="pet" label="Pets"></item-desktop-selector>
+            </div>
         </div>
         <div ng-if="characterContext.instruments !== null && characterContext.instruments.length > 0">
             <div class="col-xs-12" style="padding:0" ng-repeat-start="instrument in characterContext.instruments track by $index" ng-repeat-end>
@@ -399,6 +425,11 @@
                 <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="boot{{$index}}" model="boot" label="Feet"></item-desktop-selector>
             </div>
         </div>
+        <div ng-if="characterContext.mark !== null && characterContext.mark.length > 0">
+            <div class="col-xs-12" style="padding:0" ng-repeat-start="mark in characterContext.mark track by $index" ng-repeat-end>
+                <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="mark{{$index}}" model="mark" label="Mark"></item-desktop-selector>
+            </div>
+        </div>
         <div ng-if="characterContext.charms !== null && characterContext.charms.length > 0">
             <div class="col-xs-12" style="padding:0" ng-repeat-start="charm in characterContext.charms track by $index" ng-repeat-end>
                 <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="charm{{$index}}" model="charm" label="Charm"></item-desktop-selector>
@@ -442,6 +473,11 @@
         <div ng-if="characterContext.followers !== null && characterContext.followers.length > 0">
             <div class="col-xs-12" style="padding:0" ng-repeat-start="follower in characterContext.followers track by $index" ng-repeat-end>
                 <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="follower{{$index}}" model="follower" label="Followers"></item-desktop-selector>
+            </div>
+        </div>
+        <div ng-if="characterContext.sidekicks !== null && characterContext.sidekicks.length > 0">
+            <div class="col-xs-12" style="padding:0" ng-repeat-start="sidekick in characterContext.sidekicks track by $index" ng-repeat-end>
+                <item-desktop-selector editable="characterContext.editable" character-class="{{characterContext.characterClass}}" set-token="setTokenSlot" unequip="unequipItem" element-id="sidekick{{$index}}" model="sidekick" label="Sidekicks"></item-desktop-selector>
             </div>
         </div>
         <center style="margin-bottom:15px">

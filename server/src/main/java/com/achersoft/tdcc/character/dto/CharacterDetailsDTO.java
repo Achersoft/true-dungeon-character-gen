@@ -53,6 +53,9 @@ public class CharacterDetailsDTO {
     public Set<CharacterItemDTO> hirelings;
     public Set<CharacterItemDTO> underlings;
     public Set<CharacterItemDTO> followers;
+    public Set<CharacterItemDTO> sidekicks;
+    public Set<CharacterItemDTO> mark;
+    public Set<CharacterItemDTO> pets;
     public List<String> alwaysInEffect;
     public List<String> oncePerRound;
     public List<String>  oncePerRoom;
@@ -92,6 +95,9 @@ public class CharacterDetailsDTO {
                 .hirelings(new TreeSet<>())
                 .underlings(new TreeSet<>())
                 .followers(new TreeSet<>())
+                .sidekicks(new TreeSet<>())
+                .mark(new TreeSet<>())
+                .pets(new TreeSet<>())
                 .alwaysInEffect(new ArrayList<>())
                 .oncePerRound(new ArrayList<>())
                 .oncePerRoom(new ArrayList<>())
@@ -162,6 +168,12 @@ public class CharacterDetailsDTO {
                 build.underlings.add(CharacterItemDTO.fromDAO(item));
             if(item.getSlot() == Slot.FOLLOWER)
                 build.followers.add(CharacterItemDTO.fromDAO(item));
+            if(item.getSlot() == Slot.SIDEKICK)
+                build.sidekicks.add(CharacterItemDTO.fromDAO(item));
+            if(item.getSlot() == Slot.MARK)
+                build.mark.add(CharacterItemDTO.fromDAO(item));
+            if(item.getSlot() == Slot.PET)
+                build.pets.add(CharacterItemDTO.fromDAO(item));
         });
         
         if(dao.getNotes() != null) {

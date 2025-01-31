@@ -31,7 +31,10 @@ public enum Slot {
     SAFEHOLD("Safehold", 1),
     HIRELING("Hireling", 0),
     UNDERLING("Underling", 0),
-    FOLLOWER("Follower", 0);
+    FOLLOWER("Follower", 0),
+    SIDEKICK("Sidekick", 0),
+    MARK("Mark", 1),
+    PET("Pet", 1);
     
     public final String text;
     public final int defaultSize;

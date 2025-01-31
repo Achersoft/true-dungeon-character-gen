@@ -738,6 +738,8 @@ public class VirtualTdServiceImpl implements VirtualTdService {
                             } else if (characterItem.getName().equalsIgnoreCase("Nightshade’s +2 Throwing Dagger")) {
                                 isSneakCanCrit = true;
                                 isSneakAtRange = true;
+                            } else if (characterItem.getName().equalsIgnoreCase("Seth’s Ring of Shadows")) {
+                                isSneakAtRange = true;
                             } else if (characterItem.getName().equalsIgnoreCase("Nightshade’s +2 Short Sword")) {
                                 isSneakCanCrit = true;
                             } else if (characterItem.getName().equalsIgnoreCase("Shoes of Sneaking")) {

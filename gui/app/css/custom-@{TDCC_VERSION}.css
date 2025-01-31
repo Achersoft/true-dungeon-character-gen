@@ -7,7 +7,7 @@
 
 .navbar {
     margin-bottom: 0px;
-    background-color: #224829;
+    background-color: #2a2a2a;
 }
 
 .navbar-nav > li > a {
@@ -18,25 +18,25 @@
 
 .navbar-default .navbar-nav > li > a:focus {
     color:#ffffff;
-    background-color:#12864a;
+    background-color:#736f6f;
 }
 
 .navbar-default .navbar-nav > li > a:hover {
     color:#ffffff;
-    background-color:#12864a;
+    background-color:#736f6f;
 }
 
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
-	background-color: #12864a;
+	background-color: #736f6f;
 	color: #ffffff;
 }
 
 .navbar-default .dropdown-menu > li > a:hover, .navbar-default .dropdown-menu > .active > a, .navbar-default .dropdown-menu > .active > a:hover {
-	background-color: #12864a;
+	background-color: #736f6f;
 }
 
 .navbar-default .dropdown-menu {
-	background-color: #224829;
+	background-color: #2a2a2a;
 }
 
 @media (max-width: 767px) {
@@ -221,7 +221,7 @@
 }
 
 .vtd-background {
-    background-image: url("../images/v7.jpg");
+    background-image: url("../images/vtd25.jpg");
     background-color: #cccccc;
     height: 100%;
     width: 100%;

@@ -1251,6 +1251,8 @@ public class CharacterServiceImpl implements CharacterService {
         long deathKnightCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("death knight")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Ancients set
         long ancientsCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().endsWith("of the ancients")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Snake Priest set
+        long snakePriestCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("snake priest")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Arcane Set
         long arcaneCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && (a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane belt") ||
                 a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane bracelets") || a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane charm") ||
@@ -1281,6 +1283,14 @@ public class CharacterServiceImpl implements CharacterService {
             if (deathKnightCount >= 4) {
                 characterDetails.getStats().setRetDmg(characterDetails.getStats().getRetDmg() + 2);
             }
+        }
+
+        // Snake Priest Set
+        if (snakePriestCount >= 3) {
+            characterDetails.getStats().setRangeDmg(characterDetails.getStats().getRangeDmg() + 1);
+            characterDetails.getStats().setRangePoison(true);
+            characterDetails.getStats().setMeleeDmg(characterDetails.getStats().getMeleeDmg() + 1);
+            characterDetails.getStats().setMeleePoison(true);
         }
 
         // Silver Elf Set
@@ -1707,7 +1717,10 @@ public class CharacterServiceImpl implements CharacterService {
             } else if(item.getTokenFullDetails().getName().contains("Ioun Stone Mystic Orb")) {
                 hasMysticOrb.set(true);
             }
-            if((item.getTokenFullDetails().getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") || item.getTokenFullDetails().getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2")) && sixLevelReward.get() == 0) {
+            if((item.getTokenFullDetails().getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") ||
+                    item.getTokenFullDetails().getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2") ||
+                    item.getTokenFullDetails().getId().equals("a7105f233e1b317558d2a94fbf90ca00048aaaa9")) &&
+                    sixLevelReward.get() == 0) {
                 sixLevelReward.set(1);
                 stats.setTreasureMin(stats.getTreasureMin() + 1);
                 stats.setTreasureMax(stats.getTreasureMax() + 1);
@@ -2401,6 +2414,16 @@ public class CharacterServiceImpl implements CharacterService {
                     if(metCondition.contains(ConditionalUse.GOBLIN_WEAPON)) {
                         stats.setMeleeAC(stats.getMeleeAC() + 1);
                     } break;
+                case MAY_NOT_USE_SHIELDS:
+                    if(metCondition.contains(ConditionalUse.MAY_NOT_USE_SHIELDS)) {
+                        token.setSlotStatus(SlotStatus.INVALID);
+                        token.setStatusText(token.getName() + " cannot be used with a shield equipped.");
+                        failedConditions.add(token);
+                    } else {
+                        token.setSlotStatus(SlotStatus.OK);
+                        token.setStatusText(null);
+                        updateStats(token.getSlot(), stats, td, notes, false, false, false, false);
+                    }   break;
                 default:
                     break;
             }

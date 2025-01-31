@@ -115,6 +115,7 @@ angular.module('main')
     $scope.shirtErrors = null;
     $scope.iounStoneErrors = null;
     $scope.charmErrors = null;
+    $scope.beadErrors = null;
     $scope.slotlessErrors = null;
     $scope.slotlessRow1 = [];
     $scope.slotlessRow2 = [];
@@ -177,6 +178,7 @@ angular.module('main')
         $scope.bootsErrors = null;
         $scope.iounStoneErrors = null;
         $scope.charmErrors = null;
+        $scope.beadErrors = null;
         $scope.slotlessErrors = null;
         slotlessRow1 = [];
         slotlessRow2 = [];
@@ -272,6 +274,15 @@ angular.module('main')
                     if($scope.charmErrors === null)
                         $scope.charmErrors = [];
                     $scope.charmErrors.push(item.statusText);
+                }
+            });
+        }
+        if($scope.characterContext.bead.length > 0) {
+            $scope.characterContext.bead.forEach(function(item, index) {
+                if(item.slotStatus === 'INVALID') {
+                    if($scope.beadErrors === null)
+                        $scope.beadErrors = [];
+                    $scope.beadErrors.push(item.statusText);
                 }
             });
         }
