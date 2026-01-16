@@ -1243,6 +1243,20 @@ public class CharacterServiceImpl implements CharacterService {
         viperCount += characterDetails.getItems().stream().filter((item) -> item.getItemId() != null && item.getItemId().equals("bd21afd63114346decea5fc899ff697106e99429")).map(CharacterItem::getName).distinct().count();
         // Lucky Set
         long luckyCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("lucky")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Defender Set
+        long defenderCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("defender")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Sea Raider Set
+        long seaRaiderCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("sea raider")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Dawn Set
+        long dawnCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("dawn")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Zealot Set
+        long zealotCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("zealot")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Undeath Set
+        long undeathCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("undeath")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Triad Set
+        long triadCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().contains("triad")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
+        // Accursed Set
+        long accursedCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("accursed")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Silver elf Set
         long silverElfCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && a.getTokenFullDetails().getName().toLowerCase().startsWith("silver elf")).map(a -> a.getTokenFullDetails().getName()).distinct().count();
         // Deadshot set
@@ -1257,10 +1271,13 @@ public class CharacterServiceImpl implements CharacterService {
         long arcaneCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && (a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane belt") ||
                 a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane bracelets") || a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane charm") ||
                 a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcane earcuff"))).count();
-        
+        // Arcanum Set
+        long arcanumCount = itemDetailsMap.values().stream().filter(a -> a.getTokenFullDetails() != null && (a.getTokenFullDetails().getName().toLowerCase().trim().equals("arcanum shirt") ||
+                a.getTokenFullDetails().getName().toLowerCase().trim().equals("deathward greaves") || a.getTokenFullDetails().getName().toLowerCase().trim().equals("ring of the sacred circle"))).count();
+
         // First check if we need to boost character level
         // Charm of Heroism, Medallion of Heroism, Ring of Heroism, Eldrich Set, Kubu’s Coin of Coincidence, Smackdown’s Charm of Comraderie
-        if(levelBoost || levelItem || eldrichCount >= 2 || mightCount >= 3 || charmingCount >= 3 || ancientsCount >= 3 || deadshotCount >= 3 || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
+        if (levelBoost || levelItem || triadCount >= 3 || arcanumCount >= 2 || eldrichCount >= 2 || mightCount >= 3 || charmingCount >= 3 || ancientsCount >= 3 || deadshotCount >= 3 || itemsMap.containsKey("d20aa5f4194d09336b0a5974215247cfaa480c9a") || itemsMap.containsKey("d4674a1b2bea57e8b11676fed2bf81bd4c48ac78") || itemsMap.containsKey("85bbc3d8307b702dde0525136fb82bf1636f55d8") ||
                 itemsMap.containsKey("2f1cfd3d3dbdd218f5cd5bd3935851b7acba5a9c") || itemsMap.containsKey("f44d007c35b18b83e85a1ee183cda08180030012") || itemsMap.containsKey("c289cd1accbbcc7af656de459c157bdc40dbaf45")) {
             characterDetails.setStats(mapper.getStartingStats(characterDetails.getCharacterClass(), 5));
             characterDetails.getStats().setCharacterId(characterDetails.getId());
@@ -1282,6 +1299,8 @@ public class CharacterServiceImpl implements CharacterService {
             characterDetails.getStats().setRetDarkrift(true);
             if (deathKnightCount >= 4) {
                 characterDetails.getStats().setRetDmg(characterDetails.getStats().getRetDmg() + 2);
+            } if (deathKnightCount >= 5) {
+                characterDetails.getStats().setRetDmg(characterDetails.getStats().getRetDmg() + 2);
             }
         }
 
@@ -1297,10 +1316,52 @@ public class CharacterServiceImpl implements CharacterService {
         if (silverElfCount >= 3)
             characterDetails.getNotes().add(CharacterNote.builder().alwaysInEffect(true).note("You are immune to underwater hindrances (Silver Elf Set).").build());
 
+        // Undeath Set
+        if (undeathCount >= 3)
+            characterDetails.getNotes().add(CharacterNote.builder().oncePerRoom(true).note("You may further reduce initial damage by 1 (Undeath Set).").build());
+
+        // Zealot Set
+        if (zealotCount >= 3)
+            characterDetails.getStats().setDrDarkrift(characterDetails.getStats().getDrDarkrift() + 1);
+
         // Arcane set
         if (arcaneCount == 3)
             characterDetails.getNotes().add(CharacterNote.builder().oncePerGame(true).note("The first 0th, 1st or 2nd level spell you casts is not marked off your character card.").build());
-       
+
+        // Arcanum set
+        if (arcanumCount >= 2) {
+            characterDetails.getStats().setArcanumSet(true);
+            characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 4);
+            characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 1);
+            characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 1);
+            characterDetails.getStats().setFort(characterDetails.getStats().getFort() + 1);
+            characterDetails.getStats().setReflex(characterDetails.getStats().getReflex() + 1);
+            characterDetails.getStats().setWill(characterDetails.getStats().getWill() + 1);
+
+            if (arcanumCount >= 3) {
+                characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 2);
+                characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 1);
+                characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 1);
+                characterDetails.getStats().setFort(characterDetails.getStats().getFort() + 1);
+                characterDetails.getStats().setReflex(characterDetails.getStats().getReflex() + 1);
+                characterDetails.getStats().setWill(characterDetails.getStats().getWill() + 1);
+            } if (arcanumCount >= 4) {
+                characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 2);
+                characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 1);
+                characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 1);
+                characterDetails.getStats().setFort(characterDetails.getStats().getFort() + 1);
+                characterDetails.getStats().setReflex(characterDetails.getStats().getReflex() + 1);
+                characterDetails.getStats().setWill(characterDetails.getStats().getWill() + 1);
+            } if (arcanumCount >= 5) {
+                characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 2);
+                characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 1);
+                characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 1);
+                characterDetails.getStats().setFort(characterDetails.getStats().getFort() + 1);
+                characterDetails.getStats().setReflex(characterDetails.getStats().getReflex() + 1);
+                characterDetails.getStats().setWill(characterDetails.getStats().getWill() + 1);
+            }
+       }
+
         // Cabal set
         // Gloves
         if(itemsMap.keySet().stream().anyMatch((id) -> (id.equals("3dcfd7948a3c9196556ef7e069a36174396297ad"))))
@@ -1350,15 +1411,58 @@ public class CharacterServiceImpl implements CharacterService {
         // all 3 +2 ret dmg
         if(itemsMap.keySet().stream().filter((id) -> id.equals("2439ce9af26dfa74294083c13b73e3cc00405793") || id.equals("770a1850602b0854e7be9256f55f1b0ce2ac50ea") || id.equals("e6d0a8722540345c6a236a0aeeaf92d12c66e370")).count() == 3)
             characterDetails.getStats().setRetDmg(characterDetails.getStats().getRetDmg() + 2);
-        
+
+        // Sea Raider Set
+        if (seaRaiderCount >= 2) {
+            characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 1);
+            if (seaRaiderCount >= 4) {
+                characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 1);
+            } if (seaRaiderCount >= 6) {
+                characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 1);
+            } if (seaRaiderCount >= 8) {
+                characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 1);
+            } if (seaRaiderCount >= 10) {
+                characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 1);
+            } if (seaRaiderCount >= 12) {
+                characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 1);
+            }
+        }
+
+        // Triad Set
+        if(triadCount >= 3) {
+            characterDetails.getStats().setFreeMovement(true);
+        }
+
+        // Accursed Set
+        if(accursedCount >= 3) {
+            characterDetails.getStats().setWill(characterDetails.getStats().getWill() + 6);
+        }
+
         // Defender Set
         // all 3 free action movement and +1 AC
-        if(itemsMap.keySet().stream().filter((item) -> item.equals("89abc3b184b2b30d1a967aee7a32ccbf107532ed") || item.equals("b29ffe03ba83c567fb95ddedeb8cef8c515c003f") || item.equals("debb8b6d4a22654fadfa4983b84cac3bd69db814")).count() >= 3) {
+        if(defenderCount >= 3) {
             characterDetails.getStats().setMeleeAC(characterDetails.getStats().getMeleeAC() + 1);
             characterDetails.getStats().setRangeAC(characterDetails.getStats().getRangeAC() + 1);
             characterDetails.getStats().setFreeMovement(true);
+
+            if(defenderCount >= 4) {
+                characterDetails.getStats().setHealth(characterDetails.getStats().getHealth() + 2);
+            }
         }
-        
+
+        // Dawn Set
+        if(dawnCount >= 3) {
+            characterDetails.getStats().setFort(characterDetails.getStats().getFort() + 1);
+            characterDetails.getStats().setReflex(characterDetails.getStats().getReflex() + 1);
+            characterDetails.getStats().setWill(characterDetails.getStats().getWill() + 1);
+
+            if(dawnCount >= 5) {
+                characterDetails.getStats().setFort(characterDetails.getStats().getFort() + 1);
+                characterDetails.getStats().setReflex(characterDetails.getStats().getReflex() + 1);
+                characterDetails.getStats().setWill(characterDetails.getStats().getWill() + 1);
+            }
+        }
+
         // Dragonhide Set
         // 3 or more auto pass saves vs dragon breath, +3 saves
         if(itemsMap.keySet().stream().distinct().filter((id) -> id.equals("2a05d3436a948f9bb29e1ebfd9f3ac55115445a2") || id.equals("33205cbfbe448541fae56600346027284edc52e1") || id.equals("643e19c4273dcb6f2e8b2ce56241beb1efde902e") ||
@@ -1584,6 +1688,9 @@ public class CharacterServiceImpl implements CharacterService {
         AtomicInteger figurineSlots = new AtomicInteger(0);
         AtomicReference<String> sheildId = new AtomicReference<>("");
 
+        if (characterDetails.getStats().isArcanumSet())
+            figurineSlots.getAndAdd(1);
+
         itemDetailsMap.values().stream().filter((item) -> item.getItem().getItemId()!=null).forEach((item) -> {
             if (item.getTokenFullDetails().isWonderEffect()) {
                 if (hasWonderEffect.get()) {
@@ -1717,6 +1824,11 @@ public class CharacterServiceImpl implements CharacterService {
             } else if(item.getTokenFullDetails().getName().contains("Ioun Stone Mystic Orb")) {
                 hasMysticOrb.set(true);
             }
+            if(item.getTokenFullDetails().getName().toLowerCase().contains("ring of psychic mastery")) {
+                stats.setPsychicLevel(7);
+                stats.setPsychic(true);
+            }
+
             if((item.getTokenFullDetails().getId().equals("028d1ddec034be61aa3b3abaed02d76db2139084") ||
                     item.getTokenFullDetails().getId().equals("3bed20c850924c4b9009f50ed5b4de2998d311b2") ||
                     item.getTokenFullDetails().getId().equals("a7105f233e1b317558d2a94fbf90ca00048aaaa9")) &&

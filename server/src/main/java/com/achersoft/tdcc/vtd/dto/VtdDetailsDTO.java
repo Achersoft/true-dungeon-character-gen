@@ -5,6 +5,8 @@ import com.achersoft.tdcc.character.dto.CharacterDetailsDTO;
 import com.achersoft.tdcc.enums.*;
 import com.achersoft.tdcc.vtd.admin.dao.VtdRoom;
 import com.achersoft.tdcc.vtd.dao.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -109,8 +111,9 @@ public class VtdDetailsDTO {
     public int offSacredBonus;
     public int totalDamageLastSpell;
     public VtdItemsDTO items;
+    public String characterRollerDetails;
     
-    public static VtdDetailsDTO fromDAO(VtdDetails dao) {
+    public static VtdDetailsDTO fromDAO(VtdDetails dao) throws JsonProcessingException {
         if (dao.getBraceletCabalBonus() >= 1) {
             if (dao.getBraceletCabalBonus() >= 5) {
                 dao.getStats().setSpellDmg(dao.getStats().getSpellDmg() + 3);
@@ -351,6 +354,9 @@ public class VtdDetailsDTO {
 
         if (dao.getRangeOffhandDmgEffects() != null && !dao.getRangeOffhandDmgEffects().isEmpty())
             build.setRangeOffhandDmgEffects(Arrays.stream(dao.getRangeOffhandDmgEffects().split(",")).map(DamageModEffect::valueOf).collect(Collectors.toList()));
+
+        if (build.roomNumber == 0)
+            build.setCharacterRollerDetails(new ObjectMapper().writeValueAsString(VtdCharacterRollerDetailsDTO.from(build)));
 
         return build;
     }

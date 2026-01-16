@@ -87,6 +87,7 @@ public class CharacterStats {
     private boolean psychic = false;
     private int psychicLevel = 0;
     private boolean possession = false;
+    private boolean arcanumSet = false;
     private int spellDmg = 0;
     private int spellHeal = 0;
     private int spellResist = 0;

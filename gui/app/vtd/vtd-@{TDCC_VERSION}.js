@@ -616,6 +616,23 @@ angular.module('main')
         
         $scope.resultIndex = 0;
         
+        // Send training data
+        if ($scope.characterContext.roomNumber === 0 &&  $scope.characterContext.rollerId !== null) {
+            vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
+                ' "rolls": [{ "type": "melee_main", "dieResult": 20, "modifiedResult": 20, "isSuccess": true, "damage": 0, "effect": ' + $scope.characterContext.characterRollerDetails + ' }]}').catch(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
+                return($q.reject(response));
+            }).then(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":"Melee attack roll sent"});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();   
+            });
+
+            return;
+        } 
+        
         var buff = $scope.hasBuff("Flank");
         if (buff !== null) {
             $scope.removeBuff(buff);
@@ -3726,6 +3743,23 @@ angular.module('main')
         var statusEffect = status === undefined ? '' :  status;
         
         $scope.resultIndex = 0;
+        
+        // Send training data
+        if ($scope.characterContext.roomNumber === 0 &&  $scope.characterContext.rollerId !== null) {
+            vtdSvc.sendRoll('{ "version": 1, "slotId": "' + $scope.characterContext.rollerId + '", "classId": "' + $scope.characterContext.rollerCharacterClass  + '", "eventType": "attack_roll", ' +
+                ' "rolls": [{ "type": "melee_main", "dieResult": 20, "modifiedResult": 20, "isSuccess": true, "damage": 0, "effect": ' + $scope.characterContext.characterRollerDetails + ' }]}').catch(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":response.data.errors[0]});       
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast(); 
+                return($q.reject(response));
+            }).then(function(response) {
+                vtdHistory.add({"type":"ROLLER","sub":"Melee Attack","result":"Melee attack roll sent"});
+                $scope.history = vtdHistory.get();
+                $scope.lastEvent = vtdHistory.getLast();   
+            });
+
+            return;
+        } 
         
         var buff = $scope.hasBuff("Flank");
         if (buff !== null) {
